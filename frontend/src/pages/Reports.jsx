@@ -323,7 +323,7 @@ export default function Reports() {
   return (
     <div data-testid="reports-page" className="space-y-5">
       {/* Range + Export bar */}
-      <div className="surface flex items-center gap-3 px-4 py-2.5">
+      <div className="surface flex flex-wrap items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5">
         <div className="flex items-center gap-1">
           {RANGES.map((r) => (
             <button
@@ -340,7 +340,7 @@ export default function Reports() {
             </button>
           ))}
         </div>
-        <div className="text-[11.5px] text-ink-400 font-mono ml-2">
+        <div className="text-[11.5px] text-ink-400 font-mono hidden md:block">
           Reception desk · {TODAY_STR}
         </div>
         <div className="ml-auto">
@@ -356,7 +356,7 @@ export default function Reports() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-ink-200">
+      <div className="flex gap-1 sm:gap-2 border-b border-ink-200 overflow-x-auto -mx-1 px-1">
         {TABS.map((t) => {
           const active = tab === t.id;
           const Icon = t.icon;
@@ -365,7 +365,7 @@ export default function Reports() {
               key={t.id}
               data-testid={`reports-tab-${t.id}`}
               onClick={() => setTab(t.id)}
-              className={`relative h-10 px-4 inline-flex items-center gap-2 text-[13px] font-medium transition-colors ${
+              className={`relative h-10 px-3 sm:px-4 inline-flex items-center gap-2 text-[13px] font-medium transition-colors whitespace-nowrap ${
                 active
                   ? "text-ink-900"
                   : "text-ink-400 hover:text-ink-900"
