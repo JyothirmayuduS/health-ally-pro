@@ -42,6 +42,13 @@ Routes built:
 - `/reception/check-in` — Today's not-arrived list, search, one-click check-in that issues a per-doctor token, last-token receipt card, walk-in fast track entry
 - `/reception/queue` — One card per on-duty doctor: now-serving, call-next, mark-complete, skip, re-call, transfer-to-another-doctor modal, mark-no-show, wait timer
 - `/reception/token-display` — Lobby kiosk (no sidebar), one column per on-duty doctor, massive token numbers, next-up chips, live clock, full-screen toggle
+- `/reception/billing` (Iter 2) — Invoice list (search + status pills) + detail pane with editable line items, discount, tax (5%), receipt totals; collect-payment dialog (Cash/Card/UPI/Insurance); auto-creates invoices for today's billable appointments
+- `/reception/reports` (Iter 2) — 4 KPI cards (Footfall, No-shows, Avg wait, Revenue) with module accents, hourly footfall bar chart, registration-source pie, no-show by doctor with progress bars, revenue by payment method, Export CSV
+
+Design refresh (Iter 2):
+- Added module accent palette: clay `#B85C38`, mustard `#A87826`, plum `#7A4A6B`, teal `#2C7873`, money `#15803D` — all earthy, non-blue.
+- Pill button system: `.btn-primary` (sage), `.btn-outline`, `.btn-ghost`, `.btn-money`, `.btn-clay`, `.btn-danger`, `.btn-icon` — all `rounded-full`.
+- Sidebar nav items show a tiny per-module color dot; sidebar now has Workflow / Business / Coming soon sections.
 
 All interactive + key informational elements expose kebab-case `data-testid` attributes.
 

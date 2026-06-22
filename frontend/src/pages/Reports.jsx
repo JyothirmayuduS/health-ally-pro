@@ -283,32 +283,34 @@ export default function Reports() {
               By source
             </h2>
           </div>
-          <div className="p-4 h-64 flex items-center">
-            <ResponsiveContainer width="60%" height="100%">
-              <PieChart>
-                <Pie
-                  data={registrationMix}
-                  innerRadius={42}
-                  outerRadius={70}
-                  paddingAngle={2}
-                  dataKey="value"
-                  stroke="#fff"
-                  strokeWidth={2}
-                >
-                  {registrationMix.map((d) => (
-                    <Cell key={d.name} fill={d.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    background: "#fff",
-                    border: "1px solid #E5E5E0",
-                    fontSize: 12,
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-            <ul className="flex-1 space-y-2 text-[12.5px]">
+          <div className="p-4 h-64 grid grid-cols-2 gap-3 items-center">
+            <div className="h-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={registrationMix}
+                    innerRadius={48}
+                    outerRadius={88}
+                    paddingAngle={2}
+                    dataKey="value"
+                    stroke="#fff"
+                    strokeWidth={2}
+                  >
+                    {registrationMix.map((d) => (
+                      <Cell key={d.name} fill={d.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      background: "#fff",
+                      border: "1px solid #E5E5E0",
+                      fontSize: 12,
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <ul className="space-y-2 text-[12.5px]">
               {registrationMix.map((s) => (
                 <li key={s.name} className="flex items-center gap-2">
                   <span
