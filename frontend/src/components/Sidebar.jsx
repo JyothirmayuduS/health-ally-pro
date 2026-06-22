@@ -15,20 +15,48 @@ import {
 } from "lucide-react";
 
 const items = [
-  { to: "/reception", label: "Dashboard", icon: LayoutDashboard, end: true, testId: "nav-dashboard" },
-  { to: "/reception/register", label: "Register", icon: UserPlus, testId: "nav-register" },
-  { to: "/reception/patients", label: "Patients", icon: Users, testId: "nav-patients" },
-  { to: "/reception/appointments", label: "Appointments", icon: CalendarDays, testId: "nav-appointments" },
-  { to: "/reception/check-in", label: "Check-in", icon: LogIn, testId: "nav-checkin" },
-  { to: "/reception/queue", label: "Queue", icon: ListOrdered, testId: "nav-queue" },
-  { to: "/reception/token-display", label: "Display", icon: MonitorPlay, testId: "nav-display" },
+  { to: "/reception", label: "Dashboard", icon: LayoutDashboard, end: true, dot: "bg-sage", testId: "nav-dashboard" },
+  { to: "/reception/register", label: "Register", icon: UserPlus, dot: "bg-teal", testId: "nav-register" },
+  { to: "/reception/patients", label: "Patients", icon: Users, dot: "bg-plum", testId: "nav-patients" },
+  { to: "/reception/appointments", label: "Appointments", icon: CalendarDays, dot: "bg-clay", testId: "nav-appointments" },
+  { to: "/reception/check-in", label: "Check-in", icon: LogIn, dot: "bg-sage", testId: "nav-checkin" },
+  { to: "/reception/queue", label: "Queue", icon: ListOrdered, dot: "bg-mustard", testId: "nav-queue" },
+  { to: "/reception/token-display", label: "Display", icon: MonitorPlay, dot: "bg-ink-900", testId: "nav-display" },
 ];
 
-const disabled = [
-  { label: "Billing", icon: Receipt },
-  { label: "Reports", icon: FileBarChart },
-  { label: "Settings", icon: Settings },
+const businessItems = [
+  { to: "/reception/billing", label: "Billing", icon: Receipt, dot: "bg-money", testId: "nav-billing" },
+  { to: "/reception/reports", label: "Reports", icon: FileBarChart, dot: "bg-plum", testId: "nav-reports" },
 ];
+
+const disabled = [{ label: "Settings", icon: Settings }];
+
+const NavItem = ({ to, label, icon: Icon, end, dot, testId }) => (
+  <NavLink
+    to={to}
+    end={end}
+    data-testid={testId}
+    className={({ isActive }) =>
+      [
+        "group flex items-center gap-3 pl-3 pr-3 py-2 text-[13px] rounded-sm transition-colors relative",
+        isActive
+          ? "bg-sage-soft text-sage font-medium"
+          : "text-ink-600 hover:bg-white hover:text-ink-900",
+      ].join(" ")
+    }
+  >
+    {({ isActive }) => (
+      <>
+        {isActive && (
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-sage rounded-full" />
+        )}
+        <Icon className="w-4 h-4" strokeWidth={2} />
+        <span className="flex-1">{label}</span>
+        <span className={`w-1.5 h-1.5 rounded-full ${dot} opacity-80`} />
+      </>
+    )}
+  </NavLink>
+);
 
 export default function Sidebar() {
   return (
@@ -46,7 +74,7 @@ export default function Sidebar() {
               Maple Hospital
             </div>
             <div className="text-[11px] text-ink-400 mt-1 uppercase tracking-wider font-mono">
-              Reception · v1.0
+              Reception · v1.1
             </div>
           </div>
         </div>
@@ -56,31 +84,15 @@ export default function Sidebar() {
         <div className="px-2 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-400 font-mono font-medium">
           Workflow
         </div>
-        {items.map(({ to, label, icon: Icon, end, testId }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            data-testid={testId}
-            className={({ isActive }) =>
-              [
-                "group flex items-center gap-3 pl-3 pr-3 py-2 text-[13px] rounded-sm transition-colors relative",
-                isActive
-                  ? "bg-sage-soft text-sage font-medium"
-                  : "text-ink-600 hover:bg-white hover:text-ink-900",
-              ].join(" ")
-            }
-          >
-            {({ isActive }) => (
-              <>
-                {isActive && (
-                  <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-sage rounded-full" />
-                )}
-                <Icon className="w-4 h-4" strokeWidth={2} />
-                <span>{label}</span>
-              </>
-            )}
-          </NavLink>
+        {items.map((i) => (
+          <NavItem key={i.to} {...i} />
+        ))}
+
+        <div className="px-2 pt-5 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-400 font-mono font-medium">
+          Business
+        </div>
+        {businessItems.map((i) => (
+          <NavItem key={i.to} {...i} />
         ))}
 
         <div className="px-2 pt-5 pb-2 text-[10px] uppercase tracking-[0.12em] text-ink-400 font-mono font-medium">

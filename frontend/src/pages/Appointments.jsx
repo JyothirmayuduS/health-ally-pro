@@ -113,7 +113,7 @@ export default function Appointments() {
         <Link
           to="/reception/appointments/new"
           data-testid="appt-new"
-          className="h-8 px-3 inline-flex items-center gap-2 text-[12.5px] bg-sage hover:bg-sage-hover text-white rounded-sm font-medium"
+          className="btn-primary btn-sm"
         >
           <Plus className="w-4 h-4" />
           Book appointment

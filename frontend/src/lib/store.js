@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
 import { PATIENTS, APPOINTMENTS, DOCTORS, TODAY_STR } from "./mockData";
+import { SEED_INVOICES, nextInvoiceId } from "./billingData";
 
 const StoreCtx = createContext(null);
 
@@ -19,6 +20,37 @@ export function StoreProvider({ children }) {
   const [patients, setPatients] = useState(PATIENTS);
   const [appointments, setAppointments] = useState(APPOINTMENTS);
   const [doctors] = useState(DOCTORS);
+  const [invoices, setInvoices] = useState(SEED_INVOICES);
+
+  const addInvoice = useCallback((data) => {
+    const inv = {
+      id: nextInvoiceId(),
+      date: TODAY_STR,
+      discount: 0,
+      method: null,
+      status: "unpaid",
+      ...data,
+    };
+    setInvoices((list) => [inv, ...list]);
+    return inv;
+  }, []);
+
+  const updateInvoice = useCallback((id, patch) => {
+    setInvoices((list) => list.map((i) => (i.id === id ? { ...i, ...patch } : i)));
+  }, []);
+
+  const collectPayment = useCallback((id, method) => {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+      now.getDate(),
+    )}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
+    setInvoices((list) =>
+      list.map((i) =>
+        i.id === id ? { ...i, status: "paid", method, paidAt: ts } : i,
+      ),
+    );
+  }, []);
 
   const addPatient = useCallback((data) => {
     const newP = {
@@ -101,23 +133,31 @@ export function StoreProvider({ children }) {
       patients,
       appointments,
       doctors,
+      invoices,
       addPatient,
       addAppointment,
       checkInAppointment,
       updateAppointmentStatus,
       transferAppointment,
       findDuplicate,
+      addInvoice,
+      updateInvoice,
+      collectPayment,
     }),
     [
       patients,
       appointments,
       doctors,
+      invoices,
       addPatient,
       addAppointment,
       checkInAppointment,
       updateAppointmentStatus,
       transferAppointment,
       findDuplicate,
+      addInvoice,
+      updateInvoice,
+      collectPayment,
     ],
   );
 

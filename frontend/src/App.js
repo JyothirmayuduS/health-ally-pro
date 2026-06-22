@@ -9,6 +9,8 @@ import Appointments from "@/pages/Appointments";
 import NewAppointment from "@/pages/NewAppointment";
 import CheckIn from "@/pages/CheckIn";
 import Queue from "@/pages/Queue";
+import Billing from "@/pages/Billing";
+import Reports from "@/pages/Reports";
 import TokenDisplay from "@/pages/TokenDisplay";
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
               <Route path="/reception/appointments/new" element={<NewAppointment />} />
               <Route path="/reception/check-in" element={<CheckIn />} />
               <Route path="/reception/queue" element={<Queue />} />
+              <Route path="/reception/billing" element={<Billing />} />
+              <Route path="/reception/reports" element={<Reports />} />
             </Route>
             <Route path="*" element={<Navigate to="/reception" replace />} />
           </Routes>

@@ -77,6 +77,39 @@
   .row-hover {
     @apply hover:bg-bone transition-colors;
   }
+
+  /* --- Buttons (pill-style, hospital-grade) --- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 h-9 px-4 text-[12.5px] font-medium rounded-full transition-colors select-none disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap;
+  }
+  .btn-sm {
+    @apply h-8 px-3 text-[12px];
+  }
+  .btn-lg {
+    @apply h-10 px-5 text-[13.5px];
+  }
+  .btn-primary {
+    @apply btn bg-sage text-white hover:bg-sage-hover shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
+  }
+  .btn-outline {
+    @apply btn bg-white text-ink-900 border border-ink-200 hover:border-ink-400 hover:bg-bone;
+  }
+  .btn-ghost {
+    @apply btn text-ink-600 hover:text-ink-900 hover:bg-bone;
+  }
+  .btn-clay {
+    @apply btn bg-clay text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
+  }
+  .btn-money {
+    @apply btn bg-money text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
+  }
+  .btn-danger {
+    @apply btn bg-status-noshowText text-white hover:brightness-95;
+  }
+  .btn-icon {
+    @apply inline-flex items-center justify-center w-9 h-9 rounded-full text-ink-600 hover:text-ink-900 hover:bg-bone border border-transparent hover:border-ink-200 transition-colors;
+  }
+
   /* TV / Kiosk mode tokens */
   .kiosk-bg {
     background: #0e0f0d;

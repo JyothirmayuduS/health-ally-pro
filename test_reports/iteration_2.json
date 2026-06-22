@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only testing of Iteration 2 (Billing + Reports modules and refreshed pill-button system). All requested flows verified: sidebar Business section with Billing & Reports active (Settings remains under Coming soon), navigation to /reception/billing and /reception/reports works, 4 KPI cards present on each page, billing filter pills (All/Unpaid/Paid) work, invoice search input present, unpaid invoice detail shows editable line items, Add item adds a row, Collect button opens PayDialog, selecting UPI method and clicking Confirm flips invoice status to paid (sonner toast 'Paid via UPI · Arjun Malhotra · ₹1,470' confirmed via screenshot), Paid invoice appears under Paid filter (3 paid rows visible vs initial 2). Reports KPIs (footfall, noshow, wait, revenue) render, range pills (Today/Week/Month) toggle, 3 recharts SVGs render (BarChart, PieChart, horizontal BarChart for revenue-by-method), no-show by doctor list renders 5 rows, Export CSV download triggers and downloads 'reception-report-2026-06-22.csv'. Regression: 7 original screens load without error; token-display intentionally has no sidebar (full-screen display).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Reports / Registrations By source pie chart", "issues": ["Pie chart renders very small/cramped because ResponsiveContainer is set to width='60%' inside a flex row with the legend; on a 1920 viewport the pie appears as a tiny sliver next to the legend (visible in screenshot). Consider using width='100%' with a fixed legend column, or increasing the pie chart container size."]},
+      {"screen": "Reports - Recharts initial mount", "issues": ["Console warnings on first paint: 'The width(-1) and height(-1) of chart should be greater than 0'. Charts render correctly after layout settles, but the warnings indicate the ResponsiveContainer parent has 0 dimensions momentarily on mount."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "(Optional / cosmetic) Fix the Registrations pie chart sizing — current width='60%' makes it tiny on wide viewports. Either drop to width='100%' with the legend as a sibling outside the ResponsiveContainer, or wrap pie + legend in equal-width flex columns.",
+    "(Optional) Silence recharts width(-1)/height(-1) warnings by giving the chart wrappers a minHeight or explicit height before ResponsiveContainer mounts."
+  ],
+  "critical_code_review_comments": [
+    "Billing.jsx auto-create useEffect uses eslint-disable for exhaustive-deps — intentional but means if appointments arrive later via async load they'd never be billed. Acceptable for mock-only state, flagged for future API integration.",
+    "Reports.jsx ACCENTS references bg-mustard-soft / bg-money-soft / text-mustard / text-money classes — make sure tailwind.config.js declares both mustard-soft and money-soft tokens; verified visually they render so config is intact.",
+    "Reports.jsx delta strings like '+12% vs avg' are hardcoded — fine for mock demo but should be derived once real data is wired.",
+    "Reports.jsx pie chart 'Online' slice computes `total - Math.round(total * 0.9)` which can produce a near-zero or negative-looking value when total*0.9 rounds up; combined with the other 0.45+0.28+0.17=0.90 the math is off by intent (Online ends up ~10%). Functional but the formula is opaque — consider explicit percentages summing to 1.",
+    "Reports.jsx exportCsv ignores `range` state — CSV always exports today's snapshot regardless of selected pill. Range pills also don't change the displayed dataset (all 'ranges' act on the same today data per code comment). Acceptable for mock, flagged."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "100%"},
+  "seed_data_creation": "None. Used existing SEED_INVOICES + auto-created invoices from today's appointments.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Iteration 2 verified end-to-end via Playwright. Billing collect flow (INV-90015 Arjun Malhotra paid via UPI ₹1,470) and Reports CSV export both worked. Two cosmetic items only: (1) Registrations pie chart is too small due to width='60%' ResponsiveContainer, (2) recharts width(-1) console warnings on initial mount. The 'Has Business / Has Coming soon' false negatives in the log are test-side artifacts (Chrome innerText respects CSS text-transform:uppercase) — the labels ARE rendered (screenshot confirms BUSINESS and COMING SOON sections). State is React Context only; full page refresh resets seed (by design).",
+  "rca of the issue": "N/A — no functional defects found."
+}

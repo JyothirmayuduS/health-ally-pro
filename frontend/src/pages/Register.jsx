@@ -326,7 +326,7 @@ export default function Register() {
           <button
             type="submit"
             data-testid="reg-submit"
-            className="mt-4 w-full h-10 bg-sage hover:bg-sage-hover text-white text-[13px] font-medium rounded-sm flex items-center justify-center gap-2 transition-colors"
+            className="mt-4 w-full btn-primary btn-lg"
           >
             <UserPlus className="w-4 h-4" />
             Register patient
@@ -335,7 +335,7 @@ export default function Register() {
             type="button"
             data-testid="reg-cancel"
             onClick={() => nav(-1)}
-            className="mt-2 w-full h-9 text-[13px] text-ink-600 hover:text-ink-900 hover:bg-bone rounded-sm"
+            className="mt-2 w-full btn-ghost"
           >
             Cancel
           </button>

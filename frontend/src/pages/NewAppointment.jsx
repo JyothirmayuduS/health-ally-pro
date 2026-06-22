@@ -334,7 +334,7 @@ export default function NewAppointment() {
               type="button"
               onClick={() => nav(-1)}
               data-testid="newappt-cancel"
-              className="flex-1 h-10 text-[13px] text-ink-600 border border-ink-200 hover:bg-bone rounded-sm"
+              className="btn-outline flex-1"
             >
               Cancel
             </button>
@@ -342,7 +342,7 @@ export default function NewAppointment() {
               type="submit"
               data-testid="newappt-submit"
               disabled={!!conflict || !patientId}
-              className="flex-1 h-10 text-[13px] font-medium bg-sage hover:bg-sage-hover text-white rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn-primary btn-lg flex-1"
             >
               Book
             </button>

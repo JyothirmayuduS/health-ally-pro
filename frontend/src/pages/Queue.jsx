@@ -139,7 +139,7 @@ export default function Queue() {
                   data-testid={`queue-callnext-${doctor.id}`}
                   onClick={() => callNext(doctor.id)}
                   disabled={waiting.length === 0 && !current}
-                  className="h-9 px-3 inline-flex items-center gap-2 text-[12.5px] bg-sage hover:bg-sage-hover text-white rounded-sm font-medium disabled:opacity-40"
+                  className="btn-primary"
                 >
                   <PhoneCall className="w-4 h-4" /> Call next
                 </button>
@@ -147,7 +147,7 @@ export default function Queue() {
                   <button
                     data-testid={`queue-complete-${doctor.id}`}
                     onClick={() => updateAppointmentStatus(current.id, "completed")}
-                    className="h-9 px-3 inline-flex items-center gap-2 text-[12.5px] border border-ink-200 hover:bg-bone text-ink-900 rounded-sm font-medium"
+                    className="btn-outline"
                   >
                     <Check className="w-4 h-4 text-status-doneText" /> Mark complete
                   </button>
@@ -156,7 +156,7 @@ export default function Queue() {
                   <button
                     data-testid={`queue-skip-${doctor.id}`}
                     onClick={() => updateAppointmentStatus(current.id, "checked-in")}
-                    className="h-9 px-3 inline-flex items-center gap-2 text-[12.5px] border border-ink-200 hover:bg-bone text-ink-600 rounded-sm font-medium"
+                    className="btn-ghost"
                   >
                     <SkipForward className="w-4 h-4" /> Skip
                   </button>

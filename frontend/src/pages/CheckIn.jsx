@@ -100,7 +100,7 @@ export default function CheckIn() {
                 <button
                   data-testid={`checkin-btn-${a.id}`}
                   onClick={() => doCheckIn(a)}
-                  className="h-9 px-3 inline-flex items-center gap-2 text-[12.5px] bg-sage hover:bg-sage-hover text-white rounded-sm font-medium"
+                  className="btn-primary"
                 >
                   <LogIn className="w-4 h-4" />
                   Check-in

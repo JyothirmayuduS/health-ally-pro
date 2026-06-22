@@ -55,6 +55,12 @@ module.exports = {
           hover: "#1E4237",
           soft: "#E9F0EE",
         },
+        // Module accents — earthy, non-blue
+        clay: { DEFAULT: "#B85C38", soft: "#F7E7DC" },
+        mustard: { DEFAULT: "#A87826", soft: "#F5ECD7" },
+        plum: { DEFAULT: "#7A4A6B", soft: "#F0E6EC" },
+        teal: { DEFAULT: "#2C7873", soft: "#DCEEEC" },
+        money: { DEFAULT: "#15803D", soft: "#DCFCE7" },
         ink: {
           900: "#1C1C19",
           600: "#575753",
