@@ -61,6 +61,42 @@ let webpackConfig = {
 };
 
 webpackConfig.devServer = (devServerConfig) => {
+  // Translate CRA's webpack-dev-server v4 options to v5 since the resolved
+  // webpack-dev-server in this template is v5.x.
+
+  // v4 `https` -> v5 `server`
+  if (devServerConfig.https !== undefined) {
+    const httpsVal = devServerConfig.https;
+    delete devServerConfig.https;
+    if (httpsVal === true) {
+      devServerConfig.server = "https";
+    } else if (httpsVal && typeof httpsVal === "object") {
+      devServerConfig.server = { type: "https", options: httpsVal };
+    } else {
+      devServerConfig.server = "http";
+    }
+  }
+
+  // v4 middleware hooks -> v5 setupMiddlewares
+  const onBefore = devServerConfig.onBeforeSetupMiddleware;
+  const onAfter = devServerConfig.onAfterSetupMiddleware;
+  if (onBefore || onAfter) {
+    delete devServerConfig.onBeforeSetupMiddleware;
+    delete devServerConfig.onAfterSetupMiddleware;
+    const prevSetup = devServerConfig.setupMiddlewares;
+    devServerConfig.setupMiddlewares = (middlewares, devServer) => {
+      if (onBefore) onBefore(devServer);
+      const result = prevSetup ? prevSetup(middlewares, devServer) : middlewares;
+      if (onAfter) onAfter(devServer);
+      return result;
+    };
+  }
+
+  // Strip other v4-only options that v5 rejects
+  ["inline", "lazy", "filename", "useLocalIp", "clientLogLevel"].forEach((k) => {
+    if (k in devServerConfig) delete devServerConfig[k];
+  });
+
   // Add health check endpoints if enabled
   if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
     const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
