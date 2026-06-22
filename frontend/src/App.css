@@ -1,0 +1,5 @@
+/* Medora Lab — global app surface */
+.App {
+    min-height: 100vh;
+    background: var(--paper);
+}
