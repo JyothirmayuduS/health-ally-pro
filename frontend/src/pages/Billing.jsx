@@ -7,6 +7,7 @@ import {
   FEE_BY_DOCTOR,
 } from "@/lib/billingData";
 import { toast } from "sonner";
+import { printReceipt } from "@/lib/print";
 import {
   Receipt,
   Printer,
@@ -589,7 +590,14 @@ export default function Billing() {
               <div className="px-6 py-4 border-t border-ink-200 flex flex-wrap gap-2 items-center">
                 <button
                   data-testid="billing-print"
-                  onClick={() => toast.success("Sent to printer")}
+                  onClick={() =>
+                    printReceipt({
+                      invoice: selected,
+                      patient: selPatient,
+                      doctor: selDoctor,
+                      totals: selTotals,
+                    })
+                  }
                   className="btn-outline"
                 >
                   <Printer className="w-4 h-4" />

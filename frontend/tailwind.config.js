@@ -50,6 +50,8 @@ module.exports = {
         ring: "hsl(var(--ring))",
         // Custom hospital palette
         bone: "#F9F9F6",
+        paper: "#EFF1EC",
+        deeppaper: "#E5E9E1",
         sage: {
           DEFAULT: "#2C5E4E",
           hover: "#1E4237",

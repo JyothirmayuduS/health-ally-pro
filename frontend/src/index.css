@@ -39,7 +39,7 @@
     height: 100%;
   }
   body {
-    @apply bg-bone text-ink-900;
+    @apply bg-paper text-ink-900;
     font-family: "IBM Plex Sans", system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
@@ -149,6 +149,29 @@
   .kiosk-card {
     background: #18191680;
     border: 1px solid #2a2c27;
+  }
+
+  /* Hero strip — colored band atop each module page */
+  .module-hero {
+    @apply rounded-xl px-5 py-4 border;
+  }
+}
+
+/* Print styles — hide app chrome, show only .print-area */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  .print-hide,
+  aside,
+  header[data-testid="app-topbar"] {
+    display: none !important;
+  }
+  .print-area {
+    display: block !important;
+  }
+  @page {
+    margin: 0;
   }
 }
 

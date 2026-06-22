@@ -2,8 +2,9 @@ import React, { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { TODAY_STR } from "@/lib/mockData";
 import { toast } from "sonner";
+import { printToken } from "@/lib/print";
 import StatusPill from "@/components/StatusPill";
-import { Search, Printer, LogIn, Zap } from "lucide-react";
+import { Search, Printer, LogIn, Zap, AlertTriangle, IndianRupee } from "lucide-react";
 
 export default function CheckIn() {
   const { appointments, patients, doctors, checkInAppointment } = useStore();
@@ -68,7 +69,7 @@ export default function CheckIn() {
               <li
                 key={a.id}
                 data-testid={`checkin-row-${a.id}`}
-                className="px-5 py-3 row-hover flex items-center gap-4"
+                className="px-5 py-3 row-hover flex flex-wrap items-center gap-3"
               >
                 <div className="font-mono text-[14px] text-ink-900 w-14 tabular-nums">
                   {a.time}
@@ -81,8 +82,18 @@ export default function CheckIn() {
                     .join("")}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[13.5px] font-medium text-ink-900 truncate">
+                  <div className="text-[13.5px] font-medium text-ink-900 truncate flex items-center gap-2">
                     {p?.name}
+                    {p?.balance > 0 && (
+                      <span
+                        data-testid={`checkin-due-${a.id}`}
+                        className="chip-clay"
+                        title="Outstanding balance from previous visits"
+                      >
+                        <IndianRupee className="w-3 h-3" />
+                        Due ₹{p.balance.toLocaleString("en-IN")}
+                      </span>
+                    )}
                   </div>
                   <div className="text-[11px] text-ink-400 font-mono">
                     {p?.id} · {p?.phone}
@@ -94,7 +105,7 @@ export default function CheckIn() {
                     {d?.specialty} · Room {d?.room}
                   </div>
                 </div>
-                <div className="text-[11px] font-mono uppercase tracking-wider text-ink-400 w-20 text-center">
+                <div className="text-[11px] font-mono uppercase tracking-wider text-ink-400 w-20 text-center hidden sm:block">
                   {a.type}
                 </div>
                 <button
@@ -145,7 +156,14 @@ export default function CheckIn() {
               </div>
               <button
                 data-testid="print-token-btn"
-                onClick={() => toast.success("Sent to printer")}
+                onClick={() =>
+                  printToken({
+                    token: lastToken.token,
+                    patient: lastToken.patient,
+                    doctor: lastToken.doctor,
+                    appointment: { time: lastToken.time, type: "Token" },
+                  })
+                }
                 className="mt-5 inline-flex items-center gap-2 text-[12.5px] text-sage hover:text-sage-hover font-medium"
               >
                 <Printer className="w-4 h-4" /> Print token

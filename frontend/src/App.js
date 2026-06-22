@@ -13,6 +13,8 @@ import Billing from "@/pages/Billing";
 import CashDrawer from "@/pages/CashDrawer";
 import Insurance from "@/pages/Insurance";
 import Reports from "@/pages/Reports";
+import DoctorBoard from "@/pages/DoctorBoard";
+import DaySheet from "@/pages/DaySheet";
 import TokenDisplay from "@/pages/TokenDisplay";
 
 function App() {
@@ -31,10 +33,12 @@ function App() {
               <Route path="/reception/appointments/new" element={<NewAppointment />} />
               <Route path="/reception/check-in" element={<CheckIn />} />
               <Route path="/reception/queue" element={<Queue />} />
+              <Route path="/reception/board" element={<DoctorBoard />} />
               <Route path="/reception/billing" element={<Billing />} />
               <Route path="/reception/cash-drawer" element={<CashDrawer />} />
               <Route path="/reception/insurance" element={<Insurance />} />
               <Route path="/reception/reports" element={<Reports />} />
+              <Route path="/reception/day-sheet" element={<DaySheet />} />
             </Route>
             <Route path="*" element={<Navigate to="/reception" replace />} />
           </Routes>

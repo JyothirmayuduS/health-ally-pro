@@ -16,6 +16,7 @@ import {
   CartesianGrid,
   AreaChart,
   Area,
+  ComposedChart,
   RadialBarChart,
   RadialBar,
   PolarAngleAxis,
@@ -429,7 +430,7 @@ export default function Reports() {
                 <div className="h-full min-h-[180px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={statusMix} innerRadius={48} outerRadius={88} paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
+                      <Pie data={statusMix} innerRadius="50%" outerRadius="92%" paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
                         {statusMix.map((d) => (
                           <Cell key={d.key} fill={d.color} />
                         ))}
@@ -471,7 +472,7 @@ export default function Reports() {
                 <div className="h-full min-h-[160px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={registrationMix} innerRadius={42} outerRadius={78} paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
+                      <Pie data={registrationMix} innerRadius="45%" outerRadius="92%" paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
                         {registrationMix.map((d) => (
                           <Cell key={d.name} fill={d.color} />
                         ))}
@@ -510,7 +511,7 @@ export default function Reports() {
               <SectionHeader dot="bg-money" eyebrow="Trend" title="Revenue by hour (cumulative)" />
               <div className="p-4 h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={revTrend} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+                  <ComposedChart data={revTrend} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
                     <defs>
                       <linearGradient id="g-money" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#15803D" stopOpacity={0.4} />
@@ -522,8 +523,8 @@ export default function Reports() {
                     <YAxis tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={60} />
                     <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmt(v)} contentStyle={tooltipStyle} />
                     <Area type="monotone" dataKey="cumulative" stroke="#15803D" strokeWidth={2} fill="url(#g-money)" />
-                    <Bar dataKey="revenue" fill="#A87826" radius={[4, 4, 0, 0]} />
-                  </AreaChart>
+                    <Bar dataKey="revenue" fill="#A87826" radius={[4, 4, 0, 0]} barSize={14} />
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
             </section>
@@ -659,7 +660,7 @@ export default function Reports() {
                 <div className="h-full min-h-[200px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={claimsByStatus} innerRadius={50} outerRadius={92} paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
+                      <Pie data={claimsByStatus} innerRadius="48%" outerRadius="92%" paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
                         {claimsByStatus.map((d) => (<Cell key={d.name} fill={d.color} />))}
                       </Pie>
                       <Tooltip contentStyle={tooltipStyle} />
