@@ -169,11 +169,14 @@ export default function NewAppointment() {
                 onChange={(e) => setDoctorId(e.target.value)}
                 className="w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-sm focus:outline-none focus:border-sage"
               >
-                {doctors.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name} — {d.specialty}
-                  </option>
-                ))}
+                {doctors.map((d) => {
+                  const label = `${d.name} — ${d.specialty}`;
+                  return (
+                    <option key={d.id} value={d.id}>
+                      {label}
+                    </option>
+                  );
+                })}
               </select>
             </label>
             <label className="block">
