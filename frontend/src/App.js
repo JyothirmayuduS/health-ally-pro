@@ -10,6 +10,8 @@ import NewAppointment from "@/pages/NewAppointment";
 import CheckIn from "@/pages/CheckIn";
 import Queue from "@/pages/Queue";
 import Billing from "@/pages/Billing";
+import CashDrawer from "@/pages/CashDrawer";
+import Insurance from "@/pages/Insurance";
 import Reports from "@/pages/Reports";
 import TokenDisplay from "@/pages/TokenDisplay";
 
@@ -30,6 +32,8 @@ function App() {
               <Route path="/reception/check-in" element={<CheckIn />} />
               <Route path="/reception/queue" element={<Queue />} />
               <Route path="/reception/billing" element={<Billing />} />
+              <Route path="/reception/cash-drawer" element={<CashDrawer />} />
+              <Route path="/reception/insurance" element={<Insurance />} />
               <Route path="/reception/reports" element={<Reports />} />
             </Route>
             <Route path="*" element={<Navigate to="/reception" replace />} />

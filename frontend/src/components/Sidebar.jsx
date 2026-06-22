@@ -12,6 +12,8 @@ import {
   FileBarChart,
   Settings,
   Activity,
+  Wallet,
+  ShieldCheck,
 } from "lucide-react";
 
 const items = [
@@ -26,6 +28,8 @@ const items = [
 
 const businessItems = [
   { to: "/reception/billing", label: "Billing", icon: Receipt, dot: "bg-money", testId: "nav-billing" },
+  { to: "/reception/cash-drawer", label: "Cash drawer", icon: Wallet, dot: "bg-mustard", testId: "nav-cash" },
+  { to: "/reception/insurance", label: "Insurance", icon: ShieldCheck, dot: "bg-teal", testId: "nav-insurance" },
   { to: "/reception/reports", label: "Reports", icon: FileBarChart, dot: "bg-plum", testId: "nav-reports" },
 ];
 

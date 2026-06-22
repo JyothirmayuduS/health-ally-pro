@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
 import { PATIENTS, APPOINTMENTS, DOCTORS, TODAY_STR } from "./mockData";
 import { SEED_INVOICES, nextInvoiceId } from "./billingData";
+import { SEED_SHIFTS, SEED_CLAIMS, STAFF, nextShiftId, nextClaimId } from "./opsData";
 
 const StoreCtx = createContext(null);
 
@@ -21,6 +22,59 @@ export function StoreProvider({ children }) {
   const [appointments, setAppointments] = useState(APPOINTMENTS);
   const [doctors] = useState(DOCTORS);
   const [invoices, setInvoices] = useState(SEED_INVOICES);
+  const [shifts, setShifts] = useState(SEED_SHIFTS);
+  const [claims, setClaims] = useState(SEED_CLAIMS);
+  const [staff] = useState(STAFF);
+
+  const openShift = useCallback((data) => {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
+    const s = {
+      id: nextShiftId(),
+      date: TODAY_STR,
+      openedAt: ts,
+      closedAt: null,
+      closingDenom: null,
+      cashCollected: 0,
+      variance: null,
+      status: "open",
+      handover: null,
+      ...data,
+    };
+    setShifts((list) => [...list, s]);
+    return s;
+  }, []);
+
+  const closeShift = useCallback((id, patch) => {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
+    setShifts((list) =>
+      list.map((s) =>
+        s.id === id ? { ...s, ...patch, closedAt: ts, status: "closed" } : s,
+      ),
+    );
+  }, []);
+
+  const updateClaim = useCallback((id, patch) => {
+    setClaims((list) => list.map((c) => (c.id === id ? { ...c, ...patch } : c)));
+  }, []);
+
+  const addClaim = useCallback((data) => {
+    const c = {
+      id: nextClaimId(),
+      status: "pending",
+      submittedAt: null,
+      decisionAt: null,
+      approvedAmount: null,
+      documents: [],
+      ...data,
+    };
+    setClaims((list) => [c, ...list]);
+    return c;
+  }, []);
+
 
   const addInvoice = useCallback((data) => {
     const inv = {
@@ -134,6 +188,9 @@ export function StoreProvider({ children }) {
       appointments,
       doctors,
       invoices,
+      shifts,
+      claims,
+      staff,
       addPatient,
       addAppointment,
       checkInAppointment,
@@ -143,12 +200,19 @@ export function StoreProvider({ children }) {
       addInvoice,
       updateInvoice,
       collectPayment,
+      openShift,
+      closeShift,
+      addClaim,
+      updateClaim,
     }),
     [
       patients,
       appointments,
       doctors,
       invoices,
+      shifts,
+      claims,
+      staff,
       addPatient,
       addAppointment,
       checkInAppointment,
@@ -158,6 +222,10 @@ export function StoreProvider({ children }) {
       addInvoice,
       updateInvoice,
       collectPayment,
+      openShift,
+      closeShift,
+      addClaim,
+      updateClaim,
     ],
   );
 

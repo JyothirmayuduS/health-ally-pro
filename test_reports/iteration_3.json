@@ -1,0 +1,31 @@
+{
+  "summary": "Iteration 3 frontend testing complete. All requested flows pass end-to-end: Sidebar shows Business section with 4 active items (Dashboard/Register/Patients/Appointments/Check-in/Queue/Display + Billing/Cash drawer/Insurance/Reports) and only Settings under Coming soon. Cash drawer: 4 colored KPIs render, seeded SHF-2002 (Anjali Pawar, Afternoon, 15:05, float ₹3,000) shows as live shift with Open chip; SHF-2001 (Reena, Morning, ₹4,895 cash) shows in closed shifts table; clicking View on its handover fires the seeded handover toast text ('Two pending unpaid invoices…'). Per-staff list shows RD/AP/KM with RD at ₹4,895. Open-new-shift dialog creates a second open shift (count went 1→2). Close-shift dialog: denominations entered (500×2 + 100×10 = ₹2,000) update counted total live; confirming moves SHF-2002 into closed shifts table. Insurance: 4 colored KPI cards render, all 6 seeded claims (CLM-7001..7006) visible, 'Approved' filter narrows to 1 row (CLM-7001). Selecting CLM-7005 (pending) shows 'Submit pre-auth' button; clicking submits and surfaces 3 decision buttons (approve/partial/reject); 'Mark approved' flips status and shows ₹1,500 approved amount. Attach doc on a claim appends a mock document. Reports: 4 tabs (overview/revenue/operations/insurance) all swap content with charts (overview=4 SVGs, revenue=3, operations=2, insurance=2). Visual: cards use rounded-xl, chip system renders status chips with colored dots, pill buttons used for CTAs. Regression of iteration 1 + 2 screens not re-tested individually but no JS errors surfaced during navigation.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Reports → Overview tab", "issues": ["PieChart slices (Appointments 'Status mix' and Registrations 'By source') visually appear EMPTY on first render — only the legend is visible, the pie itself does not draw. Triggered by recharts ResponsiveContainer reporting width(-1)/height(-1) during initial mount (same warning chain from iteration 2). The parent uses 'p-4 h-64 grid grid-cols-2 gap-3 items-center' with `<div class='h-full'>` wrapping ResponsiveContainer — `items-center` collapses the child to content height so 'h-full' resolves to 0. Fix: drop `items-center` from the grid (or use `items-stretch`), or replace h-full with an explicit height (e.g. h-56) on the ResponsiveContainer wrapper. Reproduced visually in the post-test screenshot."]},
+      {"screen": "Reports - Recharts mount", "issues": ["Persistent recharts console warnings: 'The width(-1) and height(-1) of chart should be greater than 0'. Carried over from iteration 2 — affects pie charts in Overview and Insurance tabs."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix PieChart rendering in Reports Overview tab: remove `items-center` from the `p-4 h-64 grid grid-cols-2 gap-3 items-center` containers (in Status mix + Registrations sections) OR give the pie's wrapper div an explicit height instead of `h-full`. Currently the pies don't paint on first load.",
+    "Same fix should be applied to the Insurance tab's 'Claims status mix' donut wrapper (uses identical pattern with `items-center`)."
+  ],
+  "critical_code_review_comments": [
+    "Reports.jsx still uses `flex/grid items-center` with `h-full` ResponsiveContainer children — recharts cannot derive height from a centered flex/grid child. This is the root cause of the recurring width(-1)/height(-1) warnings and the invisible pies.",
+    "CashDrawer.jsx CloseShiftDialog sets cashCollected=expected-openingFloat regardless of counted variance — variance is recorded separately but the persisted cashCollected number is the 'expected' figure, not the counted one. Intentional for the mock but worth documenting.",
+    "Insurance.jsx documents upload uses an index key (`key={i}`) which is fine for append-only mock but should switch to a stable id when real uploads exist.",
+    "Reports.jsx exportCsv now references shifts+claims so the CSV is more complete; range pill still doesn't affect the underlying dataset (acceptable for mock).",
+    "Reports.jsx Revenue tab AreaChart includes a `<Bar>` child — recharts AreaChart accepts Bar children but mixing chart types should use ComposedChart for clarity."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "100% on functional flows; 1 visual regression on pie charts"},
+  "seed_data_creation": "Used existing SEED_SHIFTS and SEED_CLAIMS. During test: opened 1 new shift (default Evening + STF-001 float 3000), closed SHF-2002 with handover note 'Test handover note', submitted+approved CLM-7005 (Kavya Reddy ₹1,500), attached 1 mock doc to CLM-7005. State resets on full refresh (React Context only).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Iteration 3 fully verified via Playwright on the public URL. All 32 functional checks PASS (kpi cards, shift lifecycle, handover toast, per-staff totals, claim filters, submit→approve flow, doc upload, tab switching). Only remaining issue is the pie chart visual regression in Reports (Overview + Insurance tabs) caused by `items-center` collapsing the chart wrapper's height — pies don't draw on first load though the data and legend are correct. Screenshot at the end of the run shows the empty pies clearly. Fix is a 1-line CSS change in Reports.jsx. Console-only warnings (width/height -1) carry over from iteration 2.",
+  "rca of the issue": "PieChart invisible in Reports → SectionHeader containers wrap `<ResponsiveContainer width='100%' height='100%'>` inside `<div class='h-full'>` placed in a `grid grid-cols-2 gap-3 items-center` parent. `items-center` shrinks the grid items to their intrinsic content height (the legend column has fixed content, the chart column has none), so `h-full` resolves to 0 → recharts gets 0×0 and bails out (logs width(-1)/height(-1) warning). Fix: remove `items-center` (use default `items-stretch`) OR set a fixed height on the chart wrapper div (e.g. `h-56`)."
+}

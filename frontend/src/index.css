@@ -25,7 +25,7 @@
     --border: 60 10% 89%;
     --input: 60 10% 89%;
     --ring: 162 36% 27%;
-    --radius: 0.25rem;
+    --radius: 0.5rem;
   }
 }
 
@@ -69,14 +69,37 @@
     @apply border border-ink-200;
   }
   .surface {
-    @apply bg-white border border-ink-200 rounded-sm;
+    @apply bg-white border border-ink-200 rounded-xl;
+  }
+  .surface-tint {
+    @apply rounded-xl border;
   }
   .kbd {
-    @apply inline-flex items-center justify-center px-1.5 h-5 text-[10px] font-mono font-medium text-ink-600 bg-white border border-ink-200 rounded-sm;
+    @apply inline-flex items-center justify-center px-1.5 h-5 text-[10px] font-mono font-medium text-ink-600 bg-white border border-ink-200 rounded-md;
   }
   .row-hover {
     @apply hover:bg-bone transition-colors;
   }
+
+  /* Chips */
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide border rounded-full;
+  }
+  .chip-sage   { @apply chip bg-sage-soft text-sage border-sage/30; }
+  .chip-clay   { @apply chip bg-clay-soft text-clay border-clay/30; }
+  .chip-mustard{ @apply chip bg-mustard-soft text-mustard border-mustard/30; }
+  .chip-plum   { @apply chip bg-plum-soft text-plum border-plum/30; }
+  .chip-teal   { @apply chip bg-teal-soft text-teal border-teal/30; }
+  .chip-money  { @apply chip bg-money-soft text-money border-money/30; }
+  .chip-ink    { @apply chip bg-bone text-ink-600 border-ink-200; }
+
+  /* Section heading dot */
+  .dot-sage    { @apply w-1.5 h-1.5 rounded-full bg-sage; }
+  .dot-clay    { @apply w-1.5 h-1.5 rounded-full bg-clay; }
+  .dot-mustard { @apply w-1.5 h-1.5 rounded-full bg-mustard; }
+  .dot-plum    { @apply w-1.5 h-1.5 rounded-full bg-plum; }
+  .dot-teal    { @apply w-1.5 h-1.5 rounded-full bg-teal; }
+  .dot-money   { @apply w-1.5 h-1.5 rounded-full bg-money; }
 
   /* --- Buttons (pill-style, hospital-grade) --- */
   .btn {
@@ -99,6 +122,15 @@
   }
   .btn-clay {
     @apply btn bg-clay text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
+  }
+  .btn-plum {
+    @apply btn bg-plum text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
+  }
+  .btn-mustard {
+    @apply btn bg-mustard text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
+  }
+  .btn-teal {
+    @apply btn bg-teal text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
   }
   .btn-money {
     @apply btn bg-money text-white hover:brightness-95 shadow-[inset_0_-1px_0_rgba(0,0,0,0.15)];
