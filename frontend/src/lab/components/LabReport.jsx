@@ -3,48 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Printer, X } from "lucide-react";
 import { flagValue, formatDateTime } from "@/lab/store";
 
-export default function LabReport({ order, patient, doctor, catalog, hospital, onClose }) {
+export default function LabReport({ order, patient, catalog, hospital, onClose }) {
   if (!order) return null;
-
   const handlePrint = () => window.print();
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent
-        className="max-w-3xl p-0 bg-white max-h-[90vh] overflow-y-auto"
-        data-testid="lab-report-modal"
-      >
+      <DialogContent className="max-w-3xl p-0 bg-white max-h-[90vh] overflow-y-auto" data-testid="lab-report-modal">
         <div className="no-print flex items-center justify-between px-6 py-3 border-b border-stone-200 sticky top-0 bg-white z-10">
-          <div className="text-xs font-mono uppercase tracking-wider text-stone-500">
-            Preview — Official Lab Report
-          </div>
+          <div className="text-xs font-mono uppercase tracking-wider text-stone-500">Preview — Official Lab Report</div>
           <div className="flex gap-2">
-            <Button size="sm" variant="ghost" onClick={onClose} data-testid="close-report-btn">
-              <X className="h-4 w-4 mr-1.5" /> Close
-            </Button>
-            <Button
-              size="sm"
-              className="bg-[var(--sage-700)] hover:bg-[var(--sage-900)]"
-              onClick={handlePrint}
-              data-testid="print-report-btn"
-            >
+            <Button size="sm" variant="ghost" onClick={onClose} data-testid="close-report-btn"><X className="h-4 w-4 mr-1.5" /> Close</Button>
+            <Button size="sm" className="bg-[var(--sage-700)] hover:bg-[var(--sage-900)]" onClick={handlePrint} data-testid="print-report-btn">
               <Printer className="h-3.5 w-3.5 mr-1.5" /> Print / Save PDF
             </Button>
           </div>
         </div>
 
         <div className="print-area px-10 py-10 text-[var(--ink)]">
-          {/* Letterhead */}
           <div className="flex items-start justify-between pb-6 border-b-2 border-[var(--sage-700)]">
             <div>
-              <div className="font-display text-2xl font-bold text-[var(--sage-900)] tracking-tight">
-                {hospital.name}
-              </div>
+              <div className="font-display text-2xl font-bold text-[var(--sage-900)] tracking-tight">{hospital.name}</div>
               <div className="text-sm text-stone-600 mt-1">{hospital.tagline}</div>
-              <div className="text-xs text-stone-500 mt-2 leading-relaxed">
-                {hospital.address}<br />
-                {hospital.phone} · {hospital.email}
-              </div>
+              <div className="text-xs text-stone-500 mt-2 leading-relaxed">{hospital.address}<br />{hospital.phone} · {hospital.email}</div>
             </div>
             <div className="text-right">
               <div className="font-display text-lg font-semibold">LABORATORY REPORT</div>
@@ -54,40 +35,26 @@ export default function LabReport({ order, patient, doctor, catalog, hospital, o
             </div>
           </div>
 
-          {/* Patient + order strip */}
           <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
             <div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-stone-500 mb-1">Patient</div>
               <div className="font-semibold text-base">{patient?.name}</div>
-              <div className="text-stone-600">
-                {patient?.mrn} · {patient?.age}{patient?.sex}<br />
-                {patient?.phone}
-              </div>
+              <div className="text-stone-600">{patient?.mrn} · {patient?.age}{patient?.sex}<br />{patient?.phone}</div>
             </div>
             <div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-stone-500 mb-1">Order</div>
-              <div className="text-stone-700">
-                Ordered by: <b>{doctor?.name}</b><br />
-                {doctor?.specialty}
-              </div>
-              <div className="text-xs text-stone-500 mt-2">
-                Collected: {formatDateTime(order.collected_at)}<br />
-                Reported: {formatDateTime(order.released_at)}
-              </div>
+              <div className="text-stone-700">Ordered by: <b>{order.doctor_name}</b></div>
+              <div className="text-xs text-stone-500 mt-2">Collected: {formatDateTime(order.collected_at)}<br />Reported: {formatDateTime(order.released_at)}</div>
             </div>
           </div>
 
-          {/* Test heading */}
           <div className="mt-8 mb-2">
             <div className="font-display text-lg font-semibold border-b border-stone-300 pb-2">
               {catalog?.name} <span className="font-mono text-sm text-stone-500">({catalog?.code})</span>
             </div>
-            <div className="text-xs text-stone-500 mt-1">
-              Sample: {catalog?.sample_type} · Section: {catalog?.section}
-            </div>
+            <div className="text-xs text-stone-500 mt-1">Sample: {catalog?.sample_type} · Section: {catalog?.section}</div>
           </div>
 
-          {/* Results table */}
           <table className="w-full text-sm mt-4 border-collapse">
             <thead>
               <tr className="border-b-2 border-stone-300 text-left">
@@ -106,9 +73,7 @@ export default function LabReport({ order, patient, doctor, catalog, hospital, o
                 return (
                   <tr key={p.key} className="border-b border-stone-100">
                     <td className="py-2.5">{p.label}</td>
-                    <td className="py-2.5 font-mono font-semibold">
-                      {v ?? "—"}
-                    </td>
+                    <td className="py-2.5 font-mono font-semibold">{v ?? "—"}</td>
                     <td className="py-2.5 font-mono text-stone-600">{p.unit}</td>
                     <td className="py-2.5 font-mono text-stone-600">{ref}</td>
                     <td className="py-2.5">
@@ -129,7 +94,6 @@ export default function LabReport({ order, patient, doctor, catalog, hospital, o
             </div>
           )}
 
-          {/* Footer / signature */}
           <div className="mt-12 pt-6 border-t border-stone-300 grid grid-cols-2 gap-6 text-xs">
             <div>
               <div className="text-stone-500 mb-8 font-mono uppercase tracking-wider">Validated by</div>

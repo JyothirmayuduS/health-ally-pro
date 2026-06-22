@@ -1,24 +1,17 @@
 import { useMemo, useState } from "react";
-import { useLab, formatRelative, formatDateTime, getPatient, getDoctor, flagValue } from "@/lab/store";
-import { findCatalog } from "@/lab/mockData";
+import { useLab, formatRelative, formatDateTime, getPatient, flagValue } from "@/lab/store";
+import { useAuth } from "@/lab/auth";
 import { PriorityPill, SectionLabel, EmptyState, FlagBadge, StatusPill } from "@/lab/components/Pills";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import {
-  CheckCircle2,
-  XCircle,
-  Printer,
-  ShieldCheck,
-  ArrowLeft,
-  AlertOctagon,
-} from "lucide-react";
-import { toast } from "sonner";
+import { CheckCircle2, XCircle, Printer, ShieldCheck, ArrowLeft, AlertOctagon } from "lucide-react";
 import LabReport from "@/lab/components/LabReport";
 
 export default function Validation() {
-  const { orders, patients, doctors, validateOrder, rejectValidation, role, hospital } = useLab();
+  const { orders, patients, findCatalog, validate, rejectValid, hospital } = useLab();
+  const { user } = useAuth();
   const [openId, setOpenId] = useState(null);
   const [comment, setComment] = useState("");
   const [rejectMode, setRejectMode] = useState(false);
@@ -33,37 +26,24 @@ export default function Validation() {
   const current = orders.find((o) => o.id === openId);
   const currentCat = current && findCatalog(current.test_code);
   const currentPatient = current && getPatient(current, patients);
-  const currentDoctor = current && getDoctor(current, doctors);
-
   const printOrder = orders.find((o) => o.id === printOrderId);
-
-  const isSupervisor = role === "lab_supervisor";
-
+  const isSupervisor = user?.role === "lab_supervisor";
   const hasCritical = currentCat?.parameters?.some((p) => flagValue(p, current?.results?.[p.key]).level === "critical");
 
   if (current) {
     return (
       <div className="space-y-6" data-testid="validation-detail">
-        <button
-          onClick={() => { setOpenId(null); setComment(""); setRejectMode(false); }}
-          data-testid="back-to-validation"
-          className="text-xs font-mono uppercase tracking-wider text-stone-600 hover:text-[var(--sage-700)] flex items-center gap-1.5"
-        >
+        <button onClick={() => { setOpenId(null); setComment(""); setRejectMode(false); }} data-testid="back-to-validation"
+          className="text-xs font-mono uppercase tracking-wider text-stone-600 hover:text-[var(--sage-700)] flex items-center gap-1.5">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to validation queue
         </button>
 
         <div className="bg-white rounded-xl border border-stone-200 p-6">
           <div className="flex items-start justify-between mb-6 pb-6 border-b border-stone-200">
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-wider text-stone-500 mb-1">
-                {current.accession} · Pending validation
-              </div>
-              <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">
-                {currentPatient?.name} — {current.test_code}
-              </h2>
-              <div className="text-sm text-stone-600 mt-1">
-                {current.test_name} · ordered by {currentDoctor?.name} · completed {formatRelative(current.completed_at)}
-              </div>
+              <div className="text-[10px] font-mono uppercase tracking-wider text-stone-500 mb-1">{current.accession} · Pending validation</div>
+              <h2 className="font-display text-2xl font-semibold text-[var(--ink)]">{currentPatient?.name} — {current.test_code}</h2>
+              <div className="text-sm text-stone-600 mt-1">{current.test_name} · ordered by {current.doctor_name} · completed {formatRelative(current.completed_at)}</div>
             </div>
             <div className="flex flex-col items-end gap-2">
               <PriorityPill priority={current.priority} />
@@ -74,7 +54,7 @@ export default function Validation() {
           {!isSupervisor && (
             <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-sm">
               <ShieldCheck className="h-4 w-4" />
-              <span>Only <b>Lab Supervisors</b> can validate or reject. Switch role in the topbar (demo).</span>
+              <span>Only <b>Lab Supervisors</b> can validate or reject results.</span>
             </div>
           )}
 
@@ -97,15 +77,9 @@ export default function Validation() {
               const f = flagValue(p, v);
               const refStr = p.ref_text ? p.ref_text : `${p.ref_low ?? "—"}–${p.ref_high ?? "—"} ${p.unit}`;
               return (
-                <div
-                  key={p.key}
-                  className={cn(
-                    "grid grid-cols-12 gap-3 items-center px-3 py-2.5 rounded-lg",
-                    f.level === "critical" && "bg-red-50",
-                    (f.level === "low" || f.level === "high") && "bg-amber-50/40",
-                  )}
-                  data-testid={`val-param-${p.key}`}
-                >
+                <div key={p.key} className={cn("grid grid-cols-12 gap-3 items-center px-3 py-2.5 rounded-lg",
+                  f.level === "critical" && "bg-red-50",
+                  (f.level === "low" || f.level === "high") && "bg-amber-50/40")} data-testid={`val-param-${p.key}`}>
                   <div className="col-span-4">
                     <div className="text-sm font-medium">{p.label}</div>
                     <div className="text-[11px] font-mono text-stone-500">{p.key}</div>
@@ -114,9 +88,7 @@ export default function Validation() {
                     {v ?? "—"} <span className="text-xs text-stone-500 font-normal">{p.unit}</span>
                   </div>
                   <div className="col-span-2 text-xs text-stone-500 font-mono">{refStr}</div>
-                  <div className="col-span-3 flex justify-end">
-                    <FlagBadge level={f.level} label={f.label} />
-                  </div>
+                  <div className="col-span-3 flex justify-end"><FlagBadge level={f.level} label={f.label} /></div>
                 </div>
               );
             })}
@@ -124,63 +96,31 @@ export default function Validation() {
 
           <div className="mt-6 space-y-3">
             <Label className="text-xs">Supervisor comment {rejectMode ? "(required for rejection)" : "(optional)"}</Label>
-            <Textarea
-              data-testid="validation-comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder={rejectMode ? "Reason to send back to technician…" : "Internal note (e.g. delta check OK)"}
-            />
+            <Textarea data-testid="validation-comment" value={comment} onChange={(e) => setComment(e.target.value)}
+              placeholder={rejectMode ? "Reason to send back to technician…" : "Internal note (e.g. delta check OK)"} />
           </div>
 
           <div className="flex gap-2 mt-6">
-            <Button
-              variant="outline"
-              className="border-stone-200"
-              onClick={() => setPrintOrderId(current.id)}
-              data-testid="preview-report-btn"
-            >
+            <Button variant="outline" className="border-stone-200" onClick={() => setPrintOrderId(current.id)} data-testid="preview-report-btn">
               <Printer className="h-3.5 w-3.5 mr-1.5" /> Preview report
             </Button>
             <div className="ml-auto flex gap-2">
               {rejectMode ? (
                 <>
-                  <Button variant="ghost" onClick={() => { setRejectMode(false); setComment(""); }}>
-                    Back
-                  </Button>
-                  <Button
-                    className="bg-red-600 hover:bg-red-700"
-                    disabled={!comment.trim() || !isSupervisor}
-                    onClick={() => {
-                      rejectValidation(current.id, comment);
-                      toast(`${current.id} returned to processing`);
-                      setOpenId(null);
-                    }}
-                    data-testid="confirm-reject-validation"
-                  >
+                  <Button variant="ghost" onClick={() => { setRejectMode(false); setComment(""); }}>Back</Button>
+                  <Button className="bg-red-600 hover:bg-red-700" disabled={!comment.trim() || !isSupervisor}
+                    onClick={async () => { await rejectValid(current.id, comment); setOpenId(null); }} data-testid="confirm-reject-validation">
                     <XCircle className="h-3.5 w-3.5 mr-1.5" /> Confirm reject
                   </Button>
                 </>
               ) : (
                 <>
-                  <Button
-                    variant="ghost"
-                    className="text-red-600 hover:bg-red-50"
-                    disabled={!isSupervisor}
-                    onClick={() => setRejectMode(true)}
-                    data-testid="reject-validation-btn"
-                  >
+                  <Button variant="ghost" className="text-red-600 hover:bg-red-50" disabled={!isSupervisor}
+                    onClick={() => setRejectMode(true)} data-testid="reject-validation-btn">
                     <XCircle className="h-3.5 w-3.5 mr-1.5" /> Reject
                   </Button>
-                  <Button
-                    className="bg-[var(--sage-700)] hover:bg-[var(--sage-900)]"
-                    disabled={!isSupervisor}
-                    onClick={() => {
-                      validateOrder(current.id, comment);
-                      toast.success(`${current.id} validated & released`);
-                      setOpenId(null);
-                    }}
-                    data-testid="approve-release-btn"
-                  >
+                  <Button className="bg-[var(--sage-700)] hover:bg-[var(--sage-900)]" disabled={!isSupervisor}
+                    onClick={async () => { await validate(current.id, comment); setOpenId(null); }} data-testid="approve-release-btn">
                     <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" /> Approve & release
                   </Button>
                 </>
@@ -190,14 +130,8 @@ export default function Validation() {
         </div>
 
         {printOrder && (
-          <LabReport
-            order={printOrder}
-            patient={getPatient(printOrder, patients)}
-            doctor={getDoctor(printOrder, doctors)}
-            catalog={findCatalog(printOrder.test_code)}
-            hospital={hospital}
-            onClose={() => setPrintOrderId(null)}
-          />
+          <LabReport order={printOrder} patient={getPatient(printOrder, patients)}
+            catalog={findCatalog(printOrder.test_code)} hospital={hospital} onClose={() => setPrintOrderId(null)} />
         )}
       </div>
     );
@@ -205,13 +139,7 @@ export default function Validation() {
 
   return (
     <div className="space-y-6" data-testid="validation-page">
-      <SectionLabel
-        action={
-          <div className="text-xs font-mono uppercase tracking-wider text-stone-500">
-            {queue.length} awaiting · {released.length} released today
-          </div>
-        }
-      >
+      <SectionLabel action={<div className="text-xs font-mono uppercase tracking-wider text-stone-500">{queue.length} awaiting · {released.length} released today</div>}>
         Validation &amp; release
       </SectionLabel>
 
@@ -239,12 +167,8 @@ export default function Validation() {
                 const flags = cat?.parameters.map((pp) => flagValue(pp, o.results?.[pp.key])).filter((f) => f.level !== "normal" && f.level !== "empty");
                 const hasCrit = flags?.some((f) => f.level === "critical");
                 return (
-                  <tr
-                    key={o.id}
-                    data-testid={`validation-row-${o.id}`}
-                    onClick={() => setOpenId(o.id)}
-                    className={cn("border-b border-stone-100 cursor-pointer transition", hasCrit ? "hover:bg-red-50/40" : "hover:bg-stone-50")}
-                  >
+                  <tr key={o.id} data-testid={`validation-row-${o.id}`} onClick={() => setOpenId(o.id)}
+                    className={cn("border-b border-stone-100 cursor-pointer transition", hasCrit ? "hover:bg-red-50/40" : "hover:bg-stone-50")}>
                     <td className="px-4 py-3 font-mono text-[13px]">{o.accession}</td>
                     <td className="px-4 py-3">
                       <div className="font-medium">{p?.name}</div>
@@ -255,11 +179,8 @@ export default function Validation() {
                     <td className="px-4 py-3 text-stone-600">{formatRelative(o.completed_at)}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1.5 flex-wrap">
-                        {(flags?.length ?? 0) === 0 ? (
-                          <span className="text-xs text-stone-400">All normal</span>
-                        ) : (
-                          flags.slice(0, 3).map((f, i) => <FlagBadge key={i} {...f} />)
-                        )}
+                        {(flags?.length ?? 0) === 0 ? <span className="text-xs text-stone-400">All normal</span> :
+                          flags.slice(0, 3).map((f, i) => <FlagBadge key={i} {...f} />)}
                       </div>
                     </td>
                   </tr>
@@ -290,14 +211,8 @@ export default function Validation() {
       )}
 
       {printOrder && (
-        <LabReport
-          order={printOrder}
-          patient={getPatient(printOrder, patients)}
-          doctor={getDoctor(printOrder, doctors)}
-          catalog={findCatalog(printOrder.test_code)}
-          hospital={hospital}
-          onClose={() => setPrintOrderId(null)}
-        />
+        <LabReport order={printOrder} patient={getPatient(printOrder, patients)}
+          catalog={findCatalog(printOrder.test_code)} hospital={hospital} onClose={() => setPrintOrderId(null)} />
       )}
     </div>
   );

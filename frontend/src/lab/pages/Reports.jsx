@@ -1,9 +1,15 @@
-import { useMemo } from "react";
-import { useLab, formatDateTime, getPatient, flagValue } from "@/lab/store";
-import { findCatalog, SECTIONS } from "@/lab/mockData";
+import { useEffect, useMemo, useState } from "react";
+import { useLab, formatDateTime, getPatient } from "@/lab/store";
+import { fetchAnalytics } from "@/lab/api";
 import { SectionLabel, KpiCard } from "@/lab/components/Pills";
 import { Button } from "@/components/ui/button";
-import { Download, TrendingUp, AlertOctagon } from "lucide-react";
+import { Download, TrendingUp, AlertOctagon, Clock4 } from "lucide-react";
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
+  PieChart, Pie, Cell, LineChart, Line, Legend,
+} from "recharts";
+
+const PIE_COLORS = ["#3f6b58", "#c38246", "#5a8773", "#9aa56a", "#a06b9a", "#6b9aa0", "#bb6f6f"];
 
 function downloadCsv(rows, filename) {
   if (!rows.length) return;
@@ -15,163 +21,137 @@ function downloadCsv(rows, filename) {
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
+  a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
 }
 
 export default function Reports() {
   const { orders, patients } = useLab();
+  const [analytics, setAnalytics] = useState(null);
 
-  const stats = useMemo(() => {
-    const total = orders.length;
-    const validated = orders.filter((o) => o.status === "validated");
-    const cancelled = orders.filter((o) => o.status === "cancelled");
-    const pending = orders.filter((o) => !["validated", "cancelled"].includes(o.status));
+  useEffect(() => { fetchAnalytics().then(setAnalytics).catch(() => {}); }, [orders.length]);
 
-    const tats = validated
-      .filter((o) => o.released_at && o.ordered_at)
-      .map((o) => (new Date(o.released_at) - new Date(o.ordered_at)) / 3_600_000);
-    const avgTat = tats.length ? (tats.reduce((a, b) => a + b, 0) / tats.length).toFixed(1) : "—";
-
-    const byTest = {};
-    orders.forEach((o) => { byTest[o.test_code] = (byTest[o.test_code] || 0) + 1; });
-
-    const criticals = [];
-    orders.forEach((o) => {
-      const cat = findCatalog(o.test_code);
-      cat?.parameters.forEach((p) => {
-        const f = flagValue(p, o.results?.[p.key]);
-        if (f.level === "critical") {
-          criticals.push({ orderId: o.id, patient: getPatient(o, patients)?.name, param: p.label, value: o.results?.[p.key], at: o.completed_at });
-        }
-      });
-    });
-
-    const backlog = orders.filter((o) => {
-      if (["validated", "cancelled"].includes(o.status)) return false;
-      const hours = (Date.now() - new Date(o.ordered_at).getTime()) / 3_600_000;
-      return hours > 24;
-    });
-
-    return { total, validated: validated.length, cancelled: cancelled.length, pending: pending.length, avgTat, byTest, criticals, backlog };
-  }, [orders, patients]);
+  const byTest = useMemo(() => Object.entries(analytics?.by_test || {}).map(([code, count]) => ({ code, count })), [analytics]);
+  const bySection = useMemo(() => Object.entries(analytics?.by_section || {}).map(([section, count]) => ({ section, count })), [analytics]);
+  const byStatus = useMemo(() => Object.entries(analytics?.by_status || {}).map(([status, count]) => ({ status, count })).filter((x) => x.count > 0), [analytics]);
+  const byDay = useMemo(() => Object.entries(analytics?.by_day || {}).sort().map(([day, count]) => ({ day: day.slice(5), count })), [analytics]);
 
   const exportAll = () => {
     const rows = orders.map((o) => ({
-      order_id: o.id,
-      accession: o.accession,
+      order_id: o.id, accession: o.accession,
       patient: getPatient(o, patients)?.name,
-      test_code: o.test_code,
-      status: o.status,
-      priority: o.priority,
-      ordered_at: o.ordered_at,
-      collected_at: o.collected_at,
-      released_at: o.released_at,
+      test_code: o.test_code, status: o.status, priority: o.priority,
+      ordered_at: o.ordered_at, collected_at: o.collected_at, released_at: o.released_at,
+      doctor: o.doctor_name, source: o.source,
     }));
     downloadCsv(rows, `medora-lab-orders-${Date.now()}.csv`);
   };
 
   return (
     <div className="space-y-6" data-testid="reports-page">
-      <SectionLabel
-        action={
-          <Button onClick={exportAll} size="sm" className="bg-[var(--sage-700)] hover:bg-[var(--sage-900)]" data-testid="export-csv-btn">
-            <Download className="h-3.5 w-3.5 mr-1.5" /> Export CSV
-          </Button>
-        }
-      >
+      <SectionLabel action={
+        <Button onClick={exportAll} size="sm" className="bg-[var(--sage-700)] hover:bg-[var(--sage-900)]" data-testid="export-csv-btn">
+          <Download className="h-3.5 w-3.5 mr-1.5" /> Export CSV
+        </Button>
+      }>
         Lab analytics
       </SectionLabel>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Total orders" value={stats.total} hint="All time (mock)" accent="sage" />
-        <KpiCard label="Released" value={stats.validated} hint="Reports out" accent="emerald" />
-        <KpiCard label="Pending" value={stats.pending} hint="In workflow" accent="amber" />
-        <KpiCard label="Avg TAT" value={`${stats.avgTat}h`} hint="Order → release" accent="sky" />
+        <KpiCard label="Total orders" value={analytics?.totals?.orders ?? "—"} hint="All time" accent="sage" />
+        <KpiCard label="Released" value={analytics?.totals?.validated ?? "—"} hint="Reports out" accent="emerald" />
+        <KpiCard label="Pending" value={analytics?.totals?.pending ?? "—"} hint="In workflow" accent="amber" />
+        <KpiCard label="Avg TAT" value={analytics?.avg_tat_hours != null ? `${analytics.avg_tat_hours}h` : "—"} hint="Order → release" accent="sky" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="volume-by-test">
+        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="volume-chart">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="h-4 w-4 text-[var(--sage-700)]" />
             <h3 className="font-display font-semibold">Volume by test</h3>
           </div>
-          <div className="space-y-2.5">
-            {Object.entries(stats.byTest).map(([code, count]) => {
-              const max = Math.max(...Object.values(stats.byTest));
-              return (
-                <div key={code}>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="font-mono">{code}</span>
-                    <span className="font-mono text-stone-500">{count}</span>
-                  </div>
-                  <div className="h-2 bg-stone-100 rounded overflow-hidden">
-                    <div className="h-full bg-[var(--sage-500)]" style={{ width: `${(count / max) * 100}%` }} />
-                  </div>
-                </div>
-              );
-            })}
+          <div className="h-64">
+            <ResponsiveContainer>
+              <BarChart data={byTest} margin={{ top: 4, right: 8, left: -20, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="2 2" stroke="#e7e5e4" />
+                <XAxis dataKey="code" tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }} />
+                <YAxis allowDecimals={false} tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }} />
+                <Tooltip contentStyle={{ fontFamily: "IBM Plex Sans", fontSize: 12 }} />
+                <Bar dataKey="count" fill="#3f6b58" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="critical-log">
+        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="status-pie">
+          <h3 className="font-display font-semibold mb-4">Status mix</h3>
+          <div className="h-64">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie data={byStatus} dataKey="count" nameKey="status" innerRadius={50} outerRadius={90} paddingAngle={3}>
+                  {byStatus.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                </Pie>
+                <Tooltip contentStyle={{ fontFamily: "IBM Plex Sans", fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontFamily: "IBM Plex Mono", fontSize: 11 }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="daily-trend">
           <div className="flex items-center gap-2 mb-4">
-            <AlertOctagon className="h-4 w-4 text-red-500" />
-            <h3 className="font-display font-semibold">Critical values log</h3>
-            <span className="text-xs font-mono text-stone-500">({stats.criticals.length})</span>
+            <Clock4 className="h-4 w-4 text-[var(--sage-700)]" />
+            <h3 className="font-display font-semibold">Daily volume</h3>
           </div>
-          {stats.criticals.length === 0 ? (
-            <div className="text-sm text-stone-500 py-3">No critical results recorded.</div>
-          ) : (
-            <div className="space-y-2">
-              {stats.criticals.map((c, i) => (
-                <div key={i} className="flex items-center justify-between text-sm border-b border-stone-100 pb-2 last:border-0">
-                  <div>
-                    <div className="font-medium">{c.patient}</div>
-                    <div className="text-xs text-stone-500 font-mono">{c.orderId} · {c.param} = <b className="text-red-700">{c.value}</b></div>
-                  </div>
-                  <div className="text-xs text-stone-500">{formatDateTime(c.at)}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="h-56">
+            <ResponsiveContainer>
+              <LineChart data={byDay} margin={{ top: 4, right: 8, left: -20, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="2 2" stroke="#e7e5e4" />
+                <XAxis dataKey="day" tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }} />
+                <YAxis allowDecimals={false} tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }} />
+                <Tooltip contentStyle={{ fontFamily: "IBM Plex Sans", fontSize: 12 }} />
+                <Line type="monotone" dataKey="count" stroke="#c38246" strokeWidth={2.5} dot={{ r: 4, fill: "#c38246" }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="aging-backlog">
-          <h3 className="font-display font-semibold mb-3">Aging backlog (&gt;24h)</h3>
-          {stats.backlog.length === 0 ? (
-            <div className="text-sm text-stone-500">No backlog. 🎉</div>
-          ) : (
-            <div className="space-y-2">
-              {stats.backlog.map((o) => {
-                const p = getPatient(o, patients);
-                return (
-                  <div key={o.id} className="flex justify-between text-sm">
-                    <span>{o.id} · {p?.name}</span>
-                    <span className="font-mono text-amber-700">{o.status}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="section-bar">
+          <h3 className="font-display font-semibold mb-4">By section</h3>
+          <div className="h-56">
+            <ResponsiveContainer>
+              <BarChart data={bySection} layout="vertical" margin={{ top: 4, right: 16, left: 30, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="2 2" stroke="#e7e5e4" horizontal={false} />
+                <XAxis type="number" allowDecimals={false} tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }} />
+                <YAxis dataKey="section" type="category" tick={{ fontFamily: "IBM Plex Mono", fontSize: 11, fill: "#78716c" }} />
+                <Tooltip contentStyle={{ fontFamily: "IBM Plex Sans", fontSize: 12 }} />
+                <Bar dataKey="count" fill="#5a8773" radius={[0, 6, 6, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
+      </div>
 
-        <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="section-load">
-          <h3 className="font-display font-semibold mb-3">Section utilization</h3>
+      <div className="bg-white rounded-xl border border-stone-200 p-5" data-testid="critical-log">
+        <div className="flex items-center gap-2 mb-4">
+          <AlertOctagon className="h-4 w-4 text-red-500" />
+          <h3 className="font-display font-semibold">Critical values log</h3>
+          <span className="text-xs font-mono text-stone-500">({(analytics?.criticals || []).length})</span>
+        </div>
+        {(analytics?.criticals || []).length === 0 ? (
+          <div className="text-sm text-stone-500 py-3">No critical results recorded.</div>
+        ) : (
           <div className="space-y-2">
-            {SECTIONS.map((s) => {
-              const count = orders.filter((o) => findCatalog(o.test_code)?.section === s.id).length;
-              return (
-                <div key={s.id} className="flex justify-between text-sm">
-                  <span>{s.label}</span>
-                  <span className="font-mono text-stone-600">{count} orders</span>
+            {(analytics?.criticals || []).map((c, i) => (
+              <div key={i} className="flex items-center justify-between text-sm border-b border-stone-100 pb-2 last:border-0">
+                <div>
+                  <div className="font-mono text-xs text-stone-500">{c.order_id} · {c.param} = <b className="text-red-700">{c.value}</b></div>
                 </div>
-              );
-            })}
+                <div className="text-xs text-stone-500">{formatDateTime(c.at)}</div>
+              </div>
+            ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
