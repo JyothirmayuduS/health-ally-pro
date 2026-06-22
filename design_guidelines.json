@@ -1,0 +1,126 @@
+{
+  "theme_archetype": "Archetype 1: Organic & Earthy (Clinical Warmth Variant) - Light Theme",
+  "reasoning": "A hospital operational tool requires high clarity, dense information packing, and calm trustworthiness. Dark themes feel clinical and cold, while default blues are strictly forbidden by the user. An earthy, warm neutral palette creates a 'clinical warmth' that is professional without being sterile.",
+  "typography": {
+    "strategy": "The 'Old Money Tech' approach for professional medical tool. High density, high legibility.",
+    "fonts": {
+      "heading": {
+        "family": "'Work Sans', sans-serif",
+        "import_url": "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap",
+        "usage": "Headings, section titles, primary numbers"
+      },
+      "body": {
+        "family": "'IBM Plex Sans', sans-serif",
+        "import_url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap",
+        "usage": "Body text, table data, UI elements"
+      },
+      "mono": {
+        "family": "'IBM Plex Mono', monospace",
+        "import_url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&display=swap",
+        "usage": "MRN, Token Numbers, Queues, System Logs"
+      }
+    }
+  },
+  "colors": {
+    "background": {
+      "default": "#F9F9F6",
+      "surface": "#FFFFFF",
+      "elevated": "#FFFFFF"
+    },
+    "text": {
+      "primary": "#1C1C19",
+      "secondary": "#575753",
+      "tertiary": "#8A8A86",
+      "inverse": "#FFFFFF"
+    },
+    "border": {
+      "default": "#E5E5E0",
+      "focus": "#2C5E4E"
+    },
+    "brand": {
+      "primary": "#2C5E4E",
+      "primary_hover": "#1E4237",
+      "primary_light": "#E9F0EE"
+    },
+    "status": {
+      "waiting": {
+        "bg": "#FEF3C7",
+        "text": "#92400E",
+        "border": "#FDE68A"
+      },
+      "in_consult": {
+        "bg": "#E0F2FE",
+        "text": "#075985",
+        "border": "#BAE6FD"
+      },
+      "completed": {
+        "bg": "#DCFCE7",
+        "text": "#166534",
+        "border": "#BBF7D0"
+      },
+      "no_show": {
+        "bg": "#FEE2E2",
+        "text": "#991B1B",
+        "border": "#FECACA"
+      }
+    }
+  },
+  "layout_and_spacing": {
+    "strategy": "The 'Control Room' Grid - high density, scanability, precise alignment.",
+    "spacing_scale": "Strict adherence to Tailwind scale: p-2, p-4, p-6. Avoid massive padding in data-dense areas.",
+    "radius": "rounded-sm (2px) or rounded (4px) max. Avoid overly rounded corners.",
+    "borders": "1px solid #E5E5E0. NO shadows unless it's a modal or dropdown.",
+    "card_style": "Flat, pure white, 1px grey border, sharp corners. No glassmorphism. No gradients."
+  },
+  "components": {
+    "navigation": {
+      "type": "Left Sidebar",
+      "style": "Solid background (#F9F9F6), strict typography hierarchy, explicit active states with a left 2px green border indicator."
+    },
+    "buttons": {
+      "primary": "bg-[#2C5E4E] text-white hover:bg-[#1E4237] rounded transition-colors",
+      "secondary": "bg-white text-[#1C1C19] border border-[#E5E5E0] hover:bg-[#F9F9F6] rounded transition-colors",
+      "ghost": "text-[#575753] hover:text-[#1C1C19] hover:bg-[#F9F9F6] rounded transition-colors"
+    },
+    "inputs": {
+      "style": "Flat white background, 1px border-[#E5E5E0], sharp or slightly rounded corners. Focus state: border-[#2C5E4E] ring-1 ring-[#2C5E4E]."
+    },
+    "tables": {
+      "style": "High density, border-b on rows, no vertical borders. Sticky headers."
+    },
+    "tv_kiosk_mode": {
+      "style": "Full screen, pure black/dark charcoal background with massive, high-contrast numbers for visibility from a distance. The only exception to the light theme rule."
+    }
+  },
+  "icons": {
+    "library": "lucide-react",
+    "style": "stroke-width: 2px, sharp, unembellished."
+  },
+  "media": {
+    "images": [
+      {
+        "category": "patient_avatar_1",
+        "url": "https://images.unsplash.com/photo-1612991237712-49b879f27a48?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxwb3J0cmFpdCUyMGRpdmVyc2UlMjBwZW9wbGUlMjBuZXV0cmFsJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3ODIxNTM1NTF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Patient Avatar 1"
+      },
+      {
+        "category": "patient_avatar_2",
+        "url": "https://images.unsplash.com/photo-1607749091702-1bab1be215a4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHw0fHxwb3J0cmFpdCUyMGRpdmVyc2UlMjBwZW9wbGUlMjBuZXV0cmFsJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3ODIxNTM1NTF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Patient Avatar 2"
+      }
+    ]
+  },
+  "accessibility": {
+    "contrast": "APCA & WCAG AA compliant. All text must pass minimum 4.5:1 ratio against background.",
+    "testing_attributes": "All interactive and key informational elements MUST include a data-testid attribute in kebab-case."
+  },
+  "instructions_to_main_agent": [
+    "Extend tailwind.config.js to include the custom fonts and color palette defined above.",
+    "DO NOT use gradients or glassmorphism. This is a strict rule.",
+    "DO NOT use dark blues as primary brand colors. Stick to the Sage Green (#2C5E4E) palette.",
+    "Ensure high information density. Medical software requires seeing many records at once. Do not use excessive whitespace. Use dense tables and compact lists.",
+    "Use mock data for all dashboards and lists.",
+    "Implement the 7 core screens as specified in the problem statement, accessible via a left sidebar. Disable the later items (Billing, Reports, Settings).",
+    "For the Token Display screen, implement a distinct kiosk mode (full screen, high contrast, large typography)."
+  ]
+}
