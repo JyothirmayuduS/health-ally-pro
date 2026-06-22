@@ -98,12 +98,12 @@ export default function LabShell() {
         <nav className="px-3 py-4 flex-1 overflow-y-auto">
           <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-stone-400 px-3 mb-2">Workflow</div>
           <div className="space-y-0.5">
-            {NAV_PRIMARY.map((n) => (
+            {NAV_PRIMARY.map(({ key, ...n }) => (
               <NavItem
-                key={n.key}
+                key={key}
                 {...n}
-                badge={counts[n.key]}
-                testid={`nav-${n.key}`}
+                badge={counts[key]}
+                testid={`nav-${key}`}
               />
             ))}
           </div>
@@ -112,8 +112,8 @@ export default function LabShell() {
             Reference
           </div>
           <div className="space-y-0.5">
-            {NAV_SECONDARY.map((n) => (
-              <NavItem key={n.key} {...n} testid={`nav-${n.key}`} />
+            {NAV_SECONDARY.map(({ key, ...n }) => (
+              <NavItem key={key} {...n} testid={`nav-${key}`} />
             ))}
           </div>
         </nav>

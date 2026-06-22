@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -349,6 +350,9 @@ export default function OrdersInbox() {
         <DialogContent data-testid="cancel-dialog">
           <DialogHeader>
             <DialogTitle>Cancel order {selected?.id}</DialogTitle>
+            <DialogDescription>
+              Provide a reason — this will mark the order as cancelled and notify the ordering doctor.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Label>Reason for cancellation</Label>

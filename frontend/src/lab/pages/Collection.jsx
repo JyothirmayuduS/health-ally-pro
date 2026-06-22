@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -167,6 +168,9 @@ export default function Collection() {
               <UserCheck className="h-4 w-4 text-[var(--sage-700)]" />
               Verify patient & collect
             </DialogTitle>
+            <DialogDescription>
+              Confirm patient identity before drawing the specimen.
+            </DialogDescription>
           </DialogHeader>
           {collectFor && (() => {
             const p = getPatient(collectFor, patients);
@@ -223,6 +227,9 @@ export default function Collection() {
         <DialogContent data-testid="reject-collect-dialog">
           <DialogHeader>
             <DialogTitle>Reject at collection</DialogTitle>
+            <DialogDescription>
+              Return the sample to the queue with a reason.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Label className="text-xs">Reason</Label>
