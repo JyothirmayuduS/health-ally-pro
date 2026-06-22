@@ -425,8 +425,8 @@ export default function Reports() {
 
             <section className="surface">
               <SectionHeader dot="bg-mustard" eyebrow="Appointments" title="Status mix" />
-              <div className="p-4 h-64 grid grid-cols-2 gap-3 items-center">
-                <div className="h-full">
+              <div className="p-4 h-64 grid grid-cols-2 gap-3 items-stretch">
+                <div className="h-full min-h-[180px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={statusMix} innerRadius={48} outerRadius={88} paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
@@ -438,7 +438,7 @@ export default function Reports() {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <ul className="space-y-1.5 text-[12.5px]">
+                <ul className="space-y-1.5 text-[12.5px] self-center">
                   {statusMix.map((s) => (
                     <li key={s.key} className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full" style={{ background: s.color }} />
@@ -467,8 +467,8 @@ export default function Reports() {
 
             <section className="surface">
               <SectionHeader dot="bg-plum" eyebrow="Registrations" title="By source" />
-              <div className="p-4 h-56 grid grid-cols-2 gap-3 items-center">
-                <div className="h-full">
+              <div className="p-4 h-56 grid grid-cols-2 gap-3 items-stretch">
+                <div className="h-full min-h-[160px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={registrationMix} innerRadius={42} outerRadius={78} paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
@@ -480,7 +480,7 @@ export default function Reports() {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <ul className="space-y-1.5 text-[12.5px]">
+                <ul className="space-y-1.5 text-[12.5px] self-center">
                   {registrationMix.map((s) => (
                     <li key={s.name} className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full" style={{ background: s.color }} />
@@ -655,8 +655,8 @@ export default function Reports() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <section className="surface">
               <SectionHeader dot="bg-teal" eyebrow="Claims" title="Status mix" />
-              <div className="p-4 h-72 grid grid-cols-2 gap-3 items-center">
-                <div className="h-full">
+              <div className="p-4 h-72 grid grid-cols-2 gap-3 items-stretch">
+                <div className="h-full min-h-[200px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={claimsByStatus} innerRadius={50} outerRadius={92} paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
@@ -666,7 +666,7 @@ export default function Reports() {
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <ul className="space-y-1.5 text-[12.5px]">
+                <ul className="space-y-1.5 text-[12.5px] self-center">
                   {claimsByStatus.map((s) => (
                     <li key={s.name} className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full" style={{ background: s.color }} />

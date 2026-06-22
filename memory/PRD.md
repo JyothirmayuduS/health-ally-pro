@@ -43,12 +43,16 @@ Routes built:
 - `/reception/queue` — One card per on-duty doctor: now-serving, call-next, mark-complete, skip, re-call, transfer-to-another-doctor modal, mark-no-show, wait timer
 - `/reception/token-display` — Lobby kiosk (no sidebar), one column per on-duty doctor, massive token numbers, next-up chips, live clock, full-screen toggle
 - `/reception/billing` (Iter 2) — Invoice list (search + status pills) + detail pane with editable line items, discount, tax (5%), receipt totals; collect-payment dialog (Cash/Card/UPI/Insurance); auto-creates invoices for today's billable appointments
-- `/reception/reports` (Iter 2) — 4 KPI cards (Footfall, No-shows, Avg wait, Revenue) with module accents, hourly footfall bar chart, registration-source pie, no-show by doctor with progress bars, revenue by payment method, Export CSV
+- `/reception/cash-drawer` (Iter 3) — Multi-shift drawer management. Live shift card with cash collected derived from invoices.paidAt ≥ shift.openedAt; Open shift / Close shift dialogs with denomination tally, variance calculation, handover note. Per-staff totals + closed-shift history table.
+- `/reception/insurance` (Iter 3) — Pre-authorization workflow. Claim list with status pills (Pending/Submitted/Approved/Partial/Rejected/Not-required), claim detail with status-flow stepper, amounts, documents attach, and Submit/Approve/Partial/Reject actions.
+- `/reception/reports` (Iter 2, expanded Iter 3) — 4-tab analytics: **Overview** (Footfall area chart, status mix donut, wait distribution, registrations donut), **Revenue** (cumulative trend with bars, by method horizontal bar, by doctor bar), **Operations** (no-show by doctor, doctor utilization radial-bar, wait buckets), **Insurance** (claims status donut, claims by provider horizontal bar, provider approval rate). Export CSV includes shifts + claims.
 
-Design refresh (Iter 2):
-- Added module accent palette: clay `#B85C38`, mustard `#A87826`, plum `#7A4A6B`, teal `#2C7873`, money `#15803D` — all earthy, non-blue.
-- Pill button system: `.btn-primary` (sage), `.btn-outline`, `.btn-ghost`, `.btn-money`, `.btn-clay`, `.btn-danger`, `.btn-icon` — all `rounded-full`.
-- Sidebar nav items show a tiny per-module color dot; sidebar now has Workflow / Business / Coming soon sections.
+Design refresh (Iter 2 + 3):
+- Module accent palette (earthy, non-blue): clay `#B85C38`, mustard `#A87826`, plum `#7A4A6B`, teal `#2C7873`, money `#15803D`.
+- Pill button system (`.btn-primary` sage, `.btn-money`, `.btn-clay`, `.btn-plum`, `.btn-mustard`, `.btn-teal`, `.btn-outline`, `.btn-ghost`, `.btn-icon`).
+- Chip system (`.chip-money`, `.chip-mustard`, `.chip-clay`, `.chip-plum`, `.chip-teal`, `.chip-sage`, `.chip-ink`).
+- Section heading dots (`.dot-*`) used as small accent prefixes.
+- Bumped `--radius` to `0.5rem` — every card, dialog, input is softly rounded (`rounded-md/xl`); buttons stay `rounded-full` pills.
 
 All interactive + key informational elements expose kebab-case `data-testid` attributes.
 
