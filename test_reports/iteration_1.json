@@ -1,0 +1,47 @@
+{
+  "summary": "Comprehensive frontend testing of Oakhaven Pharmacy Desk (mock/localStorage app). 13/14 critical scenarios PASS. One CRITICAL bug found: pharmacy login fails silently after a doctor session has signed out (auth state contamination → /pharmacy bounces back to /login). One MINOR spec/testid mismatch (rx-tab 'cleared' is actually keyed 'ready_to_dispense').",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "LoginPage / AuthContext (signOut/signIn)",
+        "issue": "After signing in as doctor and clicking [data-testid=doctor-sign-out], the form lands on /login but a subsequent pharmacy sign-in (correct creds pharmacy@oakhaven.demo / Demo1234!) silently fails. The submit returns to /login with the form cleared and no [data-testid=login-error] shown. localStorage shows oakhaven.auth.v1 key exists but user/session keys are null. This breaks the canonical doctor→pharmacy handoff verification flow (the handoff Rx itself IS created — but you cannot return to pharmacy in the same browser session to view it).",
+        "selector": "[data-testid=login-submit] after doctor-sign-out",
+        "priority": "CRITICAL"
+      },
+      {
+        "component": "PharmacyPrescriptions tabs",
+        "issue": "Spec says cleared tab testid should be rx-tab-cleared, but actual testid is rx-tab-ready_to_dispense (label still 'Cleared'). Spec/test inconsistency.",
+        "selector": "[data-testid=rx-tab-ready_to_dispense]",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [
+      {
+        "flow": "Doctor → Pharmacy handoff (cross-session)",
+        "issue": "Submission of new Rx from doctor portal works (Rx is persisted in localStorage and visible if you manually clear storage and re-login). But the documented flow 'sign out doctor → sign in pharmacy → see new Rx in /pharmacy/prescriptions' is BROKEN because the second sign-in fails silently. Workaround: hard reload /login (or clear localStorage) before signing in as pharmacy — then handoff Rx appears under New tab (verified).",
+        "affected_selectors": ["[data-testid=login-submit]", "[data-testid=demo-fill-pharmacy]"]
+      }
+    ],
+    "design_issues": [
+      {"screen": "Doctor portal <select> options", "issues": ["React dev warning: <span> cannot be a child of <option> — caused by emergent x-source-* wrappers injected into option text. Cosmetic dev-only warning."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "FIX CRITICAL auth bug: After signOut, the next signIn into a different portal must complete and route correctly. Investigate /app/frontend/src/lib/auth/authContext.jsx signOut() / signIn() / requirePortalAccess() — likely a stale ref or async race where the previous (doctor) profile is not cleared before navigate('/pharmacy') runs, so PharmacyLayout's requirePortalAccess bounces back to /login. Possible fixes: (a) ensure signOut clears in-memory user state synchronously before navigating, (b) make navigate('/pharmacy') wait for setUser to flush, or (c) base requirePortalAccess on a fresh storage read.",
+    "Optional: rename rx-tab-ready_to_dispense to rx-tab-cleared (or update spec) to match documented testid contract."
+  ],
+  "critical_code_review_comments": [
+    "authContext signIn/signOut should be audited for state-race: after signOut, the immediately-following signIn navigates before the protecting route reads the new user — leading to bounce-to-login.",
+    "Doctor handoff Rx submission works in isolation; the bug is purely on the post-signOut signIn path."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "~92% (all modules functional; only post-signOut re-login broken)"},
+  "test_credentials": "pharmacy@oakhaven.demo / Demo1234!  ·  doctor@oakhaven.demo / Demo1234!",
+  "seed_data_creation": "None — app is seeded via mockData.js; Reset demo button restores state.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Verified PASSING: landing→login nav, wrong-creds error, demo-fill-pharmacy + login, dashboard 5 KPIs + worklist + urgent strip, KPI click→dispense nav, prescriptions inbox tabs (note key is 'ready_to_dispense' not 'cleared') + search + drawer + allergy badge (Aanya/penicillin/Amoxicillin shows allergy-badge), Rx transitions begin-review→send-to-dispense and hold-with-reason, dispense lanes ready_to_dispense/dispensing/dispensed, full dispense lifecycle (start→complete→collected) on rx_1001, label preview modal + print, refill approve creates new Rx in ready_to_dispense (verified count 1→2), refill deny with reason modal, inventory filters all/low/expiring/out, inc/dec batch, receive modal add-batch, quarantine, sidebar badges, reset demo, access control when fully logged out (clears LS → /pharmacy redirects to /login). FAILING: post-doctor-signOut → pharmacy signIn silently fails (form clears, stays at /login). Workaround for retest: clear localStorage between doctor and pharmacy sessions instead of using signOut button.",
+  "rca of the issue": "Symptom: After successful doctor login + doctor-sign-out, attempting pharmacy login with valid creds (pharmacy@oakhaven.demo / Demo1234!) using either demo-fill-pharmacy or manual page.fill yields: submit clicked, no login-error rendered, URL remains /login, form inputs are cleared. localStorage keys present: oakhaven.auth.v1, oakhaven.pharmacy.v3; the legacy 'user'/'session' keys are null (expected). Reproduction: 1) /login → demo-fill-doctor → submit → /doctor (OK). 2) doctor-sign-out → /login. 3) demo-fill-pharmacy → submit → bounces back to /login. Likely RCA: in authContext.jsx the signIn handler navigates('/pharmacy') before the new user profile is committed to context state, so PharmacyLayout's requirePortalAccess sees the previous (doctor) profile (or null/stale snapshot) and redirects back to /login, which on mount resets the LoginPage local state — explaining the cleared form and missing error. Mitigation: await setUser flush (e.g. wrap navigate inside a useEffect that fires when user changes) OR force requirePortalAccess to read localStorage at decision time OR ensure signOut explicitly resets profile in-memory before navigate('/login') so the next signIn starts from a clean baseline."
+}
