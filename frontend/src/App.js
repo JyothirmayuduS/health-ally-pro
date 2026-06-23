@@ -10,7 +10,8 @@ import Prescriptions from "@/routes/PharmacyPrescriptions";
 import Dispense from "@/routes/PharmacyDispense";
 import Refills from "@/routes/PharmacyRefills";
 import Inventory from "@/routes/PharmacyInventory";
-import DoctorPortal from "@/routes/DoctorPortal";
+import Search from "@/routes/PharmacySearch";
+import StorageMap from "@/routes/PharmacyStorageMap";
 import Landing from "@/routes/Landing";
 
 function App() {
@@ -22,17 +23,15 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<LoginPage />} />
 
-            {/* Pharmacy portal (requirePortalAccess inside layout) */}
             <Route path="/pharmacy" element={<PharmacyLayout />}>
-              <Route index element={<Dashboard />} />
+              <Route index               element={<Dashboard />} />
               <Route path="prescriptions" element={<Prescriptions />} />
-              <Route path="dispense" element={<Dispense />} />
-              <Route path="refills" element={<Refills />} />
-              <Route path="inventory" element={<Inventory />} />
+              <Route path="dispense"      element={<Dispense />} />
+              <Route path="refills"       element={<Refills />} />
+              <Route path="inventory"     element={<Inventory />} />
+              <Route path="inventory/map" element={<StorageMap />} />
+              <Route path="search"        element={<Search />} />
             </Route>
-
-            {/* Doctor stub for handoff demo */}
-            <Route path="/doctor" element={<DoctorPortal />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -1,9 +1,8 @@
-// Lightweight demo auth for the pharmacy portal.
-// Mirrors the spec's "demo login already seeded" — no Supabase wiring yet.
+// Demo auth — pharmacist-only (doctor portal removed in v2).
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-const AUTH_KEY = "oakhaven.auth.v1";
+const AUTH_KEY = "oakhaven.auth.v2";
 
 const DEMO_ACCOUNTS = {
   "pharmacy@oakhaven.demo": {
@@ -15,17 +14,6 @@ const DEMO_ACCOUNTS = {
       email: "pharmacy@oakhaven.demo",
       portal: "pharmacy",
       title: "Lead Pharmacist",
-    },
-  },
-  "doctor@oakhaven.demo": {
-    password: "Demo1234!",
-    profile: {
-      id: "stf_doc_01",
-      name: "Dr. Elena Marsh",
-      role: "doctor",
-      email: "doctor@oakhaven.demo",
-      portal: "doctor",
-      title: "Internal Medicine",
     },
   },
 };
@@ -40,9 +28,7 @@ export function AuthProvider({ children }) {
     try {
       const raw = localStorage.getItem(AUTH_KEY);
       if (raw) setUser(JSON.parse(raw));
-    } catch (_) {
-      // ignore
-    }
+    } catch (_) { /* ignore */ }
     setHydrated(true);
   }, []);
 
@@ -64,14 +50,11 @@ export function AuthProvider({ children }) {
 
   const signOut = useCallback(() => persist(null), []);
 
-  const requirePortalAccess = useCallback(
-    (portal) => {
-      if (!user) return { ok: false, reason: "unauthenticated" };
-      if (user.portal !== portal) return { ok: false, reason: "wrong_portal" };
-      return { ok: true };
-    },
-    [user],
-  );
+  const requirePortalAccess = useCallback((portal) => {
+    if (!user) return { ok: false, reason: "unauthenticated" };
+    if (user.portal !== portal) return { ok: false, reason: "wrong_portal" };
+    return { ok: true };
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, hydrated, signIn, signOut, requirePortalAccess }}>
@@ -87,7 +70,5 @@ export function useAuth() {
 }
 
 export const DEMO_CREDENTIALS = Object.entries(DEMO_ACCOUNTS).map(([email, v]) => ({
-  email,
-  password: v.password,
-  ...v.profile,
+  email, password: v.password, ...v.profile,
 }));

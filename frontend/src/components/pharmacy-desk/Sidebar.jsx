@@ -12,19 +12,20 @@ export default function PharmacySidebar() {
   const { user, signOut } = useAuth();
 
   const badgeFor = (to) => {
-    if (to === "/pharmacy/prescriptions") return counts.new + counts.in_review;
-    if (to === "/pharmacy/dispense") return counts.ready_to_dispense + counts.dispensing + counts.dispensed;
-    if (to === "/pharmacy/refills") return counts.refillsPending;
-    if (to === "/pharmacy/inventory") return counts.lowStock;
+    if (to === "/pharmacy/prescriptions")    return counts.new + counts.in_review;
+    if (to === "/pharmacy/dispense")         return counts.ready_to_dispense + counts.dispensing + counts.dispensed;
+    if (to === "/pharmacy/refills")          return counts.refillsPending;
+    if (to === "/pharmacy/inventory")        return counts.lowStock + counts.outOfStock;
+    if (to === "/pharmacy/inventory/map")    return 0;
+    if (to === "/pharmacy/search")           return 0;
     return 0;
   };
 
   return (
     <aside
       data-testid="pharmacy-sidebar"
-      className="w-64 shrink-0 h-screen sticky top-0 border-r border-border/70 bg-[hsl(var(--paper-100))]/60 backdrop-blur-sm flex flex-col"
+      className="w-64 shrink-0 h-screen sticky top-0 border-r border-border/70 bg-[hsl(var(--paper-100))]/60 backdrop-blur-sm flex flex-col z-20"
     >
-      {/* Brand */}
       <div className="px-5 pt-6 pb-4">
         <div className="flex items-center gap-2.5">
           <div className="h-9 w-9 rounded-lg bg-[hsl(var(--sage-500))] flex items-center justify-center shadow-sm">
@@ -36,10 +37,8 @@ export default function PharmacySidebar() {
           </div>
         </div>
       </div>
-
       <div className="pharm-divider mx-5" />
 
-      {/* Sections */}
       <nav className="px-3 py-3 flex-1 overflow-y-auto scrollbar-thin">
         {portal.sections.map((section) => (
           <div key={section.label} className="mb-5">
@@ -68,24 +67,16 @@ export default function PharmacySidebar() {
                       {({ isActive }) => (
                         <>
                           <Icon
-                            className={classNames(
-                              "h-4 w-4 transition-transform group-hover:scale-110",
-                              isActive ? "" : "text-muted-foreground",
-                            )}
+                            className={classNames("h-4 w-4 transition-transform group-hover:scale-110", isActive ? "" : "text-muted-foreground")}
                             strokeWidth={1.8}
                           />
                           <span className="flex-1">{item.label}</span>
                           {badge > 0 && (
-                            <span
-                              className={classNames(
-                                "ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-medium min-w-[20px] text-center",
-                                isActive
-                                  ? "bg-[hsl(var(--paper-50))]/20 text-[hsl(var(--paper-50))]"
-                                  : "bg-[hsl(var(--sage-500))]/12 text-[hsl(var(--sage-500))]",
-                              )}
-                            >
-                              {badge}
-                            </span>
+                            <span className={classNames(
+                              "ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-medium min-w-[20px] text-center",
+                              isActive ? "bg-[hsl(var(--paper-50))]/20 text-[hsl(var(--paper-50))]"
+                                       : "bg-[hsl(var(--sage-500))]/12 text-[hsl(var(--sage-500))]",
+                            )}>{badge}</span>
                           )}
                         </>
                       )}
@@ -98,7 +89,6 @@ export default function PharmacySidebar() {
         ))}
       </nav>
 
-      {/* Footer / user */}
       <div className="px-3 pb-4">
         <div className="pharm-divider mx-2 mb-3" />
         <div className="px-3 py-2 flex items-center gap-3">
@@ -111,20 +101,12 @@ export default function PharmacySidebar() {
           </div>
         </div>
         <div className="flex items-center gap-2 px-3 mt-1">
-          <button
-            data-testid="reset-demo-btn"
-            onClick={resetDemoData}
-            title="Reset demo data"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md border border-border/70 bg-card px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-[hsl(var(--paper-200))]/60 transition-colors"
-          >
+          <button data-testid="reset-demo-btn" onClick={resetDemoData} title="Reset demo data"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md border border-border/70 bg-card px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-[hsl(var(--paper-200))]/60 transition-colors">
             <RefreshCcw className="h-3 w-3" /> Reset demo
           </button>
-          <button
-            data-testid="sign-out-btn"
-            onClick={signOut}
-            title="Sign out"
-            className="inline-flex items-center justify-center rounded-md border border-border/70 bg-card p-1.5 text-muted-foreground hover:bg-[hsl(var(--paper-200))]/60 transition-colors"
-          >
+          <button data-testid="sign-out-btn" onClick={signOut} title="Sign out"
+            className="inline-flex items-center justify-center rounded-md border border-border/70 bg-card p-1.5 text-muted-foreground hover:bg-[hsl(var(--paper-200))]/60 transition-colors">
             <LogOut className="h-3.5 w-3.5" />
           </button>
         </div>
