@@ -20,8 +20,12 @@ export default function LoginPage() {
     setLoading(false);
     if (!res.ok) { setError(res.error); return; }
     const to = res.profile.portal === "doctor" ? "/doctor" : "/pharmacy";
-    const from = location.state?.from && location.state.from !== "/login" ? location.state.from : to;
-    navigate(from, { replace: true });
+    // Only honour `from` if it actually belongs to the signed-in user's portal,
+    // otherwise we can bounce into the wrong portal and get redirected back
+    // here (form resets, looks like a silent failure).
+    const from = location.state?.from;
+    const target = from && from.startsWith(to) ? from : to;
+    navigate(target, { replace: true });
   };
 
   const quickFill = (cred) => {

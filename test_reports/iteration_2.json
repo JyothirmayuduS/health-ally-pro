@@ -1,0 +1,25 @@
+{
+  "summary": "Retest of Oakhaven Pharmacy Desk after critical auth fix and rx-tab-cleared rename. ALL targeted scenarios PASS. The previously CRITICAL auth bug (post-doctor-signOut pharmacy login bouncing back to /login) is FIXED. The cleared tab is now correctly keyed `rx-tab-cleared` (statusKey ready_to_dispense) and the old testid `rx-tab-ready_to_dispense` is gone. Full regression on Dashboard / Prescriptions drawer + begin-review / Dispense lanes / Refills approve+deny / Inventory filters all green.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Doctor portal <select> options", "issues": ["Cosmetic dev-only React warning: <span> cannot be a child of <option> (emergent x-source-* wrapper). Unchanged from iteration_1, does not impact functionality."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Fix in LoginPage.jsx (target = from && from.startsWith(to) ? from : to) is correct and minimal — verified the post-signOut cross-portal login no longer redirects through stale location.state.from.",
+    "PharmacyPrescriptions TABS now uses key 'cleared' with explicit statusKey 'ready_to_dispense'. Label, status badge, and Cleared row count (1 seeded) all behave as expected."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "100% (all retest + regression scenarios pass)"},
+  "test_credentials": "pharmacy@oakhaven.demo / Demo1234!  ·  doctor@oakhaven.demo / Demo1234!",
+  "seed_data_creation": "None — used seeded mock data; doctor submitted one new Rx via [data-testid=rx-form-submit] (default patient/drug/route) which then appeared in /pharmacy/prescriptions New tab (count 1→2).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified PASSING end-to-end in iteration_2: (1) doctor sign-in → submit new Rx via [data-testid=rx-form-submit] → [data-testid=doctor-sign-out] → /login → [data-testid=demo-fill-pharmacy] + [data-testid=login-submit] correctly lands at /pharmacy (CRITICAL FIX confirmed). (2) /pharmacy/prescriptions: New tab shows 2 rows (includes the freshly submitted Rx from doctor handoff). (3) [data-testid=rx-tab-cleared] exists, filters status=ready_to_dispense (1 row, badge text 'Ready to dispense', label 'Cleared'); legacy [data-testid=rx-tab-ready_to_dispense] is REMOVED. (4) Dashboard: 6 KPIs + [data-testid=urgent-strip] visible. (5) Rx drawer opens on row click; [data-testid=action-begin-review] transitions status (PASS). (6) /pharmacy/dispense: 3 lanes [lane-ready_to_dispense, lane-dispensing, lane-dispensed] render. (7) /pharmacy/refills: 2 pending cards, [data-testid=approve-refill-0] click increases Cleared count 1→2 (creates new Rx). Deny modal opens via [data-testid=deny-refill-0], confirm-deny works. (8) /pharmacy/inventory: 4 filters [inv-filter-all/low/expiring/out] all clickable and switch view. Note: Refill button testids are `approve-refill-{idx}` / `deny-refill-{idx}` (NOT `refill-approve-*`); dispense lane testids are `lane-{status}` (NOT `dispense-lane-*`). Use these exact names in future scripts.",
+  "rca of the issue": "Iteration_1 bug RCA was: location.state.from from previous portal (e.g. /doctor) was being honoured unconditionally after re-login, so pharmacy user got redirected into /doctor, which then rejected them and bounced back to /login (form cleared, no error). Fix applied in /app/frontend/src/components/auth/LoginPage.jsx lines 22-28: `const target = from && from.startsWith(to) ? from : to;` — only honour `from` if it belongs to the newly signed-in user's portal base. Verified by Playwright: doctor signs in → submits Rx → signs out → pharmacy demo-fill + submit → lands on /pharmacy (was: bounced to /login). Regression scenarios all pass."
+}

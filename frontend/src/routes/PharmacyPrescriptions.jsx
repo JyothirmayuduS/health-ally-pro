@@ -11,7 +11,7 @@ const TABS = [
   { key: "all",               label: "All active" },
   { key: "new",               label: "New" },
   { key: "in_review",         label: "In review" },
-  { key: "ready_to_dispense", label: "Cleared" },
+  { key: "cleared",           label: "Cleared", statusKey: "ready_to_dispense" },
   { key: "on_hold",           label: "On hold" },
 ];
 
@@ -25,11 +25,12 @@ export default function Prescriptions() {
   const priorityFilter = params.get("priority"); // optional ?priority=urgent
 
   const list = useMemo(() => {
+    const statusFilter = TABS.find((t) => t.key === tab)?.statusKey || tab;
     return ph.prescriptions
       .filter((r) => {
         // tab filter
         if (tab === "all" && ["collected", "cancelled", "dispensed", "dispensing"].includes(r.status)) return false;
-        if (tab !== "all" && r.status !== tab) return false;
+        if (tab !== "all" && r.status !== statusFilter) return false;
         if (priorityFilter && r.priority !== priorityFilter) return false;
         if (!query.trim()) return true;
         const q = query.trim().toLowerCase();
@@ -50,7 +51,9 @@ export default function Prescriptions() {
     if (k === "all") {
       return ph.prescriptions.filter((r) => !["collected", "cancelled", "dispensed", "dispensing"].includes(r.status)).length;
     }
-    return ph.prescriptions.filter((r) => r.status === k).length;
+    const t = TABS.find((tt) => tt.key === k);
+    const status = t?.statusKey || k;
+    return ph.prescriptions.filter((r) => r.status === status).length;
   };
 
   return (
