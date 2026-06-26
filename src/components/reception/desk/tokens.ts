@@ -1,0 +1,22 @@
+/** Reception desk design tokens — independent premium UI */
+export const desk = {
+  sidebar: "#09090B",
+  sidebarBorder: "#27272A",
+  sidebarMuted: "#A1A1AA",
+  sidebarActive: "#FFFFFF",
+  accent: "#6366F1",
+  accentHover: "#4F46E5",
+  accentSoft: "#EEF2FF",
+  bg: "#FAFAFA",
+  surface: "#FFFFFF",
+  border: "#E4E4E7",
+  text: "#18181B",
+  textMuted: "#71717A",
+  textFaint: "#A1A1AA",
+  success: "#10B981",
+  successSoft: "#D1FAE5",
+  warning: "#F59E0B",
+  warningSoft: "#FEF3C7",
+  danger: "#EF4444",
+  dangerSoft: "#FEE2E2",
+} as const;

@@ -1,0 +1,20 @@
+/** Medora Doctor Portal APK — home screen palette */
+export const apk = {
+  bg: "#F5F2ED",
+  surface: "#FFFFFF",
+  forest: "#1B3B2E",
+  forestDark: "#1E3A2F",
+  clay: "#B8735D",
+  clayLight: "#E8C4B8",
+  claySoft: "#F0DDD6",
+  sage: "#C5D9C0",
+  sageSoft: "#E8EFE6",
+  text: "#1B3B2E",
+  textMuted: "#8A8F8C",
+  textOnDark: "#FFFFFF",
+  textOnDarkMuted: "#A8C4B0",
+  pending: "#F5E6B8",
+  pendingText: "#5C4A1E",
+  badge: "#C45C4A",
+  border: "#E8E4DF",
+} as const;

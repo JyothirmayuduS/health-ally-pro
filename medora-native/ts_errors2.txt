@@ -1,0 +1,26 @@
+app/(tabs)/book/[doctorId].tsx(349,17): error TS2339: Property 'reasonInput' does not exist on type '{ safe: { flex: number; }; scroll: { paddingHorizontal: number; paddingBottom: number; gap: number; }; navBar: { flexDirection: "row"; alignItems: "center"; justifyContent: "space-between"; paddingHorizontal: number; paddingVertical: number; borderBottomWidth: number; }; ... 31 more ...; confirmBtnText: { ...; }; }'.
+app/(tabs)/nutrition.tsx(165,34): error TS2304: Cannot find name 'router'.
+app/(tabs)/queue.tsx(163,43): error TS2322: Type '"#B6785C"' is not assignable to type '"#F4F1ED"'.
+app/(tabs)/queue.tsx(163,67): error TS2322: Type '"#B6785C"' is not assignable to type '"#E6E1DA"'.
+app/(tabs)/queue.tsx(165,43): error TS2322: Type '"#B6785C"' is not assignable to type '"#F4F1ED"'.
+app/(tabs)/queue.tsx(165,67): error TS2322: Type '"#1E3A32"' is not assignable to type '"#E6E1DA"'.
+app/care-team/video-call.tsx(199,5): error TS2345: Argument of type '{ container: { flex: number; backgroundColor: string; }; fullScreenFeed: { position: "absolute"; top: number; bottom: number; left: number; right: number; width: number; height: number; }; overlay: { position: "absolute"; ... 4 more ...; backgroundColor: string; }; ... 21 more ...; controlBtnActive: { ...; }; }' is not assignable to parameter of type '{ container: { flex: number; backgroundColor: string; }; fullScreenFeed: { position: "absolute"; top: number; bottom: number; left: number; right: number; width: number; height: number; }; overlay: { ...; }; ... 21 more ...; controlBtnActive: { ...; }; } & NamedStyles<...>'.
+  Property 'topInfo' is incompatible with index signature.
+    Object literal may only specify known properties, and 'backdropFilter' does not exist in type 'ViewStyle | TextStyle | ImageStyle'.
+app/doctor/[id].tsx(46,49): error TS2322: Type '{ onPress: () => void; title: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+app/medication/[id].tsx(117,13): error TS18048: 'med.sideEffects.length' is possibly 'undefined'.
+app/medication/[id].tsx(117,44): error TS18048: 'med.interactions.length' is possibly 'undefined'.
+app/medication/[id].tsx(121,21): error TS18048: 'med.interactions.length' is possibly 'undefined'.
+app/medication/[id].tsx(127,26): error TS18048: 'med.interactions' is possibly 'undefined'.
+app/medication/[id].tsx(132,21): error TS18048: 'med.interactions.length' is possibly 'undefined'.
+app/medication/[id].tsx(132,53): error TS18048: 'med.sideEffects.length' is possibly 'undefined'.
+app/medication/[id].tsx(133,21): error TS18048: 'med.sideEffects.length' is possibly 'undefined'.
+app/medication/[id].tsx(139,26): error TS18048: 'med.sideEffects' is possibly 'undefined'.
+app/medication/[id].tsx(149,12): error TS18048: 'med.alternatives.length' is possibly 'undefined'.
+app/medication/[id].tsx(153,18): error TS18048: 'med.alternatives' is possibly 'undefined'.
+app/nutrition/[id].tsx(142,13): error TS18048: 'meal.instructions' is possibly 'undefined'.
+app/nutrition/[id].tsx(159,16): error TS18048: 'meal.clinicalTips' is possibly 'undefined'.
+app/nutrition/[id].tsx(208,5): error TS2345: Argument of type '{ container: { flex: number; }; heroContainer: { height: number; width: "100%"; }; heroImage: { position: "absolute"; top: number; bottom: number; left: number; right: number; width: number; height: number; }; ... 31 more ...; tipText: { ...; }; }' is not assignable to parameter of type '{ container: { flex: number; }; heroContainer: { height: number; width: "100%"; }; heroImage: { position: "absolute"; top: number; bottom: number; left: number; right: number; width: number; height: number; }; ... 31 more ...; tipText: { ...; }; } & NamedStyles<...>'.
+  Property 'headerBadge' is incompatible with index signature.
+    Object literal may only specify known properties, and 'backdropFilter' does not exist in type 'ViewStyle | TextStyle | ImageStyle'.

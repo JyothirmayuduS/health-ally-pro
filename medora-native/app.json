@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Medora",
+    "slug": "medora-native",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "medora",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F4F1ED"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.medora.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F4F1ED"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.medora.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
+  }
+}
