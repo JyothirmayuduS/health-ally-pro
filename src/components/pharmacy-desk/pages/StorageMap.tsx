@@ -70,6 +70,7 @@ export default function StorageMap() {
   const [filterZone, setFilterZone] = useState<string>("all");
   const [filterAlert, setFilterAlert] = useState<"all" | "low" | "expiry">("all");
   const [searchQ, setSearchQ] = useState("");
+  const [addingToRack, setAddingToRack] = useState<{ rackId: string; zone: ZoneKey } | null>(null);
 
   // Enrich all drugs with live stock data
   const drugsEnriched = useMemo<DrugEnriched[]>(
@@ -311,6 +312,7 @@ export default function StorageMap() {
                           cfg={cfg}
                           selected={selected}
                           onSelect={setSelected}
+                          onAddClick={() => setAddingToRack({ rackId, zone })}
                         />
                       ))}
                     </div>
@@ -328,6 +330,15 @@ export default function StorageMap() {
         <div className="w-[360px] shrink-0 sticky top-4 self-start">
           <DrugDetailPanel drug={selected} onClose={() => setSelected(null)} />
         </div>
+      )}
+
+      {/* ── Add Medicine Modal ────────────────────────────────────────── */}
+      {addingToRack && (
+        <AddMedicineModal
+          rackId={addingToRack.rackId}
+          zone={addingToRack.zone}
+          onClose={() => setAddingToRack(null)}
+        />
       )}
     </div>
   );
@@ -359,7 +370,7 @@ function KpiCard({
 
 // ── Rack Unit — frontal elevation view of a pharmacy shelving unit ─────────────
 function RackUnit({
-  rackId, drugs, zone, cfg, selected, onSelect,
+  rackId, drugs, zone, cfg, selected, onSelect, onAddClick,
 }: {
   rackId: string;
   drugs: DrugEnriched[];
@@ -367,6 +378,7 @@ function RackUnit({
   cfg: typeof ZONE_CFG[ZoneKey];
   selected: DrugEnriched | null;
   onSelect: (d: DrugEnriched) => void;
+  onAddClick?: () => void;
 }) {
   // Group drugs by tray (= shelf level within this rack)
   const trays = useMemo(() => {
@@ -414,11 +426,22 @@ function RackUnit({
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2">
-          {hasCritical && <AlertTriangle className="h-3.5 w-3.5 text-clay" />}
-          {hasLow && !hasCritical && <AlertTriangle className="h-3.5 w-3.5 text-mustard" />}
-          {hasExpiry && <Clock className="h-3.5 w-3.5 text-orange-400" />}
-          <span className="text-[11px] text-ink-400 font-mono">{drugs.length} SKU</span>
+        <div className="flex items-center gap-3">
+          {onAddClick && (
+            <button
+              type="button"
+              onClick={onAddClick}
+              className="text-[10px] font-bold text-sage hover:text-sage-dark bg-sage-soft/30 hover:bg-sage-soft/60 border border-sage/20 rounded px-2 py-0.5 transition"
+            >
+              ＋ Add Medicine
+            </button>
+          )}
+          <div className="flex items-center gap-1.5">
+            {hasCritical && <AlertTriangle className="h-3.5 w-3.5 text-clay" />}
+            {hasLow && !hasCritical && <AlertTriangle className="h-3.5 w-3.5 text-mustard" />}
+            {hasExpiry && <Clock className="h-3.5 w-3.5 text-orange-400" />}
+            <span className="text-[11px] text-ink-400 font-mono">{drugs.length} SKU</span>
+          </div>
         </div>
       </div>
 
@@ -618,6 +641,276 @@ function DrugBin({
         </div>
       </div>
     </button>
+  );
+}
+
+// ── Add Medicine Modal ────────────────────────────────────────────────────────
+function AddMedicineModal({
+  rackId,
+  zone,
+  onClose,
+}: {
+  rackId: string;
+  zone: ZoneKey;
+  onClose: () => void;
+}) {
+  const { drugs, assignDrugToRack } = usePharmacyStore();
+  const [selectedDrugId, setSelectedDrugId] = useState("");
+  const [tray, setTray] = useState("T01");
+  const [slot, setSlot] = useState("1");
+  const [temp, setTemp] = useState<import("@/lib/pharmacy-desk/mockData").StorageTemp>(
+    zone === "cold" ? "2–8 °C" : "Room"
+  );
+
+  // Search state
+  const [searchDrugQ, setSearchDrugQ] = useState("");
+
+  // Initial stock setup state
+  const [addInitialStock, setAddInitialStock] = useState(false);
+  const [lot, setLot] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [qty, setQty] = useState("");
+  const [supplier, setSupplier] = useState("");
+
+  const filteredDrugs = useMemo(() => {
+    const q = searchDrugQ.trim().toLowerCase();
+    if (!q) return [];
+    return drugs.filter(d =>
+      [d.generic_name, ...d.brand_names, d.sku, d.id].join(" ").toLowerCase().includes(q)
+    ).slice(0, 5);
+  }, [drugs, searchDrugQ]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedDrugId) return;
+
+    assignDrugToRack({
+      drugId: selectedDrugId,
+      zone,
+      aisle: rackId[0] || "A",
+      rack: rackId,
+      tray,
+      slot,
+      temp,
+      initialBatch: addInitialStock && lot && expiry && qty
+        ? { lot, expiry, qty: parseInt(qty, 10), supplier }
+        : undefined
+    });
+    onClose();
+  };
+
+  const selectedDrug = drugs.find(d => d.id === selectedDrugId);
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+      <div className="bg-white border border-ink-200 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-ink-200 bg-bone flex items-center justify-between">
+          <div>
+            <h3 className="font-heading text-[16px] font-bold text-ink-900">Add Medicine to Rack {rackId}</h3>
+            <p className="text-[11px] text-ink-500 mt-0.5">Assign medication slot and set optional initial stock</p>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-ink-100 transition-colors">
+            <X className="h-4 w-4 text-ink-500" />
+          </button>
+        </div>
+
+        {/* Form Body */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
+
+          {/* Step 1: Select drug */}
+          <div className="space-y-2">
+            <label className="block text-[12px] font-bold text-ink-700">Search Formulary Medication</label>
+            {!selectedDrugId ? (
+              <div className="space-y-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-400" />
+                  <input
+                    value={searchDrugQ}
+                    onChange={(e) => setSearchDrugQ(e.target.value)}
+                    placeholder="Type to search generic or brand name..."
+                    className="w-full h-9 pl-8 pr-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sage"
+                    autoFocus
+                  />
+                </div>
+                {filteredDrugs.length > 0 && (
+                  <div className="border border-ink-200 rounded-lg bg-white overflow-hidden shadow-sm divide-y divide-ink-100">
+                    {filteredDrugs.map((d) => (
+                      <button
+                        key={d.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedDrugId(d.id);
+                          setSearchDrugQ("");
+                        }}
+                        className="w-full text-left px-3 py-2 text-[12.5px] hover:bg-stone-50 transition-colors flex items-center justify-between"
+                      >
+                        <div>
+                          <div className="font-semibold text-ink-900">{d.generic_name}</div>
+                          <div className="text-[10px] text-ink-400">{d.strength} · {d.form}</div>
+                        </div>
+                        <span className="font-mono text-[9px] bg-stone-100 text-stone-600 border rounded px-1.5 py-0.5">
+                          {d.location.location_code}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {searchDrugQ && filteredDrugs.length === 0 && (
+                  <div className="text-[12px] text-ink-400 italic text-center py-2">No matching medications found.</div>
+                )}
+              </div>
+            ) : (
+              <div className="p-3 bg-sage-soft/10 border border-sage/30 rounded-lg flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-[13px] text-ink-950">{selectedDrug?.generic_name}</div>
+                  <div className="text-[11px] text-ink-500">{selectedDrug?.strength} · {selectedDrug?.form}</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDrugId("")}
+                  className="text-[11px] text-clay font-bold hover:underline"
+                >
+                  Change
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Step 2: Location and Tray specifications */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Tray Level</label>
+              <select
+                value={tray}
+                onChange={(e) => setTray(e.target.value)}
+                className="w-full h-9 border border-ink-200 rounded-md bg-white px-2 text-[12.5px] focus:outline-none focus:border-sage"
+              >
+                {["T01", "T02", "T03", "T04", "T05", "T06", "T07", "T08"].map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Slot Code (e.g. S1-S10)</label>
+              <input
+                value={slot}
+                onChange={(e) => setSlot(e.target.value)}
+                placeholder="1"
+                className="w-full h-9 px-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sage"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Zone</label>
+              <input
+                value={zone.toUpperCase()}
+                disabled
+                className="w-full h-9 px-3 border border-ink-200 rounded-md bg-stone-50 text-[12.5px] text-ink-400 font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Temperature Setting</label>
+              <select
+                value={temp}
+                onChange={(e) => setTemp(e.target.value as any)}
+                className="w-full h-9 border border-ink-200 rounded-md bg-white px-2 text-[12.5px] focus:outline-none focus:border-sage"
+              >
+                <option value="Room">Room Temp (25°C)</option>
+                <option value="2–8 °C">Cold Chain (2–8 °C)</option>
+                <option value="Frozen">Frozen (&lt; 0°C)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Step 3: Initial Stock setup (Optional) */}
+          <div className="border-t border-ink-100 pt-3">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={addInitialStock}
+                onChange={(e) => setAddInitialStock(e.target.checked)}
+                className="rounded border-ink-300 text-sage focus:ring-sage"
+              />
+              <span className="text-[12.5px] font-bold text-ink-800">Add initial batch stock count?</span>
+            </label>
+
+            {addInitialStock && (
+              <div className="mt-3 p-3 bg-bone border border-ink-200 rounded-lg grid grid-cols-2 gap-3 animate-in fade-in duration-150">
+                <div>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Lot / Batch Number</label>
+                  <input
+                    value={lot}
+                    onChange={(e) => setLot(e.target.value)}
+                    placeholder="e.g. LOT-A239"
+                    required={addInitialStock}
+                    className="w-full h-8 px-2.5 border border-ink-200 rounded bg-white text-[12px] focus:outline-none focus:border-sage"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Expiry Date</label>
+                  <input
+                    type="date"
+                    value={expiry}
+                    onChange={(e) => setExpiry(e.target.value)}
+                    required={addInitialStock}
+                    className="w-full h-8 px-2.5 border border-ink-200 rounded bg-white text-[12px] focus:outline-none focus:border-sage"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Quantity Received</label>
+                  <input
+                    type="number"
+                    value={qty}
+                    onChange={(e) => setQty(e.target.value)}
+                    placeholder="100"
+                    required={addInitialStock}
+                    min="1"
+                    className="w-full h-8 px-2.5 border border-ink-200 rounded bg-white text-[12px] focus:outline-none focus:border-sage"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Supplier / Vendor</label>
+                  <input
+                    value={supplier}
+                    onChange={(e) => setSupplier(e.target.value)}
+                    placeholder="e.g. Cipla Pharma Ltd."
+                    className="w-full h-8 px-2.5 border border-ink-200 rounded bg-white text-[12px] focus:outline-none focus:border-sage"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="border-t border-ink-200 pt-4 flex justify-end gap-2.5">
+            <button
+              type="button"
+              onClick={onClose}
+              className="h-9 px-4 border border-ink-200 rounded-md text-[13px] text-ink-600 hover:bg-stone-50 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={!selectedDrugId}
+              className={cn(
+                "h-9 px-4 rounded-md text-[13px] font-bold text-white transition",
+                selectedDrugId
+                  ? "bg-sage hover:bg-sage-dark"
+                  : "bg-ink-200 text-ink-400 cursor-not-allowed"
+              )}
+            >
+              Confirm Assignment
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
   );
 }
 
