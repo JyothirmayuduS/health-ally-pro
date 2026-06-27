@@ -16,13 +16,28 @@ import {
 } from "@/components/pharmacy-desk/Pills";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Package, Printer, CheckCircle, MapPin, ScanLine } from "lucide-react";
+import { Package, Printer, CheckCircle, MapPin, ScanLine, ShieldAlert, X } from "lucide-react";
+import { checkDDI, type DDIAlert } from "@/lib/pharmacy-desk/ddiUtils";
+import { cn } from "@/lib/utils";
 
 export default function Dispense() {
-  const { prescriptions, patients, batches, findDrug, pickLine, completeDispense, markCollected, startDispense } = usePharmacyStore();
+  const {
+    prescriptions,
+    patients,
+    batches,
+    findDrug,
+    pickLine,
+    completeDispense,
+    markCollected,
+    startDispense,
+    logDdiOverride
+  } = usePharmacyStore();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [counseling, setCounseling] = useState("");
   const [witness, setWitness] = useState("");
+
+  const [ddiModalOpen, setDdiModalOpen] = useState(false);
+  const [ddiAlerts, setDdiAlerts] = useState<DDIAlert[]>([]);
 
   const queue = useMemo(
     () =>
@@ -35,6 +50,30 @@ export default function Dispense() {
   const selected = queue.find((r) => r.id === selectedId) ?? queue[0];
   const patient = selected && getPatient(selected, patients);
   const hasControlled = selected?.lines.some((l) => findDrug(l.drug_id)?.controlled_schedule);
+
+  // Task 1: Identify patient's other active drugs from their prescription history in the store
+  const patientActiveDrugs = useMemo(() => {
+    if (!patient || !selected) return [];
+    const patientRxs = prescriptions.filter(
+      (rx) => rx.patient_id === patient.id && rx.id !== selected.id && ["dispensed", "collected", "ready_pickup"].includes(rx.status)
+    );
+    const names = new Set<string>();
+    patientRxs.forEach((rx) => {
+      rx.lines.forEach((line) => {
+        const drug = findDrug(line.drug_id);
+        if (drug) names.add(drug.generic_name);
+      });
+    });
+    return Array.from(names);
+  }, [patient, selected, prescriptions, findDrug]);
+
+  // Current Rx drug names
+  const currentDrugs = useMemo(() => {
+    if (!selected) return [];
+    return selected.lines
+      .map((l) => findDrug(l.drug_id)?.generic_name)
+      .filter(Boolean) as string[];
+  }, [selected, findDrug]);
 
   function printLabel() {
     if (!selected || !patient) return;
@@ -181,7 +220,15 @@ export default function Dispense() {
                     <Button
                       className="btn-primary"
                       disabled={hasControlled && !witness.trim()}
-                      onClick={() => completeDispense(selected.id, counseling, witness || undefined)}
+                      onClick={() => {
+                        const alerts = checkDDI(currentDrugs, patientActiveDrugs);
+                        if (alerts.length > 0) {
+                          setDdiAlerts(alerts);
+                          setDdiModalOpen(true);
+                        } else {
+                          completeDispense(selected.id, counseling, witness || undefined);
+                        }
+                      }}
                     >
                       <CheckCircle className="mr-1.5 h-4 w-4" /> Complete dispense & bag
                     </Button>
@@ -211,6 +258,169 @@ export default function Dispense() {
               )}
             </div>
           )}
+        </div>
+      </div>
+
+      <DDIAlertModal
+        open={ddiModalOpen}
+        alerts={ddiAlerts}
+        rxNumber={selected?.rx_number ?? ""}
+        onClose={() => setDdiModalOpen(false)}
+        onConfirm={(overrideNotes, staffId) => {
+          ddiAlerts.forEach((alert) => {
+            logDdiOverride({
+              drugA: alert.drugA,
+              drugB: alert.drugB,
+              severity: alert.rule.severity,
+              pharmacistId: staffId,
+              rxRef: selected.rx_number,
+              reason: overrideNotes,
+            });
+          });
+          setDdiModalOpen(false);
+          completeDispense(selected.id, counseling, witness || undefined);
+        }}
+      />
+    </div>
+  );
+}
+
+function DDIAlertModal({
+  open,
+  alerts,
+  onClose,
+  onConfirm,
+  rxNumber
+}: {
+  open: boolean;
+  alerts: any[];
+  onClose: () => void;
+  onConfirm: (overrideNotes: string, staffId: string) => void;
+  rxNumber: string;
+}) {
+  const [overrideText, setOverrideText] = useState("");
+  const [staffId, setStaffId] = useState("");
+  const [acknowledged, setAcknowledged] = useState<Record<number, boolean>>({});
+
+  const majorAlerts = alerts.filter(a => a.rule.severity === "major");
+  const moderateAlerts = alerts.filter(a => a.rule.severity === "moderate");
+  const minorAlerts = alerts.filter(a => a.rule.severity === "minor");
+
+  const sortedAlerts = [...majorAlerts, ...moderateAlerts, ...minorAlerts];
+
+  const hasMajor = majorAlerts.length > 0;
+  const isMajorCleared = !hasMajor || (overrideText.trim().toUpperCase() === "CONFIRM OVERRIDE" && staffId.trim() !== "");
+
+  const nonMajorAlerts = [...moderateAlerts, ...minorAlerts];
+  const allNonMajorAcknowledged = nonMajorAlerts.every((_, idx) => acknowledged[idx] === true);
+
+  const canProceed = isMajorCleared && allNonMajorAcknowledged;
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 grid place-items-center p-4">
+      <div className="w-full max-w-2xl bg-white rounded-lg shadow-xl border border-ink-200 overflow-hidden max-h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-ink-200 bg-clay-soft flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldAlert className="h-5 w-5 text-clay" />
+            <div>
+              <h3 className="font-heading text-[16px] font-bold text-ink-900">Drug-Drug Interaction (DDI) Warning</h3>
+              <p className="text-[12px] text-ink-500">Clinical safety check for Rx: {rxNumber}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-ink-100 transition-colors">
+            <X className="h-4 w-4 text-ink-600" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-5 overflow-y-auto space-y-4 flex-1">
+          <div className="p-3 bg-clay-soft/40 border border-clay/20 text-[12.5px] text-clay rounded-md">
+            <strong>CRITICAL CAUTION:</strong> The following clinical drug interactions were detected. Please review each carefully and consult the prescriber if necessary.
+          </div>
+
+          <div className="space-y-3">
+            {sortedAlerts.map((alert, idx) => {
+              const severity = alert.rule.severity;
+              const borderCol = severity === "major" ? "border-l-clay" : severity === "moderate" ? "border-l-mustard" : "border-l-teal";
+              const bgCol = severity === "major" ? "bg-clay-soft/10" : severity === "moderate" ? "bg-mustard-soft/10" : "bg-teal-soft/10";
+              const textCol = severity === "major" ? "text-clay" : severity === "moderate" ? "text-mustard" : "text-teal";
+
+              return (
+                <div key={idx} className={cn("border border-ink-200 border-l-4 rounded-md p-4 space-y-2", borderCol, bgCol)}>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[10.5px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white border border-ink-200 text-ink-600">
+                      {alert.drugA} + {alert.drugB}
+                    </span>
+                    <span className={cn("text-[11px] font-bold uppercase tracking-wider", textCol)}>
+                      {severity} Interaction
+                    </span>
+                  </div>
+                  <div className="text-[13px] font-medium text-ink-900">{alert.rule.effect}</div>
+                  <div className="text-[12px] text-ink-600">
+                    <strong className="text-ink-900">Recommendation:</strong> {alert.rule.recommendation}
+                  </div>
+
+                  {severity !== "major" && (
+                    <label className="flex items-center gap-2 pt-2 text-[12px] text-ink-700 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={acknowledged[idx] || false}
+                        onChange={(e) => setAcknowledged({ ...acknowledged, [idx]: e.target.checked })}
+                        className="rounded border-ink-300 text-mustard focus:ring-mustard"
+                      />
+                      I acknowledge this {severity} interaction and will counsel the patient.
+                    </label>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Override Form for Major */}
+          {hasMajor && (
+            <div className="p-4 border border-clay/30 bg-clay-soft/20 rounded-md space-y-3">
+              <h4 className="text-[13px] font-bold text-clay uppercase tracking-wider">Major Override Justification</h4>
+              <p className="text-[12px] text-ink-600">To override major interactions, you must type "CONFIRM OVERRIDE" and input your Pharmacist/Staff ID.</p>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-ink-600 mb-1">Type CONFIRM OVERRIDE</label>
+                  <input
+                    placeholder="CONFIRM OVERRIDE"
+                    value={overrideText}
+                    onChange={(e) => setOverrideText(e.target.value)}
+                    className="w-full h-8 px-2 border border-ink-300 bg-white text-[12.5px] rounded focus:outline-none focus:border-clay"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold uppercase text-ink-600 mb-1">Staff / Pharmacist ID</label>
+                  <input
+                    placeholder="Riley Chen"
+                    value={staffId}
+                    onChange={(e) => setStaffId(e.target.value)}
+                    className="w-full h-8 px-2 border border-ink-300 bg-white text-[12.5px] rounded focus:outline-none focus:border-clay"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 py-3 border-t border-ink-200 bg-stone-50 flex justify-end gap-2">
+          <Button variant="outline" className="border-ink-200" onClick={onClose}>
+            Cancel dispensing
+          </Button>
+          <Button
+            className="btn-primary bg-clay hover:bg-clay-soft text-white"
+            disabled={!canProceed}
+            onClick={() => onConfirm(hasMajor ? `Manual override validated: "${overrideText}"` : "Acknowledged moderate/minor alerts", staffId || "Riley Chen")}
+          >
+            <CheckCircle className="mr-1.5 h-4 w-4" /> Override & Complete
+          </Button>
         </div>
       </div>
     </div>

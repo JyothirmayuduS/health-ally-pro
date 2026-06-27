@@ -67,6 +67,7 @@ import { Route as PharmacyWalkInRouteImport } from './routes/pharmacy.walk-in'
 import { Route as PharmacySearchRouteImport } from './routes/pharmacy.search'
 import { Route as PharmacyReportsRouteImport } from './routes/pharmacy.reports'
 import { Route as PharmacyRefillsRouteImport } from './routes/pharmacy.refills'
+import { Route as PharmacyPurchaseOrdersRouteImport } from './routes/pharmacy.purchase-orders'
 import { Route as PharmacyPrescriptionsRouteImport } from './routes/pharmacy.prescriptions'
 import { Route as PharmacyOperationsRouteImport } from './routes/pharmacy.operations'
 import { Route as PharmacyMapRouteImport } from './routes/pharmacy.map'
@@ -453,6 +454,11 @@ const PharmacyReportsRoute = PharmacyReportsRouteImport.update({
 const PharmacyRefillsRoute = PharmacyRefillsRouteImport.update({
   id: '/refills',
   path: '/refills',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyPurchaseOrdersRoute = PharmacyPurchaseOrdersRouteImport.update({
+  id: '/purchase-orders',
+  path: '/purchase-orders',
   getParentRoute: () => PharmacyRoute,
 } as any)
 const PharmacyPrescriptionsRoute = PharmacyPrescriptionsRouteImport.update({
@@ -1026,6 +1032,7 @@ export interface FileRoutesByFullPath {
   '/pharmacy/map': typeof PharmacyMapRoute
   '/pharmacy/operations': typeof PharmacyOperationsRoute
   '/pharmacy/prescriptions': typeof PharmacyPrescriptionsRoute
+  '/pharmacy/purchase-orders': typeof PharmacyPurchaseOrdersRoute
   '/pharmacy/refills': typeof PharmacyRefillsRoute
   '/pharmacy/reports': typeof PharmacyReportsRoute
   '/pharmacy/search': typeof PharmacySearchRoute
@@ -1172,6 +1179,7 @@ export interface FileRoutesByTo {
   '/pharmacy/map': typeof PharmacyMapRoute
   '/pharmacy/operations': typeof PharmacyOperationsRoute
   '/pharmacy/prescriptions': typeof PharmacyPrescriptionsRoute
+  '/pharmacy/purchase-orders': typeof PharmacyPurchaseOrdersRoute
   '/pharmacy/refills': typeof PharmacyRefillsRoute
   '/pharmacy/reports': typeof PharmacyReportsRoute
   '/pharmacy/search': typeof PharmacySearchRoute
@@ -1328,6 +1336,7 @@ export interface FileRoutesById {
   '/pharmacy/map': typeof PharmacyMapRoute
   '/pharmacy/operations': typeof PharmacyOperationsRoute
   '/pharmacy/prescriptions': typeof PharmacyPrescriptionsRoute
+  '/pharmacy/purchase-orders': typeof PharmacyPurchaseOrdersRoute
   '/pharmacy/refills': typeof PharmacyRefillsRoute
   '/pharmacy/reports': typeof PharmacyReportsRoute
   '/pharmacy/search': typeof PharmacySearchRoute
@@ -1487,6 +1496,7 @@ export interface FileRouteTypes {
     | '/pharmacy/map'
     | '/pharmacy/operations'
     | '/pharmacy/prescriptions'
+    | '/pharmacy/purchase-orders'
     | '/pharmacy/refills'
     | '/pharmacy/reports'
     | '/pharmacy/search'
@@ -1633,6 +1643,7 @@ export interface FileRouteTypes {
     | '/pharmacy/map'
     | '/pharmacy/operations'
     | '/pharmacy/prescriptions'
+    | '/pharmacy/purchase-orders'
     | '/pharmacy/refills'
     | '/pharmacy/reports'
     | '/pharmacy/search'
@@ -1788,6 +1799,7 @@ export interface FileRouteTypes {
     | '/pharmacy/map'
     | '/pharmacy/operations'
     | '/pharmacy/prescriptions'
+    | '/pharmacy/purchase-orders'
     | '/pharmacy/refills'
     | '/pharmacy/reports'
     | '/pharmacy/search'
@@ -2324,6 +2336,13 @@ declare module '@tanstack/react-router' {
       path: '/refills'
       fullPath: '/pharmacy/refills'
       preLoaderRoute: typeof PharmacyRefillsRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/purchase-orders': {
+      id: '/pharmacy/purchase-orders'
+      path: '/purchase-orders'
+      fullPath: '/pharmacy/purchase-orders'
+      preLoaderRoute: typeof PharmacyPurchaseOrdersRouteImport
       parentRoute: typeof PharmacyRoute
     }
     '/pharmacy/prescriptions': {
@@ -3246,6 +3265,7 @@ interface PharmacyRouteChildren {
   PharmacyMapRoute: typeof PharmacyMapRoute
   PharmacyOperationsRoute: typeof PharmacyOperationsRoute
   PharmacyPrescriptionsRoute: typeof PharmacyPrescriptionsRoute
+  PharmacyPurchaseOrdersRoute: typeof PharmacyPurchaseOrdersRoute
   PharmacyRefillsRoute: typeof PharmacyRefillsRoute
   PharmacyReportsRoute: typeof PharmacyReportsRoute
   PharmacySearchRoute: typeof PharmacySearchRoute
@@ -3264,6 +3284,7 @@ const PharmacyRouteChildren: PharmacyRouteChildren = {
   PharmacyMapRoute: PharmacyMapRoute,
   PharmacyOperationsRoute: PharmacyOperationsRoute,
   PharmacyPrescriptionsRoute: PharmacyPrescriptionsRoute,
+  PharmacyPurchaseOrdersRoute: PharmacyPurchaseOrdersRoute,
   PharmacyRefillsRoute: PharmacyRefillsRoute,
   PharmacyReportsRoute: PharmacyReportsRoute,
   PharmacySearchRoute: PharmacySearchRoute,

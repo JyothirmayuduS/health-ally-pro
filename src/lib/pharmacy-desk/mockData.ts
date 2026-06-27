@@ -773,3 +773,81 @@ export const RACK_LAYOUT = [
 export function findDrug(id: string) {
   return DRUGS.find((d) => d.id === id);
 }
+
+export type ReturnReason =
+  | "Patient discharged"
+  | "Dose change"
+  | "Treatment stopped"
+  | "Excess dispensed"
+  | "Damaged packaging";
+
+export type WardReturn = {
+  id: string;
+  ward: string;
+  bed: string;
+  patient_id: string;
+  drug_id: string;
+  batch_id: string;
+  qty: number;
+  reason: ReturnReason;
+  submitted_by: string;
+  submitted_at: string;
+  status: "pending" | "restocked" | "disposed";
+};
+
+
+export const SEED_RETURNS: WardReturn[] = [
+  {
+    id: "ret-1",
+    ward: "Med-Surg 3W",
+    bed: "312",
+    patient_id: "MRN-100234",
+    drug_id: "drug-hct25",
+    batch_id: "b11",
+    qty: 5,
+    reason: "Patient discharged",
+    submitted_by: "Nurse N. Okoro",
+    submitted_at: ago(120),
+    status: "pending",
+  },
+  {
+    id: "ret-2",
+    ward: "ICU 2N",
+    bed: "ICU-08",
+    patient_id: "MRN-100232",
+    drug_id: "drug-met500",
+    batch_id: "b3",
+    qty: 10,
+    reason: "Dose change",
+    submitted_by: "Nurse T. Hughes",
+    submitted_at: ago(180),
+    status: "pending",
+  },
+  {
+    id: "ret-3",
+    ward: "Peds 1E",
+    bed: "104",
+    patient_id: "MRN-100235",
+    drug_id: "drug-amx500",
+    batch_id: "b1",
+    qty: 2,
+    reason: "Treatment stopped",
+    submitted_by: "Nurse M. Santos",
+    submitted_at: ago(240),
+    status: "pending",
+  },
+  {
+    id: "ret-4",
+    ward: "Ortho 4W",
+    bed: "418",
+    patient_id: "MRN-100236",
+    drug_id: "drug-par500",
+    batch_id: "b6",
+    qty: 8,
+    reason: "Damaged packaging",
+    submitted_by: "Nurse K. Webb",
+    submitted_at: ago(360),
+    status: "pending",
+  },
+];
+

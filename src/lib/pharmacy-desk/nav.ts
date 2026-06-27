@@ -14,6 +14,7 @@ import {
   Store,
   BookOpen,
   ClipboardCheck,
+  ShoppingCart,
 } from "lucide-react";
 
 export type PharmacyCountKey =
@@ -62,6 +63,7 @@ export const PHARMACY_NAV: PharmacyNavSection[] = [
     items: [
       { to: "/pharmacy/search", label: "Medicine search", icon: Search },
       { to: "/pharmacy/inventory", label: "Inventory", icon: Briefcase, countKey: "lowStock" },
+      { to: "/pharmacy/purchase-orders", label: "Purchase orders", icon: ShoppingCart },
       { to: "/pharmacy/formulary", label: "Formulary & pricing", icon: BookOpen },
       { to: "/pharmacy/map", label: "Storage map", icon: Map },
       { to: "/pharmacy/cycle-count", label: "Cycle count", icon: ClipboardCheck },
