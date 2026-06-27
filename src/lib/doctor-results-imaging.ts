@@ -635,9 +635,108 @@ export function declinePatientUpload(id: string) {
   saveState(state);
 }
 
+/** Read validated lab results published by the lab supervisor from shared storage */
+function loadPublishedLabResults(): Array<{
+  id: string;
+  patientId: string;
+  doctorPatientId: string;
+  orderId: string;
+  testName: string;
+  testCode: string;
+  date: string;
+  status: "normal" | "abnormal" | "pending";
+  summary: string;
+  results?: Record<string, string>;
+  doctorName?: string;
+  doctorId?: string;
+  patientName?: string;
+}> {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem("medora-lab-results-v1");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Convert a published lab result into a ResultDocument for the doctor's inbox */
+function publishedResultToDocument(r: ReturnType<typeof loadPublishedLabResults>[number]): ResultDocument {
+  const isAbnormal = r.status === "abnormal";
+  const analytes: ResultAnalyte[] = r.results
+    ? Object.entries(r.results).map(([key, value]) => ({
+        name: key,
+        ref: "—",
+        value: String(value),
+        flag: isAbnormal ? ("High" as const) : undefined,
+      }))
+    : [];
+
+  const relativeTime = r.date
+    ? (() => {
+        const diff = Date.now() - new Date(r.date).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 2) return "Just now";
+        if (mins < 60) return `${mins} minutes ago`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours}h ago`;
+        const days = Math.floor(hours / 24);
+        if (days === 1) return "Yesterday";
+        if (days < 7) return `${days} days ago`;
+        return `${Math.floor(days / 7)} week${days >= 14 ? "s" : ""} ago`;
+      })()
+    : "Recently";
+
+  const doctorLabel = r.doctorName ? `Dr. ${r.doctorName.replace(/^Dr\.?\s*/i, "")}` : "Ordering Clinician";
+  const patientLabel = r.patientName || "Patient";
+
+  return {
+    id: r.id,
+    patientId: r.doctorPatientId || r.patientId,
+    title: r.testName,
+    modality: "LAB",
+    modalityClass: "Lab",
+    channel: "Lab",
+    description: r.summary || `${r.testName} results validated and released by Oakhaven Laboratory.`,
+    source: "Oakhaven Laboratory",
+    relativeTime,
+    needsReview: isAbnormal,
+    flagged: isAbnormal,
+    status: "Final",
+    accent: isAbnormal ? "#F0DDD6" : "#E8EFE6",
+    iconKind: "lab",
+    filterTabs: ["all"],
+    pageCount: 1,
+    fileFormat: "PDF",
+    payloadSize: "—",
+    analytes: analytes.length > 0 ? analytes : undefined,
+    structuredAnalyteCount: analytes.length || undefined,
+    history: [
+      {
+        id: `h-${r.id}`,
+        action: "Validated & released by Lab Supervisor",
+        detail: `Ordered by ${doctorLabel} for ${patientLabel}`,
+        actor: "Oakhaven Laboratory",
+        relativeTime,
+        absoluteTime: r.date ? new Date(r.date).toLocaleString() : relativeTime,
+        isLatest: true,
+      },
+    ],
+    documentRecordId: r.id,
+    inboxStatus: isAbnormal ? "Needs review" : "Final — released",
+    orderingClinician: r.doctorName || undefined,
+    interfaceSource: "Lab Desk — Oakhaven",
+    specimenDate: r.date,
+    receivedAt: r.date,
+    indexSummary: r.summary || `Ordered by ${doctorLabel}`,
+  };
+}
+
 export function listResultDocuments(): ResultDocument[] {
   const state = loadState();
-  return SEED_DOCUMENTS.map((doc) => {
+
+  // Seed documents with sign-off / intake state applied
+  const seedDocs = SEED_DOCUMENTS.map((doc) => {
     const intake = resolvePatientUploadIntake(doc, state);
     const declined = intake === "declined";
     const signed = state.signedOff.includes(doc.id);
@@ -664,8 +763,28 @@ export function listResultDocuments(): ResultDocument[] {
         : intake === "pending"
           ? "Patient upload — accept to view"
           : doc.footerNote,
-    };
+    } as ResultDocument;
   });
+
+  // Dynamic docs from validated lab results (published by lab supervisor)
+  const publishedResults = loadPublishedLabResults();
+  const seedIds = new Set(SEED_DOCUMENTS.map((d) => d.id));
+  const dynamicDocs: ResultDocument[] = publishedResults
+    .filter((r) => !seedIds.has(r.id)) // avoid duplicating any seed doc
+    .map((r) => {
+      const doc = publishedResultToDocument(r);
+      const signed = state.signedOff.includes(doc.id);
+      return {
+        ...doc,
+        status: signed ? ("Signed off" as const) : doc.status,
+        needsReview: signed ? false : doc.needsReview,
+        inboxStatus: signed ? "Filed in chart" : doc.inboxStatus,
+        chartAttachment: signed ? "Filed in chart" : doc.chartAttachment,
+      };
+    });
+
+  // Put dynamic (live results) first so they appear at top of inbox
+  return [...dynamicDocs, ...seedDocs];
 }
 
 export function getResultDocument(id: string): ResultDocument | undefined {

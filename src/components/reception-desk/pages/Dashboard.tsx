@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { useStore } from "@/lib/reception-desk/store";
 import { getPatient } from "@/lib/reception-desk/utils";
@@ -14,9 +14,10 @@ import {
   Hourglass,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
 } from "lucide-react";
 import WalkInModal from "@/components/reception-desk/WalkInModal";
-import { useState } from "react";
+import { getAnnouncements, ANNOUNCEMENTS_EVENT, type Announcement } from "@/lib/shared/announcements";
 
 const Kpi = ({ label, value, sub, accent, testId }) => (
   <div data-testid={testId} className="surface px-5 py-4">
@@ -54,6 +55,29 @@ export default function Dashboard() {
     if (typeof window === "undefined") return "";
     return localStorage.getItem("medora-reception-announcement-v1") || "Welcome to Oakhaven Hospital. Please wait for your token to be called. Keep your physical slips ready.";
   });
+
+  const [activeAnnouncements, setActiveAnnouncements] = useState<Announcement[]>(() =>
+    getAnnouncements().filter(
+      (a) =>
+        a.status === "active" &&
+        (a.targetModules.includes("all") || a.targetModules.includes("reception"))
+    )
+  );
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setActiveAnnouncements(
+        getAnnouncements().filter(
+          (a) =>
+            a.status === "active" &&
+            (a.targetModules.includes("all") || a.targetModules.includes("reception"))
+        )
+      );
+    };
+    window.addEventListener(ANNOUNCEMENTS_EVENT, handleUpdate);
+    return () => window.removeEventListener(ANNOUNCEMENTS_EVENT, handleUpdate);
+  }, []);
+
   const { appointments, doctors, patients, encounters } = useStore();
   const today = useMemo(() => appointments.filter((a) => a.date === TODAY_STR), [appointments]);
 
@@ -88,6 +112,28 @@ export default function Dashboard() {
   return (
     <>
       <div data-testid="dashboard-page" className="space-y-6">
+        {/* Active Announcement Banners */}
+        {activeAnnouncements.map((ann) => (
+          <div
+            key={ann.id}
+            className={`rounded border px-4 py-3 text-[13px] flex gap-2.5 items-start ${
+              ann.priority === "emergency"
+                ? "bg-red-50 border-red-200 text-red-900"
+                : ann.priority === "urgent"
+                ? "bg-status-waitBg border-status-waitBorder text-status-waitText"
+                : "bg-bone border-stone-200 text-ink-700"
+            }`}
+          >
+            <AlertTriangle className="h-4.5 w-4.5 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold uppercase tracking-wider text-[11px] mr-2">
+                [{ann.priority}] {ann.title}
+              </span>
+              <p className="mt-0.5 text-[12px] opacity-90">{ann.body}</p>
+            </div>
+          </div>
+        ))}
+
         {/* KPI strip — compact pills, not big tiles */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <Kpi testId="kpi-today" label="Today" value={today.length} sub="appointments" />

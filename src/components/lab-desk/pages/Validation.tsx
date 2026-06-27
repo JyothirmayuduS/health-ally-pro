@@ -12,14 +12,19 @@ import LabReport from "@/components/lab-desk/LabReport";
 export default function Validation() {
   const { orders, patients, findCatalog, validate, rejectValid, hospital } = useLabStore();
   const { isSupervisor, session } = useLabAuth();
-  const [openId, setOpenId] = useState(null);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   const [rejectMode, setRejectMode] = useState(false);
-  const [printOrderId, setPrintOrderId] = useState(null);
+  const [printOrderId, setPrintOrderId] = useState<string | null>(null);
+
+  // Critical Value Notification inputs
+  const [notifiedPerson, setNotifiedPerson] = useState("");
+  const [notifiedMethod, setNotifiedMethod] = useState("Phone call");
+  const [notifiedNotes, setNotifiedNotes] = useState("");
 
   const queue = useMemo(() => orders.filter((o) => o.status === "validation"), [orders]);
   const released = useMemo(
-    () => orders.filter((o) => o.status === "validated").sort((a, b) => new Date(b.released_at) - new Date(a.released_at)).slice(0, 6),
+    () => orders.filter((o) => o.status === "validated").sort((a, b) => new Date(b.released_at ?? "").getTime() - new Date(a.released_at ?? "").getTime()).slice(0, 6),
     [orders],
   );
 
@@ -32,7 +37,7 @@ export default function Validation() {
   if (current) {
     return (
       <div className="space-y-6" data-testid="validation-detail">
-        <button onClick={() => { setOpenId(null); setComment(""); setRejectMode(false); }} data-testid="back-to-validation"
+        <button onClick={() => { setOpenId(null); setComment(""); setRejectMode(false); setNotifiedPerson(""); setNotifiedNotes(""); }} data-testid="back-to-validation"
           className="text-xs font-mono uppercase tracking-wider text-ink-600 hover:text-[var(--sage-700)] flex items-center gap-1.5">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to validation queue
         </button>
@@ -60,7 +65,7 @@ export default function Validation() {
           {hasCritical && (
             <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-800 text-sm">
               <AlertOctagon className="h-4 w-4" />
-              <span><b>Critical value</b> present — dual sign-off required. Confirm doctor notification before release.</span>
+              <span><b>Critical value</b> present — Dual sign-off required. Enforce clinician phone/EMR alert below to unlock release.</span>
             </div>
           )}
 
@@ -93,6 +98,46 @@ export default function Validation() {
             })}
           </div>
 
+          {hasCritical && (
+            <div className="mt-6 p-4 rounded-lg border border-red-200 bg-red-50/30 space-y-3">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-red-800 font-bold flex items-center gap-1.5">
+                <AlertOctagon className="h-3.5 w-3.5" /> Clinician Handover Record
+              </h4>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <Label className="text-[10px] uppercase font-bold text-red-900">Notified Person *</Label>
+                  <input
+                    placeholder="e.g. Dr. Saanvi Reddy"
+                    value={notifiedPerson}
+                    onChange={(e) => setNotifiedPerson(e.target.value)}
+                    className="mt-1 w-full h-8 px-2 border border-red-200 bg-white rounded text-sm outline-none focus:border-red-400"
+                  />
+                </div>
+                <div>
+                  <Label className="text-[10px] uppercase font-bold text-red-900">Method *</Label>
+                  <select
+                    value={notifiedMethod}
+                    onChange={(e) => setNotifiedMethod(e.target.value)}
+                    className="mt-1 w-full h-8 px-2 border border-red-200 bg-white rounded text-sm outline-none focus:border-red-400"
+                  >
+                    <option value="Phone call">Phone call</option>
+                    <option value="In-person">In-person</option>
+                    <option value="Pager / EMR Alert">Pager / EMR Alert</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <Label className="text-[10px] uppercase font-bold text-red-900">Call / Verification Notes</Label>
+                <input
+                  placeholder="e.g. Confirmed back results. Repeated critical glucose value to Dr. Reddy."
+                  value={notifiedNotes}
+                  onChange={(e) => setNotifiedNotes(e.target.value)}
+                  className="mt-1 w-full h-8 px-2 border border-red-200 bg-white rounded text-sm outline-none focus:border-red-400"
+                />
+              </div>
+            </div>
+          )}
+
           <div className="mt-6 space-y-3">
             <Label className="text-xs">Supervisor comment {rejectMode ? "(required for rejection)" : "(optional)"}</Label>
             <Textarea data-testid="validation-comment" value={comment} onChange={(e) => setComment(e.target.value)}
@@ -118,8 +163,17 @@ export default function Validation() {
                     onClick={() => setRejectMode(true)} data-testid="reject-validation-btn">
                     <XCircle className="h-3.5 w-3.5 mr-1.5" /> Reject
                   </Button>
-                  <Button className="btn-primary" disabled={!isSupervisor}
-                    onClick={() => { validate(current.id, comment, session?.fullName); setOpenId(null); }} data-testid="approve-release-btn">
+                  <Button className="btn-primary" disabled={!isSupervisor || (hasCritical && !notifiedPerson.trim())}
+                    onClick={() => {
+                      validate(current.id, comment, session?.fullName, {
+                        notifiedPerson,
+                        method: notifiedMethod,
+                        notes: notifiedNotes,
+                      });
+                      setOpenId(null);
+                      setNotifiedPerson("");
+                      setNotifiedNotes("");
+                    }} data-testid="approve-release-btn">
                     <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" /> Approve & release
                   </Button>
                 </>
@@ -129,7 +183,7 @@ export default function Validation() {
         </div>
 
         {printOrder && (
-          <LabReport order={printOrder} patient={getPatient(printOrder, patients)}
+          <LabReport order={printOrder} patient={getPatient(printOrder, patients) ?? null}
             catalog={findCatalog(printOrder.test_code)} hospital={hospital} onClose={() => setPrintOrderId(null)} />
         )}
       </div>
@@ -179,7 +233,7 @@ export default function Validation() {
                     <td className="px-4 py-3">
                       <div className="flex gap-1.5 flex-wrap">
                         {(flags?.length ?? 0) === 0 ? <span className="text-xs text-stone-400">All normal</span> :
-                          flags.slice(0, 3).map((f, i) => <FlagBadge key={i} {...f} />)}
+                          (flags ?? []).slice(0, 3).map((f, i) => <FlagBadge key={i} {...f} />)}
                       </div>
                     </td>
                   </tr>
@@ -210,7 +264,7 @@ export default function Validation() {
       )}
 
       {printOrder && (
-        <LabReport order={printOrder} patient={getPatient(printOrder, patients)}
+        <LabReport order={printOrder} patient={getPatient(printOrder, patients) ?? null}
           catalog={findCatalog(printOrder.test_code)} hospital={hospital} onClose={() => setPrintOrderId(null)} />
       )}
     </div>

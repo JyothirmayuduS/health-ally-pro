@@ -40,6 +40,8 @@ const titleFromPath = (pathname: string) => {
     return { eyebrow: "Compliance", title: "Controlled register" };
   if (pathname.startsWith("/pharmacy/operations"))
     return { eyebrow: "Insights", title: "Operations center" };
+  if (pathname.startsWith("/pharmacy/purchase-orders"))
+    return { eyebrow: "Stock", title: "Purchase orders" };
   if (pathname.startsWith("/pharmacy/ward"))
     return { eyebrow: "IPD", title: "Ward deliveries" };
   if (pathname.startsWith("/pharmacy/walk-in"))

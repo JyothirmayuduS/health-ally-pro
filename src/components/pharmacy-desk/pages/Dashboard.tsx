@@ -25,12 +25,14 @@ import {
   isLowStock,
 } from "@/lib/pharmacy-desk/store";
 import { usePharmacyAuth } from "@/lib/pharmacy-desk/usePharmacyAuth";
+import { Button } from "@/components/ui/button";
 import {
   KpiCard,
   SectionLabel,
   PriorityPill,
   RxStatusPill,
   LocationChip,
+  EmptyState,
 } from "@/components/pharmacy-desk/Pills";
 import { findDrug } from "@/lib/pharmacy-desk/mockData";
 import { printPharmacistShiftReport } from "@/lib/pharmacy-desk/print";
@@ -237,7 +239,7 @@ export default function Dashboard() {
           )}
 
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Link to="/pharmacy/search" className="surface flex items-center justify-between border-l-4 border-l-mustard px-5 py-4 transition hover:bg-white">
+            <Link to="/pharmacy/search" search={{ q: "" }} className="surface flex items-center justify-between border-l-4 border-l-mustard px-5 py-4 transition hover:bg-white">
               <div>
                 <div className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-400">Quick lookup</div>
                 <div className="font-heading mt-2 text-[18px] font-semibold text-ink-900">Medicine search</div>
@@ -313,11 +315,11 @@ export default function Dashboard() {
               <div className="surface p-5">
                 <h3 className="font-heading text-[16px] font-semibold text-ink-900">Quick actions</h3>
                 <div className="mt-4 grid gap-2">
-                  <Link to="/pharmacy/search" className="btn-outline w-full justify-start"><Search className="h-4 w-4" /> Find medicine location</Link>
+                  <Link to="/pharmacy/search" search={{ q: "" }} className="btn-outline w-full justify-start"><Search className="h-4 w-4" /> Find medicine location</Link>
                   <Link to="/pharmacy/dispense" className="btn-outline w-full justify-start"><Package className="h-4 w-4" /> Open dispense counter</Link>
                   <Link to="/pharmacy/ward" className="btn-outline w-full justify-start"><BedDouble className="h-4 w-4" /> Ward deliveries</Link>
                   <Link to="/pharmacy/refills" className="btn-outline w-full justify-start"><RefreshCw className="h-4 w-4" /> Review refills</Link>
-                  <Link to="/pharmacy/map" className="btn-outline w-full justify-start"><Snowflake className="h-4 w-4" /> Storage map</Link>
+                  <Link to="/pharmacy/map" search={{ highlight: "" }} className="btn-outline w-full justify-start"><Snowflake className="h-4 w-4" /> Storage map</Link>
                 </div>
               </div>
 

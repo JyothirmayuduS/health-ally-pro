@@ -22,6 +22,7 @@ export default function Collection() {
   const [rejectFor, setRejectFor] = useState<typeof collectFor>(null);
   const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
+  const [condition, setCondition] = useState("");
 
   const queue = useMemo(
     () =>
@@ -178,6 +179,7 @@ export default function Collection() {
           {collectFor && (() => {
             const p = getPatient(collectFor, patients);
             const cat = findCatalog(collectFor.test_code);
+            const isNonAdequate = condition && condition !== "Adequate";
             return (
               <div className="space-y-4">
                 <div className="rounded-lg border border-plum/30 bg-plum-soft/50 p-4">
@@ -190,16 +192,57 @@ export default function Collection() {
                   <div><span className="text-ink-400">Test</span><div className="font-medium">{collectFor.test_code}</div></div>
                   <div><span className="text-ink-400">Fasting</span><div className="font-medium">{collectFor.fasting ? "Required" : "Not required"}</div></div>
                 </div>
+
+                {/* Specimen Condition — required field */}
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide">
+                    Specimen Condition <span className="text-clay">*</span>
+                  </Label>
+                  <select
+                    value={condition}
+                    onChange={(e) => setCondition(e.target.value)}
+                    className="w-full rounded-md border border-ink-200 bg-white px-3 py-2 text-sm outline-none focus:border-plum focus:ring-1 focus:ring-plum/20"
+                  >
+                    <option value="">— Select condition —</option>
+                    <option value="Adequate">✅ Adequate</option>
+                    <option value="Hemolyzed">⚠️ Hemolyzed</option>
+                    <option value="Lipemic">⚠️ Lipemic</option>
+                    <option value="Clotted">🚫 Clotted</option>
+                    <option value="Insufficient volume">🚫 Insufficient volume</option>
+                  </select>
+                </div>
+
+                {/* Warning banner for non-adequate */}
+                {isNonAdequate && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12px] text-amber-800">
+                    <div className="font-bold mb-0.5">⚠️ Non-adequate specimen</div>
+                    <div>Bench processing will be <strong>blocked</strong> until a Lab Supervisor grants an override. Record why sample is being accepted below.</div>
+                  </div>
+                )}
+
                 <div>
-                  <Label className="text-xs">Draw note (optional)</Label>
-                  <Input placeholder="e.g. difficult vein, right antecubital" value={note} onChange={(e) => setNote(e.target.value)} />
+                  <Label className="text-xs">Draw note {isNonAdequate && <span className="text-clay font-bold">(required — reason for accepting non-adequate sample)</span>}</Label>
+                  <Input
+                    placeholder={isNonAdequate ? "e.g. patient difficult draw, only sample available — supervisor notified" : "e.g. difficult vein, right antecubital"}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
                 </div>
               </div>
             );
           })()}
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setCollectFor(null)}>Cancel</Button>
-            <Button className="bg-plum text-white hover:bg-plum/90" onClick={() => { collect(collectFor!.id, note); setCollectFor(null); }}>
+            <Button variant="ghost" onClick={() => { setCollectFor(null); setCondition(""); }}>Cancel</Button>
+            <Button
+              className="bg-plum text-white hover:bg-plum/90"
+              disabled={!condition || (condition !== "Adequate" && !note.trim())}
+              onClick={() => {
+                collect(collectFor!.id, note, condition);
+                setCollectFor(null);
+                setCondition("");
+                setNote("");
+              }}
+            >
               <CheckCircle2 className="h-3.5 w-3.5" /> Specimen collected
             </Button>
           </DialogFooter>

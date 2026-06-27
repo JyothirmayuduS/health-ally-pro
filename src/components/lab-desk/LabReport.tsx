@@ -2,8 +2,18 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Printer, X } from "lucide-react";
 import { flagValue, formatDateTime } from "@/lib/lab-desk/store";
+import type { LabOrder, LabPatient, LabCatalogItem } from "@/lib/lab-desk/mockData";
+import type { HOSPITAL as HospitalType } from "@/lib/lab-desk/mockData";
 
-export default function LabReport({ order, patient, catalog, hospital, onClose }) {
+type Props = {
+  order: LabOrder | null;
+  patient: LabPatient | null;
+  catalog: LabCatalogItem | null | undefined;
+  hospital: typeof import("@/lib/lab-desk/mockData").HOSPITAL;
+  onClose: () => void;
+};
+
+export default function LabReport({ order, patient, catalog, hospital, onClose }: Props) {
   if (!order) return null;
   const handlePrint = () => window.print();
 

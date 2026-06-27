@@ -46,6 +46,12 @@ const titleFromPath = (pathname: string, isSupervisor: boolean) => {
     return { eyebrow: "Imaging", title: "Radiology queue" };
   if (pathname.startsWith("/lab/reports"))
     return { eyebrow: "Insights", title: "Lab reports" };
+  if (pathname.startsWith("/lab/qc"))
+    return { eyebrow: "Quality", title: "QC Run Registry" };
+  if (pathname.startsWith("/lab/reagents"))
+    return { eyebrow: "Inventory", title: "Reagent & Consumables" };
+  if (pathname.startsWith("/lab/storage"))
+    return { eyebrow: "Specimens", title: "Storage & Aliquots" };
   if (pathname.startsWith("/lab/settings"))
     return { eyebrow: "Operations", title: "Lab settings" };
   return { eyebrow: "Laboratory", title: "Maple Hospital" };

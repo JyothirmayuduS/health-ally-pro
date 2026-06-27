@@ -8,6 +8,10 @@ import React, {
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
+import { checkCriticalValues, type CriticalAlert } from "./criticalValueUtils";
+import { SEED_QC_RUNS, type QCRun } from "./qcData";
+import { SEED_REAGENTS, type Reagent } from "./reagentData";
+import { pushPatientNotification } from "@/lib/patient-notifications-store";
 import {
   HOSPITAL,
   SEED_ORDERS,
@@ -51,6 +55,73 @@ import {
 const ACTOR_TECH = "J. Mensah";
 const ACTOR_SUP = "Dr. Rajan";
 
+export interface CriticalValueNotification {
+  id: string;
+  orderId: string;
+  patientId: string;
+  doctorId: string;
+  parameters: {
+    parameterName: string;
+    value: string;
+    unit: string;
+    threshold: string;
+    direction: "low" | "high";
+  }[];
+  notifiedBy: string;
+  notifiedPerson: string;
+  method: string;
+  notes?: string;
+  notifiedAt: string;
+  acknowledgedAt: string | null;
+  status: "pending_ack" | "acknowledged";
+}
+
+export interface Aliquot {
+  id: string;
+  parentAccession: string;
+  volume: number;
+  containerType: string;
+  destination: string;
+  createdAt: string;
+  status: "active" | "disposed";
+}
+
+export interface LabShiftReport {
+  id: string;
+  date: string;
+  shift: "morning" | "afternoon" | "night";
+  technicianName: string;
+  supervisorName?: string;
+  handoverNotes?: string;
+  throughput: {
+    received: number;
+    stat: number;
+    urgent: number;
+    routine: number;
+    completed: number;
+    pending: number;
+    tatComplianceRate: number;
+  };
+  quality: {
+    qcPass: number;
+    qcWarning: number;
+    qcFail: number;
+    criticalAlertsCount: number;
+    deltaFailuresCount: number;
+  };
+  integrity: {
+    rejectedCollection: number;
+    rejectedReception: number;
+    storedCount: number;
+  };
+  reagents: {
+    lowOrExpiredCount: number;
+    blockedTestsCount: number;
+  };
+  status: "draft" | "signed";
+  signedAt?: string;
+}
+
 type StoreValue = {
   orders: LabOrder[];
   patients: LabPatient[];
@@ -58,14 +129,20 @@ type StoreValue = {
   invoices: LabInvoice[];
   staff: typeof STAFF;
   hospital: typeof HOSPITAL;
+  criticalNotifications: CriticalValueNotification[];
+  qcRuns: QCRun[];
+  reagents: Reagent[];
+  aliquots: Aliquot[];
+  labShiftReports: LabShiftReport[];
+  qcLocks: string[]; // List of locked analytes/test codes
   findCatalog: (code: string) => LabCatalogItem | undefined;
   updateCatalogPrice: (code: string, price: number) => void;
   addCatalogTest: (item: LabCatalogItem) => void;
-  collect: (id: string, note?: string) => void;
+  collect: (id: string, note?: string, condition?: string) => void;
   rejectCollect: (id: string, reason: string) => void;
   startProcessing: (id: string) => void;
   saveResults: (id: string, results: Record<string, string>, complete: boolean) => void;
-  validate: (id: string, comment?: string, actor?: string) => void;
+  validate: (id: string, comment?: string, actor?: string, criticalNotifData?: { notifiedPerson: string; method: string; notes?: string }) => void;
   rejectValid: (id: string, reason: string) => void;
   cancel: (id: string, reason: string) => void;
   addWalkIn: (input: {
@@ -87,6 +164,17 @@ type StoreValue = {
     priority?: LabOrder["priority"];
     notes?: string;
   }) => LabOrder | null;
+  // New actions:
+  acknowledgeCriticalAlert: (id: string, actor?: string) => void;
+  supervisorOverrideCondition: (id: string, reason: string, actor: string) => void;
+  logQCRun: (run: Omit<QCRun, "id" | "date" | "status" | "rulesTriggered">) => void;
+  logQCCorrectiveAction: (runId: string, action: string) => void;
+  acceptSampleAtLab: (orderId: string, condition: string, reason?: string) => void;
+  storeSample: (orderId: string, rack: string, box: string, position: string, retentionDays: number) => void;
+  disposeSample: (orderId: string) => void;
+  addReagentLot: (reagent: Omit<Reagent, "id">) => void;
+  createAliquots: (orderId: string, list: Omit<Aliquot, "id" | "parentAccession" | "createdAt" | "status">[]) => void;
+  saveShiftReport: (report: LabShiftReport) => void;
 };
 
 const StoreCtx = createContext<StoreValue | null>(null);
@@ -122,6 +210,79 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [patients, setPatients] = useState<LabPatient[]>(LAB_PATIENTS);
   const [catalog, setCatalog] = useState<LabCatalogItem[]>(() => loadLabCatalog());
   const [invoices, setInvoices] = useState<LabInvoice[]>([]);
+  const [criticalNotifications, setCriticalNotifications] = useState<CriticalValueNotification[]>(() => [
+    {
+      id: "CRIT-001",
+      orderId: "ORD-101",
+      patientId: "P-101",
+      doctorId: "DOC-202",
+      parameters: [
+        { parameterName: "Potassium", value: "6.8", unit: "mmol/L", threshold: ">= 6.5", direction: "high" }
+      ],
+      notifiedBy: "J. Mensah",
+      notifiedPerson: "Dr. Saanvi Reddy",
+      method: "Phone call",
+      notes: "Informed of critical K+ level. Doctor ordered urgent dialysis check.",
+      notifiedAt: new Date(Date.now() - 40 * 60 * 1000).toISOString(),
+      acknowledgedAt: null,
+      status: "pending_ack"
+    },
+    {
+      id: "CRIT-002",
+      orderId: "ORD-102",
+      patientId: "P-102",
+      doctorId: "DOC-203",
+      parameters: [
+        { parameterName: "Glucose", value: "32", unit: "mg/dL", threshold: "<= 40", direction: "low" }
+      ],
+      notifiedBy: "J. Mensah",
+      notifiedPerson: "Nurse Anita",
+      method: "In-person",
+      notes: "Ward 3 nurse notified. Patient being administered IV dextrose.",
+      notifiedAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+      acknowledgedAt: null,
+      status: "pending_ack"
+    }
+  ]);
+  const [qcRuns, setQCRuns] = useState<QCRun[]>(() => SEED_QC_RUNS);
+  const [qcLocks, setQcLocks] = useState<string[]>([]);
+  const [reagents, setReagents] = useState<Reagent[]>(() => SEED_REAGENTS);
+  const [aliquots, setAliquots] = useState<Aliquot[]>(() => [
+    {
+      id: "ACC-001-A",
+      parentAccession: "ACC-001",
+      volume: 1.5,
+      containerType: "Microcentrifuge tube",
+      destination: "Bench — Biochemistry",
+      createdAt: new Date().toISOString(),
+      status: "active"
+    },
+    {
+      id: "ACC-001-B",
+      parentAccession: "ACC-001",
+      volume: 2.0,
+      containerType: "Cryovial",
+      destination: "Archive",
+      createdAt: new Date().toISOString(),
+      status: "active"
+    }
+  ]);
+  const [labShiftReports, setLabShiftReports] = useState<LabShiftReport[]>(() => [
+    {
+      id: "REP-SHIFT-001",
+      date: new Date(Date.now() - 24 * 3600 * 1000).toISOString().slice(0, 10),
+      shift: "morning",
+      technicianName: "J. Mensah",
+      supervisorName: "Dr. Rajan",
+      handoverNotes: "All instruments functioning normally. Controls verified.",
+      throughput: { received: 24, stat: 5, urgent: 8, routine: 11, completed: 22, pending: 2, tatComplianceRate: 95.8 },
+      quality: { qcPass: 12, qcWarning: 2, qcFail: 0, criticalAlertsCount: 2, deltaFailuresCount: 0 },
+      integrity: { rejectedCollection: 1, rejectedReception: 0, storedCount: 21 },
+      reagents: { lowOrExpiredCount: 1, blockedTestsCount: 0 },
+      status: "signed",
+      signedAt: new Date(Date.now() - 20 * 3600 * 1000).toISOString()
+    }
+  ]);
 
   const findCatalog = useCallback(
     (code: string) => findCatalogItem(code, catalog),
@@ -257,21 +418,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const collect = useCallback(
-    (id: string, note?: string) => {
+    (id: string, note?: string, condition?: string) => {
       const now = new Date().toISOString();
       setOrders((list) =>
         list.map((o) => {
           if (o.id !== id) return o;
           const cat = findCatalogItem(o.test_code, catalog);
           const specimen = buildSpecimenMeta(o, cat);
+          const finalCondition = (condition as LabOrder["specimen"] extends undefined ? never : NonNullable<LabOrder["specimen"]>["condition"]) ?? "Adequate";
+          const coc = [
+            {
+              step: 'collected' as const,
+              performedBy: ACTOR_TECH,
+              performedAt: now,
+              notes: note || "Blood sample drawn successfully.",
+              location: "Phlebotomy Bay"
+            }
+          ];
           return {
             ...o,
             status: "collected" as const,
             collected_at: now,
             collector: ACTOR_TECH,
             bench_tech_email: DEMO_TECH_EMAIL,
-            specimen,
-            history: pushHistory(o, ACTOR_TECH, "Sample collected", note),
+            specimen: { ...specimen, condition: finalCondition as any },
+            chainOfCustody: coc,
+            history: pushHistory(o, ACTOR_TECH, `Sample collected — Condition: ${finalCondition}`, note),
           };
         }),
       );
@@ -314,32 +486,134 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const saveResults = useCallback(
     (id: string, results: Record<string, string>, complete: boolean) => {
+      let orderToSave: LabOrder | undefined;
+      setOrders((list) => {
+        orderToSave = list.find((o) => o.id === id);
+        return list;
+      });
+
+      if (!orderToSave) {
+        toast.error("Order not found");
+        return;
+      }
+
+      const testCode = orderToSave.test_code;
+      let blocked = false;
+      let lowReagents: string[] = [];
+
+      setReagents((list) => {
+        const linked = list.filter((r) => r.testCodes.includes(testCode.toLowerCase()));
+        for (const r of linked) {
+          const isExpired = new Date(r.expiryDate).getTime() < Date.now();
+          const isOutOfStock = r.testsRemaining <= 0;
+          if (isExpired || isOutOfStock) {
+            blocked = true;
+          } else if (r.testsRemaining / r.maxTests < 0.2) {
+            lowReagents.push(r.name);
+          }
+        }
+        return list;
+      });
+
+      if (blocked) {
+        toast.error("Reagent expired/exhausted. Cannot save results. Contact supervisor.");
+        return;
+      }
+
+      if (lowReagents.length > 0) {
+        toast.warning(`Low reagent warning: ${lowReagents.join(", ")}`);
+      }
+
+      setReagents((list) =>
+        list.map((r) => {
+          if (r.testCodes.includes(testCode.toLowerCase())) {
+            return { ...r, testsRemaining: Math.max(0, r.testsRemaining - 1) };
+          }
+          return r;
+        })
+      );
+
+      const cat = findCatalog(testCode);
+      const criticalAlerts = checkCriticalValues(results, cat?.parameters);
+      const isCritical = criticalAlerts.length > 0;
+
       setOrders((list) =>
         list.map((o) => {
           if (o.id !== id) return o;
+
+          let finalPriority = o.priority;
+          if (isCritical && (o.priority === "routine" || o.priority === "urgent")) {
+            finalPriority = "stat";
+            toast.warning(`Critical value detected! Automatically escalated order to STAT.`);
+          }
+
+          const coc = o.chainOfCustody ? [...o.chainOfCustody] : [];
+          if (complete && !coc.some((c) => c.step === "assigned_to_bench")) {
+            coc.push({
+              step: "assigned_to_bench" as const,
+              performedBy: ACTOR_TECH,
+              performedAt: new Date().toISOString(),
+              location: "Bench 3 — Hematology",
+              notes: "Assigned for bench verification"
+            });
+          }
+
           if (complete) {
             return {
               ...o,
               results,
+              priority: finalPriority,
               status: "validation" as const,
               completed_at: new Date().toISOString(),
               bench_tech_email: o.bench_tech_email ?? DEMO_TECH_EMAIL,
+              chainOfCustody: coc,
               history: pushHistory(o, ACTOR_TECH, "Results entered", "Submitted for validation"),
             };
           }
-          return { ...o, results };
+          return { ...o, results, priority: finalPriority };
         }),
       );
       if (complete) toast.success(`${id} submitted for validation`);
       else toast(`Draft saved · ${id}`);
     },
-    [],
+    [findCatalog],
   );
 
-  const validate = useCallback((id: string, comment?: string, actor = ACTOR_SUP) => {
-    const now = new Date().toISOString();
+  const validate = useCallback((
+    id: string,
+    comment?: string,
+    actor = ACTOR_SUP,
+    criticalNotifData?: { notifiedPerson: string; method: string; notes?: string }
+  ) => {
+    let orderToValidate: LabOrder | undefined;
     setOrders((list) => {
-      const order = list.find((o) => o.id === id);
+      orderToValidate = list.find((o) => o.id === id);
+      return list;
+    });
+
+    if (!orderToValidate) {
+      toast.error("Order not found");
+      return;
+    }
+
+    let isLocked = false;
+    setQcLocks((locks) => {
+      if (locks.includes(orderToValidate!.test_code.toLowerCase())) {
+        isLocked = true;
+      }
+      return locks;
+    });
+
+    if (isLocked) {
+      toast.error(`QC Lock in place for ${orderToValidate.test_code}. Cannot release results.`);
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const cat = findCatalog(orderToValidate.test_code);
+    const criticalAlerts = checkCriticalValues(orderToValidate.results, cat?.parameters);
+
+    setOrders((list) => {
       const next = list.map((o) =>
         o.id === id
           ? {
@@ -352,23 +626,63 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           : o,
       );
-      if (order) {
-        const patient = patients.find((p) => p.id === order.patient_id);
+      if (orderToValidate) {
+        const pat = patients.find((p) => p.id === orderToValidate.patient_id);
         publishLabResult({
-          orderId: order.id,
-          patientId: order.patient_id,
-          testName: order.test_name,
-          testCode: order.test_code,
-          results: order.results,
-          abnormal: Object.values(order.results ?? {}).some((v) =>
+          orderId: orderToValidate.id,
+          patientId: orderToValidate.patient_id,
+          testName: orderToValidate.test_name,
+          testCode: orderToValidate.test_code,
+          results: orderToValidate.results,
+          abnormal: Object.values(orderToValidate.results ?? {}).some((v) =>
             String(v).toLowerCase().includes("high") || String(v).toLowerCase().includes("low"),
           ),
+          doctorName: orderToValidate.doctor_name,
+          doctorId: orderToValidate.doctor_id,
+          patientName: pat?.name,
         });
       }
       return next;
     });
+
+    if (criticalAlerts.length > 0) {
+      const newNotif: CriticalValueNotification = {
+        id: `CRIT-NOTIF-${Date.now()}`,
+        orderId: id,
+        patientId: orderToValidate.patient_id,
+        doctorId: orderToValidate.doctor_id,
+        parameters: criticalAlerts,
+        notifiedBy: actor,
+        notifiedPerson: criticalNotifData?.notifiedPerson || "Standard Routing",
+        method: criticalNotifData?.method || "System Automated Paging",
+        notes: criticalNotifData?.notes || "",
+        notifiedAt: now,
+        acknowledgedAt: null,
+        status: "pending_ack"
+      };
+
+      setCriticalNotifications((prev) => [newNotif, ...prev]);
+
+      pushPatientNotification({
+        title: "Critical Lab Results Released",
+        body: `Critical values identified in your ${orderToValidate.test_name} report. Your physician has been notified.`,
+        at: "Just now",
+        type: "report",
+        to: `/patient/reports/${orderToValidate.id}`,
+      });
+    } else {
+      // Normal (non-critical) result — still notify patient and referring doctor
+      pushPatientNotification({
+        title: "Lab Results Ready",
+        body: `Your ${orderToValidate.test_name} results have been validated and released by the laboratory. Ordered by ${orderToValidate.doctor_name || "your doctor"}.`,
+        at: "Just now",
+        type: "report",
+        to: `/patient/reports/${orderToValidate.id}`,
+      });
+    }
+
     toast.success(`${id} validated & released`);
-  }, [patients]);
+  }, [patients, findCatalog]);
 
   const rejectValid = useCallback((id: string, reason: string) => {
     setOrders((list) =>
@@ -402,6 +716,204 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       ),
     );
     toast(`${id} cancelled`);
+  }, []);
+
+  const acknowledgeCriticalAlert = useCallback((id: string, actor?: string) => {
+    const acknowledgedBy = actor || ACTOR_SUP;
+    setCriticalNotifications((list) =>
+      list.map((n) =>
+        n.id === id
+          ? {
+              ...n,
+              acknowledgedAt: new Date().toISOString(),
+              status: "acknowledged" as const,
+              notifiedPerson: n.notifiedPerson, // preserve
+              notes: (n.notes ? n.notes + " | " : "") + `Confirmed by ${acknowledgedBy}`,
+            }
+          : n
+      )
+    );
+    toast.success(`Critical alert acknowledged by ${acknowledgedBy}`);
+  }, []);
+
+  const supervisorOverrideCondition = useCallback((id: string, reason: string, actor: string) => {
+    const now = new Date().toISOString();
+    setOrders((list) =>
+      list.map((o) =>
+        o.id === id
+          ? {
+              ...o,
+              sampleConditionOverride: { overriddenBy: actor, overriddenAt: now, reason },
+              history: pushHistory(o, actor, `Supervisor override: non-adequate sample approved for processing`, reason),
+            }
+          : o
+      )
+    );
+    toast.success(`Sample condition override recorded by ${actor}`);
+  }, []);
+
+  const logQCRun = useCallback((run: Omit<QCRun, "id" | "date" | "status" | "rulesTriggered">) => {
+    const diff = run.value - run.mean;
+    const sdUnits = Math.abs(diff / run.sd);
+    let status: "pass" | "warning" | "fail" = "pass";
+    let rules: string[] = [];
+
+    if (sdUnits >= 3.0) {
+      status = "fail";
+      rules.push("1_3s Westgard Rule Violation (Value > 3SD)");
+    } else if (sdUnits >= 2.0) {
+      status = "warning";
+      rules.push("1_2s Westgard Rule Warning (Value > 2SD)");
+    }
+
+    const newRun: QCRun = {
+      ...run,
+      id: `QC-RUN-${Date.now()}`,
+      date: new Date().toISOString(),
+      status,
+      rulesTriggered: rules,
+    };
+
+    setQCRuns((prev) => [newRun, ...prev]);
+
+    if (status === "fail") {
+      setQcLocks((locks) => [...locks, run.analyte.toLowerCase()]);
+      toast.error(`QC FAILED for ${run.analyteName}! Reagent/analyte locked for patient release.`);
+    } else {
+      toast.success(`QC Run logged successfully: ${status.toUpperCase()}`);
+    }
+  }, []);
+
+  const logQCCorrectiveAction = useCallback((runId: string, action: string) => {
+    let affectedAnalyte = "";
+    setQCRuns((list) =>
+      list.map((r) => {
+        if (r.id === runId) {
+          affectedAnalyte = r.analyte;
+          return { ...r, correctiveAction: action, status: "pass" };
+        }
+        return r;
+      })
+    );
+    if (affectedAnalyte) {
+      setQcLocks((locks) => locks.filter((l) => l !== affectedAnalyte.toLowerCase()));
+      toast.success(`Corrective action recorded. QC lock lifted for ${affectedAnalyte.toUpperCase()}.`);
+    }
+  }, []);
+
+  const acceptSampleAtLab = useCallback((orderId: string, condition: string, reason?: string) => {
+    const now = new Date().toISOString();
+    setOrders((list) =>
+      list.map((o) => {
+        if (o.id !== orderId) return o;
+        const coc = o.chainOfCustody ? [...o.chainOfCustody] : [];
+        coc.push({
+          step: "received_at_lab" as const,
+          performedBy: ACTOR_TECH,
+          performedAt: now,
+          location: "Lab Reception Counter",
+          notes: `Condition: ${condition}. ${reason || ""}`
+        });
+
+        const nextSpecimen = o.specimen
+          ? { ...o.specimen, condition: condition as any }
+          : undefined;
+
+        return {
+          ...o,
+          chainOfCustody: coc,
+          specimen: nextSpecimen,
+          history: pushHistory(o, ACTOR_TECH, `Sample Accepted - ${condition}`, reason)
+        };
+      })
+    );
+    toast.success(`Sample condition recorded: ${condition}`);
+  }, []);
+
+  const storeSample = useCallback((orderId: string, rack: string, box: string, position: string, retentionDays: number) => {
+    const now = new Date().toISOString();
+    const expiry = new Date(Date.now() + retentionDays * 24 * 3600 * 1000).toISOString();
+    setOrders((list) =>
+      list.map((o) => {
+        if (o.id !== orderId) return o;
+        const coc = o.chainOfCustody ? [...o.chainOfCustody] : [];
+        coc.push({
+          step: "stored" as const,
+          performedBy: ACTOR_TECH,
+          performedAt: now,
+          location: `Freezer A — Rack ${rack}, Box ${box}, Pos ${position}`,
+          notes: `Stored for ${retentionDays} days retention.`
+        });
+        return {
+          ...o,
+          chainOfCustody: coc,
+          sampleStorage: {
+            rack,
+            box,
+            position,
+            retentionExpiry: expiry,
+            storedBy: ACTOR_TECH,
+            storedAt: now,
+            status: "stored" as const
+          },
+          history: pushHistory(o, ACTOR_TECH, "Sample put in storage")
+        };
+      })
+    );
+    toast.success(`Sample stored successfully in Freezer A`);
+  }, []);
+
+  const disposeSample = useCallback((orderId: string) => {
+    const now = new Date().toISOString();
+    setOrders((list) =>
+      list.map((o) => {
+        if (o.id !== orderId) return o;
+        const coc = o.chainOfCustody ? [...o.chainOfCustody] : [];
+        coc.push({
+          step: "disposed" as const,
+          performedBy: ACTOR_TECH,
+          performedAt: now,
+          location: "Biohazard Disposal",
+          notes: "Sample retention period completed. Safely incinerated/disposed."
+        });
+        return {
+          ...o,
+          chainOfCustody: coc,
+          sampleStorage: o.sampleStorage ? { ...o.sampleStorage, status: "disposed" as const } : undefined,
+          history: pushHistory(o, ACTOR_TECH, "Sample disposed")
+        };
+      })
+    );
+    toast.success(`Sample disposed and logged`);
+  }, []);
+
+  const addReagentLot = useCallback((reagent: Omit<Reagent, "id">) => {
+    const newReg: Reagent = {
+      ...reagent,
+      id: `REG-${Date.now()}`
+    };
+    setReagents((prev) => [newReg, ...prev]);
+    toast.success(`Registered reagent lot ${reagent.lotNumber}`);
+  }, []);
+
+  const createAliquots = useCallback((orderId: string, list: Omit<Aliquot, "id" | "parentAccession" | "createdAt" | "status">[]) => {
+    const order = orders.find((o) => o.id === orderId);
+    if (!order) return;
+    const parentAcc = order.accession;
+    const newAliquots = list.map((a, i) => ({
+      ...a,
+      id: `${parentAcc}-${String.fromCharCode(65 + i)}`,
+      parentAccession: parentAcc,
+      createdAt: new Date().toISOString(),
+      status: "active" as const
+    }));
+    setAliquots((prev) => [...newAliquots, ...prev]);
+    toast.success(`Created ${list.length} aliquots for ${parentAcc}`);
+  }, [orders]);
+
+  const saveShiftReport = useCallback((report: LabShiftReport) => {
+    setLabShiftReports((prev) => [report, ...prev]);
+    toast.success(`Shift report saved: ${report.shift.toUpperCase()}`);
   }, []);
 
   const addWalkIn = useCallback(
@@ -630,6 +1142,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       invoices,
       staff: STAFF,
       hospital: HOSPITAL,
+      criticalNotifications,
+      qcRuns,
+      reagents,
+      aliquots,
+      labShiftReports,
+      qcLocks,
       findCatalog,
       updateCatalogPrice,
       addCatalogTest,
@@ -644,12 +1162,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       collectLabPayment,
       flagInvoiceForReception,
       placeReceptionOrder,
+      acknowledgeCriticalAlert,
+      supervisorOverrideCondition,
+      logQCRun,
+      logQCCorrectiveAction,
+      acceptSampleAtLab,
+      storeSample,
+      disposeSample,
+      addReagentLot,
+      createAliquots,
+      saveShiftReport,
     }),
     [
       orders,
       patients,
       catalog,
       invoices,
+      criticalNotifications,
+      qcRuns,
+      reagents,
+      aliquots,
+      labShiftReports,
+      qcLocks,
       findCatalog,
       updateCatalogPrice,
       addCatalogTest,
@@ -664,6 +1198,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       collectLabPayment,
       flagInvoiceForReception,
       placeReceptionOrder,
+      acknowledgeCriticalAlert,
+      supervisorOverrideCondition,
+      logQCRun,
+      logQCCorrectiveAction,
+      acceptSampleAtLab,
+      storeSample,
+      disposeSample,
+      addReagentLot,
+      createAliquots,
+      saveShiftReport,
     ],
   );
 

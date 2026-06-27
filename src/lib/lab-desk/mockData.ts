@@ -62,7 +62,13 @@ export type LabOrder = {
     storage_rack: string;
     storage_slot: string;
     temp: "Room" | "2–8 °C" | "Frozen";
-    condition: "Acceptable" | "Hemolyzed" | "Lipemic";
+    condition: "Adequate" | "Hemolyzed" | "Lipemic" | "Clotted" | "Insufficient volume";
+  };
+  /** Supervisor override for non-adequate samples — set to allow bench processing despite condition */
+  sampleConditionOverride?: {
+    overriddenBy: string;
+    overriddenAt: string;
+    reason: string;
   };
   validated_by?: string;
   results?: Record<string, string>;
@@ -71,6 +77,22 @@ export type LabOrder = {
   price?: number;
   payment_status?: "unpaid" | "paid" | "reception";
   lab_invoice_id?: string;
+  chainOfCustody?: {
+    step: 'collected' | 'received_at_lab' | 'assigned_to_bench' | 'stored' | 'disposed';
+    performedBy: string;
+    performedAt: string;
+    notes?: string;
+    location?: string;
+  }[];
+  sampleStorage?: {
+    rack: string;
+    box: string;
+    position: string;
+    retentionExpiry: string;
+    storedBy: string;
+    storedAt: string;
+    status: 'stored' | 'disposed';
+  };
 };
 
 export const SECTIONS = [

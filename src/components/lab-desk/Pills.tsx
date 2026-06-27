@@ -107,15 +107,24 @@ export function KpiCard({
   value,
   hint,
   testid,
+  onClick,
 }: {
   label: string;
   value: string | number;
   hint?: string;
   accent?: string;
   testid?: string;
+  onClick?: () => void;
 }) {
   return (
-    <div data-testid={testid} className="surface border-l-4 border-l-sage px-5 py-4">
+    <div
+      data-testid={testid}
+      onClick={onClick}
+      className={cn(
+        "surface border-l-4 border-l-sage px-5 py-4",
+        onClick && "cursor-pointer hover:shadow-md transition-shadow active:bg-stone-50"
+      )}
+    >
       <div className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-400">
         {label}
       </div>

@@ -45,7 +45,7 @@ export default function Orders() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
 
@@ -66,14 +66,14 @@ export default function Orders() {
           p?.mrn.toLowerCase().includes(q)
         );
       })
-      .sort((a, b) => new Date(b.ordered_at) - new Date(a.ordered_at));
+      .sort((a, b) => new Date(b.ordered_at).getTime() - new Date(a.ordered_at).getTime());
   }, [orders, statusFilter, priorityFilter, query, patients]);
 
   const selected = orders.find((o) => o.id === selectedId);
   const selectedPatient = selected && getPatient(selected, patients);
   const selectedCat = selected && findCatalog(selected.test_code);
 
-  const printLabel = (order) => {
+  const printLabel = (order: import("@/lib/lab-desk/mockData").LabOrder) => {
     const p = getPatient(order, patients);
     const cat = findCatalog(order.test_code);
     const html = `<html><head><title>Label ${order.accession}</title>
@@ -93,7 +93,7 @@ export default function Orders() {
       <div class="row"><span>Priority</span><b>${order.priority.toUpperCase()}</b></div>
       </div><script>window.print();</script></body></html>`;
     const w = window.open("", "_blank", "width=420,height=560");
-    w.document.write(html); w.document.close();
+    if (w) { w.document.write(html); w.document.close(); }
   };
 
   return (
@@ -246,7 +246,7 @@ export default function Orders() {
                     <Printer className="h-3.5 w-3.5 mr-1.5" /> Print label
                   </Button>
                   {selected.status === "ordered" && (
-                    <Button size="sm" className="btn-primary" onClick={() => navigate("/lab/collection")} data-testid="drawer-collect-btn">
+                    <Button size="sm" className="btn-primary" onClick={() => navigate({ to: "/lab/collection" })} data-testid="drawer-collect-btn">
                       Go to collection
                     </Button>
                   )}
@@ -288,7 +288,7 @@ export default function Orders() {
           <DialogFooter>
             <Button variant="ghost" onClick={() => setCancelOpen(false)}>Keep order</Button>
             <Button data-testid="confirm-cancel-btn" className="bg-red-600 hover:bg-red-700" disabled={!cancelReason.trim()}
-              onClick={() => { cancel(selected.id, cancelReason); setCancelOpen(false); setCancelReason(""); setSelectedId(null); }}>
+              onClick={() => { cancel(selected!.id, cancelReason); setCancelOpen(false); setCancelReason(""); setSelectedId(null); }}>
               Confirm cancel
             </Button>
           </DialogFooter>

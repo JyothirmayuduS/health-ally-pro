@@ -4,6 +4,7 @@ import { getDietVideoLanguage } from "@/lib/diet-language-store";
 import {
   getVerifiedMealImage,
   getVerifiedMealMedia,
+  getVerifiedMealVideos,
   VERIFIED_MEAL_MEDIA,
 } from "@/lib/diet-meal-media";
 import { simplifyMealSearchName } from "@/lib/diet-meal-search";

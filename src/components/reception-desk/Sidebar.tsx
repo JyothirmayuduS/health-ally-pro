@@ -23,6 +23,7 @@ import {
   Stethoscope,
   FileText,
   Bed,
+  CalendarOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -45,8 +46,10 @@ const businessItems = [
   { to: "/reception/insurance", label: "Insurance", icon: ShieldCheck, dot: "bg-teal" },
   { to: "/reception/reports", label: "Reports", icon: FileBarChart, dot: "bg-plum" },
   { to: "/reception/day-sheet", label: "Day sheet", icon: FileText, dot: "bg-clay" },
+  { to: "/reception/leave", label: "My Leaves", icon: CalendarOff, dot: "bg-plum" },
   { to: "/reception/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" },
 ];
+
 
 const disabled: { label: string; icon: typeof Settings }[] = [];
 

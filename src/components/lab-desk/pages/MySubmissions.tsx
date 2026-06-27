@@ -1,20 +1,26 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useLabStore, formatRelative, formatDateTime, getPatient } from "@/lib/lab-desk/store";
+import { useLabStore, formatRelative, formatDateTime, getPatient, flagValue } from "@/lib/lab-desk/store";
 import { useTechnicianOrders } from "@/lib/lab-desk/technician";
 import { isSubmittedToSupervisor } from "@/lib/lab-desk/specimen";
 import { SectionLabel, StatusPill, PriorityPill } from "@/components/lab-desk/Pills";
-import { Send, CheckCircle, Clock } from "lucide-react";
+import { Send, CheckCircle, Clock, ClipboardList, Beaker } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import type { LabOrder } from "@/lib/lab-desk/store";
+import LabReport from "@/components/lab-desk/LabReport";
 
 export default function MySubmissions() {
-  const { patients } = useLabStore();
+  const { patients, findCatalog, hospital } = useLabStore();
   const mine = useTechnicianOrders();
+  const [selectedSub, setSelectedSub] = useState<LabOrder | null>(null);
 
   const submissions = useMemo(
     () => mine.filter(isSubmittedToSupervisor).sort((a, b) => {
       const ta = a.completed_at ?? a.validated_at ?? "";
       const tb = b.completed_at ?? b.validated_at ?? "";
-      return new Date(tb).getTime() - new Date(a).getTime();
+      return new Date(tb).getTime() - new Date(ta).getTime();
     }),
     [mine],
   );
@@ -71,7 +77,11 @@ export default function MySubmissions() {
             {awaiting.map((o) => {
               const p = getPatient(o, patients);
               return (
-                <div key={o.id} className="row-hover flex flex-wrap items-center gap-3 px-4 py-3">
+                <div
+                  key={o.id}
+                  className="row-hover flex flex-wrap items-center gap-3 px-4 py-3 cursor-pointer hover:bg-stone-50/70 transition-colors"
+                  onClick={() => setSelectedSub(o)}
+                >
                   <div className="font-mono text-[12px]">{o.accession}</div>
                   <div className="min-w-[140px] flex-1">
                     <div className="font-medium">{p?.name}</div>
@@ -100,7 +110,11 @@ export default function MySubmissions() {
             {released.map((o) => {
               const p = getPatient(o, patients);
               return (
-                <div key={o.id} className="row-hover flex flex-wrap items-center gap-3 px-4 py-3">
+                <div
+                  key={o.id}
+                  className="row-hover flex flex-wrap items-center gap-3 px-4 py-3 cursor-pointer hover:bg-stone-50/70 transition-colors"
+                  onClick={() => setSelectedSub(o)}
+                >
                   <div className="font-mono text-[12px]">{o.accession}</div>
                   <div className="min-w-[140px] flex-1">
                     <div className="font-medium">{p?.name}</div>
@@ -117,6 +131,16 @@ export default function MySubmissions() {
           </div>
         )}
       </div>
+      {/* View Submission Details LabReport */}
+      {selectedSub && (
+        <LabReport
+          order={selectedSub}
+          patient={getPatient(selectedSub, patients) ?? null}
+          catalog={findCatalog(selectedSub.test_code)}
+          hospital={hospital}
+          onClose={() => setSelectedSub(null)}
+        />
+      )}
     </div>
   );
 }

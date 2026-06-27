@@ -267,7 +267,7 @@ const docTokenBase = (doctorId) => {
 export function StoreProvider({ children }) {
   const [patients, setPatients] = useState(() => loadPatientRegistry());
   const [appointments, setAppointments] = useState(() => loadAppointments());
-  const [doctors] = useState(DOCTORS);
+  const [doctors, setDoctors] = useState(DOCTORS);
   const [invoices, setInvoices] = useState(SEED_INVOICES);
   const [shifts, setShifts] = useState(SEED_SHIFTS);
   const [claims, setClaims] = useState(SEED_CLAIMS);
@@ -432,6 +432,39 @@ export function StoreProvider({ children }) {
     window.addEventListener(RECEPTION_INVOICE_EVENT, onIncoming);
     return () => window.removeEventListener(RECEPTION_INVOICE_EVENT, onIncoming);
   }, [ingestBridgeInvoices]);
+
+  useEffect(() => {
+    const syncDoctorDuty = () => {
+      try {
+        const raw = localStorage.getItem("medora-admin-doctor-onduty-v1");
+        if (raw) {
+          const statuses = JSON.parse(raw) as { id: string; onDuty: boolean; shift: string }[];
+          setDoctors((prev) =>
+            prev.map((d) => {
+              const match = statuses.find((s) => s.id === d.id);
+              if (match) {
+                return {
+                  ...d,
+                  onDuty: match.onDuty,
+                  shift: match.shift === "off" ? "Off today" : match.shift === "leave" ? "On leave" : match.shift
+                };
+              }
+              return d;
+            })
+          );
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    syncDoctorDuty();
+    window.addEventListener("storage", syncDoctorDuty);
+    window.addEventListener("medora-roster-updated", syncDoctorDuty);
+    return () => {
+      window.removeEventListener("storage", syncDoctorDuty);
+      window.removeEventListener("medora-roster-updated", syncDoctorDuty);
+    };
+  }, []);
 
   const findOpenEncounterForPatient = useCallback(
     (patientId: string) => findOpenEncounterForPatientShared(patientId),
@@ -760,40 +793,38 @@ export function StoreProvider({ children }) {
   }, []);
 
   const checkInAppointment = useCallback((apptId) => {
-    let issuedToken = null;
-    let aptSnapshot = null;
-    setAppointments((apts) => {
-      const apt = apts.find((a) => a.id === apptId);
-      if (!apt) return apts;
-      aptSnapshot = apt;
-      const docApts = apts.filter((a) => a.doctorId === apt.doctorId && a.tokenNumber !== null);
-      const base = docTokenBase(apt.doctorId);
-      const used = docApts.map((a) => a.tokenNumber).filter((n) => n >= base && n < base + 100);
-      const nextNum = used.length ? Math.max(...used) + 1 : base + 1;
-      issuedToken = nextNum;
-      return apts.map((a) =>
-        a.id === apptId ? { ...a, status: "checked-in", tokenNumber: nextNum } : a,
-      );
+    // Read current state synchronously to compute token before any async updates
+    const apt = appointments.find((a) => a.id === apptId);
+    if (!apt) return null;
+
+    const docApts = appointments.filter((a) => a.doctorId === apt.doctorId && a.tokenNumber !== null);
+    const base = docTokenBase(apt.doctorId);
+    const used = docApts.map((a) => a.tokenNumber).filter((n) => n >= base && n < base + 100);
+    const issuedToken = used.length ? Math.max(...used) + 1 : base + 1;
+
+    setAppointments((apts) =>
+      apts.map((a) =>
+        a.id === apptId ? { ...a, status: "checked-in", tokenNumber: issuedToken } : a,
+      ),
+    );
+
+    const doctor = DOCTORS.find((d) => d.id === apt.doctorId);
+    const enc = openEncounterForCheckIn({
+      patientId: apt.patientId,
+      appointmentId: apt.id,
+      doctorName: doctor?.name,
+      chiefComplaint: apt.notes,
     });
-    if (aptSnapshot && issuedToken != null) {
-      const apt = aptSnapshot;
-      const doctor = DOCTORS.find((d) => d.id === apt.doctorId);
-      const enc = openEncounterForCheckIn({
-        patientId: apt.patientId,
-        appointmentId: apt.id,
-        doctorName: doctor?.name,
-        chiefComplaint: apt.notes,
-      });
-      enqueueFromCheckIn({
-        appointmentId: apt.id,
-        patientId: apt.patientId,
-        doctorId: apt.doctorId,
-        tokenNumber: issuedToken,
-        encounterId: enc.id,
-      });
-    }
+    enqueueFromCheckIn({
+      appointmentId: apt.id,
+      patientId: apt.patientId,
+      doctorId: apt.doctorId,
+      tokenNumber: issuedToken,
+      encounterId: enc.id,
+    });
+
     return issuedToken;
-  }, []);
+  }, [appointments]);
 
   const updateAppointmentStatus = useCallback((apptId, status) => {
     setAppointments((apts) => apts.map((a) => (a.id === apptId ? { ...a, status } : a)));

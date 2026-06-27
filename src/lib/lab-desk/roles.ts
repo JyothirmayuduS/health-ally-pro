@@ -13,6 +13,8 @@ import {
   Send,
   Lock,
   Scan,
+  FlaskConical,
+  CalendarOff,
 } from "lucide-react";
 import { getAuthSession } from "@/lib/supabase/auth";
 import { requirePortalAccess } from "@/lib/supabase/rbac";
@@ -72,6 +74,7 @@ export const SUPERVISOR_NAV: LabNavConfig = {
           urgentBadge: true,
         },
         { to: "/lab/samples", label: "All samples", icon: Droplets },
+        { to: "/lab/qc", label: "Quality control", icon: FlaskConical },
         { to: "/lab/radiology", label: "Radiology", icon: Scan },
       ],
     },
@@ -80,6 +83,7 @@ export const SUPERVISOR_NAV: LabNavConfig = {
       items: [
         { to: "/lab/reports", label: "Analytics", icon: BarChart3 },
         { to: "/lab/team", label: "Team & roles", icon: Users2 },
+        { to: "/lab/leave", label: "My Leaves", icon: CalendarOff },
         { to: "/lab/settings", label: "Lab settings", icon: Settings2 },
       ],
     },
@@ -104,6 +108,8 @@ export const TECHNICIAN_NAV: LabNavConfig = {
       items: [
         { to: "/lab/collection", label: "Collection", icon: Droplets, countKey: "collection" },
         { to: "/lab/processing", label: "Processing", icon: TestTube2, countKey: "processing" },
+        { to: "/lab/reagents", label: "Reagents", icon: Settings2 },
+        { to: "/lab/storage", label: "Storage & Aliquots", icon: Droplets },
       ],
     },
     {
@@ -111,6 +117,7 @@ export const TECHNICIAN_NAV: LabNavConfig = {
       items: [
         { to: "/lab/my-submissions", label: "My submissions", icon: Send, countKey: "submissions" },
         { to: "/lab/samples", label: "My samples", icon: Droplets },
+        { to: "/lab/leave", label: "My Leaves", icon: CalendarOff },
       ],
     },
     {
@@ -132,9 +139,16 @@ const SUPERVISOR_ONLY_PREFIXES = [
   "/lab/team",
   "/lab/settings",
   "/lab/walk-in",
+  "/lab/qc",
 ];
 
-const TECHNICIAN_ONLY_PREFIXES = ["/lab/collection", "/lab/processing", "/lab/my-submissions"];
+const TECHNICIAN_ONLY_PREFIXES = [
+  "/lab/collection",
+  "/lab/processing",
+  "/lab/my-submissions",
+  "/lab/reagents",
+  "/lab/storage",
+];
 
 export function isLabSupervisor(roles: UserRole[]) {
   return roles.includes("lab_supervisor");
@@ -169,7 +183,7 @@ export async function requireLabTechnician() {
     throw redirect({ to: "/lab", search: { denied: "technician" } });
   }
   if (!isLabTechnician(session.roles)) {
-    throw redirect({ to: "/login", search: { error: "unauthorized" } });
+    throw redirect({ to: "/login", search: { redirect: "/lab", error: "unauthorized" } });
   }
   return session;
 }

@@ -20,6 +20,13 @@ import {
   TestTube,
   BedDouble,
   Scan,
+  DollarSign,
+  Shield,
+  CalendarRange,
+  LayoutGrid,
+  Megaphone,
+  TrendingUp,
+  CalendarOff,
 } from "lucide-react";
 import type { DeskPortalConfig } from "./types";
 
@@ -52,6 +59,7 @@ export const BILLING_DESK: DeskPortalConfig = {
         { to: "/billing/invoices", label: "Invoices", icon: Receipt, dot: "bg-money" },
         { to: "/billing/payments", label: "Payments", icon: CreditCard, dot: "bg-mustard" },
         { to: "/billing/encounters", label: "Encounters", icon: FileText, dot: "bg-plum" },
+        { to: "/billing/leave", label: "My Leaves", icon: CalendarOff, dot: "bg-plum" },
       ],
     },
   ],
@@ -66,6 +74,8 @@ export const BILLING_DESK: DeskPortalConfig = {
       return { eyebrow: "Collections", title: "Payment log" };
     if (pathname.startsWith("/billing/encounters"))
       return { eyebrow: "Visits", title: "Encounter linkage" };
+    if (pathname.startsWith("/billing/leave"))
+      return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Billing", title: "Back office" };
   },
 };
@@ -94,6 +104,7 @@ export const NURSING_DESK: DeskPortalConfig = {
         { to: "/nursing/beds", label: "IPD & beds", icon: BedDouble, dot: "bg-teal" },
         { to: "/nursing/patients", label: "Patients", icon: Users, dot: "bg-plum" },
         { to: "/nursing/vitals", label: "Vitals", icon: Activity, dot: "bg-teal" },
+        { to: "/nursing/leave", label: "My Leaves", icon: CalendarOff, dot: "bg-plum" },
       ],
     },
   ],
@@ -108,6 +119,8 @@ export const NURSING_DESK: DeskPortalConfig = {
       return { eyebrow: "Census", title: "Patient list" };
     if (pathname.startsWith("/nursing/vitals"))
       return { eyebrow: "Clinical", title: "Record vitals" };
+    if (pathname.startsWith("/nursing/leave"))
+      return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Nursing", title: "Station" };
   },
 };
@@ -134,6 +147,8 @@ export const ADMIN_DESK: DeskPortalConfig = {
       items: [
         { to: "/admin", label: "Command center", icon: LayoutDashboard, exact: true, dot: "bg-plum" },
         { to: "/admin/analytics", label: "Analytics", icon: BarChart3, dot: "bg-teal" },
+        { to: "/admin/revenue", label: "Revenue", icon: DollarSign, dot: "bg-money" },
+        { to: "/admin/occupancy", label: "Occupancy & load", icon: LayoutGrid, dot: "bg-clay" },
       ],
     },
     {
@@ -143,12 +158,16 @@ export const ADMIN_DESK: DeskPortalConfig = {
         { to: "/admin/branches", label: "Branches", icon: GitBranch, dot: "bg-mustard" },
         { to: "/admin/departments", label: "Departments", icon: Layers, dot: "bg-clay" },
         { to: "/admin/staff", label: "Staff", icon: Users, dot: "bg-plum" },
+        { to: "/admin/access-control", label: "Access control", icon: Shield, dot: "bg-plum" },
+        { to: "/admin/announcements", label: "Announcements", icon: Megaphone, dot: "bg-clay" },
+        { to: "/admin/hr", label: "HR & Performance", icon: TrendingUp, dot: "bg-clay" },
       ],
     },
     {
       title: "Clinical config",
       items: [
         { to: "/admin/doctors", label: "Doctors", icon: Stethoscope, dot: "bg-teal" },
+        { to: "/admin/doctor-roster", label: "Doctor roster", icon: CalendarRange, dot: "bg-teal" },
         { to: "/admin/ot", label: "Operation theatre", icon: Activity, dot: "bg-plum" },
         { to: "/admin/services", label: "Services & fees", icon: Briefcase, dot: "bg-money" },
         { to: "/admin/lab-catalog", label: "Lab catalog", icon: FlaskConical, dot: "bg-sage" },
@@ -185,8 +204,20 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "System", title: "Hospital settings" };
     if (pathname.startsWith("/admin/analytics"))
       return { eyebrow: "Insights", title: "Analytics" };
+    if (pathname.startsWith("/admin/revenue"))
+      return { eyebrow: "Finance", title: "Revenue cycle" };
+    if (pathname.startsWith("/admin/access-control"))
+      return { eyebrow: "Security", title: "Access control" };
+    if (pathname.startsWith("/admin/doctor-roster"))
+      return { eyebrow: "Clinical", title: "Doctor roster" };
+    if (pathname.startsWith("/admin/occupancy"))
+      return { eyebrow: "Operations", title: "Occupancy & load" };
+    if (pathname.startsWith("/admin/announcements"))
+      return { eyebrow: "Communications", title: "Announcements" };
     if (pathname.startsWith("/admin/ot"))
       return { eyebrow: "Clinical", title: "Operation theatre" };
+    if (pathname.startsWith("/admin/hr"))
+      return { eyebrow: "People", title: "HR & Performance" };
     return { eyebrow: "Admin", title: "Control center" };
   },
 };
@@ -215,6 +246,7 @@ export const DOCTOR_DESK: DeskPortalConfig = {
         { to: "/doctor/schedule", label: "Schedule", icon: Calendar, dot: "bg-clay" },
         { to: "/doctor/settings/slots", label: "Booking slots", icon: Calendar, dot: "bg-teal" },
         { to: "/doctor/queue", label: "Queue", icon: ListOrdered, dot: "bg-mustard" },
+        { to: "/doctor/leave", label: "My Leaves", icon: CalendarOff, dot: "bg-plum" },
       ],
     },
     {
@@ -254,6 +286,8 @@ export const DOCTOR_DESK: DeskPortalConfig = {
       return { eyebrow: "Pharmacy", title: "E-prescriptions" };
     if (pathname.startsWith("/doctor/results"))
       return { eyebrow: "Diagnostics", title: "Lab results" };
+    if (pathname.startsWith("/doctor/leave"))
+      return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Doctor", title: "Clinic" };
   },
 };

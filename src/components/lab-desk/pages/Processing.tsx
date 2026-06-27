@@ -1,15 +1,16 @@
 import { useMemo, useState, useEffect } from "react";
-import { useLabStore, formatRelative, getPatient, flagValue } from "@/lib/lab-desk/store";
+import { useLabStore, formatRelative, formatDateTime, getPatient, flagValue } from "@/lib/lab-desk/store";
 import { PriorityPill, SectionLabel, EmptyState, FlagBadge } from "@/components/lab-desk/Pills";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Microscope, Save, Send, AlertOctagon, ChevronRight, ArrowLeft } from "lucide-react";
+import { Microscope, Save, Send, AlertOctagon, ChevronRight, ArrowLeft, ShieldAlert } from "lucide-react";
 
 export default function Processing() {
-  const { orders, patients, findCatalog, saveResults, startProcessing } = useLabStore();
-  const [openId, setOpenId] = useState(null);
-  const [draft, setDraft] = useState({});
+  const { orders, patients, findCatalog, saveResults, startProcessing, reagents, supervisorOverrideCondition } = useLabStore();
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<Record<string, string>>({});
+  const [overrideReason, setOverrideReason] = useState("");
 
   const queue = useMemo(() => orders.filter((o) => o.status === "collected" || o.status === "processing"), [orders]);
 
@@ -23,7 +24,7 @@ export default function Processing() {
     }
   }, [current, startProcessing]);
 
-  const openOrder = (o) => { setOpenId(o.id); setDraft({ ...(o.results || {}) }); };
+  const openOrder = (o: import("@/lib/lab-desk/mockData").LabOrder) => { setOpenId(o.id); setDraft({ ...(o.results as Record<string,string> || {}) }); };
 
   const handleSave = (complete: boolean) => {
     saveResults(openId!, draft, complete);
@@ -32,6 +33,24 @@ export default function Processing() {
 
   const hasCritical = currentCat?.parameters?.some((p) => flagValue(p, draft[p.key]).level === "critical");
   const allFilled = currentCat?.parameters?.every((p) => draft[p.key] !== undefined && draft[p.key] !== "" && draft[p.key] !== null);
+
+  // Reagent lot status evaluation for current order
+  const reagentStatus = useMemo(() => {
+    if (!current) return { blocked: false, warning: false, list: [] };
+    const code = current.test_code.toLowerCase();
+    const linked = reagents.filter((r) => r.testCodes.includes(code));
+    let blocked = false;
+    let warning = false;
+
+    linked.forEach((r) => {
+      const isExpired = new Date(r.expiryDate).getTime() < Date.now();
+      const isOutOfStock = r.testsRemaining <= 0;
+      if (isExpired || isOutOfStock) blocked = true;
+      else if (r.testsRemaining / r.maxTests < 0.2) warning = true;
+    });
+
+    return { blocked, warning, list: linked };
+  }, [current, reagents]);
 
   if (current) {
     return (
@@ -50,7 +69,85 @@ export default function Processing() {
             <PriorityPill priority={current.priority} />
           </div>
 
-          {hasCritical && (
+          {/* Persistent STAT escalated banner */}
+          {current.priority === "stat" && hasCritical && (
+            <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-red-100 border border-red-300 text-red-900 text-sm animate-pulse-border">
+              <AlertOctagon className="h-4 w-4 text-red-700" />
+              <span><strong>STAT ESCALATION ACTIVE:</strong> Critical result detected. Order priority has been escalated to STAT for immediate validation.</span>
+            </div>
+          )}
+
+          {/* Reagent lot status banner messages */}
+          {reagentStatus.blocked && (
+            <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-800 text-sm">
+              <AlertOctagon className="h-4 w-4 text-red-600" />
+              <span><strong>Hard Block:</strong> Expired or out-of-stock reagent lot detected. Reagent: {reagentStatus.list.map(r => r.name).join(", ")}. Cannot save results.</span>
+            </div>
+          )}
+
+          {!reagentStatus.blocked && reagentStatus.warning && (
+            <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-sm">
+              <AlertOctagon className="h-4 w-4 text-amber-600" />
+              <span><strong>Warning:</strong> Low reagent stock remaining (&lt; 20%) for {reagentStatus.list.map(r => r.name).join(", ")}. Proceed with caution.</span>
+            </div>
+          )}
+
+          {/* Non-adequate specimen condition block */}
+          {(() => {
+            const cond = current.specimen?.condition;
+            const nonAdequate = cond && cond !== "Adequate";
+            const hasOverride = !!current.sampleConditionOverride;
+            if (!nonAdequate) return null;
+            if (hasOverride) {
+              return (
+                <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-sm">
+                  <ShieldAlert className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="font-bold">Supervisor override in effect.</span>{" "}
+                    Specimen condition: <span className="font-mono font-bold">{cond}</span>. Processing is allowed.
+                    <div className="text-xs text-amber-700 mt-0.5">
+                      Overridden by {current.sampleConditionOverride!.overriddenBy} · Reason: {current.sampleConditionOverride!.reason}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <div className="mb-4 space-y-3 p-4 rounded-xl border-2 border-red-300 bg-red-50 text-sm">
+                <div className="flex items-start gap-2">
+                  <AlertOctagon className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-red-900 text-base">🚫 Hard Block — Non-Adequate Specimen</div>
+                    <div className="text-red-800 mt-0.5">
+                      Specimen condition recorded as <span className="font-mono font-bold">{cond}</span>. Result entry is blocked until a Lab Supervisor grants an override.
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-2 pt-1">
+                  <label className="text-xs font-semibold uppercase tracking-wide text-red-700">Supervisor Override Reason</label>
+                  <Input
+                    placeholder="Enter override justification (e.g. patient cannot be re-drawn, clinician accepted risk)…"
+                    value={overrideReason}
+                    onChange={(e) => setOverrideReason(e.target.value)}
+                    className="border-red-200 bg-white focus:border-red-400"
+                  />
+                  <button
+                    type="button"
+                    disabled={!overrideReason.trim()}
+                    onClick={() => {
+                      supervisorOverrideCondition(current.id, overrideReason, "Lab Supervisor");
+                      setOverrideReason("");
+                    }}
+                    className="w-full rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40 hover:bg-red-700 transition"
+                  >
+                    <ShieldAlert className="inline h-3.5 w-3.5 mr-1" /> Grant Override & Allow Processing
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
+
+          {hasCritical && !reagentStatus.blocked && (
             <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-800 text-sm">
               <AlertOctagon className="h-4 w-4" />
               <span>Critical value detected — supervisor will be alerted on submission.</span>
@@ -78,8 +175,9 @@ export default function Processing() {
                     <div className="text-[11px] font-mono text-ink-400">{p.key}</div>
                   </div>
                   <div className="col-span-3">
-                    <Input data-testid={`input-${p.key}`} value={v} onChange={(e) => setDraft((d) => ({ ...d, [p.key]: e.target.value }))}
-                      className="bg-white border-ink-200 font-mono" placeholder="—" />
+                   <Input data-testid={`input-${p.key}`} value={v} onChange={(e) => setDraft((d) => ({ ...d, [p.key]: e.target.value }))}
+                      className="bg-white border-ink-200 font-mono" placeholder="—"
+                      disabled={reagentStatus.blocked || (!!current.specimen?.condition && current.specimen.condition !== "Adequate" && !current.sampleConditionOverride)} />
                   </div>
                   <div className="col-span-2 text-sm text-ink-600 font-mono">{p.unit || "—"}</div>
                   <div className="col-span-2 text-xs text-ink-400 font-mono">{refStr}</div>
@@ -90,12 +188,33 @@ export default function Processing() {
           </div>
 
           <div className="flex gap-2 mt-6">
-            <Button variant="outline" className="border-ink-200" onClick={() => handleSave(false)} data-testid="save-draft-btn">
+            <Button variant="outline" className="border-ink-200" onClick={() => handleSave(false)} disabled={reagentStatus.blocked} data-testid="save-draft-btn">
               <Save className="h-3.5 w-3.5 mr-1.5" /> Save draft
             </Button>
-            <Button className="btn-primary ml-auto" onClick={() => handleSave(true)} disabled={!allFilled} data-testid="submit-validation-btn">
+            <Button className="btn-primary ml-auto" onClick={() => handleSave(true)} disabled={!allFilled || reagentStatus.blocked} data-testid="submit-validation-btn">
               <Send className="h-3.5 w-3.5 mr-1.5" /> Submit for validation
             </Button>
+          </div>
+
+          {/* Chain of Custody Timeline */}
+          <div className="mt-8 pt-6 border-t border-ink-200">
+            <h4 className="text-xs font-mono uppercase tracking-wider text-ink-400 mb-4">Sample Chain of Custody Audit Trail</h4>
+            <div className="relative border-l-2 border-stone-200 pl-4 ml-2 space-y-4 text-xs">
+              {current.chainOfCustody?.map((c, i) => (
+                <div key={i} className="relative">
+                  <div className="absolute -left-[23px] mt-0.5 h-2.5 w-2.5 rounded-full bg-sage border-2 border-white" />
+                  <div className="font-semibold text-ink-800 capitalize">{c.step.replace(/_/g, " ")}</div>
+                  <div className="text-ink-500">{c.performedBy} · {c.location} · {formatDateTime(c.performedAt)}</div>
+                  {c.notes && <div className="text-[11px] text-ink-400 italic mt-0.5">&quot;{c.notes}&quot;</div>}
+                </div>
+              ))}
+              {!current.chainOfCustody?.some((c) => c.step === "assigned_to_bench") && (
+                <div className="relative text-ink-400">
+                  <div className="absolute -left-[23px] mt-0.5 h-2.5 w-2.5 rounded-full bg-stone-300 border-2 border-white" />
+                  <div>Awaiting Bench Assignment</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

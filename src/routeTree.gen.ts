@@ -48,6 +48,7 @@ import { Route as ReceptionReportsRouteImport } from './routes/reception.reports
 import { Route as ReceptionRegisterRouteImport } from './routes/reception.register'
 import { Route as ReceptionQueueRouteImport } from './routes/reception.queue'
 import { Route as ReceptionPatientsRouteImport } from './routes/reception.patients'
+import { Route as ReceptionLeaveRouteImport } from './routes/reception.leave'
 import { Route as ReceptionInsuranceRouteImport } from './routes/reception.insurance'
 import { Route as ReceptionDaySheetRouteImport } from './routes/reception.day-sheet'
 import { Route as ReceptionCheckInRouteImport } from './routes/reception.check-in'
@@ -71,6 +72,7 @@ import { Route as PharmacyPurchaseOrdersRouteImport } from './routes/pharmacy.pu
 import { Route as PharmacyPrescriptionsRouteImport } from './routes/pharmacy.prescriptions'
 import { Route as PharmacyOperationsRouteImport } from './routes/pharmacy.operations'
 import { Route as PharmacyMapRouteImport } from './routes/pharmacy.map'
+import { Route as PharmacyLeaveRouteImport } from './routes/pharmacy.leave'
 import { Route as PharmacyInventoryRouteImport } from './routes/pharmacy.inventory'
 import { Route as PharmacyFormularyRouteImport } from './routes/pharmacy.formulary'
 import { Route as PharmacyDispenseRouteImport } from './routes/pharmacy.dispense'
@@ -79,19 +81,24 @@ import { Route as PharmacyControlledRouteImport } from './routes/pharmacy.contro
 import { Route as PharmacyBillingRouteImport } from './routes/pharmacy.billing'
 import { Route as NursingVitalsRouteImport } from './routes/nursing.vitals'
 import { Route as NursingPatientsRouteImport } from './routes/nursing.patients'
+import { Route as NursingLeaveRouteImport } from './routes/nursing.leave'
 import { Route as NursingBedsRouteImport } from './routes/nursing.beds'
 import { Route as MedicationsRefillHistoryRouteImport } from './routes/medications.refill-history'
 import { Route as MedicationsMedIdRouteImport } from './routes/medications.$medId'
 import { Route as LabWalkInRouteImport } from './routes/lab.walk-in'
 import { Route as LabValidationRouteImport } from './routes/lab.validation'
 import { Route as LabTeamRouteImport } from './routes/lab.team'
+import { Route as LabStorageRouteImport } from './routes/lab.storage'
 import { Route as LabSettingsRouteImport } from './routes/lab.settings'
 import { Route as LabSamplesRouteImport } from './routes/lab.samples'
 import { Route as LabReportsRouteImport } from './routes/lab.reports'
+import { Route as LabReagentsRouteImport } from './routes/lab.reagents'
 import { Route as LabRadiologyRouteImport } from './routes/lab.radiology'
+import { Route as LabQcRouteImport } from './routes/lab.qc'
 import { Route as LabProcessingRouteImport } from './routes/lab.processing'
 import { Route as LabOrdersRouteImport } from './routes/lab.orders'
 import { Route as LabMySubmissionsRouteImport } from './routes/lab.my-submissions'
+import { Route as LabLeaveRouteImport } from './routes/lab.leave'
 import { Route as LabCollectionRouteImport } from './routes/lab.collection'
 import { Route as LabCatalogRouteImport } from './routes/lab.catalog'
 import { Route as ExerciseRoutineIdRouteImport } from './routes/exercise.$routineId'
@@ -108,6 +115,7 @@ import { Route as DoctorPatientsRouteImport } from './routes/doctor.patients'
 import { Route as DoctorOrdersRouteImport } from './routes/doctor.orders'
 import { Route as DoctorNotificationsRouteImport } from './routes/doctor.notifications'
 import { Route as DoctorMessagingRouteImport } from './routes/doctor.messaging'
+import { Route as DoctorLeaveRouteImport } from './routes/doctor.leave'
 import { Route as DoctorEncountersRouteImport } from './routes/doctor.encounters'
 import { Route as DoctorCoverageRouteImport } from './routes/doctor.coverage'
 import { Route as DietClinicalRulesRouteImport } from './routes/diet.clinical-rules'
@@ -116,19 +124,26 @@ import { Route as DietMealIdRouteImport } from './routes/diet.$mealId'
 import { Route as CareVisitsRouteImport } from './routes/care.visits'
 import { Route as BookDoctorIdRouteImport } from './routes/book.$doctorId'
 import { Route as BillingPaymentsRouteImport } from './routes/billing.payments'
+import { Route as BillingLeaveRouteImport } from './routes/billing.leave'
 import { Route as BillingInvoicesRouteImport } from './routes/billing.invoices'
 import { Route as BillingEncountersRouteImport } from './routes/billing.encounters'
 import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
+import { Route as AdminRevenueRouteImport } from './routes/admin.revenue'
 import { Route as AdminPharmacyFormularyRouteImport } from './routes/admin.pharmacy-formulary'
 import { Route as AdminOtRouteImport } from './routes/admin.ot'
+import { Route as AdminOccupancyRouteImport } from './routes/admin.occupancy'
 import { Route as AdminLabCatalogRouteImport } from './routes/admin.lab-catalog'
+import { Route as AdminHrRouteImport } from './routes/admin.hr'
 import { Route as AdminHospitalRouteImport } from './routes/admin.hospital'
 import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminDoctorRosterRouteImport } from './routes/admin.doctor-roster'
 import { Route as AdminDepartmentsRouteImport } from './routes/admin.departments'
 import { Route as AdminBranchesRouteImport } from './routes/admin.branches'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminAccessControlRouteImport } from './routes/admin.access-control'
 import { Route as ReportsShareIndexRouteImport } from './routes/reports.share.index'
 import { Route as ReceptionAppointmentsIndexRouteImport } from './routes/reception.appointments.index'
 import { Route as ProfileDependentsIndexRouteImport } from './routes/profile.dependents.index'
@@ -361,6 +376,11 @@ const ReceptionPatientsRoute = ReceptionPatientsRouteImport.update({
   path: '/patients',
   getParentRoute: () => ReceptionRoute,
 } as any)
+const ReceptionLeaveRoute = ReceptionLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => ReceptionRoute,
+} as any)
 const ReceptionInsuranceRoute = ReceptionInsuranceRouteImport.update({
   id: '/insurance',
   path: '/insurance',
@@ -476,6 +496,11 @@ const PharmacyMapRoute = PharmacyMapRouteImport.update({
   path: '/map',
   getParentRoute: () => PharmacyRoute,
 } as any)
+const PharmacyLeaveRoute = PharmacyLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => PharmacyRoute,
+} as any)
 const PharmacyInventoryRoute = PharmacyInventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -516,6 +541,11 @@ const NursingPatientsRoute = NursingPatientsRouteImport.update({
   path: '/patients',
   getParentRoute: () => NursingRoute,
 } as any)
+const NursingLeaveRoute = NursingLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => NursingRoute,
+} as any)
 const NursingBedsRoute = NursingBedsRouteImport.update({
   id: '/beds',
   path: '/beds',
@@ -547,6 +577,11 @@ const LabTeamRoute = LabTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => LabRoute,
 } as any)
+const LabStorageRoute = LabStorageRouteImport.update({
+  id: '/storage',
+  path: '/storage',
+  getParentRoute: () => LabRoute,
+} as any)
 const LabSettingsRoute = LabSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -562,9 +597,19 @@ const LabReportsRoute = LabReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => LabRoute,
 } as any)
+const LabReagentsRoute = LabReagentsRouteImport.update({
+  id: '/reagents',
+  path: '/reagents',
+  getParentRoute: () => LabRoute,
+} as any)
 const LabRadiologyRoute = LabRadiologyRouteImport.update({
   id: '/radiology',
   path: '/radiology',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabQcRoute = LabQcRouteImport.update({
+  id: '/qc',
+  path: '/qc',
   getParentRoute: () => LabRoute,
 } as any)
 const LabProcessingRoute = LabProcessingRouteImport.update({
@@ -580,6 +625,11 @@ const LabOrdersRoute = LabOrdersRouteImport.update({
 const LabMySubmissionsRoute = LabMySubmissionsRouteImport.update({
   id: '/my-submissions',
   path: '/my-submissions',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabLeaveRoute = LabLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
   getParentRoute: () => LabRoute,
 } as any)
 const LabCollectionRoute = LabCollectionRouteImport.update({
@@ -662,6 +712,11 @@ const DoctorMessagingRoute = DoctorMessagingRouteImport.update({
   path: '/messaging',
   getParentRoute: () => DoctorRoute,
 } as any)
+const DoctorLeaveRoute = DoctorLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => DoctorRoute,
+} as any)
 const DoctorEncountersRoute = DoctorEncountersRouteImport.update({
   id: '/encounters',
   path: '/encounters',
@@ -702,6 +757,11 @@ const BillingPaymentsRoute = BillingPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => BillingRoute,
 } as any)
+const BillingLeaveRoute = BillingLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => BillingRoute,
+} as any)
 const BillingInvoicesRoute = BillingInvoicesRouteImport.update({
   id: '/invoices',
   path: '/invoices',
@@ -727,6 +787,11 @@ const AdminServicesRoute = AdminServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRevenueRoute = AdminRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPharmacyFormularyRoute = AdminPharmacyFormularyRouteImport.update({
   id: '/pharmacy-formulary',
   path: '/pharmacy-formulary',
@@ -737,9 +802,19 @@ const AdminOtRoute = AdminOtRouteImport.update({
   path: '/ot',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminOccupancyRoute = AdminOccupancyRouteImport.update({
+  id: '/occupancy',
+  path: '/occupancy',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLabCatalogRoute = AdminLabCatalogRouteImport.update({
   id: '/lab-catalog',
   path: '/lab-catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHrRoute = AdminHrRouteImport.update({
+  id: '/hr',
+  path: '/hr',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminHospitalRoute = AdminHospitalRouteImport.update({
@@ -752,6 +827,11 @@ const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
   path: '/doctors',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDoctorRosterRoute = AdminDoctorRosterRouteImport.update({
+  id: '/doctor-roster',
+  path: '/doctor-roster',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDepartmentsRoute = AdminDepartmentsRouteImport.update({
   id: '/departments',
   path: '/departments',
@@ -762,9 +842,19 @@ const AdminBranchesRoute = AdminBranchesRouteImport.update({
   path: '/branches',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAccessControlRoute = AdminAccessControlRouteImport.update({
+  id: '/access-control',
+  path: '/access-control',
   getParentRoute: () => AdminRoute,
 } as any)
 const ReportsShareIndexRoute = ReportsShareIndexRouteImport.update({
@@ -971,19 +1061,26 @@ export interface FileRoutesByFullPath {
   '/queue': typeof QueueRoute
   '/reception': typeof ReceptionRouteWithChildren
   '/register': typeof RegisterRoute
+  '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/branches': typeof AdminBranchesRoute
   '/admin/departments': typeof AdminDepartmentsRoute
+  '/admin/doctor-roster': typeof AdminDoctorRosterRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/hospital': typeof AdminHospitalRoute
+  '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
+  '/admin/occupancy': typeof AdminOccupancyRoute
   '/admin/ot': typeof AdminOtRoute
   '/admin/pharmacy-formulary': typeof AdminPharmacyFormularyRoute
+  '/admin/revenue': typeof AdminRevenueRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/staff': typeof AdminStaffRoute
   '/billing/encounters': typeof BillingEncountersRoute
   '/billing/invoices': typeof BillingInvoicesRoute
+  '/billing/leave': typeof BillingLeaveRoute
   '/billing/payments': typeof BillingPaymentsRoute
   '/book/$doctorId': typeof BookDoctorIdRoute
   '/care/visits': typeof CareVisitsRouteWithChildren
@@ -992,6 +1089,7 @@ export interface FileRoutesByFullPath {
   '/diet/clinical-rules': typeof DietClinicalRulesRoute
   '/doctor/coverage': typeof DoctorCoverageRoute
   '/doctor/encounters': typeof DoctorEncountersRoute
+  '/doctor/leave': typeof DoctorLeaveRoute
   '/doctor/messaging': typeof DoctorMessagingRoute
   '/doctor/notifications': typeof DoctorNotificationsRoute
   '/doctor/orders': typeof DoctorOrdersRoute
@@ -1008,19 +1106,24 @@ export interface FileRoutesByFullPath {
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
   '/lab/catalog': typeof LabCatalogRoute
   '/lab/collection': typeof LabCollectionRoute
+  '/lab/leave': typeof LabLeaveRoute
   '/lab/my-submissions': typeof LabMySubmissionsRoute
   '/lab/orders': typeof LabOrdersRoute
   '/lab/processing': typeof LabProcessingRoute
+  '/lab/qc': typeof LabQcRoute
   '/lab/radiology': typeof LabRadiologyRoute
+  '/lab/reagents': typeof LabReagentsRoute
   '/lab/reports': typeof LabReportsRoute
   '/lab/samples': typeof LabSamplesRoute
   '/lab/settings': typeof LabSettingsRoute
+  '/lab/storage': typeof LabStorageRoute
   '/lab/team': typeof LabTeamRoute
   '/lab/validation': typeof LabValidationRoute
   '/lab/walk-in': typeof LabWalkInRoute
   '/medications/$medId': typeof MedicationsMedIdRouteWithChildren
   '/medications/refill-history': typeof MedicationsRefillHistoryRoute
   '/nursing/beds': typeof NursingBedsRoute
+  '/nursing/leave': typeof NursingLeaveRoute
   '/nursing/patients': typeof NursingPatientsRoute
   '/nursing/vitals': typeof NursingVitalsRoute
   '/pharmacy/billing': typeof PharmacyBillingRoute
@@ -1029,6 +1132,7 @@ export interface FileRoutesByFullPath {
   '/pharmacy/dispense': typeof PharmacyDispenseRoute
   '/pharmacy/formulary': typeof PharmacyFormularyRoute
   '/pharmacy/inventory': typeof PharmacyInventoryRoute
+  '/pharmacy/leave': typeof PharmacyLeaveRoute
   '/pharmacy/map': typeof PharmacyMapRoute
   '/pharmacy/operations': typeof PharmacyOperationsRoute
   '/pharmacy/prescriptions': typeof PharmacyPrescriptionsRoute
@@ -1052,6 +1156,7 @@ export interface FileRoutesByFullPath {
   '/reception/check-in': typeof ReceptionCheckInRoute
   '/reception/day-sheet': typeof ReceptionDaySheetRoute
   '/reception/insurance': typeof ReceptionInsuranceRoute
+  '/reception/leave': typeof ReceptionLeaveRoute
   '/reception/patients': typeof ReceptionPatientsRoute
   '/reception/queue': typeof ReceptionQueueRoute
   '/reception/register': typeof ReceptionRegisterRoute
@@ -1121,19 +1226,26 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/queue': typeof QueueRoute
   '/register': typeof RegisterRoute
+  '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/branches': typeof AdminBranchesRoute
   '/admin/departments': typeof AdminDepartmentsRoute
+  '/admin/doctor-roster': typeof AdminDoctorRosterRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/hospital': typeof AdminHospitalRoute
+  '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
+  '/admin/occupancy': typeof AdminOccupancyRoute
   '/admin/ot': typeof AdminOtRoute
   '/admin/pharmacy-formulary': typeof AdminPharmacyFormularyRoute
+  '/admin/revenue': typeof AdminRevenueRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/staff': typeof AdminStaffRoute
   '/billing/encounters': typeof BillingEncountersRoute
   '/billing/invoices': typeof BillingInvoicesRoute
+  '/billing/leave': typeof BillingLeaveRoute
   '/billing/payments': typeof BillingPaymentsRoute
   '/book/$doctorId': typeof BookDoctorIdRoute
   '/diet/$mealId': typeof DietMealIdRouteWithChildren
@@ -1141,6 +1253,7 @@ export interface FileRoutesByTo {
   '/diet/clinical-rules': typeof DietClinicalRulesRoute
   '/doctor/coverage': typeof DoctorCoverageRoute
   '/doctor/encounters': typeof DoctorEncountersRoute
+  '/doctor/leave': typeof DoctorLeaveRoute
   '/doctor/messaging': typeof DoctorMessagingRoute
   '/doctor/notifications': typeof DoctorNotificationsRoute
   '/doctor/orders': typeof DoctorOrdersRoute
@@ -1155,19 +1268,24 @@ export interface FileRoutesByTo {
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
   '/lab/catalog': typeof LabCatalogRoute
   '/lab/collection': typeof LabCollectionRoute
+  '/lab/leave': typeof LabLeaveRoute
   '/lab/my-submissions': typeof LabMySubmissionsRoute
   '/lab/orders': typeof LabOrdersRoute
   '/lab/processing': typeof LabProcessingRoute
+  '/lab/qc': typeof LabQcRoute
   '/lab/radiology': typeof LabRadiologyRoute
+  '/lab/reagents': typeof LabReagentsRoute
   '/lab/reports': typeof LabReportsRoute
   '/lab/samples': typeof LabSamplesRoute
   '/lab/settings': typeof LabSettingsRoute
+  '/lab/storage': typeof LabStorageRoute
   '/lab/team': typeof LabTeamRoute
   '/lab/validation': typeof LabValidationRoute
   '/lab/walk-in': typeof LabWalkInRoute
   '/medications/$medId': typeof MedicationsMedIdRouteWithChildren
   '/medications/refill-history': typeof MedicationsRefillHistoryRoute
   '/nursing/beds': typeof NursingBedsRoute
+  '/nursing/leave': typeof NursingLeaveRoute
   '/nursing/patients': typeof NursingPatientsRoute
   '/nursing/vitals': typeof NursingVitalsRoute
   '/pharmacy/billing': typeof PharmacyBillingRoute
@@ -1176,6 +1294,7 @@ export interface FileRoutesByTo {
   '/pharmacy/dispense': typeof PharmacyDispenseRoute
   '/pharmacy/formulary': typeof PharmacyFormularyRoute
   '/pharmacy/inventory': typeof PharmacyInventoryRoute
+  '/pharmacy/leave': typeof PharmacyLeaveRoute
   '/pharmacy/map': typeof PharmacyMapRoute
   '/pharmacy/operations': typeof PharmacyOperationsRoute
   '/pharmacy/prescriptions': typeof PharmacyPrescriptionsRoute
@@ -1198,6 +1317,7 @@ export interface FileRoutesByTo {
   '/reception/check-in': typeof ReceptionCheckInRoute
   '/reception/day-sheet': typeof ReceptionDaySheetRoute
   '/reception/insurance': typeof ReceptionInsuranceRoute
+  '/reception/leave': typeof ReceptionLeaveRoute
   '/reception/patients': typeof ReceptionPatientsRoute
   '/reception/queue': typeof ReceptionQueueRoute
   '/reception/register': typeof ReceptionRegisterRoute
@@ -1275,19 +1395,26 @@ export interface FileRoutesById {
   '/queue': typeof QueueRoute
   '/reception': typeof ReceptionRouteWithChildren
   '/register': typeof RegisterRoute
+  '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/branches': typeof AdminBranchesRoute
   '/admin/departments': typeof AdminDepartmentsRoute
+  '/admin/doctor-roster': typeof AdminDoctorRosterRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/hospital': typeof AdminHospitalRoute
+  '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
+  '/admin/occupancy': typeof AdminOccupancyRoute
   '/admin/ot': typeof AdminOtRoute
   '/admin/pharmacy-formulary': typeof AdminPharmacyFormularyRoute
+  '/admin/revenue': typeof AdminRevenueRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/staff': typeof AdminStaffRoute
   '/billing/encounters': typeof BillingEncountersRoute
   '/billing/invoices': typeof BillingInvoicesRoute
+  '/billing/leave': typeof BillingLeaveRoute
   '/billing/payments': typeof BillingPaymentsRoute
   '/book/$doctorId': typeof BookDoctorIdRoute
   '/care/visits': typeof CareVisitsRouteWithChildren
@@ -1296,6 +1423,7 @@ export interface FileRoutesById {
   '/diet/clinical-rules': typeof DietClinicalRulesRoute
   '/doctor/coverage': typeof DoctorCoverageRoute
   '/doctor/encounters': typeof DoctorEncountersRoute
+  '/doctor/leave': typeof DoctorLeaveRoute
   '/doctor/messaging': typeof DoctorMessagingRoute
   '/doctor/notifications': typeof DoctorNotificationsRoute
   '/doctor/orders': typeof DoctorOrdersRoute
@@ -1312,19 +1440,24 @@ export interface FileRoutesById {
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
   '/lab/catalog': typeof LabCatalogRoute
   '/lab/collection': typeof LabCollectionRoute
+  '/lab/leave': typeof LabLeaveRoute
   '/lab/my-submissions': typeof LabMySubmissionsRoute
   '/lab/orders': typeof LabOrdersRoute
   '/lab/processing': typeof LabProcessingRoute
+  '/lab/qc': typeof LabQcRoute
   '/lab/radiology': typeof LabRadiologyRoute
+  '/lab/reagents': typeof LabReagentsRoute
   '/lab/reports': typeof LabReportsRoute
   '/lab/samples': typeof LabSamplesRoute
   '/lab/settings': typeof LabSettingsRoute
+  '/lab/storage': typeof LabStorageRoute
   '/lab/team': typeof LabTeamRoute
   '/lab/validation': typeof LabValidationRoute
   '/lab/walk-in': typeof LabWalkInRoute
   '/medications/$medId': typeof MedicationsMedIdRouteWithChildren
   '/medications/refill-history': typeof MedicationsRefillHistoryRoute
   '/nursing/beds': typeof NursingBedsRoute
+  '/nursing/leave': typeof NursingLeaveRoute
   '/nursing/patients': typeof NursingPatientsRoute
   '/nursing/vitals': typeof NursingVitalsRoute
   '/pharmacy/billing': typeof PharmacyBillingRoute
@@ -1333,6 +1466,7 @@ export interface FileRoutesById {
   '/pharmacy/dispense': typeof PharmacyDispenseRoute
   '/pharmacy/formulary': typeof PharmacyFormularyRoute
   '/pharmacy/inventory': typeof PharmacyInventoryRoute
+  '/pharmacy/leave': typeof PharmacyLeaveRoute
   '/pharmacy/map': typeof PharmacyMapRoute
   '/pharmacy/operations': typeof PharmacyOperationsRoute
   '/pharmacy/prescriptions': typeof PharmacyPrescriptionsRoute
@@ -1356,6 +1490,7 @@ export interface FileRoutesById {
   '/reception/check-in': typeof ReceptionCheckInRoute
   '/reception/day-sheet': typeof ReceptionDaySheetRoute
   '/reception/insurance': typeof ReceptionInsuranceRoute
+  '/reception/leave': typeof ReceptionLeaveRoute
   '/reception/patients': typeof ReceptionPatientsRoute
   '/reception/queue': typeof ReceptionQueueRoute
   '/reception/register': typeof ReceptionRegisterRoute
@@ -1435,19 +1570,26 @@ export interface FileRouteTypes {
     | '/queue'
     | '/reception'
     | '/register'
+    | '/admin/access-control'
     | '/admin/analytics'
+    | '/admin/announcements'
     | '/admin/branches'
     | '/admin/departments'
+    | '/admin/doctor-roster'
     | '/admin/doctors'
     | '/admin/hospital'
+    | '/admin/hr'
     | '/admin/lab-catalog'
+    | '/admin/occupancy'
     | '/admin/ot'
     | '/admin/pharmacy-formulary'
+    | '/admin/revenue'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/staff'
     | '/billing/encounters'
     | '/billing/invoices'
+    | '/billing/leave'
     | '/billing/payments'
     | '/book/$doctorId'
     | '/care/visits'
@@ -1456,6 +1598,7 @@ export interface FileRouteTypes {
     | '/diet/clinical-rules'
     | '/doctor/coverage'
     | '/doctor/encounters'
+    | '/doctor/leave'
     | '/doctor/messaging'
     | '/doctor/notifications'
     | '/doctor/orders'
@@ -1472,19 +1615,24 @@ export interface FileRouteTypes {
     | '/exercise/$routineId'
     | '/lab/catalog'
     | '/lab/collection'
+    | '/lab/leave'
     | '/lab/my-submissions'
     | '/lab/orders'
     | '/lab/processing'
+    | '/lab/qc'
     | '/lab/radiology'
+    | '/lab/reagents'
     | '/lab/reports'
     | '/lab/samples'
     | '/lab/settings'
+    | '/lab/storage'
     | '/lab/team'
     | '/lab/validation'
     | '/lab/walk-in'
     | '/medications/$medId'
     | '/medications/refill-history'
     | '/nursing/beds'
+    | '/nursing/leave'
     | '/nursing/patients'
     | '/nursing/vitals'
     | '/pharmacy/billing'
@@ -1493,6 +1641,7 @@ export interface FileRouteTypes {
     | '/pharmacy/dispense'
     | '/pharmacy/formulary'
     | '/pharmacy/inventory'
+    | '/pharmacy/leave'
     | '/pharmacy/map'
     | '/pharmacy/operations'
     | '/pharmacy/prescriptions'
@@ -1516,6 +1665,7 @@ export interface FileRouteTypes {
     | '/reception/check-in'
     | '/reception/day-sheet'
     | '/reception/insurance'
+    | '/reception/leave'
     | '/reception/patients'
     | '/reception/queue'
     | '/reception/register'
@@ -1585,19 +1735,26 @@ export interface FileRouteTypes {
     | '/login'
     | '/queue'
     | '/register'
+    | '/admin/access-control'
     | '/admin/analytics'
+    | '/admin/announcements'
     | '/admin/branches'
     | '/admin/departments'
+    | '/admin/doctor-roster'
     | '/admin/doctors'
     | '/admin/hospital'
+    | '/admin/hr'
     | '/admin/lab-catalog'
+    | '/admin/occupancy'
     | '/admin/ot'
     | '/admin/pharmacy-formulary'
+    | '/admin/revenue'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/staff'
     | '/billing/encounters'
     | '/billing/invoices'
+    | '/billing/leave'
     | '/billing/payments'
     | '/book/$doctorId'
     | '/diet/$mealId'
@@ -1605,6 +1762,7 @@ export interface FileRouteTypes {
     | '/diet/clinical-rules'
     | '/doctor/coverage'
     | '/doctor/encounters'
+    | '/doctor/leave'
     | '/doctor/messaging'
     | '/doctor/notifications'
     | '/doctor/orders'
@@ -1619,19 +1777,24 @@ export interface FileRouteTypes {
     | '/exercise/$routineId'
     | '/lab/catalog'
     | '/lab/collection'
+    | '/lab/leave'
     | '/lab/my-submissions'
     | '/lab/orders'
     | '/lab/processing'
+    | '/lab/qc'
     | '/lab/radiology'
+    | '/lab/reagents'
     | '/lab/reports'
     | '/lab/samples'
     | '/lab/settings'
+    | '/lab/storage'
     | '/lab/team'
     | '/lab/validation'
     | '/lab/walk-in'
     | '/medications/$medId'
     | '/medications/refill-history'
     | '/nursing/beds'
+    | '/nursing/leave'
     | '/nursing/patients'
     | '/nursing/vitals'
     | '/pharmacy/billing'
@@ -1640,6 +1803,7 @@ export interface FileRouteTypes {
     | '/pharmacy/dispense'
     | '/pharmacy/formulary'
     | '/pharmacy/inventory'
+    | '/pharmacy/leave'
     | '/pharmacy/map'
     | '/pharmacy/operations'
     | '/pharmacy/prescriptions'
@@ -1662,6 +1826,7 @@ export interface FileRouteTypes {
     | '/reception/check-in'
     | '/reception/day-sheet'
     | '/reception/insurance'
+    | '/reception/leave'
     | '/reception/patients'
     | '/reception/queue'
     | '/reception/register'
@@ -1738,19 +1903,26 @@ export interface FileRouteTypes {
     | '/queue'
     | '/reception'
     | '/register'
+    | '/admin/access-control'
     | '/admin/analytics'
+    | '/admin/announcements'
     | '/admin/branches'
     | '/admin/departments'
+    | '/admin/doctor-roster'
     | '/admin/doctors'
     | '/admin/hospital'
+    | '/admin/hr'
     | '/admin/lab-catalog'
+    | '/admin/occupancy'
     | '/admin/ot'
     | '/admin/pharmacy-formulary'
+    | '/admin/revenue'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/staff'
     | '/billing/encounters'
     | '/billing/invoices'
+    | '/billing/leave'
     | '/billing/payments'
     | '/book/$doctorId'
     | '/care/visits'
@@ -1759,6 +1931,7 @@ export interface FileRouteTypes {
     | '/diet/clinical-rules'
     | '/doctor/coverage'
     | '/doctor/encounters'
+    | '/doctor/leave'
     | '/doctor/messaging'
     | '/doctor/notifications'
     | '/doctor/orders'
@@ -1775,19 +1948,24 @@ export interface FileRouteTypes {
     | '/exercise/$routineId'
     | '/lab/catalog'
     | '/lab/collection'
+    | '/lab/leave'
     | '/lab/my-submissions'
     | '/lab/orders'
     | '/lab/processing'
+    | '/lab/qc'
     | '/lab/radiology'
+    | '/lab/reagents'
     | '/lab/reports'
     | '/lab/samples'
     | '/lab/settings'
+    | '/lab/storage'
     | '/lab/team'
     | '/lab/validation'
     | '/lab/walk-in'
     | '/medications/$medId'
     | '/medications/refill-history'
     | '/nursing/beds'
+    | '/nursing/leave'
     | '/nursing/patients'
     | '/nursing/vitals'
     | '/pharmacy/billing'
@@ -1796,6 +1974,7 @@ export interface FileRouteTypes {
     | '/pharmacy/dispense'
     | '/pharmacy/formulary'
     | '/pharmacy/inventory'
+    | '/pharmacy/leave'
     | '/pharmacy/map'
     | '/pharmacy/operations'
     | '/pharmacy/prescriptions'
@@ -1819,6 +1998,7 @@ export interface FileRouteTypes {
     | '/reception/check-in'
     | '/reception/day-sheet'
     | '/reception/insurance'
+    | '/reception/leave'
     | '/reception/patients'
     | '/reception/queue'
     | '/reception/register'
@@ -2205,6 +2385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReceptionPatientsRouteImport
       parentRoute: typeof ReceptionRoute
     }
+    '/reception/leave': {
+      id: '/reception/leave'
+      path: '/leave'
+      fullPath: '/reception/leave'
+      preLoaderRoute: typeof ReceptionLeaveRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
     '/reception/insurance': {
       id: '/reception/insurance'
       path: '/insurance'
@@ -2366,6 +2553,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PharmacyMapRouteImport
       parentRoute: typeof PharmacyRoute
     }
+    '/pharmacy/leave': {
+      id: '/pharmacy/leave'
+      path: '/leave'
+      fullPath: '/pharmacy/leave'
+      preLoaderRoute: typeof PharmacyLeaveRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
     '/pharmacy/inventory': {
       id: '/pharmacy/inventory'
       path: '/inventory'
@@ -2422,6 +2616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NursingPatientsRouteImport
       parentRoute: typeof NursingRoute
     }
+    '/nursing/leave': {
+      id: '/nursing/leave'
+      path: '/leave'
+      fullPath: '/nursing/leave'
+      preLoaderRoute: typeof NursingLeaveRouteImport
+      parentRoute: typeof NursingRoute
+    }
     '/nursing/beds': {
       id: '/nursing/beds'
       path: '/beds'
@@ -2464,6 +2665,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LabTeamRouteImport
       parentRoute: typeof LabRoute
     }
+    '/lab/storage': {
+      id: '/lab/storage'
+      path: '/storage'
+      fullPath: '/lab/storage'
+      preLoaderRoute: typeof LabStorageRouteImport
+      parentRoute: typeof LabRoute
+    }
     '/lab/settings': {
       id: '/lab/settings'
       path: '/settings'
@@ -2485,11 +2693,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LabReportsRouteImport
       parentRoute: typeof LabRoute
     }
+    '/lab/reagents': {
+      id: '/lab/reagents'
+      path: '/reagents'
+      fullPath: '/lab/reagents'
+      preLoaderRoute: typeof LabReagentsRouteImport
+      parentRoute: typeof LabRoute
+    }
     '/lab/radiology': {
       id: '/lab/radiology'
       path: '/radiology'
       fullPath: '/lab/radiology'
       preLoaderRoute: typeof LabRadiologyRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/qc': {
+      id: '/lab/qc'
+      path: '/qc'
+      fullPath: '/lab/qc'
+      preLoaderRoute: typeof LabQcRouteImport
       parentRoute: typeof LabRoute
     }
     '/lab/processing': {
@@ -2511,6 +2733,13 @@ declare module '@tanstack/react-router' {
       path: '/my-submissions'
       fullPath: '/lab/my-submissions'
       preLoaderRoute: typeof LabMySubmissionsRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/leave': {
+      id: '/lab/leave'
+      path: '/leave'
+      fullPath: '/lab/leave'
+      preLoaderRoute: typeof LabLeaveRouteImport
       parentRoute: typeof LabRoute
     }
     '/lab/collection': {
@@ -2625,6 +2854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorMessagingRouteImport
       parentRoute: typeof DoctorRoute
     }
+    '/doctor/leave': {
+      id: '/doctor/leave'
+      path: '/leave'
+      fullPath: '/doctor/leave'
+      preLoaderRoute: typeof DoctorLeaveRouteImport
+      parentRoute: typeof DoctorRoute
+    }
     '/doctor/encounters': {
       id: '/doctor/encounters'
       path: '/encounters'
@@ -2681,6 +2917,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BillingPaymentsRouteImport
       parentRoute: typeof BillingRoute
     }
+    '/billing/leave': {
+      id: '/billing/leave'
+      path: '/leave'
+      fullPath: '/billing/leave'
+      preLoaderRoute: typeof BillingLeaveRouteImport
+      parentRoute: typeof BillingRoute
+    }
     '/billing/invoices': {
       id: '/billing/invoices'
       path: '/invoices'
@@ -2716,6 +2959,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminServicesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/revenue': {
+      id: '/admin/revenue'
+      path: '/revenue'
+      fullPath: '/admin/revenue'
+      preLoaderRoute: typeof AdminRevenueRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pharmacy-formulary': {
       id: '/admin/pharmacy-formulary'
       path: '/pharmacy-formulary'
@@ -2730,11 +2980,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOtRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/occupancy': {
+      id: '/admin/occupancy'
+      path: '/occupancy'
+      fullPath: '/admin/occupancy'
+      preLoaderRoute: typeof AdminOccupancyRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/lab-catalog': {
       id: '/admin/lab-catalog'
       path: '/lab-catalog'
       fullPath: '/admin/lab-catalog'
       preLoaderRoute: typeof AdminLabCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/hr': {
+      id: '/admin/hr'
+      path: '/hr'
+      fullPath: '/admin/hr'
+      preLoaderRoute: typeof AdminHrRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/hospital': {
@@ -2751,6 +3015,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDoctorsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/doctor-roster': {
+      id: '/admin/doctor-roster'
+      path: '/doctor-roster'
+      fullPath: '/admin/doctor-roster'
+      preLoaderRoute: typeof AdminDoctorRosterRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/departments': {
       id: '/admin/departments'
       path: '/departments'
@@ -2765,11 +3036,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBranchesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/analytics': {
       id: '/admin/analytics'
       path: '/analytics'
       fullPath: '/admin/analytics'
       preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/access-control': {
+      id: '/admin/access-control'
+      path: '/access-control'
+      fullPath: '/admin/access-control'
+      preLoaderRoute: typeof AdminAccessControlRouteImport
       parentRoute: typeof AdminRoute
     }
     '/reports/share/': {
@@ -3028,14 +3313,20 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAccessControlRoute: typeof AdminAccessControlRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminBranchesRoute: typeof AdminBranchesRoute
   AdminDepartmentsRoute: typeof AdminDepartmentsRoute
+  AdminDoctorRosterRoute: typeof AdminDoctorRosterRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminHospitalRoute: typeof AdminHospitalRoute
+  AdminHrRoute: typeof AdminHrRoute
   AdminLabCatalogRoute: typeof AdminLabCatalogRoute
+  AdminOccupancyRoute: typeof AdminOccupancyRoute
   AdminOtRoute: typeof AdminOtRoute
   AdminPharmacyFormularyRoute: typeof AdminPharmacyFormularyRoute
+  AdminRevenueRoute: typeof AdminRevenueRoute
   AdminServicesRoute: typeof AdminServicesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminStaffRoute: typeof AdminStaffRoute
@@ -3043,14 +3334,20 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAccessControlRoute: AdminAccessControlRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminBranchesRoute: AdminBranchesRoute,
   AdminDepartmentsRoute: AdminDepartmentsRoute,
+  AdminDoctorRosterRoute: AdminDoctorRosterRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminHospitalRoute: AdminHospitalRoute,
+  AdminHrRoute: AdminHrRoute,
   AdminLabCatalogRoute: AdminLabCatalogRoute,
+  AdminOccupancyRoute: AdminOccupancyRoute,
   AdminOtRoute: AdminOtRoute,
   AdminPharmacyFormularyRoute: AdminPharmacyFormularyRoute,
+  AdminRevenueRoute: AdminRevenueRoute,
   AdminServicesRoute: AdminServicesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminStaffRoute: AdminStaffRoute,
@@ -3062,6 +3359,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 interface BillingRouteChildren {
   BillingEncountersRoute: typeof BillingEncountersRoute
   BillingInvoicesRoute: typeof BillingInvoicesRoute
+  BillingLeaveRoute: typeof BillingLeaveRoute
   BillingPaymentsRoute: typeof BillingPaymentsRoute
   BillingIndexRoute: typeof BillingIndexRoute
 }
@@ -3069,6 +3367,7 @@ interface BillingRouteChildren {
 const BillingRouteChildren: BillingRouteChildren = {
   BillingEncountersRoute: BillingEncountersRoute,
   BillingInvoicesRoute: BillingInvoicesRoute,
+  BillingLeaveRoute: BillingLeaveRoute,
   BillingPaymentsRoute: BillingPaymentsRoute,
   BillingIndexRoute: BillingIndexRoute,
 }
@@ -3166,6 +3465,7 @@ const DoctorSettingsRouteWithChildren = DoctorSettingsRoute._addFileChildren(
 interface DoctorRouteChildren {
   DoctorCoverageRoute: typeof DoctorCoverageRoute
   DoctorEncountersRoute: typeof DoctorEncountersRoute
+  DoctorLeaveRoute: typeof DoctorLeaveRoute
   DoctorMessagingRoute: typeof DoctorMessagingRoute
   DoctorNotificationsRoute: typeof DoctorNotificationsRoute
   DoctorOrdersRoute: typeof DoctorOrdersRoute
@@ -3185,6 +3485,7 @@ interface DoctorRouteChildren {
 const DoctorRouteChildren: DoctorRouteChildren = {
   DoctorCoverageRoute: DoctorCoverageRoute,
   DoctorEncountersRoute: DoctorEncountersRoute,
+  DoctorLeaveRoute: DoctorLeaveRoute,
   DoctorMessagingRoute: DoctorMessagingRoute,
   DoctorNotificationsRoute: DoctorNotificationsRoute,
   DoctorOrdersRoute: DoctorOrdersRoute,
@@ -3207,13 +3508,17 @@ const DoctorRouteWithChildren =
 interface LabRouteChildren {
   LabCatalogRoute: typeof LabCatalogRoute
   LabCollectionRoute: typeof LabCollectionRoute
+  LabLeaveRoute: typeof LabLeaveRoute
   LabMySubmissionsRoute: typeof LabMySubmissionsRoute
   LabOrdersRoute: typeof LabOrdersRoute
   LabProcessingRoute: typeof LabProcessingRoute
+  LabQcRoute: typeof LabQcRoute
   LabRadiologyRoute: typeof LabRadiologyRoute
+  LabReagentsRoute: typeof LabReagentsRoute
   LabReportsRoute: typeof LabReportsRoute
   LabSamplesRoute: typeof LabSamplesRoute
   LabSettingsRoute: typeof LabSettingsRoute
+  LabStorageRoute: typeof LabStorageRoute
   LabTeamRoute: typeof LabTeamRoute
   LabValidationRoute: typeof LabValidationRoute
   LabWalkInRoute: typeof LabWalkInRoute
@@ -3223,13 +3528,17 @@ interface LabRouteChildren {
 const LabRouteChildren: LabRouteChildren = {
   LabCatalogRoute: LabCatalogRoute,
   LabCollectionRoute: LabCollectionRoute,
+  LabLeaveRoute: LabLeaveRoute,
   LabMySubmissionsRoute: LabMySubmissionsRoute,
   LabOrdersRoute: LabOrdersRoute,
   LabProcessingRoute: LabProcessingRoute,
+  LabQcRoute: LabQcRoute,
   LabRadiologyRoute: LabRadiologyRoute,
+  LabReagentsRoute: LabReagentsRoute,
   LabReportsRoute: LabReportsRoute,
   LabSamplesRoute: LabSamplesRoute,
   LabSettingsRoute: LabSettingsRoute,
+  LabStorageRoute: LabStorageRoute,
   LabTeamRoute: LabTeamRoute,
   LabValidationRoute: LabValidationRoute,
   LabWalkInRoute: LabWalkInRoute,
@@ -3240,6 +3549,7 @@ const LabRouteWithChildren = LabRoute._addFileChildren(LabRouteChildren)
 
 interface NursingRouteChildren {
   NursingBedsRoute: typeof NursingBedsRoute
+  NursingLeaveRoute: typeof NursingLeaveRoute
   NursingPatientsRoute: typeof NursingPatientsRoute
   NursingVitalsRoute: typeof NursingVitalsRoute
   NursingIndexRoute: typeof NursingIndexRoute
@@ -3247,6 +3557,7 @@ interface NursingRouteChildren {
 
 const NursingRouteChildren: NursingRouteChildren = {
   NursingBedsRoute: NursingBedsRoute,
+  NursingLeaveRoute: NursingLeaveRoute,
   NursingPatientsRoute: NursingPatientsRoute,
   NursingVitalsRoute: NursingVitalsRoute,
   NursingIndexRoute: NursingIndexRoute,
@@ -3262,6 +3573,7 @@ interface PharmacyRouteChildren {
   PharmacyDispenseRoute: typeof PharmacyDispenseRoute
   PharmacyFormularyRoute: typeof PharmacyFormularyRoute
   PharmacyInventoryRoute: typeof PharmacyInventoryRoute
+  PharmacyLeaveRoute: typeof PharmacyLeaveRoute
   PharmacyMapRoute: typeof PharmacyMapRoute
   PharmacyOperationsRoute: typeof PharmacyOperationsRoute
   PharmacyPrescriptionsRoute: typeof PharmacyPrescriptionsRoute
@@ -3281,6 +3593,7 @@ const PharmacyRouteChildren: PharmacyRouteChildren = {
   PharmacyDispenseRoute: PharmacyDispenseRoute,
   PharmacyFormularyRoute: PharmacyFormularyRoute,
   PharmacyInventoryRoute: PharmacyInventoryRoute,
+  PharmacyLeaveRoute: PharmacyLeaveRoute,
   PharmacyMapRoute: PharmacyMapRoute,
   PharmacyOperationsRoute: PharmacyOperationsRoute,
   PharmacyPrescriptionsRoute: PharmacyPrescriptionsRoute,
@@ -3346,6 +3659,7 @@ interface ReceptionRouteChildren {
   ReceptionCheckInRoute: typeof ReceptionCheckInRoute
   ReceptionDaySheetRoute: typeof ReceptionDaySheetRoute
   ReceptionInsuranceRoute: typeof ReceptionInsuranceRoute
+  ReceptionLeaveRoute: typeof ReceptionLeaveRoute
   ReceptionPatientsRoute: typeof ReceptionPatientsRoute
   ReceptionQueueRoute: typeof ReceptionQueueRoute
   ReceptionRegisterRoute: typeof ReceptionRegisterRoute
@@ -3366,6 +3680,7 @@ const ReceptionRouteChildren: ReceptionRouteChildren = {
   ReceptionCheckInRoute: ReceptionCheckInRoute,
   ReceptionDaySheetRoute: ReceptionDaySheetRoute,
   ReceptionInsuranceRoute: ReceptionInsuranceRoute,
+  ReceptionLeaveRoute: ReceptionLeaveRoute,
   ReceptionPatientsRoute: ReceptionPatientsRoute,
   ReceptionQueueRoute: ReceptionQueueRoute,
   ReceptionRegisterRoute: ReceptionRegisterRoute,

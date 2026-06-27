@@ -11,7 +11,7 @@ import {
 
 const PIE_COLORS = ["#3f6b58", "#c38246", "#5a8773", "#9aa56a", "#a06b9a", "#6b9aa0", "#bb6f6f"];
 
-function downloadCsv(rows, filename) {
+function downloadCsv(rows: Record<string, unknown>[], filename: string) {
   if (!rows.length) return;
   const headers = Object.keys(rows[0]);
   const csv = [

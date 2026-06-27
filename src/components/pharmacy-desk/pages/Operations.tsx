@@ -20,6 +20,7 @@ import {
   Plus,
   ShoppingCart,
   Snowflake,
+  Thermometer,
   Timer,
   TrendingUp,
 } from "lucide-react";
@@ -37,7 +38,7 @@ import { Button } from "@/components/ui/button";
 const TABS = [
   { id: "shift", label: "Shift pulse", icon: Activity },
   { id: "expiry", label: "Expiry & quarantine", icon: Snowflake },
-  { id: "coldchain", label: "Cold chain log", icon: Snowflake },
+  { id: "coldchain", label: "Cold chain log", icon: Thermometer },
   { id: "procurement", label: "Procurement", icon: ShoppingCart },
   { id: "audit", label: "Audit trail", icon: ClipboardList },
 ] as const;

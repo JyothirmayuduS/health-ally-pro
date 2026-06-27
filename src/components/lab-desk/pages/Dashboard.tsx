@@ -19,7 +19,7 @@ const SECTIONS = [
 
 export default function Dashboard() {
   const { orders, patients, findCatalog, staff } = useLabStore();
-  const { name, isSupervisor } = useLabAuth();
+  const { name } = useLabAuth();
 
   const stats = useMemo(() => {
     const today = new Date().toDateString();
@@ -52,14 +52,14 @@ export default function Dashboard() {
   })).filter((s) => s.count > 0);
 
   const recent = useMemo(() => {
-    const items = [];
+    const items: Array<{ at: string; order: (typeof orders)[0]; [k: string]: unknown }> = [];
     orders.forEach((o) => (o.history || []).forEach((h) => items.push({ ...h, order: o })));
-    return items.sort((a, b) => new Date(b.at) - new Date(a.at)).slice(0, 8);
+    return items.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime()).slice(0, 8);
   }, [orders]);
 
   const oldestPending = useMemo(() => {
     const pending = orders.filter((o) => !["validated", "cancelled"].includes(o.status))
-      .sort((a, b) => new Date(a.ordered_at) - new Date(b.ordered_at));
+      .sort((a, b) => new Date(a.ordered_at).getTime() - new Date(b.ordered_at).getTime());
     return pending[0];
   }, [orders]);
 
@@ -132,7 +132,7 @@ export default function Dashboard() {
             <div className="text-sm text-ink-400 py-4">All orders within target.</div>
           ) : (
             <div className="space-y-3">
-              {tatWatch.map(({ order, elapsed, target, breached }) => {
+              {(tatWatch as NonNullable<(typeof tatWatch)[0]>[]).map(({ order, elapsed, target, breached }) => {
                 const p = getPatient(order, patients);
                 return (
                   <div key={order.id} className="text-sm">
@@ -222,11 +222,11 @@ export default function Dashboard() {
                   <div className="h-1.5 w-1.5 rounded-full bg-[var(--sage-500)] mt-2 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="text-[13px] text-ink-900">
-                      <span className="font-medium">{r.actor}</span>{" "}
-                      <span className="text-ink-600">{r.action.toLowerCase()}</span>{" "}
-                      <span className="font-mono text-ink-400">{r.order.id}</span>
+                      <span className="font-medium">{String(r.actor)}</span>{" "}
+                      <span className="text-ink-600">{String(r.action).toLowerCase()}</span>{" "}
+                      <span className="font-mono text-ink-400">{(r.order as any).id}</span>
                     </div>
-                    <div className="text-xs text-ink-400">{formatRelative(r.at)}</div>
+                    <div className="text-xs text-ink-400">{formatRelative(String(r.at))}</div>
                   </div>
                 </div>
               ))}

@@ -55,8 +55,14 @@ export function ResultsImagingScreen({ selectedId }: { selectedId?: string }) {
 
   useEffect(() => {
     const refresh = () => setDocs(listResultDocuments());
+    // Primary: doctor-results state changes (sign-off, intake)
     window.addEventListener(RESULTS_IMAGING_EVENT, refresh);
-    return () => window.removeEventListener(RESULTS_IMAGING_EVENT, refresh);
+    // Secondary: lab supervisor validated and published a result to the inbox
+    window.addEventListener("medora-lab-results-updated", refresh);
+    return () => {
+      window.removeEventListener(RESULTS_IMAGING_EVENT, refresh);
+      window.removeEventListener("medora-lab-results-updated", refresh);
+    };
   }, []);
 
   useEffect(() => {
