@@ -25,6 +25,8 @@ const titleFromPath = (pathname: string) => {
     return { eyebrow: "Scheduling", title: "New appointment" };
   if (pathname.startsWith("/reception/appointments"))
     return { eyebrow: "Scheduling", title: "Appointments" };
+  if (pathname.startsWith("/reception/admissions"))
+    return { eyebrow: "Inpatient", title: "Admissions & Bed Board" };
   if (pathname.startsWith("/reception/check-in"))
     return { eyebrow: "Arrivals", title: "Check-in" };
   if (pathname.startsWith("/reception/vitals"))

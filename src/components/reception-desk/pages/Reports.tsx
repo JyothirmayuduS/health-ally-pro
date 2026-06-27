@@ -3,6 +3,7 @@ import { useStore } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { computeTotals } from "@/lib/reception-desk/billingData";
 import { STATUS_META } from "@/lib/reception-desk/opsData";
+import { printDayReport } from "@/lib/reception-desk/print";
 import {
   BarChart,
   Bar,
@@ -32,6 +33,7 @@ import {
   Activity,
   ShieldCheck,
   Layers,
+  FileText,
 } from "lucide-react";
 
 const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
@@ -41,6 +43,7 @@ const TABS = [
   { id: "revenue", label: "Revenue", icon: IndianRupee, dot: "bg-money" },
   { id: "operations", label: "Operations", icon: Layers, dot: "bg-mustard" },
   { id: "insurance", label: "Insurance", icon: ShieldCheck, dot: "bg-teal" },
+  { id: "shifts", label: "Shift Reports", icon: FileText, dot: "bg-plum" },
 ];
 
 const ACCENTS = {
@@ -115,9 +118,13 @@ function SectionHeader({ dot, title, eyebrow, right }) {
 }
 
 export default function Reports() {
-  const { appointments, patients, doctors, invoices, claims, shifts } = useStore();
+  const { appointments, patients, doctors, invoices, claims, shifts, staff } = useStore();
   const [range, setRange] = useState("Today");
   const [tab, setTab] = useState("overview");
+
+  // Date and shift selectors for Shift Reports
+  const [selectedDate, setSelectedDate] = useState(TODAY_STR);
+  const [selectedShiftId, setSelectedShiftId] = useState("");
 
   const today = appointments.filter((a) => a.date === TODAY_STR);
 
@@ -318,6 +325,102 @@ export default function Reports() {
     a.download = `reception-report-${TODAY_STR}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  // Derived shift calculations for Shift Reports tab
+  const currentReportShift = useMemo(() => {
+    const s = shifts.find((x) => x.id === selectedShiftId);
+    if (!s) return null;
+    const st = staff.find((x) => x.id === s.staffId);
+    return {
+      ...s,
+      staffName: st?.name || "Medical Officer",
+    };
+  }, [selectedShiftId, shifts, staff]);
+
+  const reportCollections = useMemo(() => {
+    if (!currentReportShift) return { cash: 0, card: 0, upi: 0, insurance: 0 };
+    const s = currentReportShift;
+    const shiftInvoices = invoices.filter(
+      (i) =>
+        (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
+        i.paidAt &&
+        i.paidAt >= s.openedAt &&
+        (!s.closedAt || i.paidAt <= s.closedAt)
+    );
+    const methodTotals: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
+    shiftInvoices.forEach((i) => {
+      const t = computeTotals(i.items, i.discount).total;
+      const invoiceRefundsShift = (i.refunds || [])
+        .filter((r) => r.processedAt >= s.openedAt && (!s.closedAt || r.processedAt <= s.closedAt))
+        .reduce((sum, r) => sum + r.amount, 0);
+      methodTotals[i.method] = (methodTotals[i.method] || 0) + (t - invoiceRefundsShift);
+    });
+    return methodTotals;
+  }, [currentReportShift, invoices]);
+
+  const reportRefunds = useMemo(() => {
+    if (!currentReportShift) return 0;
+    const s = currentReportShift;
+    return invoices.reduce((sum, i) => {
+      const shiftRefunds = (i.refunds || []).filter(
+        (r) =>
+          r.processedAt >= s.openedAt &&
+          (!s.closedAt || r.processedAt <= s.closedAt)
+      );
+      return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
+    }, 0);
+  }, [currentReportShift, invoices]);
+
+  const reportServices = useMemo(() => {
+    if (!currentReportShift) return [];
+    const s = currentReportShift;
+    const shiftInvoices = invoices.filter(
+      (i) =>
+        (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
+        i.paidAt &&
+        i.paidAt >= s.openedAt &&
+        (!s.closedAt || i.paidAt <= s.closedAt)
+    );
+    const serviceMap: Record<string, { name: string; count: number; revenue: number }> = {};
+    shiftInvoices.forEach((i) => {
+      i.items.forEach((item) => {
+        if (!serviceMap[item.label]) {
+          serviceMap[item.label] = { name: item.label, count: 0, revenue: 0 };
+        }
+        serviceMap[item.label].count += item.qty || 1;
+        serviceMap[item.label].revenue += item.amount;
+      });
+    });
+    return Object.values(serviceMap)
+      .sort((a: any, b: any) => b.revenue - a.revenue)
+      .slice(0, 5);
+  }, [currentReportShift, invoices]);
+
+  const reportCancellations = useMemo(() => {
+    if (!currentReportShift) return {};
+    const cancelled = appointments.filter(
+      (a) => a.status === "cancelled" && a.date === selectedDate
+    );
+    const counts: Record<string, number> = {};
+    cancelled.forEach((a) => {
+      const reason = a.cancellationReason || "Other";
+      counts[reason] = (counts[reason] || 0) + 1;
+    });
+    return counts;
+  }, [currentReportShift, appointments, selectedDate]);
+
+  // Handle printing of the selected shift report
+  const handlePrintReport = () => {
+    if (!currentReportShift) return;
+    printDayReport({
+      shift: currentReportShift,
+      collections: reportCollections,
+      refunds: reportRefunds,
+      variance: currentReportShift.variance || 0,
+      topServices: reportServices,
+      cancellations: reportCancellations,
+    });
   };
 
   return (
@@ -725,6 +828,170 @@ export default function Reports() {
                 })()}
               </ul>
             </section>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: Shift Reports */}
+      {tab === "shifts" && (
+        <div className="space-y-5">
+          <div className="surface p-5">
+            <h2 className="text-[15px] font-heading font-semibold text-ink-900 mb-4">Shift Handover & End Reports</h2>
+            <div className="flex flex-col sm:flex-row gap-4 items-end mb-6">
+              <div>
+                <label className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">Select Date</label>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => {
+                    setSelectedDate(e.target.value);
+                    const dateShifts = shifts.filter((s) => s.date === e.target.value);
+                    setSelectedShiftId(dateShifts[0]?.id || "");
+                  }}
+                  className="h-9 px-3 text-[13px] bg-bone border border-ink-200 rounded-md focus:outline-none focus:border-sage"
+                />
+              </div>
+              <div className="flex-grow w-full">
+                <label className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">Select Shift</label>
+                <select
+                  value={selectedShiftId}
+                  onChange={(e) => setSelectedShiftId(e.target.value)}
+                  className="w-full h-9 px-3 text-[13px] bg-bone border border-ink-200 rounded-md focus:outline-none focus:border-sage bg-white"
+                >
+                  <option value="">-- Choose Shift --</option>
+                  {shifts
+                    .filter((s) => s.date === selectedDate)
+                    .map((s) => {
+                      const st = staff.find((x) => x.id === s.staffId);
+                      return (
+                        <option key={s.id} value={s.id}>
+                          {s.label} Shift ({s.id}) · {st?.name || "Medical Officer"} · {s.status === "open" ? "Active" : "Closed"}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+
+            {currentReportShift ? (
+              <div className="border border-ink-200 rounded-lg p-5 space-y-4 bg-white">
+                <div className="flex justify-between items-start border-b border-ink-200 pb-3">
+                  <div>
+                    <span className={`chip-${currentReportShift.status === "open" ? "mustard" : "ink"} capitalize`}>
+                      {currentReportShift.status}
+                    </span>
+                    <h3 className="text-[16px] font-heading font-semibold text-ink-900 mt-1">
+                      {currentReportShift.label} Shift Summary
+                    </h3>
+                    <div className="text-[11.5px] text-ink-400 font-mono mt-0.5">
+                      ID: {currentReportShift.id} · Date: {currentReportShift.date}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handlePrintReport}
+                      className="btn-primary h-9 flex items-center gap-1.5 text-[12.5px]"
+                    >
+                      <Download className="w-4 h-4" /> Print / Export PDF
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Financials card */}
+                  <div className="border border-ink-200 rounded-lg p-4 bg-bone/20">
+                    <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">Reconciliation & Drawer</div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-ink-600">Opening Float</span>
+                        <span className="font-mono text-ink-900">{fmt(currentReportShift.openingFloat)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-ink-600">Cash Collected</span>
+                        <span className="font-mono text-ink-900">{fmt(currentReportShift.cashCollected || 0)}</span>
+                      </div>
+                      {currentReportShift.status === "closed" && (
+                        <>
+                          <div className="flex justify-between">
+                            <span className="text-ink-600">Expected Total</span>
+                            <span className="font-mono text-ink-900">
+                              {fmt(currentReportShift.openingFloat + (currentReportShift.cashCollected || 0))}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-ink-600">Actual Counted</span>
+                            <span className="font-mono text-ink-900">{fmt(currentReportShift.actualCash || 0)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-ink-600">Total Refunds</span>
+                            <span className="font-mono text-status-noshowText">{fmt(reportRefunds || 0)}</span>
+                          </div>
+                          <div className="flex justify-between border-t border-ink-200 pt-2 font-semibold">
+                            <span className="text-ink-900">Variance</span>
+                            <span className={currentReportShift.variance === 0 ? "text-money" : currentReportShift.variance > 0 ? "text-mustard" : "text-clay"}>
+                              {currentReportShift.variance >= 0 ? "+" : ""}{fmt(currentReportShift.variance || 0)}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Collections by method */}
+                  <div className="border border-ink-200 rounded-lg p-4 bg-bone/20">
+                    <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">Collections by Method</div>
+                    <div className="space-y-2">
+                      {Object.entries(reportCollections).map(([m, amt]) => (
+                        <div key={m} className="flex justify-between font-mono">
+                          <span className="capitalize text-ink-600">{m}</span>
+                          <span className="text-ink-900 font-medium">{fmt(amt)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Top 5 Services */}
+                <div className="border border-ink-200 rounded-lg p-4">
+                  <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">Top Billed Services</div>
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="border-b border-ink-200 text-[10px] text-ink-400 font-mono uppercase">
+                        <th className="pb-1">Service</th>
+                        <th className="pb-1 text-right">Qty Billed</th>
+                        <th className="pb-1 text-right">Total Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-ink-100">
+                      {reportServices.map((s, idx) => (
+                        <tr key={s.name}>
+                          <td className="py-2 font-medium text-ink-900">{idx + 1}. {s.name}</td>
+                          <td className="py-2 text-right font-mono">{s.count}</td>
+                          <td className="py-2 text-right font-mono text-ink-900">{fmt(s.revenue)}</td>
+                        </tr>
+                      ))}
+                      {reportServices.length === 0 && (
+                        <tr>
+                          <td colSpan={3} className="py-4 text-center text-ink-400 italic">No transactions recorded in this shift.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Handover note */}
+                {currentReportShift.handover && (
+                  <div className="p-4 border border-mustard/30 bg-mustard-soft/40 rounded-lg">
+                    <span className="text-[11px] uppercase tracking-wider text-mustard font-mono font-medium block mb-1">Handover Note</span>
+                    <p className="text-[13px] text-ink-900 font-medium">{currentReportShift.handover}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-12 text-center text-ink-400 italic border border-dashed border-ink-200 rounded-lg bg-bone/35">
+                No shift record selected or found for this date.
+              </div>
+            )}
           </div>
         </div>
       )}

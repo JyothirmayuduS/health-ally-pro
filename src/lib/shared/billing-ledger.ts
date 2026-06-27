@@ -14,7 +14,7 @@ export type LedgerInvoice = {
   tax: number;
   total: number;
   amountPaid: number;
-  status: "unpaid" | "partial" | "paid";
+  status: "unpaid" | "partial" | "paid" | "refunded" | "partial-refund";
   method?: string;
   encounterId?: string;
   referenceId?: string;

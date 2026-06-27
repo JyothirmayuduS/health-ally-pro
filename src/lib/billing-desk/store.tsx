@@ -39,7 +39,18 @@ export function receptionInvoiceToLedger(inv: (typeof SEED_INVOICES)[number]): L
   const sub = subtotal(inv.items);
   const tax = Math.round(sub * TAX_RATE * 100) / 100;
   const total = Math.round((sub - (inv.discount ?? 0) + tax) * 100) / 100;
-  const paid = inv.status === "paid" ? total : 0;
+  
+  let paid = inv.status === "paid" ? total : 0;
+  let status = inv.status === "paid" ? "paid" : "unpaid";
+  if (inv.status === "refunded") {
+    paid = 0;
+    status = "refunded" as any;
+  } else if (inv.status === "partial-refund") {
+    const totalRefunded = ((inv as any).refunds || []).reduce((sum: number, r: any) => sum + r.amount, 0);
+    paid = Math.max(0, total - totalRefunded);
+    status = "partial-refund" as any;
+  }
+
   return {
     id: inv.id,
     source: "reception",
@@ -52,7 +63,7 @@ export function receptionInvoiceToLedger(inv: (typeof SEED_INVOICES)[number]): L
     tax,
     total,
     amountPaid: paid,
-    status: inv.status === "paid" ? "paid" : "unpaid",
+    status: status as any,
     method: inv.method ?? undefined,
     paidAt: inv.paidAt,
     referenceId: inv.appointmentId,

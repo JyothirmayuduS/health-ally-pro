@@ -48,7 +48,7 @@ export default function TokenDisplay() {
   return (
     <div
       data-testid="token-display"
-      className="kiosk-bg min-h-screen text-white flex flex-col"
+      className="kiosk-bg min-h-screen bg-[#141512] text-[#e5e5e0] flex flex-col"
       style={{ fontFamily: "'Work Sans', system-ui, sans-serif" }}
     >
       {/* Header */}
@@ -86,7 +86,7 @@ export default function TokenDisplay() {
             <section
               key={doctor.id}
               data-testid={`token-col-${doctor.id}`}
-              className="kiosk-card rounded-sm overflow-hidden flex flex-col"
+              className="kiosk-card rounded-sm overflow-hidden flex flex-col bg-[#1c1c19] border border-[#2a2c27]"
             >
               <div className="px-6 pt-5 pb-4 border-b border-[#2a2c27]">
                 <div className="text-[11px] uppercase tracking-[0.2em] text-[#7a7d75] font-mono">

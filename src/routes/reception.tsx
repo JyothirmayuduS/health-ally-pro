@@ -8,7 +8,7 @@ export const Route = createFileRoute("/reception")({
 
 function ReceptionRoot() {
   const { pathname } = useLocation();
-  const fullscreen = pathname === "/reception/token-display";
+  const fullscreen = pathname === "/reception/token-display" || pathname === "/reception/token-board";
 
   return (
     <StoreProvider>

@@ -42,6 +42,7 @@ import { Route as ReportsHistoryRouteImport } from './routes/reports.history'
 import { Route as ReportsReportIdRouteImport } from './routes/reports.$reportId'
 import { Route as ReceptionVitalsRouteImport } from './routes/reception.vitals'
 import { Route as ReceptionTokenDisplayRouteImport } from './routes/reception.token-display'
+import { Route as ReceptionTokenBoardRouteImport } from './routes/reception.token-board'
 import { Route as ReceptionSettingsRouteImport } from './routes/reception.settings'
 import { Route as ReceptionReportsRouteImport } from './routes/reception.reports'
 import { Route as ReceptionRegisterRouteImport } from './routes/reception.register'
@@ -54,6 +55,7 @@ import { Route as ReceptionCashDrawerRouteImport } from './routes/reception.cash
 import { Route as ReceptionBoardRouteImport } from './routes/reception.board'
 import { Route as ReceptionBillingRouteImport } from './routes/reception.billing'
 import { Route as ReceptionAppointmentsRouteImport } from './routes/reception.appointments'
+import { Route as ReceptionAdmissionsRouteImport } from './routes/reception.admissions'
 import { Route as ProfileTermsRouteImport } from './routes/profile.terms'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfilePrivacyRouteImport } from './routes/profile.privacy'
@@ -328,6 +330,11 @@ const ReceptionTokenDisplayRoute = ReceptionTokenDisplayRouteImport.update({
   path: '/token-display',
   getParentRoute: () => ReceptionRoute,
 } as any)
+const ReceptionTokenBoardRoute = ReceptionTokenBoardRouteImport.update({
+  id: '/token-board',
+  path: '/token-board',
+  getParentRoute: () => ReceptionRoute,
+} as any)
 const ReceptionSettingsRoute = ReceptionSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -386,6 +393,11 @@ const ReceptionBillingRoute = ReceptionBillingRouteImport.update({
 const ReceptionAppointmentsRoute = ReceptionAppointmentsRouteImport.update({
   id: '/appointments',
   path: '/appointments',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionAdmissionsRoute = ReceptionAdmissionsRouteImport.update({
+  id: '/admissions',
+  path: '/admissions',
   getParentRoute: () => ReceptionRoute,
 } as any)
 const ProfileTermsRoute = ProfileTermsRouteImport.update({
@@ -1025,6 +1037,7 @@ export interface FileRoutesByFullPath {
   '/profile/privacy': typeof ProfilePrivacyRoute
   '/profile/support': typeof ProfileSupportRoute
   '/profile/terms': typeof ProfileTermsRoute
+  '/reception/admissions': typeof ReceptionAdmissionsRoute
   '/reception/appointments': typeof ReceptionAppointmentsRouteWithChildren
   '/reception/billing': typeof ReceptionBillingRoute
   '/reception/board': typeof ReceptionBoardRoute
@@ -1037,6 +1050,7 @@ export interface FileRoutesByFullPath {
   '/reception/register': typeof ReceptionRegisterRoute
   '/reception/reports': typeof ReceptionReportsRoute
   '/reception/settings': typeof ReceptionSettingsRoute
+  '/reception/token-board': typeof ReceptionTokenBoardRoute
   '/reception/token-display': typeof ReceptionTokenDisplayRoute
   '/reception/vitals': typeof ReceptionVitalsRoute
   '/reports/$reportId': typeof ReportsReportIdRoute
@@ -1169,6 +1183,7 @@ export interface FileRoutesByTo {
   '/profile/privacy': typeof ProfilePrivacyRoute
   '/profile/support': typeof ProfileSupportRoute
   '/profile/terms': typeof ProfileTermsRoute
+  '/reception/admissions': typeof ReceptionAdmissionsRoute
   '/reception/billing': typeof ReceptionBillingRoute
   '/reception/board': typeof ReceptionBoardRoute
   '/reception/cash-drawer': typeof ReceptionCashDrawerRoute
@@ -1180,6 +1195,7 @@ export interface FileRoutesByTo {
   '/reception/register': typeof ReceptionRegisterRoute
   '/reception/reports': typeof ReceptionReportsRoute
   '/reception/settings': typeof ReceptionSettingsRoute
+  '/reception/token-board': typeof ReceptionTokenBoardRoute
   '/reception/token-display': typeof ReceptionTokenDisplayRoute
   '/reception/vitals': typeof ReceptionVitalsRoute
   '/reports/$reportId': typeof ReportsReportIdRoute
@@ -1323,6 +1339,7 @@ export interface FileRoutesById {
   '/profile/privacy': typeof ProfilePrivacyRoute
   '/profile/support': typeof ProfileSupportRoute
   '/profile/terms': typeof ProfileTermsRoute
+  '/reception/admissions': typeof ReceptionAdmissionsRoute
   '/reception/appointments': typeof ReceptionAppointmentsRouteWithChildren
   '/reception/billing': typeof ReceptionBillingRoute
   '/reception/board': typeof ReceptionBoardRoute
@@ -1335,6 +1352,7 @@ export interface FileRoutesById {
   '/reception/register': typeof ReceptionRegisterRoute
   '/reception/reports': typeof ReceptionReportsRoute
   '/reception/settings': typeof ReceptionSettingsRoute
+  '/reception/token-board': typeof ReceptionTokenBoardRoute
   '/reception/token-display': typeof ReceptionTokenDisplayRoute
   '/reception/vitals': typeof ReceptionVitalsRoute
   '/reports/$reportId': typeof ReportsReportIdRoute
@@ -1480,6 +1498,7 @@ export interface FileRouteTypes {
     | '/profile/privacy'
     | '/profile/support'
     | '/profile/terms'
+    | '/reception/admissions'
     | '/reception/appointments'
     | '/reception/billing'
     | '/reception/board'
@@ -1492,6 +1511,7 @@ export interface FileRouteTypes {
     | '/reception/register'
     | '/reception/reports'
     | '/reception/settings'
+    | '/reception/token-board'
     | '/reception/token-display'
     | '/reception/vitals'
     | '/reports/$reportId'
@@ -1624,6 +1644,7 @@ export interface FileRouteTypes {
     | '/profile/privacy'
     | '/profile/support'
     | '/profile/terms'
+    | '/reception/admissions'
     | '/reception/billing'
     | '/reception/board'
     | '/reception/cash-drawer'
@@ -1635,6 +1656,7 @@ export interface FileRouteTypes {
     | '/reception/register'
     | '/reception/reports'
     | '/reception/settings'
+    | '/reception/token-board'
     | '/reception/token-display'
     | '/reception/vitals'
     | '/reports/$reportId'
@@ -1777,6 +1799,7 @@ export interface FileRouteTypes {
     | '/profile/privacy'
     | '/profile/support'
     | '/profile/terms'
+    | '/reception/admissions'
     | '/reception/appointments'
     | '/reception/billing'
     | '/reception/board'
@@ -1789,6 +1812,7 @@ export interface FileRouteTypes {
     | '/reception/register'
     | '/reception/reports'
     | '/reception/settings'
+    | '/reception/token-board'
     | '/reception/token-display'
     | '/reception/vitals'
     | '/reports/$reportId'
@@ -2127,6 +2151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReceptionTokenDisplayRouteImport
       parentRoute: typeof ReceptionRoute
     }
+    '/reception/token-board': {
+      id: '/reception/token-board'
+      path: '/token-board'
+      fullPath: '/reception/token-board'
+      preLoaderRoute: typeof ReceptionTokenBoardRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
     '/reception/settings': {
       id: '/reception/settings'
       path: '/settings'
@@ -2209,6 +2240,13 @@ declare module '@tanstack/react-router' {
       path: '/appointments'
       fullPath: '/reception/appointments'
       preLoaderRoute: typeof ReceptionAppointmentsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/admissions': {
+      id: '/reception/admissions'
+      path: '/admissions'
+      fullPath: '/reception/admissions'
+      preLoaderRoute: typeof ReceptionAdmissionsRouteImport
       parentRoute: typeof ReceptionRoute
     }
     '/profile/terms': {
@@ -3279,6 +3317,7 @@ const ReceptionAppointmentsRouteWithChildren =
   )
 
 interface ReceptionRouteChildren {
+  ReceptionAdmissionsRoute: typeof ReceptionAdmissionsRoute
   ReceptionAppointmentsRoute: typeof ReceptionAppointmentsRouteWithChildren
   ReceptionBillingRoute: typeof ReceptionBillingRoute
   ReceptionBoardRoute: typeof ReceptionBoardRoute
@@ -3291,12 +3330,14 @@ interface ReceptionRouteChildren {
   ReceptionRegisterRoute: typeof ReceptionRegisterRoute
   ReceptionReportsRoute: typeof ReceptionReportsRoute
   ReceptionSettingsRoute: typeof ReceptionSettingsRoute
+  ReceptionTokenBoardRoute: typeof ReceptionTokenBoardRoute
   ReceptionTokenDisplayRoute: typeof ReceptionTokenDisplayRoute
   ReceptionVitalsRoute: typeof ReceptionVitalsRoute
   ReceptionIndexRoute: typeof ReceptionIndexRoute
 }
 
 const ReceptionRouteChildren: ReceptionRouteChildren = {
+  ReceptionAdmissionsRoute: ReceptionAdmissionsRoute,
   ReceptionAppointmentsRoute: ReceptionAppointmentsRouteWithChildren,
   ReceptionBillingRoute: ReceptionBillingRoute,
   ReceptionBoardRoute: ReceptionBoardRoute,
@@ -3309,6 +3350,7 @@ const ReceptionRouteChildren: ReceptionRouteChildren = {
   ReceptionRegisterRoute: ReceptionRegisterRoute,
   ReceptionReportsRoute: ReceptionReportsRoute,
   ReceptionSettingsRoute: ReceptionSettingsRoute,
+  ReceptionTokenBoardRoute: ReceptionTokenBoardRoute,
   ReceptionTokenDisplayRoute: ReceptionTokenDisplayRoute,
   ReceptionVitalsRoute: ReceptionVitalsRoute,
   ReceptionIndexRoute: ReceptionIndexRoute,

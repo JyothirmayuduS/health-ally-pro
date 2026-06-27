@@ -44,7 +44,7 @@ export default function NewAppointment() {
 
   const conflict = useMemo(() => {
     return appointments.find(
-      (a) => a.doctorId === doctorId && a.date === date && a.time === time,
+      (a) => a.doctorId === doctorId && a.date === date && a.time === time && a.status !== "cancelled",
     );
   }, [appointments, doctorId, date, time]);
 
@@ -237,7 +237,7 @@ export default function NewAppointment() {
               <div className="grid grid-cols-6 sm:grid-cols-8 gap-1.5">
                 {TIME_SLOTS.map((slot) => {
                   const taken = appointments.some(
-                    (a) => a.doctorId === doctorId && a.date === date && a.time === slot,
+                    (a) => a.doctorId === doctorId && a.date === date && a.time === slot && a.status !== "cancelled",
                   );
                   const active = time === slot;
                   return (

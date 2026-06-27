@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   Stethoscope,
   FileText,
+  Bed,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,7 @@ const items = [
   { to: "/reception/register", label: "Register", icon: UserPlus, dot: "bg-teal" },
   { to: "/reception/patients", label: "Patients", icon: Users, dot: "bg-plum" },
   { to: "/reception/appointments", label: "Appointments", icon: CalendarDays, dot: "bg-clay" },
+  { to: "/reception/admissions", label: "Admissions & Beds", icon: Bed, dot: "bg-teal" },
   { to: "/reception/check-in", label: "Check-in", icon: LogIn, dot: "bg-sage" },
   { to: "/reception/vitals", label: "Record vitals", icon: Activity, dot: "bg-teal" },
   { to: "/reception/queue", label: "Queue", icon: ListOrdered, dot: "bg-mustard" },

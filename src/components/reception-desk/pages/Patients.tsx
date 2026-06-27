@@ -23,6 +23,8 @@ const age = (dob) => {
   return Math.floor(ms / (365.25 * 24 * 3600 * 1000));
 };
 
+
+
 export default function Patients() {
   const { patient: patientParam } = Route.useSearch();
   const { patients, appointments, doctors } = useStore();
@@ -170,6 +172,14 @@ export default function Patients() {
                     className="h-9 px-3 inline-flex items-center gap-2 text-[12.5px] bg-white border border-ink-200 hover:bg-bone text-ink-900 rounded-sm font-medium"
                   >
                     <LogIn className="w-4 h-4" /> Check-in
+                  </Link>
+                  <Link
+                    to="/reception/insurance"
+                    search={{ patientId: selected.id, action: "new-preauth" }}
+                    data-testid="patient-preauth"
+                    className="h-9 px-3 inline-flex items-center gap-2 text-[12.5px] bg-white border border-ink-200 hover:bg-bone text-ink-900 rounded-sm font-medium"
+                  >
+                    <Shield className="w-4 h-4 text-sage" /> Request Pre-auth
                   </Link>
                   <button
                     data-testid="patient-print"

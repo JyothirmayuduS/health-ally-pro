@@ -1,11 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from "react";
 import { PATIENTS, APPOINTMENTS, DOCTORS, TODAY_STR } from "./mockData";
-import { SEED_INVOICES, nextInvoiceId } from "./billingData";
+import { SEED_INVOICES, nextInvoiceId, computeTotals } from "./billingData";
 import { SEED_SHIFTS, SEED_CLAIMS, STAFF, nextShiftId, nextClaimId } from "./opsData";
-import {
-  drainReceptionInvoices,
-  RECEPTION_INVOICE_EVENT,
-} from "@/lib/shared/billing-bridge";
+import { drainReceptionInvoices, RECEPTION_INVOICE_EVENT } from "@/lib/shared/billing-bridge";
 import { loadServiceFees, feesByDoctor } from "@/lib/shared/services";
 import { loadLabCatalog } from "@/lib/shared/lab-catalog";
 import { pushLabOrder, type DoctorLabPayload } from "@/lib/lab-desk/order-bridge";
@@ -13,6 +11,7 @@ import { getSharedPatient, resolvePatientId, calcAge } from "@/lib/shared/patien
 import {
   loadPatientRegistry,
   registerPatient,
+  updatePatientRegistry,
   PATIENT_REGISTRY_EVENT,
 } from "@/lib/shared/patient-registry";
 import {
@@ -21,17 +20,207 @@ import {
   updateQueueByAppointment,
   CLINIC_QUEUE_EVENT,
 } from "@/lib/shared/clinic-queue";
-import { openEncounterForCheckIn } from "@/lib/shared/encounters";
+import {
+  ENCOUNTERS_EVENT,
+  findOpenEncounterForPatient as findOpenEncounterForPatientShared,
+  linkToEncounter,
+  listEncounters,
+  openEncounterForCheckIn,
+} from "@/lib/shared/encounters";
 import {
   ensureLedgerHydrated,
   mirrorToLedger,
   receptionInvoiceToLedger,
 } from "@/lib/billing-desk/store";
-import {
-  LEDGER_EVENT,
-  loadLedgerInvoices,
-  type LedgerInvoice,
-} from "@/lib/shared/billing-ledger";
+import { LEDGER_EVENT, loadLedgerInvoices, type LedgerInvoice } from "@/lib/shared/billing-ledger";
+import { pushPatientNotification } from "@/lib/patient-notifications-store";
+
+export interface PreAuthRecord {
+  id: string;
+  patientId: string;
+  provider: string;
+  policyId: string;
+  procedureType: string;
+  diagnosis: string;
+  estimatedCost: number;
+  notes?: string;
+  documentName?: string;
+  status: "draft" | "submitted" | "approved" | "rejected" | "expired";
+  createdAt: string;
+  submittedAt?: string;
+  decisionAt?: string;
+  approvedAmount?: number;
+}
+
+const SEED_PREAUTHS: PreAuthRecord[] = [
+  {
+    id: "PA-8001",
+    patientId: "MRN-100231",
+    provider: "Star Health",
+    policyId: "SH-882-3341",
+    procedureType: "OPD Consultation",
+    diagnosis: "Severe lumbar radiculopathy (ICD M54.16)",
+    estimatedCost: 12000,
+    notes: "Requires urgent MRI of lumbar spine",
+    documentName: "mri_req.pdf",
+    status: "approved",
+    approvedAmount: 12000,
+    createdAt: `${TODAY_STR}T08:10:00`,
+    submittedAt: `${TODAY_STR}T08:15:00`,
+    decisionAt: `${TODAY_STR}T09:00:00`,
+  },
+  {
+    id: "PA-8002",
+    patientId: "MRN-100233",
+    provider: "ICICI Lombard",
+    policyId: "IL-664-2210",
+    procedureType: "Orthopedic consult + X-ray",
+    diagnosis: "ACL Tear Left Knee",
+    estimatedCost: 45000,
+    notes: "Patient scheduled for arthroscopic repair next week",
+    documentName: "clinical_brief.pdf",
+    status: "submitted",
+    createdAt: `${TODAY_STR}T09:30:00`,
+    submittedAt: `${TODAY_STR}T09:45:00`,
+  },
+  {
+    id: "PA-8003",
+    patientId: "MRN-100235",
+    provider: "Niva Bupa",
+    policyId: "NB-441-5523",
+    procedureType: "Pediatric consult + Vaccine",
+    diagnosis: "Routine pediatric review",
+    estimatedCost: 2500,
+    status: "draft",
+    createdAt: `${TODAY_STR}T10:00:00`,
+  },
+];
+
+const PREAUTHS_KEY = "medora-reception-preauths-v1";
+
+function loadPreAuths(): PreAuthRecord[] {
+  if (typeof window === "undefined") return SEED_PREAUTHS;
+  try {
+    const raw = localStorage.getItem(PREAUTHS_KEY);
+    return raw ? JSON.parse(raw) : SEED_PREAUTHS;
+  } catch {
+    return SEED_PREAUTHS;
+  }
+}
+
+export interface Bed {
+  id: string;
+  name: string;
+  wardCategory: "general" | "semi-private" | "private-deluxe" | "icu";
+  status: "available" | "occupied" | "maintenance";
+}
+
+export interface AdmissionRecord {
+  id: string;
+  patientId: string;
+  bedId: string;
+  doctorId: string;
+  admittedAt: string;
+  dischargedAt?: string;
+  depositAmount: number;
+  status: "active" | "pending-clearance" | "discharged";
+  tariffPlan: "standard" | "star-corporate" | "cghs" | "staff";
+  transfers?: {
+    fromBedId: string;
+    toBedId: string;
+    transferredAt: string;
+  }[];
+}
+
+export interface WardCategory {
+  id: "general" | "semi-private" | "private-deluxe" | "icu";
+  name: string;
+  ratePerDay: number;
+}
+
+export const WARD_CATEGORIES: WardCategory[] = [
+  { id: "general", name: "General Ward", ratePerDay: 1500 },
+  { id: "semi-private", name: "Semi-Private Ward", ratePerDay: 3000 },
+  { id: "private-deluxe", name: "Private Deluxe Room", ratePerDay: 6000 },
+  { id: "icu", name: "Intensive Care Unit (ICU)", ratePerDay: 12000 },
+];
+
+const SEED_BEDS: Bed[] = [
+  { id: "B-101", name: "Bed 101", wardCategory: "general", status: "occupied" },
+  { id: "B-102", name: "Bed 102", wardCategory: "general", status: "available" },
+  { id: "B-103", name: "Bed 103", wardCategory: "general", status: "available" },
+  { id: "B-104", name: "Bed 104", wardCategory: "general", status: "maintenance" },
+  { id: "B-105", name: "Bed 105", wardCategory: "general", status: "available" },
+  { id: "B-201", name: "Bed 201", wardCategory: "semi-private", status: "occupied" },
+  { id: "B-202", name: "Bed 202", wardCategory: "semi-private", status: "available" },
+  { id: "B-203", name: "Bed 203", wardCategory: "semi-private", status: "maintenance" },
+  { id: "B-204", name: "Bed 204", wardCategory: "semi-private", status: "available" },
+  { id: "B-301", name: "Bed 301", wardCategory: "private-deluxe", status: "occupied" },
+  { id: "B-302", name: "Bed 302", wardCategory: "private-deluxe", status: "available" },
+  { id: "B-303", name: "Bed 303", wardCategory: "private-deluxe", status: "available" },
+  { id: "B-304", name: "Bed 304", wardCategory: "private-deluxe", status: "available" },
+  { id: "B-401", name: "Bed 401", wardCategory: "icu", status: "available" },
+  { id: "B-402", name: "Bed 402", wardCategory: "icu", status: "available" },
+];
+
+const SEED_ADMISSIONS: AdmissionRecord[] = [
+  {
+    id: "ADM-1001",
+    patientId: "MRN-100231",
+    bedId: "B-101",
+    doctorId: "DOC-001",
+    admittedAt: `${TODAY_STR}T08:00:00`,
+    depositAmount: 5000,
+    status: "active",
+    tariffPlan: "standard",
+    transfers: [],
+  },
+  {
+    id: "ADM-1002",
+    patientId: "MRN-100232",
+    bedId: "B-201",
+    doctorId: "DOC-002",
+    admittedAt: `${TODAY_STR}T07:30:00`,
+    depositAmount: 10000,
+    status: "active",
+    tariffPlan: "star-corporate",
+    transfers: [],
+  },
+  {
+    id: "ADM-1003",
+    patientId: "MRN-100233",
+    bedId: "B-301",
+    doctorId: "DOC-003",
+    admittedAt: `${TODAY_STR}T09:00:00`,
+    depositAmount: 15000,
+    status: "active",
+    tariffPlan: "cghs",
+    transfers: [],
+  },
+];
+
+const BEDS_KEY = "medora-reception-beds-v1";
+const ADMISSIONS_KEY = "medora-reception-admissions-v1";
+
+function loadBeds(): Bed[] {
+  if (typeof window === "undefined") return SEED_BEDS;
+  try {
+    const raw = localStorage.getItem(BEDS_KEY);
+    return raw ? JSON.parse(raw) : SEED_BEDS;
+  } catch {
+    return SEED_BEDS;
+  }
+}
+
+function loadAdmissions(): AdmissionRecord[] {
+  if (typeof window === "undefined") return SEED_ADMISSIONS;
+  try {
+    const raw = localStorage.getItem(ADMISSIONS_KEY);
+    return raw ? JSON.parse(raw) : SEED_ADMISSIONS;
+  } catch {
+    return SEED_ADMISSIONS;
+  }
+}
 
 const APPOINTMENTS_KEY = "medora-reception-appointments-v1";
 
@@ -85,16 +274,33 @@ export function StoreProvider({ children }) {
   const [staff] = useState(STAFF);
   const [serviceFees, setServiceFees] = useState(() => loadServiceFees());
   const [labCatalog] = useState(() => loadLabCatalog());
+  const [encounters, setEncounters] = useState(() => listEncounters());
+  const [preAuths, setPreAuths] = useState<PreAuthRecord[]>(() => loadPreAuths());
+  const [beds, setBeds] = useState<Bed[]>(() => loadBeds());
+  const [admissions, setAdmissions] = useState<AdmissionRecord[]>(() => loadAdmissions());
+
+  const notifyPatientBillingEvent = useCallback((patientId, title, body) => {
+    const patient = getSharedPatient(resolvePatientId(patientId));
+    const patientName = patient?.name ?? patientId;
+    pushPatientNotification({
+      title,
+      body: body.replace(/\{patient\}/g, patientName),
+      at: "Just now",
+      type: "general",
+      to: "/profile/notifications",
+    });
+  }, []);
 
   const ingestBridgeInvoices = useCallback(() => {
     const payloads = drainReceptionInvoices();
     if (!payloads.length) return;
+    const addedInvoices = [];
     setInvoices((list) => {
       const next = [...list];
       for (const p of payloads) {
         const exists = next.some((i) => i.note?.includes(p.labOrderId));
         if (exists) continue;
-        next.unshift({
+        const inv = {
           id: p.id,
           date: TODAY_STR,
           patientId: resolvePatientId(p.patientId),
@@ -105,7 +311,9 @@ export function StoreProvider({ children }) {
           method: null,
           status: "unpaid",
           note: p.note,
-        });
+        };
+        next.unshift(inv);
+        addedInvoices.push(inv);
         mirrorToLedger({
           ...receptionInvoiceToLedger({
             id: p.id,
@@ -124,12 +332,26 @@ export function StoreProvider({ children }) {
       }
       return next;
     });
-  }, []);
+    for (const inv of addedInvoices) {
+      const totals = computeTotals(inv.items, inv.discount);
+      notifyPatientBillingEvent(
+        inv.patientId,
+        "New lab invoice ready",
+        `A new bill ${inv.id} for ₹${totals.total} is ready to pay.`,
+      );
+    }
+  }, [notifyPatientBillingEvent]);
 
   useEffect(() => {
     const refreshPatients = () => setPatients(loadPatientRegistry());
     window.addEventListener(PATIENT_REGISTRY_EVENT, refreshPatients);
     return () => window.removeEventListener(PATIENT_REGISTRY_EVENT, refreshPatients);
+  }, []);
+
+  useEffect(() => {
+    const refreshEncounters = () => setEncounters(listEncounters());
+    window.addEventListener(ENCOUNTERS_EVENT, refreshEncounters);
+    return () => window.removeEventListener(ENCOUNTERS_EVENT, refreshEncounters);
   }, []);
 
   useEffect(() => {
@@ -139,6 +361,30 @@ export function StoreProvider({ children }) {
       /* ignore quota */
     }
   }, [appointments]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(PREAUTHS_KEY, JSON.stringify(preAuths));
+    } catch {
+      /* ignore quota */
+    }
+  }, [preAuths]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(BEDS_KEY, JSON.stringify(beds));
+    } catch {
+      /* ignore quota */
+    }
+  }, [beds]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(ADMISSIONS_KEY, JSON.stringify(admissions));
+    } catch {
+      /* ignore quota */
+    }
+  }, [admissions]);
 
   useEffect(() => {
     ensureLedgerHydrated();
@@ -187,6 +433,21 @@ export function StoreProvider({ children }) {
     return () => window.removeEventListener(RECEPTION_INVOICE_EVENT, onIncoming);
   }, [ingestBridgeInvoices]);
 
+  const findOpenEncounterForPatient = useCallback(
+    (patientId: string) => findOpenEncounterForPatientShared(patientId),
+    [],
+  );
+
+  const linkLabOrderToEncounter = useCallback(
+    (patientId: string, labOrderId: string) => {
+      const enc = findOpenEncounterForPatient(patientId);
+      if (enc) {
+        linkToEncounter(enc.id, { labOrderId });
+      }
+    },
+    [findOpenEncounterForPatient],
+  );
+
   const orderLabForPatient = useCallback(
     (patientId: string, testCode: string, notes?: string) => {
       const pid = resolvePatientId(patientId);
@@ -219,9 +480,10 @@ export function StoreProvider({ children }) {
         source: "reception",
       };
       pushLabOrder(payload);
+      linkLabOrderToEncounter(pid, payload.id);
       return true;
     },
-    [labCatalog],
+    [labCatalog, linkLabOrderToEncounter],
   );
 
   const getConsultFee = useCallback(
@@ -261,9 +523,7 @@ export function StoreProvider({ children }) {
     const pad = (n) => String(n).padStart(2, "0");
     const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
     setShifts((list) =>
-      list.map((s) =>
-        s.id === id ? { ...s, ...patch, closedAt: ts, status: "closed" } : s,
-      ),
+      list.map((s) => (s.id === id ? { ...s, ...patch, closedAt: ts, status: "closed" } : s)),
     );
   }, []);
 
@@ -285,20 +545,32 @@ export function StoreProvider({ children }) {
     return c;
   }, []);
 
-
-  const addInvoice = useCallback((data) => {
-    const inv = {
-      id: nextInvoiceId(),
-      date: TODAY_STR,
-      discount: 0,
-      method: null,
-      status: "unpaid",
-      ...data,
-    };
-    setInvoices((list) => [inv, ...list]);
-    mirrorToLedger(receptionInvoiceToLedger(inv));
-    return inv;
-  }, []);
+  const addInvoice = useCallback(
+    (data) => {
+      const inv = {
+        id: nextInvoiceId(),
+        date: TODAY_STR,
+        discount: 0,
+        method: null,
+        status: "unpaid",
+        ...data,
+      };
+      setInvoices((list) => [inv, ...list]);
+      const enc = findOpenEncounterForPatient(data.patientId);
+      if (enc) {
+        linkToEncounter(enc.id, { invoiceId: inv.id });
+      }
+      mirrorToLedger(receptionInvoiceToLedger(inv));
+      const totals = computeTotals(inv.items, inv.discount);
+      notifyPatientBillingEvent(
+        inv.patientId,
+        "New invoice ready",
+        `A new bill ${inv.id} for ₹${totals.total} is ready to pay.`,
+      );
+      return inv;
+    },
+    [findOpenEncounterForPatient, notifyPatientBillingEvent],
+  );
 
   const updateInvoice = useCallback((id, patch) => {
     setInvoices((list) => {
@@ -309,21 +581,134 @@ export function StoreProvider({ children }) {
     });
   }, []);
 
-  const collectPayment = useCallback((id, method) => {
-    const now = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
-    const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
-      now.getDate(),
-    )}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
-    setInvoices((list) => {
-      const next = list.map((i) =>
-        i.id === id ? { ...i, status: "paid", method, paidAt: ts } : i,
-      );
-      const paid = next.find((i) => i.id === id);
-      if (paid) mirrorToLedger(receptionInvoiceToLedger(paid));
-      return next;
-    });
+  const collectPayment = useCallback(
+    (id, method) => {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+        now.getDate(),
+      )}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
+      let paidInvoice = null;
+      setInvoices((list) => {
+        const next = list.map((i) =>
+          i.id === id ? { ...i, status: "paid", method, paidAt: ts } : i,
+        );
+        paidInvoice = next.find((i) => i.id === id);
+        if (paidInvoice) mirrorToLedger(receptionInvoiceToLedger(paidInvoice));
+        return next;
+      });
+      if (paidInvoice) {
+        notifyPatientBillingEvent(
+          paidInvoice.patientId,
+          "Payment received",
+          `Your payment for invoice ${paidInvoice.id} has been recorded.`,
+        );
+      }
+    },
+    [notifyPatientBillingEvent],
+  );
+
+  const addPreAuth = useCallback((data) => {
+    const newPa = {
+      id: `PA-${Date.now().toString().slice(-4)}`,
+      status: "draft",
+      createdAt: new Date().toISOString(),
+      ...data,
+    };
+    setPreAuths((list) => [newPa, ...list]);
+    return newPa;
   }, []);
+
+  const updatePreAuth = useCallback((id, patch) => {
+    setPreAuths((list) =>
+      list.map((pa) => (pa.id === id ? { ...pa, ...patch } : pa)),
+    );
+  }, []);
+
+  const convertPreAuthToClaim = useCallback((id) => {
+    let createdClaim = null;
+    setPreAuths((list) => {
+      const pa = list.find((x) => x.id === id);
+      if (pa && pa.status === "approved") {
+        createdClaim = addClaim({
+          patientId: pa.patientId,
+          appointmentId: null,
+          doctorId: "DOC-001",
+          provider: pa.provider,
+          policyId: pa.policyId,
+          diagnosis: pa.diagnosis,
+          serviceType: pa.procedureType,
+          estimatedCost: pa.estimatedCost,
+          requestedAmount: pa.estimatedCost,
+          approvedAmount: pa.approvedAmount ?? pa.estimatedCost,
+          status: "pending",
+        });
+        return list.map((x) => (x.id === id ? { ...x, status: "submitted" } : x));
+      }
+      return list;
+    });
+    return createdClaim;
+  }, [addClaim]);
+
+  const addRefund = useCallback(
+    (invoiceId, amount, type, reason, notes, method = "cash") => {
+      let updatedInvoice = null;
+      setInvoices((list) => {
+        const next = list.map((i) => {
+          if (i.id === invoiceId) {
+            const currentRefunds = i.refunds || [];
+            const newRefund = {
+              type,
+              amount: Number(amount),
+              reason,
+              notes,
+              processedAt: new Date().toISOString(),
+              processedBy: "reception",
+              method,
+            };
+            const updatedRefunds = [...currentRefunds, newRefund];
+            const totalRefunded = updatedRefunds.reduce((sum, r) => sum + r.amount, 0);
+            const invoiceTotal = computeTotals(i.items, i.discount).total;
+            const status = totalRefunded >= invoiceTotal ? "refunded" : "partial-refund";
+            const updated = {
+              ...i,
+              status,
+              refunds: updatedRefunds,
+            };
+            updatedInvoice = updated;
+            return updated;
+          }
+          return i;
+        });
+
+        if (updatedInvoice) {
+          mirrorToLedger(receptionInvoiceToLedger(updatedInvoice));
+
+          if (type === "credit") {
+            const currentPatient = getSharedPatient(updatedInvoice.patientId);
+            if (currentPatient) {
+              const currentBalance = currentPatient.balance || 0;
+              const newBalance = currentBalance - Number(amount);
+              updatePatientRegistry(updatedInvoice.patientId, { balance: newBalance });
+              setPatients(loadPatientRegistry());
+            }
+          }
+        }
+
+        return next;
+      });
+
+      if (updatedInvoice) {
+        notifyPatientBillingEvent(
+          updatedInvoice.patientId,
+          "Refund processed",
+          `A refund of ₹${amount} (${type}) has been issued for invoice ${invoiceId}.`,
+        );
+      }
+      return updatedInvoice;
+    },
+    [notifyPatientBillingEvent, patients],
+  );
 
   const addPatient = useCallback((data) => {
     const newP = registerPatient({
@@ -339,7 +724,11 @@ export function StoreProvider({ children }) {
         ? { provider: data.insuranceProvider, policyId: data.policyId ?? "—" }
         : undefined,
       emergency: data.emergencyName
-        ? { name: data.emergencyName, phone: data.emergencyPhone ?? "", relation: data.emergencyRelation ?? "" }
+        ? {
+            name: data.emergencyName,
+            phone: data.emergencyPhone ?? "",
+            relation: data.emergencyRelation ?? "",
+          }
         : undefined,
       balance: 0,
       createdAt: TODAY_STR,
@@ -370,51 +759,44 @@ export function StoreProvider({ children }) {
     return newA;
   }, []);
 
-  const checkInAppointment = useCallback(
-    (apptId) => {
-      let issuedToken = null;
-      let aptSnapshot = null;
-      setAppointments((apts) => {
-        const apt = apts.find((a) => a.id === apptId);
-        if (!apt) return apts;
-        aptSnapshot = apt;
-        const docApts = apts.filter(
-          (a) => a.doctorId === apt.doctorId && a.tokenNumber !== null,
-        );
-        const base = docTokenBase(apt.doctorId);
-        const used = docApts.map((a) => a.tokenNumber).filter((n) => n >= base && n < base + 100);
-        const nextNum = used.length ? Math.max(...used) + 1 : base + 1;
-        issuedToken = nextNum;
-        return apts.map((a) =>
-          a.id === apptId ? { ...a, status: "checked-in", tokenNumber: nextNum } : a,
-        );
+  const checkInAppointment = useCallback((apptId) => {
+    let issuedToken = null;
+    let aptSnapshot = null;
+    setAppointments((apts) => {
+      const apt = apts.find((a) => a.id === apptId);
+      if (!apt) return apts;
+      aptSnapshot = apt;
+      const docApts = apts.filter((a) => a.doctorId === apt.doctorId && a.tokenNumber !== null);
+      const base = docTokenBase(apt.doctorId);
+      const used = docApts.map((a) => a.tokenNumber).filter((n) => n >= base && n < base + 100);
+      const nextNum = used.length ? Math.max(...used) + 1 : base + 1;
+      issuedToken = nextNum;
+      return apts.map((a) =>
+        a.id === apptId ? { ...a, status: "checked-in", tokenNumber: nextNum } : a,
+      );
+    });
+    if (aptSnapshot && issuedToken != null) {
+      const apt = aptSnapshot;
+      const doctor = DOCTORS.find((d) => d.id === apt.doctorId);
+      const enc = openEncounterForCheckIn({
+        patientId: apt.patientId,
+        appointmentId: apt.id,
+        doctorName: doctor?.name,
+        chiefComplaint: apt.notes,
       });
-      if (aptSnapshot && issuedToken != null) {
-        const apt = aptSnapshot;
-        const doctor = DOCTORS.find((d) => d.id === apt.doctorId);
-        const enc = openEncounterForCheckIn({
-          patientId: apt.patientId,
-          appointmentId: apt.id,
-          doctorName: doctor?.name,
-          chiefComplaint: apt.notes,
-        });
-        enqueueFromCheckIn({
-          appointmentId: apt.id,
-          patientId: apt.patientId,
-          doctorId: apt.doctorId,
-          tokenNumber: issuedToken,
-          encounterId: enc.id,
-        });
-      }
-      return issuedToken;
-    },
-    [],
-  );
+      enqueueFromCheckIn({
+        appointmentId: apt.id,
+        patientId: apt.patientId,
+        doctorId: apt.doctorId,
+        tokenNumber: issuedToken,
+        encounterId: enc.id,
+      });
+    }
+    return issuedToken;
+  }, []);
 
   const updateAppointmentStatus = useCallback((apptId, status) => {
-    setAppointments((apts) =>
-      apts.map((a) => (a.id === apptId ? { ...a, status } : a)),
-    );
+    setAppointments((apts) => apts.map((a) => (a.id === apptId ? { ...a, status } : a)));
     if (status === "in-progress") {
       updateQueueByAppointment(apptId, { status: "in-consultation" });
     }
@@ -438,12 +820,175 @@ export function StoreProvider({ children }) {
     });
   }, []);
 
+  const cancelAppointment = useCallback((apptId, { reason, notes, reschedule } = {}) => {
+    const orig = appointments.find((a) => a.id === apptId);
+    if (!orig) return null;
+
+    let createdRescheduled = null;
+    if (reschedule) {
+      createdRescheduled = {
+        id: nextApt(),
+        status: "scheduled",
+        tokenNumber: null,
+        patientId: orig.patientId,
+        doctorId: reschedule.doctorId || orig.doctorId,
+        date: reschedule.date,
+        time: reschedule.time,
+        type: reschedule.type || orig.type,
+        rescheduledFromId: apptId,
+      };
+    }
+
+    setAppointments((apts) => {
+      const next = apts.map((a) =>
+        a.id === apptId
+          ? {
+              ...a,
+              status: "cancelled",
+              cancellationReason: reason || "",
+              cancellationNotes: notes || "",
+            }
+          : a
+      );
+      if (createdRescheduled) {
+        return [...next, createdRescheduled];
+      }
+      return next;
+    });
+
+    pushPatientNotification({
+      title: "Appointment cancelled",
+      body: `Your appointment ${orig.id} has been cancelled. Reason: ${reason || "-"}`,
+      at: "Just now",
+      type: "appointment",
+      to: "/book",
+    });
+
+    if (createdRescheduled) {
+      pushPatientNotification({
+        title: "New appointment scheduled",
+        body: `A new appointment ${createdRescheduled.id} has been scheduled for ${reschedule.date} at ${reschedule.time}.`,
+        at: "Just now",
+        type: "appointment",
+        to: "/book",
+      });
+    }
+
+    return createdRescheduled;
+  }, [appointments]);
+
+  const admitPatient = useCallback((patientId: string, bedId: string, doctorId: string, tariffPlan: string, depositAmount: number) => {
+    setBeds((prevBeds) =>
+      prevBeds.map((b) => (b.id === bedId ? { ...b, status: "occupied" } : b))
+    );
+
+    const newAdm: AdmissionRecord = {
+      id: `ADM-${Date.now().toString().slice(-4)}`,
+      patientId,
+      bedId,
+      doctorId,
+      admittedAt: new Date().toISOString(),
+      depositAmount,
+      status: "active",
+      tariffPlan: tariffPlan as any,
+      transfers: [],
+    };
+    setAdmissions((prev) => [newAdm, ...prev]);
+
+    const patient = getSharedPatient(patientId);
+    if (patient) {
+      const currentBalance = patient.balance || 0;
+      updatePatientRegistry(patientId, { balance: currentBalance - depositAmount });
+      setPatients(loadPatientRegistry());
+    }
+
+    notifyPatientBillingEvent(
+      patientId,
+      "Admission Confirmed",
+      `You have been admitted to bed ${bedId} under doctor ${doctorId}. Deposit of ₹${depositAmount} has been credited.`
+    );
+
+    return newAdm;
+  }, [notifyPatientBillingEvent]);
+
+  const transferPatient = useCallback((admissionId: string, toBedId: string) => {
+    let fromBedId = "";
+    setAdmissions((prev) =>
+      prev.map((adm) => {
+        if (adm.id === admissionId) {
+          fromBedId = adm.bedId;
+          const transferLog = {
+            fromBedId: adm.bedId,
+            toBedId,
+            transferredAt: new Date().toISOString(),
+          };
+          return {
+            ...adm,
+            bedId: toBedId,
+            transfers: [...(adm.transfers || []), transferLog],
+          };
+        }
+        return adm;
+      })
+    );
+
+    if (fromBedId) {
+      setBeds((prevBeds) =>
+        prevBeds.map((b) => {
+          if (b.id === fromBedId) return { ...b, status: "available" };
+          if (b.id === toBedId) return { ...b, status: "occupied" };
+          return b;
+        })
+      );
+    }
+  }, []);
+
+  const initiateDischarge = useCallback((admissionId: string) => {
+    setAdmissions((prev) =>
+      prev.map((adm) =>
+        adm.id === admissionId ? { ...adm, status: "pending-clearance" } : adm
+      )
+    );
+  }, []);
+
+  const finalizeDischarge = useCallback((admissionId: string) => {
+    let bedIdToRelease = "";
+    setAdmissions((prev) =>
+      prev.map((adm) => {
+        if (adm.id === admissionId) {
+          bedIdToRelease = adm.bedId;
+          return {
+            ...adm,
+            status: "discharged",
+            dischargedAt: new Date().toISOString(),
+          };
+        }
+        return adm;
+      })
+    );
+
+    if (bedIdToRelease) {
+      setBeds((prevBeds) =>
+        prevBeds.map((b) =>
+          b.id === bedIdToRelease ? { ...b, status: "maintenance" } : b
+        )
+      );
+    }
+  }, []);
+
+  const clearMaintenanceBed = useCallback((bedId: string) => {
+    setBeds((prevBeds) =>
+      prevBeds.map((b) => (b.id === bedId ? { ...b, status: "available" } : b))
+    );
+  }, []);
+
   const value = useMemo(
     () => ({
       patients,
       appointments,
       doctors,
       invoices,
+      encounters,
       shifts,
       claims,
       staff,
@@ -461,16 +1006,31 @@ export function StoreProvider({ children }) {
       addClaim,
       updateClaim,
       orderLabForPatient,
+      findOpenEncounterForPatient,
       getConsultFee,
       serviceFees,
       labCatalog,
       refreshServiceFees,
+      addRefund,
+      cancelAppointment,
+      preAuths,
+      addPreAuth,
+      updatePreAuth,
+      convertPreAuthToClaim,
+      beds,
+      admissions,
+      admitPatient,
+      transferPatient,
+      initiateDischarge,
+      finalizeDischarge,
+      clearMaintenanceBed,
     }),
     [
       patients,
       appointments,
       doctors,
       invoices,
+      encounters,
       shifts,
       claims,
       staff,
@@ -488,10 +1048,24 @@ export function StoreProvider({ children }) {
       addClaim,
       updateClaim,
       orderLabForPatient,
+      findOpenEncounterForPatient,
       getConsultFee,
       serviceFees,
       labCatalog,
       refreshServiceFees,
+      addRefund,
+      cancelAppointment,
+      preAuths,
+      addPreAuth,
+      updatePreAuth,
+      convertPreAuthToClaim,
+      beds,
+      admissions,
+      admitPatient,
+      transferPatient,
+      initiateDischarge,
+      finalizeDischarge,
+      clearMaintenanceBed,
     ],
   );
 
@@ -502,12 +1076,4 @@ export function useStore() {
   const ctx = useContext(StoreCtx);
   if (!ctx) throw new Error("useStore must be used within StoreProvider");
   return ctx;
-}
-
-export function getPatient(patients, id) {
-  return patients.find((p) => p.id === id);
-}
-
-export function getDoctor(doctors, id) {
-  return doctors.find((d) => d.id === id);
 }

@@ -1,10 +1,7 @@
 import React, { useMemo, useState } from "react";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, WARD_CATEGORIES } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
-import {
-  PAYMENT_METHODS,
-  computeTotals,
-} from "@/lib/reception-desk/billingData";
+import { PAYMENT_METHODS, computeTotals } from "@/lib/reception-desk/billingData";
 import { toast } from "sonner";
 import { printReceipt } from "@/lib/reception-desk/print";
 import {
@@ -20,7 +17,9 @@ import {
   Smartphone,
   ShieldCheck,
   X,
+  Sparkles,
 } from "lucide-react";
+import RefundModal from "@/components/reception-desk/RefundModal";
 
 const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
@@ -38,6 +37,20 @@ function StatusChip({ status }) {
     return (
       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide border rounded-sm bg-money/10 text-money border-money/30">
         <span className="w-1.5 h-1.5 rounded-full bg-money" /> Paid
+      </span>
+    );
+  }
+  if (status === "refunded") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide border rounded-sm bg-clay-soft text-clay border-clay/30">
+        <span className="w-1.5 h-1.5 rounded-full bg-clay" /> Refunded
+      </span>
+    );
+  }
+  if (status === "partial-refund") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide border rounded-sm bg-mustard-soft text-mustard border-mustard/30">
+        <span className="w-1.5 h-1.5 rounded-full bg-mustard" /> Partial Refund
       </span>
     );
   }
@@ -118,9 +131,7 @@ function PayDialog({ invoice, totals, onClose, onPay }) {
             </div>
             <div className="flex justify-between pt-2 border-t border-ink-200 mt-2 text-[15px]">
               <span className="font-medium text-ink-900">Total</span>
-              <span className="font-mono font-semibold text-ink-900">
-                {fmt(totals.total)}
-              </span>
+              <span className="font-mono font-semibold text-ink-900">{fmt(totals.total)}</span>
             </div>
           </div>
         </div>
@@ -148,11 +159,15 @@ export default function Billing() {
     patients,
     doctors,
     appointments,
+    encounters,
     addInvoice,
+    addRefund,
     updateInvoice,
     collectPayment,
     getConsultFee,
     labCatalog,
+    beds,
+    admissions,
   } = useStore();
 
   const [addMenuOpen, setAddMenuOpen] = useState(false);
@@ -161,14 +176,13 @@ export default function Billing() {
   const [q, setQ] = useState("");
   const [selectedId, setSelectedId] = useState(invoices[0]?.id || null);
   const [payOpen, setPayOpen] = useState(false);
+  const [refundOpen, setRefundOpen] = useState(false);
 
   // Auto-create invoices for today's completed/in-progress/checked-in appointments
   // that don't have one yet (one-shot, harmless on re-render).
   React.useEffect(() => {
     const billable = appointments.filter(
-      (a) =>
-        a.date === TODAY_STR &&
-        ["checked-in", "in-progress", "completed"].includes(a.status),
+      (a) => a.date === TODAY_STR && ["checked-in", "in-progress", "completed"].includes(a.status),
     );
     billable.forEach((apt) => {
       const has = invoices.some((i) => i.appointmentId === apt.id);
@@ -214,9 +228,95 @@ export default function Billing() {
   const selected = invoices.find((i) => i.id === selectedId) || filtered[0];
   const selPatient = selected && patients.find((p) => p.id === selected.patientId);
   const selDoctor = selected && doctors.find((d) => d.id === selected.doctorId);
-  const selTotals = selected
-    ? computeTotals(selected.items, selected.discount)
-    : { subtotal: 0, discount: 0, tax: 0, total: 0 };
+  const selectedEncounter = selected
+    ? encounters.find(
+        (e) =>
+          e.invoiceIds.includes(selected.id) ||
+          (e.patientId === selected.patientId && e.status === "open"),
+      )
+    : undefined;
+
+  const patientAdmission = useMemo(() => {
+    if (!selected) return null;
+    return admissions.find((a: any) => a.patientId === selected.patientId && a.status !== "discharged");
+  }, [selected, admissions]);
+
+  const itemsWithBedStay = useMemo(() => {
+    if (!selected) return [];
+    const base = [...selected.items];
+    if (patientAdmission) {
+      const bed = beds.find((b: any) => b.id === patientAdmission.bedId);
+      const rate = WARD_CATEGORIES.find((w) => w.id === bed?.wardCategory)?.ratePerDay || 0;
+      
+      const start = new Date(patientAdmission.admittedAt);
+      const now = new Date();
+      const diffTime = Math.max(0, now.getTime() - start.getTime());
+      const days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+      
+      const bedStayLabel = `Inpatient Bed Stay — ${bed?.name || patientAdmission.bedId} (${bed?.wardCategory || ""})`;
+      
+      const exists = base.some((it) => it.label.startsWith("Inpatient Bed Stay"));
+      if (!exists) {
+        base.push({
+          label: bedStayLabel,
+          qty: days,
+          unit: rate,
+          amount: days * rate,
+        });
+      }
+    }
+    return base;
+  }, [selected, patientAdmission, beds]);
+
+  const selTotals = useMemo(() => {
+    if (!selected) return { subtotal: 0, discount: 0, tax: 0, total: 0, processedItems: [] };
+    
+    const tariffPlan = selected.tariffPlan || "standard";
+    const manualDiscount = selected.discount || 0;
+    
+    let subtotal = 0;
+    let tariffDiscount = 0;
+    
+    const processedItems = itemsWithBedStay.map((it) => {
+      let unit = it.unit;
+      if (tariffPlan === "cghs") {
+        if (it.label.toLowerCase().includes("consultation")) {
+          unit = Math.min(unit, 350);
+        } else if (it.label.toLowerCase().includes("lab")) {
+          unit = Math.min(unit, 300);
+        } else {
+          unit = Math.min(unit, 500);
+        }
+      }
+      
+      const amount = it.qty * unit;
+      subtotal += amount;
+      
+      if (tariffPlan === "star-corporate") {
+        if (!it.label.toLowerCase().includes("consultation")) {
+          tariffDiscount += amount * 0.15;
+        }
+      }
+      
+      return { ...it, unit, amount };
+    });
+
+    if (tariffPlan === "staff") {
+      tariffDiscount = subtotal * 0.5;
+    }
+
+    const totalDiscount = manualDiscount + tariffDiscount;
+    const tax = Math.round((subtotal - totalDiscount) * 0.05);
+    const total = Math.max(0, subtotal - totalDiscount + tax);
+
+    return {
+      subtotal,
+      discount: totalDiscount,
+      tax,
+      total,
+      processedItems,
+    };
+  }, [selected, itemsWithBedStay]);
 
   // KPIs
   const todayInv = invoices.filter((i) => i.date === TODAY_STR);
@@ -231,10 +331,7 @@ export default function Billing() {
   const addItem = () => {
     if (!selected) return;
     updateInvoice(selected.id, {
-      items: [
-        ...selected.items,
-        { label: "Service", qty: 1, unit: 200, amount: 200 },
-      ],
+      items: [...selected.items, { label: "Service", qty: 1, unit: 200, amount: 200 }],
     });
   };
 
@@ -275,9 +372,7 @@ export default function Billing() {
         ? {
             ...it,
             ...patch,
-            amount:
-              (patch.qty ?? it.qty) * (patch.unit ?? it.unit) ||
-              it.amount,
+            amount: (patch.qty ?? it.qty) * (patch.unit ?? it.unit) || it.amount,
           }
         : it,
     );
@@ -384,9 +479,7 @@ export default function Billing() {
                   >
                     <div
                       className={`w-9 h-9 rounded-sm grid place-items-center ${
-                        i.status === "paid"
-                          ? "bg-money/10 text-money"
-                          : "bg-clay-soft text-clay"
+                        i.status === "paid" ? "bg-money/10 text-money" : "bg-clay-soft text-clay"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -414,9 +507,7 @@ export default function Billing() {
               );
             })}
             {filtered.length === 0 && (
-              <li className="p-8 text-center text-[13px] text-ink-400">
-                No invoices match.
-              </li>
+              <li className="p-8 text-center text-[13px] text-ink-400">No invoices match.</li>
             )}
           </ul>
         </section>
@@ -424,9 +515,7 @@ export default function Billing() {
         {/* Invoice detail */}
         <section className="col-span-12 lg:col-span-7 surface flex flex-col">
           {!selected ? (
-            <div className="p-12 text-center text-ink-400 text-[13px]">
-              Select an invoice
-            </div>
+            <div className="p-12 text-center text-ink-400 text-[13px]">Select an invoice</div>
           ) : (
             <>
               <div className="px-6 py-4 border-b border-ink-200 flex items-start gap-4">
@@ -443,6 +532,32 @@ export default function Billing() {
                   <div className="text-[12.5px] text-ink-600 mt-1">
                     {selPatient?.name} · {selPatient?.id} · {selDoctor?.name}
                   </div>
+                  {selected.status === "unpaid" ? (
+                    <div className="mt-3 flex items-center gap-3">
+                      <span className="text-[11px] font-medium text-ink-500 uppercase tracking-wider font-mono">Tariff Plan:</span>
+                      <select
+                        className="h-8 px-2.5 text-[12.5px] bg-white border border-ink-200 rounded focus:outline-none focus:border-sage"
+                        value={selected.tariffPlan || "standard"}
+                        onChange={(e) => updateInvoice(selected.id, { tariffPlan: e.target.value })}
+                      >
+                        <option value="standard">Standard Tariff Rates</option>
+                        <option value="star-corporate">Star Health Corporate (15% Procedures Disc)</option>
+                        <option value="cghs">CGHS Gov Scheme (Capped Rates)</option>
+                        <option value="staff">Staff Discount (50% Disc)</option>
+                      </select>
+                    </div>
+                  ) : selected.tariffPlan && selected.tariffPlan !== "standard" ? (
+                    <div className="mt-2 text-[12px] font-medium text-plum flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-plum" />
+                      Scheme: <span className="uppercase">{selected.tariffPlan}</span>
+                    </div>
+                  ) : null}
+                  {selectedEncounter ? (
+                    <div className="mt-2 rounded-sm border border-ink-200 bg-bone px-3 py-2 text-[12px] text-ink-700">
+                      Encounter linked:{" "}
+                      <span className="font-medium text-ink-900">{selectedEncounter.id}</span>
+                    </div>
+                  ) : null}
                 </div>
                 <StatusChip status={selected.status} />
               </div>
@@ -508,65 +623,62 @@ export default function Billing() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-ink-200">
-                    {selected.items.map((it, idx) => (
-                      <tr key={idx} data-testid={`billing-item-${idx}`}>
-                        <td className="py-2.5 pr-3">
-                          {selected.status === "unpaid" ? (
-                            <input
-                              value={it.label}
-                              onChange={(e) =>
-                                updateItem(idx, { label: e.target.value })
-                              }
-                              className="w-full h-8 px-2 text-[13px] bg-white border border-transparent hover:border-ink-200 rounded-sm focus:outline-none focus:border-sage"
-                            />
-                          ) : (
-                            <span className="text-ink-900">{it.label}</span>
-                          )}
-                        </td>
-                        <td className="py-2.5 text-right font-mono">
-                          {selected.status === "unpaid" ? (
-                            <input
-                              type="number"
-                              value={it.qty}
-                              onChange={(e) =>
-                                updateItem(idx, { qty: Number(e.target.value) })
-                              }
-                              className="w-14 h-8 px-2 text-right text-[13px] bg-white border border-transparent hover:border-ink-200 rounded-sm focus:outline-none focus:border-sage"
-                            />
-                          ) : (
-                            it.qty
-                          )}
-                        </td>
-                        <td className="py-2.5 text-right font-mono">
-                          {selected.status === "unpaid" ? (
-                            <input
-                              type="number"
-                              value={it.unit}
-                              onChange={(e) =>
-                                updateItem(idx, { unit: Number(e.target.value) })
-                              }
-                              className="w-20 h-8 px-2 text-right text-[13px] bg-white border border-transparent hover:border-ink-200 rounded-sm focus:outline-none focus:border-sage"
-                            />
-                          ) : (
-                            fmt(it.unit)
-                          )}
-                        </td>
-                        <td className="py-2.5 text-right font-mono text-ink-900">
-                          {fmt(it.amount)}
-                        </td>
-                        <td className="py-2.5 text-right">
-                          {selected.status === "unpaid" && selected.items.length > 1 && (
-                            <button
-                              data-testid={`billing-remove-item-${idx}`}
-                              onClick={() => removeItem(idx)}
-                              className="btn-icon"
-                            >
-                              <Trash2 className="w-3.5 h-3.5 text-status-noshowText" />
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                    {selTotals.processedItems.map((it, idx) => {
+                      const isBedStay = it.label.startsWith("Inpatient Bed Stay");
+                      return (
+                        <tr key={idx} data-testid={`billing-item-${idx}`}>
+                          <td className="py-2.5 pr-3">
+                            {selected.status === "unpaid" && !isBedStay ? (
+                              <input
+                                value={it.label}
+                                onChange={(e) => updateItem(idx, { label: e.target.value })}
+                                className="w-full h-8 px-2 text-[13px] bg-white border border-transparent hover:border-ink-200 rounded-sm focus:outline-none focus:border-sage"
+                              />
+                            ) : (
+                              <span className="text-ink-900 font-medium">{it.label}</span>
+                            )}
+                          </td>
+                          <td className="py-2.5 text-right font-mono">
+                            {selected.status === "unpaid" && !isBedStay ? (
+                              <input
+                                type="number"
+                                value={it.qty}
+                                onChange={(e) => updateItem(idx, { qty: Number(e.target.value) })}
+                                className="w-14 h-8 px-2 text-right text-[13px] bg-white border border-transparent hover:border-ink-200 rounded-sm focus:outline-none focus:border-sage"
+                              />
+                            ) : (
+                              it.qty
+                            )}
+                          </td>
+                          <td className="py-2.5 text-right font-mono">
+                            {selected.status === "unpaid" && !isBedStay ? (
+                              <input
+                                type="number"
+                                value={it.unit}
+                                onChange={(e) => updateItem(idx, { unit: Number(e.target.value) })}
+                                className="w-20 h-8 px-2 text-right text-[13px] bg-white border border-transparent hover:border-ink-200 rounded-sm focus:outline-none focus:border-sage"
+                              />
+                            ) : (
+                              fmt(it.unit)
+                            )}
+                          </td>
+                          <td className="py-2.5 text-right font-mono text-ink-900">
+                            {fmt(it.amount)}
+                          </td>
+                          <td className="py-2.5 text-right">
+                            {selected.status === "unpaid" && selected.items.length > 1 && !isBedStay && (
+                              <button
+                                data-testid={`billing-remove-item-${idx}`}
+                                onClick={() => removeItem(idx)}
+                                className="btn-icon"
+                              >
+                                <Trash2 className="w-3.5 h-3.5 text-status-noshowText" />
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
 
@@ -599,9 +711,7 @@ export default function Billing() {
                   <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium mb-3">
                     Insurance
                   </div>
-                  <div className="text-[13px] text-ink-900">
-                    {selPatient?.insurance?.provider}
-                  </div>
+                  <div className="text-[13px] text-ink-900">{selPatient?.insurance?.provider}</div>
                   <div className="text-[11px] text-ink-400 font-mono mt-1">
                     {selPatient?.insurance?.policyId}
                   </div>
@@ -628,9 +738,7 @@ export default function Billing() {
                 <div className="px-6 py-5 space-y-1.5 text-[13px]">
                   <div className="flex justify-between text-ink-600">
                     <span>Subtotal</span>
-                    <span className="font-mono text-ink-900">
-                      {fmt(selTotals.subtotal)}
-                    </span>
+                    <span className="font-mono text-ink-900">{fmt(selTotals.subtotal)}</span>
                   </div>
                   {selTotals.discount > 0 && (
                     <div className="flex justify-between text-ink-600">
@@ -644,17 +752,57 @@ export default function Billing() {
                     <span>Tax (5%)</span>
                     <span className="font-mono text-ink-900">{fmt(selTotals.tax)}</span>
                   </div>
+                  {patientAdmission && patientAdmission.depositAmount > 0 && (
+                    <>
+                      <div className="flex justify-between text-ink-600 border-t border-ink-100 pt-1.5 mt-1">
+                        <span>Invoice Total</span>
+                        <span className="font-mono text-ink-900">{fmt(selTotals.total)}</span>
+                      </div>
+                      <div className="flex justify-between text-money font-medium">
+                        <span>IPD Deposit Credit</span>
+                        <span className="font-mono text-money">−{fmt(patientAdmission.depositAmount)}</span>
+                      </div>
+                    </>
+                  )}
                   <div className="flex justify-between pt-2 mt-2 border-t border-ink-200">
-                    <span className="text-[14px] font-medium text-ink-900">
-                      Total due
-                    </span>
+                    <span className="text-[14px] font-medium text-ink-900">Total due</span>
                     <span className="font-mono font-semibold text-[20px] text-ink-900">
-                      {fmt(selTotals.total)}
+                      {fmt(
+                        patientAdmission && patientAdmission.depositAmount > 0
+                          ? Math.max(0, selTotals.total - patientAdmission.depositAmount)
+                          : selTotals.total,
+                      )}
                     </span>
                   </div>
                 </div>
               </div>
 
+              {selected.refunds && selected.refunds.length > 0 && (
+                <div className="px-6 py-4 bg-bone border-t border-b border-ink-200">
+                  <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium mb-2">
+                    Refund History
+                  </div>
+                  <div className="space-y-2">
+                    {selected.refunds.map((ref: any, idx: number) => (
+                      <div key={idx} className="flex justify-between items-start text-[12.5px] text-ink-600 bg-white p-2.5 rounded-sm border border-ink-200 shadow-xs">
+                        <div>
+                          <div className="font-medium text-ink-900 capitalize">
+                            {ref.type === "credit" ? "Credit Note" : `${ref.type} Refund`} · {ref.reason}
+                          </div>
+                          {ref.notes && <div className="text-[11.5px] text-ink-500 mt-0.5">Notes: {ref.notes}</div>}
+                          <div className="text-[10.5px] text-ink-400 font-mono mt-1">
+                            Processed: {ref.processedAt.slice(0, 10)} {ref.processedAt.slice(11, 16)} by {ref.processedBy}
+                          </div>
+                        </div>
+                        <span className="font-mono text-status-noshowText font-medium">
+                          -₹{ref.amount}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+ 
               <div className="px-6 py-4 border-t border-ink-200 flex flex-wrap gap-2 items-center">
                 <button
                   data-testid="billing-print"
@@ -679,26 +827,59 @@ export default function Billing() {
                     className="btn-money btn-lg"
                   >
                     <CheckCircle2 className="w-4 h-4" />
-                    Collect {fmt(selTotals.total)}
+                    Collect {fmt(
+                      patientAdmission && patientAdmission.depositAmount > 0
+                        ? Math.max(0, selTotals.total - patientAdmission.depositAmount)
+                        : selTotals.total,
+                    )}
                   </button>
                 ) : (
-                  <span className="inline-flex items-center gap-2 px-4 h-10 rounded-full bg-money/10 text-money text-[13px] font-medium">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Paid {selected.paidAt?.slice(11, 16)}
-                  </span>
+                  <>
+                    <span className="inline-flex items-center gap-2 px-4 h-10 rounded-full bg-money/10 text-money text-[13px] font-medium">
+                      <CheckCircle2 className="w-4 h-4" />
+                      Paid {selected.paidAt?.slice(11, 16)}
+                    </span>
+                    {selected.status !== "refunded" && (
+                      <button onClick={() => setRefundOpen(true)} className="btn-outline ml-2">
+                        Refund
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </>
           )}
         </section>
       </div>
-
+ 
       {payOpen && (
         <PayDialog
           invoice={selected}
-          totals={selTotals}
+          totals={{
+            ...selTotals,
+            total:
+              patientAdmission && patientAdmission.depositAmount > 0
+                ? Math.max(0, selTotals.total - patientAdmission.depositAmount)
+                : selTotals.total,
+          }}
           onClose={() => setPayOpen(false)}
           onPay={onPay}
+        />
+      )}
+      {refundOpen && (
+        <RefundModal
+          open={refundOpen}
+          invoice={selected}
+          onClose={() => setRefundOpen(false)}
+          onRefund={(amount, type, reason, notes) => {
+            const r = addRefund(selected.id, amount, type, reason, notes);
+            if (r) {
+              toast.success(`Refund issued ₹${amount}`);
+              setRefundOpen(false);
+            } else {
+              toast.error("Refund failed");
+            }
+          }}
         />
       )}
     </div>

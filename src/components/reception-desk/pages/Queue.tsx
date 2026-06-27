@@ -11,6 +11,7 @@ import {
   ArrowRightLeft,
   Stethoscope,
   Clock,
+  MonitorPlay,
 } from "lucide-react";
 
 const mins = (t) => {
@@ -74,6 +75,19 @@ export default function Queue() {
 
   return (
     <div data-testid="queue-page" className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 border border-ink-200 rounded-sm">
+        <div>
+          <h1 className="text-[16px] font-heading font-semibold text-ink-900">Clinic Queue Management</h1>
+          <p className="text-[12px] text-ink-400">Call, skip, or transfer checked-in patients to active doctors.</p>
+        </div>
+        <button
+          onClick={() => window.open("/reception/token-board", "_blank")}
+          className="btn-outline flex items-center gap-2 h-9 shrink-0 self-start sm:self-auto"
+        >
+          <MonitorPlay className="w-4 h-4" /> Open Waiting Board (TV)
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {queuesByDoctor.map(({ doctor, current, waiting }) => {
           const currentPatient = current

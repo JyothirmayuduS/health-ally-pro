@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useStore } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { computeTotals } from "@/lib/reception-desk/billingData";
+import { printDayReport } from "@/lib/reception-desk/print";
 import { DENOMS } from "@/lib/reception-desk/opsData";
 import { toast } from "sonner";
 import { DeskKpi } from "@/components/desk-shell/ui";
@@ -270,10 +271,221 @@ function OpenShiftDialog({ staff, onClose, onConfirm }) {
   );
 }
 
+export function DayEndReportModal({ shift, collections, refunds, variance, topServices, cancellations, onClose, onPrint }) {
+  return (
+    <div className="fixed inset-0 z-30 bg-black/40 grid place-items-center p-4">
+      <div className="bg-white border border-ink-200 rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-xl">
+        <div className="px-5 py-4 border-b border-ink-200 flex justify-between items-center shrink-0">
+          <div>
+            <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">Shift Summary</div>
+            <h3 className="text-[16px] font-heading font-semibold text-ink-900 mt-0.5">{shift.label} Shift End Report</h3>
+          </div>
+          <button onClick={onClose} className="btn-icon">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex-grow overflow-y-auto p-5 space-y-4 text-[13px]">
+          <div className="grid grid-cols-2 gap-4 p-3 bg-bone border border-ink-200 rounded-lg">
+            <div>
+              <span className="text-[11px] uppercase tracking-wider text-ink-400 font-mono">Staff Lead</span>
+              <div className="font-semibold text-ink-900">{shift.staffName}</div>
+            </div>
+            <div>
+              <span className="text-[11px] uppercase tracking-wider text-ink-400 font-mono">Shift Timeline</span>
+              <div className="text-ink-600 font-mono">{timeStr(shift.openedAt)} - {timeStr(shift.closedAt)}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="border border-ink-200 rounded-lg p-3 bg-bone/10">
+              <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Collections</div>
+              <div className="space-y-1">
+                {Object.entries(collections).map(([m, amt]) => (
+                  <div key={m} className="flex justify-between font-mono">
+                    <span className="capitalize text-ink-600">{m}</span>
+                    <span className="text-ink-900 font-medium">{fmt(amt)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border border-ink-200 rounded-lg p-3 bg-bone/10">
+              <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Drawer Cash</div>
+              <div className="space-y-1">
+                <div className="flex justify-between font-mono">
+                  <span>Opening Float</span>
+                  <span>{fmt(shift.openingFloat)}</span>
+                </div>
+                <div className="flex justify-between font-mono">
+                  <span>Expected Cash</span>
+                  <span>{fmt(shift.openingFloat + (shift.cashCollected || 0))}</span>
+                </div>
+                <div className="flex justify-between font-mono">
+                  <span>Actual Cash</span>
+                  <span>{fmt(shift.actualCash || 0)}</span>
+                </div>
+                <div className="flex justify-between font-mono">
+                  <span>Refunds</span>
+                  <span className="text-status-noshowText">{fmt(refunds || 0)}</span>
+                </div>
+                <div className="flex justify-between font-mono border-t border-ink-200 pt-1 mt-1 font-semibold">
+                  <span>Variance</span>
+                  <span className={variance === 0 ? "text-money" : variance > 0 ? "text-mustard" : "text-clay"}>
+                    {variance >= 0 ? "+" : ""}{fmt(variance)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border border-ink-200 rounded-lg p-3">
+            <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Top 5 Services Billed</div>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-ink-200 text-[10px] text-ink-400 font-mono uppercase">
+                  <th className="pb-1">Service</th>
+                  <th className="pb-1 text-right">Count</th>
+                  <th className="pb-1 text-right">Revenue</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-ink-100">
+                {topServices.map((s: any, idx: number) => (
+                  <tr key={s.name}>
+                    <td className="py-1.5 font-medium text-ink-900">{idx + 1}. {s.name}</td>
+                    <td className="py-1.5 text-right font-mono">{s.count}</td>
+                    <td className="py-1.5 text-right font-mono text-ink-900">{fmt(s.revenue)}</td>
+                  </tr>
+                ))}
+                {topServices.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="py-4 text-center text-ink-400 italic">No services billed in this shift.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="border border-ink-200 rounded-lg p-3">
+            <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Cancellations Reasons</div>
+            <div className="space-y-1">
+              {Object.entries(cancellations).map(([r, count]) => (
+                <div key={r} className="flex justify-between">
+                  <span className="text-ink-600">{r}</span>
+                  <span className="font-mono text-ink-900 font-semibold">{count}</span>
+                </div>
+              ))}
+              {Object.keys(cancellations).length === 0 && (
+                <div className="text-ink-400 italic text-center py-2">No cancellations today.</div>
+              )}
+            </div>
+          </div>
+
+          {shift.handover && (
+            <div className="p-3 border border-mustard/30 bg-mustard-soft/30 rounded-lg">
+              <span className="text-[11.5px] uppercase tracking-wider text-mustard font-mono font-medium block mb-1">Handover Note</span>
+              <p className="text-ink-900 text-[12.5px] font-medium">{shift.handover}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 py-3 border-t border-ink-200 flex justify-end gap-2 bg-bone shrink-0">
+          <button onClick={onClose} className="btn-outline h-9">Close</button>
+          <button onClick={onPrint} className="btn-primary h-9 flex items-center gap-1.5">
+            <FileText className="w-4 h-4" /> Print / Export PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CashDrawer() {
-  const { shifts, staff, invoices, openShift, closeShift } = useStore();
+  const { shifts, staff, invoices, appointments, openShift, closeShift } = useStore();
   const [openDialog, setOpenDialog] = useState(false);
   const [closeDialog, setCloseDialog] = useState(null);
+  const [reportShift, setReportShift] = useState<any>(null);
+
+  const getCollectionsForShift = (s: any) => {
+    const shiftInvoices = invoices.filter(
+      (i) =>
+        (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
+        i.paidAt &&
+        i.paidAt >= s.openedAt &&
+        (!s.closedAt || i.paidAt <= s.closedAt)
+    );
+    const methodTotals: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
+    shiftInvoices.forEach((i) => {
+      const t = computeTotals(i.items, i.discount).total;
+      const invoiceRefundsShift = (i.refunds || [])
+        .filter((r) => r.processedAt >= s.openedAt && (!s.closedAt || r.processedAt <= s.closedAt))
+        .reduce((sum, r) => sum + r.amount, 0);
+      methodTotals[i.method] = (methodTotals[i.method] || 0) + (t - invoiceRefundsShift);
+    });
+    return methodTotals;
+  };
+
+  const getRefundsForShift = (s: any) => {
+    return invoices.reduce((sum, i) => {
+      const shiftRefunds = (i.refunds || []).filter(
+        (r) =>
+          r.processedAt >= s.openedAt &&
+          (!s.closedAt || r.processedAt <= s.closedAt)
+      );
+      return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
+    }, 0);
+  };
+
+  const getTopServicesForShift = (s: any) => {
+    const shiftInvoices = invoices.filter(
+      (i) =>
+        (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
+        i.paidAt &&
+        i.paidAt >= s.openedAt &&
+        (!s.closedAt || i.paidAt <= s.closedAt)
+    );
+    const serviceMap: Record<string, { name: string; count: number; revenue: number }> = {};
+    shiftInvoices.forEach((i) => {
+      i.items.forEach((item) => {
+        if (!serviceMap[item.label]) {
+          serviceMap[item.label] = { name: item.label, count: 0, revenue: 0 };
+        }
+        serviceMap[item.label].count += item.qty || 1;
+        serviceMap[item.label].revenue += item.amount;
+      });
+    });
+    return Object.values(serviceMap)
+      .sort((a: any, b: any) => b.revenue - a.revenue)
+      .slice(0, 5);
+  };
+
+  const getCancellationsForShift = (s: any) => {
+    const cancelledToday = appointments.filter(
+      (a) => a.status === "cancelled" && a.date === TODAY_STR
+    );
+    const counts: Record<string, number> = {};
+    cancelledToday.forEach((a) => {
+      const reason = a.cancellationReason || "Other";
+      counts[reason] = (counts[reason] || 0) + 1;
+    });
+    return counts;
+  };
+
+  const handleOpenReport = (s: any) => {
+    const st = staff.find((x) => x.id === s.staffId);
+    const collections = getCollectionsForShift(s);
+    const refunds = getRefundsForShift(s);
+    const topServices = getTopServicesForShift(s);
+    const cancellations = getCancellationsForShift(s);
+    setReportShift({
+      ...s,
+      staffName: st?.name || "Medical Officer",
+      collections,
+      refunds,
+      topServices,
+      cancellations,
+    });
+  };
 
   const todayShifts = shifts.filter((s) => s.date === TODAY_STR);
   const openShifts = todayShifts.filter((s) => s.status === "open");
@@ -283,32 +495,62 @@ export default function CashDrawer() {
   const cashByOpenShift = useMemo(() => {
     const out = {};
     openShifts.forEach((s) => {
-      out[s.id] = invoices
+      const grossCash = invoices
         .filter(
           (i) =>
-            i.status === "paid" &&
+            (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
             i.method === "cash" &&
             i.paidAt &&
             i.paidAt >= s.openedAt,
         )
         .reduce((sum, i) => sum + computeTotals(i.items, i.discount).total, 0);
+
+      const cashRefunds = invoices.reduce((sum, i) => {
+        const shiftRefunds = (i.refunds || []).filter(
+          (r) => r.method === "cash" && r.processedAt >= s.openedAt
+        );
+        return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
+      }, 0);
+
+      out[s.id] = grossCash - cashRefunds;
     });
     return out;
   }, [openShifts, invoices]);
 
   // Today's collection totals by method (for KPI strip)
   const todayPaid = invoices.filter(
-    (i) => i.status === "paid" && i.date === TODAY_STR,
+    (i) => (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") && i.date === TODAY_STR,
   );
   const totalByMethod = todayPaid.reduce(
     (acc, i) => {
       const t = computeTotals(i.items, i.discount).total;
-      acc[i.method] = (acc[i.method] || 0) + t;
+      const invoiceRefundsToday = (i.refunds || [])
+        .filter((r) => r.processedAt.startsWith(TODAY_STR))
+        .reduce((sum, r) => sum + r.amount, 0);
+      acc[i.method] = (acc[i.method] || 0) + (t - invoiceRefundsToday);
       return acc;
     },
     { cash: 0, card: 0, upi: 0, insurance: 0 },
   );
   const grossDesk = Object.values(totalByMethod).reduce((a, b) => a + b, 0);
+
+  // Refunds column computation for shifts table
+  const refundsByShift = useMemo(() => {
+    const out = {};
+    todayShifts.forEach((s) => {
+      const cashRefunds = invoices.reduce((sum, i) => {
+        const shiftRefunds = (i.refunds || []).filter(
+          (r) =>
+            r.method === "cash" &&
+            r.processedAt >= s.openedAt &&
+            (!s.closedAt || r.processedAt <= s.closedAt)
+        );
+        return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
+      }, 0);
+      out[s.id] = cashRefunds;
+    });
+    return out;
+  }, [todayShifts, invoices]);
 
   // Per-staff collected (across all closed + open shifts today)
   const perStaff = staff.map((st) => {
@@ -491,8 +733,9 @@ export default function CashDrawer() {
                 <th className="text-left font-medium px-3 py-2.5">Closed</th>
                 <th className="text-right font-medium px-3 py-2.5">Float</th>
                 <th className="text-right font-medium px-3 py-2.5">Cash</th>
+                <th className="text-right font-medium px-3 py-2.5">Refunds</th>
                 <th className="text-right font-medium px-3 py-2.5">Variance</th>
-                <th className="text-right font-medium px-5 py-2.5">Handover</th>
+                <th className="text-right font-medium px-5 py-2.5">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-ink-200">
@@ -517,6 +760,9 @@ export default function CashDrawer() {
                     <td className="px-3 py-3 text-right font-mono text-ink-900">
                       {fmt(s.cashCollected)}
                     </td>
+                    <td className="px-3 py-3 text-right font-mono text-status-noshowText">
+                      {fmt(refundsByShift[s.id] || 0)}
+                    </td>
                     <td
                       className={`px-3 py-3 text-right font-mono ${
                         s.variance === 0
@@ -529,18 +775,24 @@ export default function CashDrawer() {
                       {s.variance > 0 ? "+" : ""}
                       {fmt(s.variance || 0)}
                     </td>
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-5 py-3 text-right flex justify-end gap-2.5 items-center">
+                      <button
+                        onClick={() => handleOpenReport(s)}
+                        className="text-teal hover:text-teal-hover font-medium text-[12.5px] inline-flex items-center gap-1"
+                      >
+                        <FileText className="w-3.5 h-3.5" /> Report
+                      </button>
                       {s.handover ? (
                         <button
                           onClick={() =>
                             toast(s.handover, { duration: 6000 })
                           }
-                          className="text-sage hover:text-sage-hover font-medium text-[12px] inline-flex items-center gap-1.5"
+                          className="text-sage hover:text-sage-hover font-medium text-[12.5px] inline-flex items-center gap-1"
                         >
-                          <FileText className="w-3.5 h-3.5" /> View
+                          <FileText className="w-3.5 h-3.5" /> Handover
                         </button>
                       ) : (
-                        <span className="text-ink-400 text-[12px]">—</span>
+                        <span className="text-ink-400 text-[12.5px]">—</span>
                       )}
                     </td>
                   </tr>
@@ -579,15 +831,44 @@ export default function CashDrawer() {
           expected={closeDialog.expected}
           onClose={() => setCloseDialog(null)}
           onConfirm={(patch) => {
+            const closedShiftDetails = {
+              ...closeDialog.shift,
+              ...patch,
+              status: "closed",
+              closedAt: new Date().toISOString(),
+              cashCollected: closeDialog.expected - closeDialog.shift.openingFloat,
+            };
             closeShift(closeDialog.shift.id, {
               ...patch,
-              cashCollected: closeDialog.expected - closeDialog.shift.openingFloat,
+              cashCollected: closedShiftDetails.cashCollected,
             });
             toast.success(`Shift ${closeDialog.shift.label} closed`, {
               description: `Variance ${patch.variance >= 0 ? "+" : ""}${fmt(patch.variance)}`,
               icon: <CheckCircle2 className="w-4 h-4 text-money" />,
             });
             setCloseDialog(null);
+            handleOpenReport(closedShiftDetails);
+          }}
+        />
+      )}
+      {reportShift && (
+        <DayEndReportModal
+          shift={reportShift}
+          collections={reportShift.collections}
+          refunds={reportShift.refunds}
+          variance={reportShift.variance}
+          topServices={reportShift.topServices}
+          cancellations={reportShift.cancellations}
+          onClose={() => setReportShift(null)}
+          onPrint={() => {
+            printDayReport({
+              shift: reportShift,
+              collections: reportShift.collections,
+              refunds: reportShift.refunds,
+              variance: reportShift.variance,
+              topServices: reportShift.topServices,
+              cancellations: reportShift.cancellations,
+            });
           }}
         />
       )}

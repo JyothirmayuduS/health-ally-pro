@@ -181,3 +181,74 @@ export function printDaySheet({ date, kpis, byMethod, byDoctor, shifts, noShows 
   `;
   openPrintWindow(`Day sheet · ${date}`, body, 190); // A4-ish portrait
 }
+
+export function printDayReport({ shift, collections, refunds, variance, topServices, cancellations }) {
+  const methodRows = Object.entries(collections)
+    .map(([method, amount]) => `<tr><td>${method.toUpperCase()}</td><td class="right mono">${fmt(amount)}</td></tr>`)
+    .join("");
+
+  const serviceRows = topServices
+    .map((s: any, idx) => `<tr><td class="mono">#${idx + 1}</td><td>${s.name}</td><td class="right mono">${s.count}</td><td class="right mono">${fmt(s.revenue)}</td></tr>`)
+    .join("");
+
+  const cancelRows = Object.entries(cancellations)
+    .map(([reason, count]) => `<tr><td>${reason}</td><td class="right mono">${count}</td></tr>`)
+    .join("");
+
+  const body = `
+    <div class="center" style="border-bottom:2px solid #1c1c19;padding-bottom:8px;margin-bottom:10px">
+      <div class="h" style="font-size:16px">${HOSPITAL.name}</div>
+      <div class="sm">Shift End Report · ${shift.label}</div>
+    </div>
+    
+    <div class="xs">Shift Details</div>
+    <table style="margin:6px 0">
+      <tr><td>Staff</td><td class="right">${shift.staff}</td></tr>
+      <tr><td>Opened</td><td class="right mono">${shift.opened}</td></tr>
+      <tr><td>Closed</td><td class="right mono">${shift.closed || "—"}</td></tr>
+      <tr><td>Opening Cash</td><td class="right mono">${fmt(shift.openingCash || 0)}</td></tr>
+    </table>
+    
+    <hr/>
+    <div class="xs">Collections by Method</div>
+    <table style="margin:6px 0">
+      <thead><tr><th>Method</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        ${methodRows}
+      </tbody>
+    </table>
+    
+    <hr/>
+    <div class="xs">Adjustments & Drawer</div>
+    <table style="margin:6px 0">
+      <tr><td>Expected Cash</td><td class="right mono">${fmt(shift.expectedCash || 0)}</td></tr>
+      <tr><td>Actual Cash</td><td class="right mono">${fmt(shift.actualCash || 0)}</td></tr>
+      <tr><td>Total Refunds</td><td class="right mono" style="color:#b85c38">${fmt(refunds || 0)}</td></tr>
+      <tr><td>Variance</td><td class="right mono" style="color:${variance === 0 ? "#15803d" : variance > 0 ? "#a87826" : "#b85c38"}">${variance >= 0 ? "+" : ""}${fmt(variance)}</td></tr>
+    </table>
+    
+    <hr/>
+    <div class="xs">Top Services / Treatments</div>
+    <table style="margin:6px 0">
+      <thead><tr><th>Rank</th><th>Service</th><th class="right">Count</th><th class="right">Revenue</th></tr></thead>
+      <tbody>
+        ${serviceRows}
+      </tbody>
+    </table>
+    
+    <hr/>
+    <div class="xs">Cancellations Reason Breakdown</div>
+    <table style="margin:6px 0">
+      <thead><tr><th>Reason</th><th class="right">Count</th></tr></thead>
+      <tbody>
+        ${cancelRows.length ? cancelRows : '<tr><td colspan="2" class="center sm">No cancellations recorded</td></tr>'}
+      </tbody>
+    </table>
+    
+    <div class="stamp" style="margin-top:14px">
+      <div class="xs">Verified by staff</div>
+      <div style="margin-top:18px;border-top:1px solid #1c1c19;padding-top:4px" class="sm center">${shift.staff} · ${new Date().toLocaleDateString()}</div>
+    </div>
+  `;
+  openPrintWindow(`Shift Report · ${shift.id}`, body, 110);
+}

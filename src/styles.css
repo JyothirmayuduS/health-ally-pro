@@ -418,7 +418,8 @@
   .reception-desk .chip-mustard,
   .reception-desk .chip-plum,
   .reception-desk .chip-ink,
-  .reception-desk .chip-sage {
+  .reception-desk .chip-sage,
+  .reception-desk .chip-clay {
     @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium;
   }
   .reception-desk .chip-teal {
@@ -438,6 +439,9 @@
   }
   .reception-desk .chip-sage {
     @apply border-sage/25 bg-sage-soft text-sage;
+  }
+  .reception-desk .chip-clay {
+    @apply border-clay/25 bg-clay-soft text-clay;
   }
   .reception-desk .dot-money,
   .reception-desk .dot-sage,
