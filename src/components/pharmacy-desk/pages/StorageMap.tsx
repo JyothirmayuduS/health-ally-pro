@@ -635,7 +635,7 @@ function DrugDetailPanel({
   }[drug.location.zone] ?? "bg-stone-100 border-stone-300 text-stone-700";
 
   return (
-    <div className="fixed right-0 top-0 h-screen w-[380px] z-[60] bg-white border-l border-ink-200 shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+    <div className="fixed right-0 top-[64px] h-[calc(100vh-64px)] w-[380px] z-[60] bg-white border-l border-ink-200 shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
       {/* Header */}
       <div className="px-5 py-4 border-b border-ink-200 bg-bone">
         <div className="flex items-start justify-between">
