@@ -129,7 +129,9 @@ export default function StorageMap() {
   const hasFilter = !!(searchQ || filterAlert !== "all" || filterZone !== "all");
 
   return (
-    <div className="space-y-5" data-testid="storage-map">
+    <div className="flex items-start gap-5" data-testid="storage-map">
+      {/* ── Main scrollable content column ─────────────────────────────── */}
+      <div className="flex-1 min-w-0 space-y-5">
 
       {/* ── KPI bar ──────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -319,10 +321,13 @@ export default function StorageMap() {
           );
         })}
       </div>
+      </div>{/* end main content column */}
 
-      {/* ── Drug detail panel (fixed right drawer) ───────────────────────── */}
+      {/* ── Drug detail panel — inline sticky right column ──────────────── */}
       {selected && (
-        <DrugDetailPanel drug={selected} onClose={() => setSelected(null)} />
+        <div className="w-[360px] shrink-0 sticky top-4 self-start">
+          <DrugDetailPanel drug={selected} onClose={() => setSelected(null)} />
+        </div>
       )}
     </div>
   );
@@ -635,7 +640,7 @@ function DrugDetailPanel({
   }[drug.location.zone] ?? "bg-stone-100 border-stone-300 text-stone-700";
 
   return (
-    <div className="fixed right-0 top-[64px] h-[calc(100vh-64px)] w-[380px] z-[60] bg-white border-l border-ink-200 shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+    <div className="rounded-xl border border-ink-200 bg-white shadow-xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-200 max-h-[calc(100vh-88px)]">
       {/* Header */}
       <div className="px-5 py-4 border-b border-ink-200 bg-bone">
         <div className="flex items-start justify-between">
