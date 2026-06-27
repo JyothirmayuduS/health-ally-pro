@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   BarChart,
@@ -17,6 +17,7 @@ import {
   ClipboardList,
   Download,
   Package,
+  Plus,
   ShoppingCart,
   Snowflake,
   Timer,
@@ -36,6 +37,7 @@ import { Button } from "@/components/ui/button";
 const TABS = [
   { id: "shift", label: "Shift pulse", icon: Activity },
   { id: "expiry", label: "Expiry & quarantine", icon: Snowflake },
+  { id: "coldchain", label: "Cold chain log", icon: Snowflake },
   { id: "procurement", label: "Procurement", icon: ShoppingCart },
   { id: "audit", label: "Audit trail", icon: ClipboardList },
 ] as const;
@@ -44,7 +46,8 @@ type TabId = (typeof TABS)[number]["id"];
 
 export default function Operations() {
   const [tab, setTab] = useState<TabId>("shift");
-  const { prescriptions, drugs, batches, movements, alerts, quarantineBatch } = usePharmacyStore();
+  const [breachModalOpen, setBreachModalOpen] = useState(false);
+  const { prescriptions, drugs, batches, movements, alerts, quarantineBatch, coldChainBreaches, logColdChainBreach, resolveColdChainBreach } = usePharmacyStore();
 
   const stats = useMemo(() => {
     const today = new Date().toDateString();
@@ -269,6 +272,85 @@ export default function Operations() {
         </div>
       )}
 
+      {tab === "coldchain" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-heading text-[16px] font-semibold text-ink-900 flex items-center gap-2">
+                <Snowflake className="h-4 w-4 text-sky-500" /> Cold Chain Breach Action Log
+              </h3>
+              <p className="text-[12px] text-ink-400 mt-0.5">Schedule H/X and cold-chain integrity incident records — who acknowledged, corrective action, and affected stock status.</p>
+            </div>
+            <Button size="sm" className="btn-primary" onClick={() => setBreachModalOpen(true)}>
+              <Plus className="mr-1.5 h-3.5 w-3.5" /> Log New Breach
+            </Button>
+          </div>
+
+          {coldChainBreaches.length === 0 ? (
+            <div className="surface py-12 text-center text-ink-400">No cold chain breaches logged.</div>
+          ) : (
+            <div className="surface overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="border-b border-ink-200 bg-stone-50">
+                  <tr className="font-mono text-[10px] uppercase tracking-wider text-ink-400">
+                    <th className="px-4 py-3 text-left">Date / Time</th>
+                    <th className="px-4 py-3 text-left">Unit</th>
+                    <th className="px-4 py-3 text-left">Temp Recorded</th>
+                    <th className="px-4 py-3 text-left">Logged By</th>
+                    <th className="px-4 py-3 text-left">Corrective Action</th>
+                    <th className="px-4 py-3 text-left">Batches</th>
+                    <th className="px-4 py-3 text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {coldChainBreaches.map((b) => (
+                    <tr key={b.id} className="border-b border-stone-100 hover:bg-stone-50/50 align-top">
+                      <td className="px-4 py-3 text-[12px] text-ink-500 whitespace-nowrap">
+                        {new Date(b.loggedAt).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3 font-mono font-bold text-sky-700">{b.unit}</td>
+                      <td className="px-4 py-3">
+                        <span className="text-clay font-bold">{b.tempReading}</span>
+                        <span className="text-ink-400 text-[11px] ml-1">(expected {b.expectedRange})</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium">{b.loggedBy}</div>
+                        <div className="text-[11px] text-ink-400">Ack: {b.acknowledgedBy}</div>
+                      </td>
+                      <td className="px-4 py-3 text-[12px] max-w-xs">{b.correctiveAction}</td>
+                      <td className="px-4 py-3 font-mono text-[12px]">
+                        {b.affectedBatchIds.length > 0
+                          ? b.affectedBatchIds.join(", ")
+                          : <span className="text-ink-400">None</span>}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {b.status === "resolved" ? (
+                          <div>
+                            <span className="rounded px-2 py-0.5 text-[10px] font-bold bg-sage-soft text-sage">Resolved</span>
+                            {b.resolvedAt && (
+                              <div className="text-[10px] text-ink-400 mt-0.5">{new Date(b.resolvedAt).toLocaleString()}</div>
+                            )}
+                          </div>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-[11px] border-sage/40 text-sage"
+                            onClick={() => resolveColdChainBreach(b.id)}
+                          >
+                            Mark Resolved
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
       {tab === "procurement" && (
         <div className="space-y-4">
           <div className="rounded-lg border border-sage/30 bg-sage-soft/30 px-4 py-3 text-[13px] text-ink-600">
@@ -331,6 +413,171 @@ export default function Operations() {
           </table>
         </div>
       )}
+      <LogBreachModal
+        open={breachModalOpen}
+        onClose={() => setBreachModalOpen(false)}
+        onSubmit={(entry) => { logColdChainBreach(entry); setBreachModalOpen(false); }}
+      />
+    </div>
+  );
+}
+
+// ── Log Breach Modal ──────────────────────────────────────────────────────────────────
+function LogBreachModal({ open, onClose, onSubmit }: {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (entry: any) => void;
+}) {
+  const { batches, drugs } = usePharmacyStore();
+  const [unit, setUnit] = useState("FRIDGE-1");
+  const [tempReading, setTempReading] = useState("");
+  const [expectedRange, setExpectedRange] = useState("2–8°C");
+  const [acknowledgedBy, setAcknowledgedBy] = useState("Riley Chen");
+  const [correctiveAction, setCorrectiveAction] = useState("");
+  const [affectedBatchIds, setAffectedBatchIds] = useState<string[]>([]);
+
+  // Batches in cold zone for selection
+  const coldBatches = batches.filter((b) => {
+    const drug = drugs.find((d) => d.id === b.drug_id);
+    return drug?.location.zone === "cold" && b.status === "active";
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tempReading || !correctiveAction) return;
+    onSubmit({
+      loggedBy: "Riley Chen",
+      unit,
+      tempReading,
+      expectedRange,
+      acknowledgedBy,
+      correctiveAction,
+      affectedBatchIds,
+      status: "open" as const,
+    });
+    // Reset
+    setTempReading("");
+    setCorrectiveAction("");
+    setAffectedBatchIds([]);
+    onClose();
+  };
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-2xl border border-ink-200 w-full max-w-lg flex flex-col max-h-[90vh] overflow-hidden">
+        <div className="px-5 py-4 border-b border-ink-200 bg-stone-50 flex items-center justify-between">
+          <div>
+            <h3 className="font-heading text-[15px] font-bold text-ink-900">Log Cold Chain Breach</h3>
+            <p className="text-[11px] text-ink-500 mt-0.5">Regulatory record of temperature excursion and corrective action taken</p>
+          </div>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-ink-100 transition">
+            <AlertTriangle className="h-4 w-4 text-sky-500" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Cold Unit / Fridge</label>
+              <select
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+                className="w-full h-9 border border-ink-200 rounded-md bg-white px-2 text-[12.5px] focus:outline-none focus:border-sky-400"
+              >
+                {["FRIDGE-1", "FRIDGE-2", "FREEZER-1", "CRYO-VAULT"].map(u => (
+                  <option key={u}>{u}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Temperature Recorded</label>
+              <input
+                value={tempReading}
+                onChange={(e) => setTempReading(e.target.value)}
+                required
+                placeholder="e.g. 12°C"
+                className="w-full h-9 px-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sky-400"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Expected Range</label>
+              <input
+                value={expectedRange}
+                onChange={(e) => setExpectedRange(e.target.value)}
+                className="w-full h-9 px-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sky-400"
+              />
+            </div>
+            <div>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">Acknowledged By</label>
+              <input
+                value={acknowledgedBy}
+                onChange={(e) => setAcknowledgedBy(e.target.value)}
+                className="w-full h-9 px-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sky-400"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[12px] font-bold text-ink-700 mb-1">Corrective Action Taken *</label>
+            <textarea
+              value={correctiveAction}
+              onChange={(e) => setCorrectiveAction(e.target.value)}
+              required
+              rows={3}
+              placeholder="Describe actions: technician called, stock moved, repair done, quarantine applied…"
+              className="w-full px-3 py-2 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sky-400 resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[12px] font-bold text-ink-700 mb-1">Affected Batches (select all impacted)</label>
+            <div className="border border-ink-200 rounded-md bg-bone overflow-y-auto max-h-36 divide-y divide-ink-100">
+              {coldBatches.length === 0 ? (
+                <div className="px-3 py-3 text-[12px] text-ink-400">No cold batches in system.</div>
+              ) : (
+                coldBatches.map((b) => {
+                  const drug = drugs.find((d) => d.id === b.drug_id);
+                  const checked = affectedBatchIds.includes(b.id);
+                  return (
+                    <label key={b.id} className="flex items-center gap-2.5 px-3 py-2 cursor-pointer hover:bg-sky-50/40">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          setAffectedBatchIds((prev) =>
+                            checked ? prev.filter((id) => id !== b.id) : [...prev, b.id]
+                          );
+                        }}
+                        className="rounded border-ink-300 text-sky-600 focus:ring-sky-400"
+                      />
+                      <span className="text-[12px] font-medium text-ink-900">{drug?.generic_name}</span>
+                      <span className="font-mono text-[10px] text-ink-400">{b.lot} · {b.qty} units · Exp {b.expiry}</span>
+                    </label>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          <div className="border-t border-ink-200 pt-4 flex justify-end gap-2.5">
+            <button type="button" onClick={onClose} className="h-9 px-4 border border-ink-200 rounded-md text-[13px] text-ink-600 hover:bg-stone-50 transition">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={!tempReading || !correctiveAction}
+              className="h-9 px-4 bg-sky-600 hover:bg-sky-700 disabled:opacity-40 rounded-md text-[13px] font-bold text-white transition"
+            >
+              Submit Breach Report
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

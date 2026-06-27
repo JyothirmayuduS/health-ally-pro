@@ -179,6 +179,20 @@ export interface ShiftReport {
   wardReturnsCount: number;
 }
 
+export interface ColdChainBreachEntry {
+  id: string;
+  loggedAt: string;
+  loggedBy: string;
+  unit: string;
+  tempReading: string;
+  expectedRange: string;
+  acknowledgedBy: string;
+  correctiveAction: string;
+  affectedBatchIds: string[];
+  status: "open" | "resolved";
+  resolvedAt?: string;
+}
+
 type StoreValue = {
   drugs: Drug[];
   batches: StockBatch[];
@@ -228,6 +242,16 @@ type StoreValue = {
     unit_price: number;
     sku?: string;
   }) => void;
+  assignDrugToRack: (input: {
+    drugId: string;
+    zone: import('./mockData').StorageZone;
+    aisle: string;
+    rack: string;
+    tray: string;
+    slot: string;
+    temp: import('./mockData').StorageTemp;
+    initialBatch?: { lot: string; expiry: string; qty: number; supplier?: string };
+  }) => void;
   recordCycleCount: (batchId: string, countedQty: number) => void;
   searchDrugs: (q: string) => Drug[];
 
@@ -251,6 +275,11 @@ type StoreValue = {
   // Task 4 Shift reports
   shiftReports: ShiftReport[];
   submitShiftReport: (report: Omit<ShiftReport, "id" | "signedAt">) => void;
+
+  // Cold chain breach log
+  coldChainBreaches: ColdChainBreachEntry[];
+  logColdChainBreach: (entry: Omit<ColdChainBreachEntry, "id" | "loggedAt">) => void;
+  resolveColdChainBreach: (id: string) => void;
 };
 
 const StoreCtx = createContext<StoreValue | null>(null);
@@ -325,6 +354,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       wardReturnsCount: 2
     }
   ]);
+  const [coldChainBreachesList, setColdChainBreachesList] = useState<ColdChainBreachEntry[]>([
+    {
+      id: "ccb-1",
+      loggedAt: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
+      loggedBy: "Riley Chen",
+      unit: "FRIDGE-1",
+      tempReading: "11°C",
+      expectedRange: "2–8°C",
+      acknowledgedBy: "Riley Chen",
+      correctiveAction: "Technician called. Door seal replaced. Affected stock moved to FRIDGE-2 during repair.",
+      affectedBatchIds: ["b4", "b8"],
+      status: "resolved",
+      resolvedAt: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
+    },
+  ]);
+
 
   const findDrugById = useCallback(
     (id: string) => drugs.find((d) => d.id === id),
@@ -784,8 +829,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const refill = refills.find((r) => r.id === id);
     if (!refill) return;
 
-    const drug = findDrugById(refill.drug_id);
+    // ── Hard block: refills exhausted ────────────────────────────────
+    if (refill.refills_remaining <= 0) {
+      toast.error("Cannot approve — this prescription has no refills remaining. A new prescription from the doctor is required.");
+      return;
+    }
+
     const orig = prescriptions.find((r) => r.id === refill.original_rx_id);
+
+    // ── Hard block: original Rx expired (>90 days old) ───────────────
+    const rxAgeDays = orig
+      ? (Date.now() - new Date(orig.received_at).getTime()) / 86_400_000
+      : 999;
+    if (rxAgeDays > 90) {
+      toast.error("Cannot approve — original prescription has expired (older than 90 days). A fresh Rx is required.");
+      return;
+    }
+
+    const drug = findDrugById(refill.drug_id);
     const doctor = DOCTORS.find((d) => d.id === orig?.doctor_id) ?? DOCTORS[0];
     const now = new Date().toISOString();
 
@@ -1089,6 +1150,72 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const assignDrugToRack = useCallback(
+    (input: {
+      drugId: string;
+      zone: import("./mockData").StorageZone;
+      aisle: string;
+      rack: string;
+      tray: string;
+      slot: string;
+      temp: import("./mockData").StorageTemp;
+      initialBatch?: { lot: string; expiry: string; qty: number; supplier?: string };
+    }) => {
+      const now = new Date().toISOString();
+      setDrugs((list) => {
+        const next = list.map((d) => {
+          if (d.id === input.drugId) {
+            return {
+              ...d,
+              location: {
+                zone: input.zone,
+                aisle: input.aisle,
+                rack: input.rack,
+                tray: input.tray,
+                slot: input.slot,
+                temp: input.temp,
+                location_code: `${input.zone.toUpperCase()}-${input.aisle}${input.rack}-T${input.tray}-S${input.slot}`,
+              },
+            };
+          }
+          return d;
+        });
+        saveFormulary(next);
+        return next;
+      });
+
+      if (input.initialBatch) {
+        batchSeq += 1;
+        const newBatch: StockBatch = {
+          id: `b${batchSeq}`,
+          drug_id: input.drugId,
+          lot: input.initialBatch.lot,
+          expiry: input.initialBatch.expiry,
+          qty: input.initialBatch.qty,
+          reserved_qty: 0,
+          purchase_cost_per_unit: 0,
+          vendor: input.initialBatch.supplier,
+          po_reference: "INITIAL-SETUP",
+          received_at: now,
+          status: "active",
+        };
+        setBatches((list) => [...list, newBatch]);
+
+        addMovement({
+          drug_id: input.drugId,
+          batch_id: newBatch.id,
+          type: "receive",
+          qty: input.initialBatch.qty,
+          reference: "INITIAL-SETUP",
+          actor: ACTOR,
+        });
+      }
+
+      toast.success("Successfully assigned medication to shelf slot");
+    },
+    [addMovement],
+  );
+
   const recordCycleCount = useCallback(
     (batchId: string, countedQty: number) => {
       const batch = batches.find((b) => b.id === batchId);
@@ -1326,6 +1453,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     toast.success("Shift successfully signed off and report stored");
   }, []);
 
+  // Cold chain breach log
+  const logColdChainBreach = useCallback((entry: Omit<ColdChainBreachEntry, "id" | "loggedAt">) => {
+    const fresh: ColdChainBreachEntry = {
+      ...entry,
+      id: `ccb-${Date.now()}`,
+      loggedAt: new Date().toISOString(),
+    };
+    setColdChainBreachesList((prev) => [fresh, ...prev]);
+    toast.success("Cold chain breach logged and documented");
+  }, []);
+
+  const resolveColdChainBreach = useCallback((id: string) => {
+    setColdChainBreachesList((prev) =>
+      prev.map((b) =>
+        b.id === id
+          ? { ...b, status: "resolved" as const, resolvedAt: new Date().toISOString() }
+          : b
+      )
+    );
+    toast.success("Breach marked as resolved");
+  }, []);
+
   const value = useMemo(
     () => ({
       drugs,
@@ -1364,6 +1513,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addWalkInSale,
       payWalkInSale,
       addDrug,
+      assignDrugToRack,
       recordCycleCount,
       searchDrugs,
 
@@ -1381,6 +1531,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       createGRN,
       shiftReports,
       submitShiftReport,
+
+      coldChainBreaches: coldChainBreachesList,
+      logColdChainBreach,
+      resolveColdChainBreach,
     }),
     [
       drugs,
@@ -1414,6 +1568,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addWalkInSale,
       payWalkInSale,
       addDrug,
+      assignDrugToRack,
       recordCycleCount,
       searchDrugs,
       getInvoiceForRx,
@@ -1434,6 +1589,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       createGRN,
       shiftReports,
       submitShiftReport,
+
+      coldChainBreachesList,
+      logColdChainBreach,
+      resolveColdChainBreach,
     ],
   );
 

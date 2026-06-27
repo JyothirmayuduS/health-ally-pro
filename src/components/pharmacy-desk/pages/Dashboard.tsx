@@ -500,12 +500,16 @@ function ShiftReportModal({
   onSubmit: (notes: string, supervisor: string) => void;
   pharmacistName: string;
 }) {
-  const { doctors } = usePharmacyStore();
+  const { doctors, drugs } = usePharmacyStore();
   const [notes, setNotes] = useState("");
   const [supervisor, setSupervisor] = useState(doctors[0]?.name || "Dr. Elena Vasquez");
-  const [acknowledged, setAcknowledged] = useState<Record<number, boolean>>({});
+  // Per-drug pharmacist initials — required for each controlled substance row
+  const [initials, setInitials] = useState<Record<number, string>>({});
 
-  const allReconciled = metrics.reconciliation.every((_: any, idx: number) => acknowledged[idx] === true);
+  // All controlled rows must have non-empty initials to enable submit
+  const allReconciled =
+    metrics.reconciliation.length === 0 ||
+    metrics.reconciliation.every((_: any, idx: number) => (initials[idx] ?? "").trim().length > 0);
 
   if (!open) return null;
 
@@ -554,44 +558,66 @@ function ShiftReportModal({
           {/* Section B: Controlled Reconciliation */}
           <div className="space-y-2">
             <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-ink-400">Section B: Controlled Substance Reconciliation</h4>
+            <div className="flex items-start gap-2 rounded bg-plum-soft/30 border border-plum/20 px-3 py-2 text-[11.5px] text-plum mb-2">
+              <span className="font-bold shrink-0">⚠ Schedule H/X:</span>
+              <span>Each controlled drug balance must be individually verified and initialled by the dispensing pharmacist before this shift report can be submitted.</span>
+            </div>
             <div className="border border-ink-200 rounded-md overflow-hidden bg-bone">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-stone-100 border-b border-ink-200 font-mono uppercase text-ink-400">
-                    <th className="px-3 py-2 text-left">Controlled Drug Name</th>
+                    <th className="px-3 py-2 text-left">Controlled Drug — Schedule</th>
                     <th className="px-3 py-2 text-left w-20">Shift Open</th>
                     <th className="px-3 py-2 text-left w-20">Dispensed</th>
                     <th className="px-3 py-2 text-left w-20">Closing (Shelf)</th>
                     <th className="px-3 py-2 text-left w-20">Expected</th>
-                    <th className="px-3 py-2 text-left w-20">Var</th>
-                    <th className="px-3 py-2 text-right w-24">Acknowledge</th>
+                    <th className="px-3 py-2 text-left w-16">Var</th>
+                    <th className="px-3 py-2 text-right w-32">Pharmacist Initials</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink-100">
                   {metrics.reconciliation.length === 0 ? (
                     <tr><td colSpan={7} className="text-center py-4 text-ink-400">No controlled drugs dispensed this shift.</td></tr>
                   ) : (
-                    metrics.reconciliation.map((r: any, idx: number) => (
-                      <tr key={idx} className="bg-white">
-                        <td className="px-3 py-2 font-medium">{r.drugName}</td>
-                        <td className="px-3 py-2 font-mono">{r.openingBalance}</td>
-                        <td className="px-3 py-2 font-mono text-plum font-semibold">{r.totalDispensed}</td>
-                        <td className="px-3 py-2 font-mono">{r.closingBalance}</td>
-                        <td className="px-3 py-2 font-mono">{r.expectedBalance}</td>
-                        <td className="px-3 py-2 font-mono font-semibold" style={{ color: r.variance !== 0 ? "#b85c38" : "inherit" }}>{r.variance}</td>
-                        <td className="px-3 py-2 text-right">
-                          <label className="inline-flex items-center gap-1 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={acknowledged[idx] || false}
-                              onChange={(e) => setAcknowledged({ ...acknowledged, [idx]: e.target.checked })}
-                              className="rounded border-ink-300 text-mustard focus:ring-mustard"
-                            />
-                            <span className="text-[10px] uppercase text-ink-600">Reconciled</span>
-                          </label>
-                        </td>
-                      </tr>
-                    ))
+                    metrics.reconciliation.map((r: any, idx: number) => {
+                      const drug = drugs.find((d: any) => `${d.generic_name} ${d.strength}` === r.drugName);
+                      const schedule = drug?.controlled_schedule ?? "H";
+                      return (
+                        <tr key={idx} className={cn("bg-white", (initials[idx] ?? "").trim().length === 0 ? "" : "bg-sage-soft/5")}>
+                          <td className="px-3 py-2 font-medium">
+                            <div className="flex items-center gap-1.5">
+                              {r.drugName}
+                              <span className="rounded bg-plum-soft px-1 py-0.5 text-[9px] font-bold text-plum border border-plum/20">Sch-{schedule}</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 font-mono">{r.openingBalance}</td>
+                          <td className="px-3 py-2 font-mono text-plum font-semibold">{r.totalDispensed}</td>
+                          <td className="px-3 py-2 font-mono">{r.closingBalance}</td>
+                          <td className="px-3 py-2 font-mono">{r.expectedBalance}</td>
+                          <td className="px-3 py-2 font-mono font-semibold" style={{ color: r.variance !== 0 ? "#b85c38" : "inherit" }}>{r.variance}</td>
+                          <td className="px-3 py-2 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <input
+                                type="text"
+                                maxLength={4}
+                                value={initials[idx] ?? ""}
+                                onChange={(e) => setInitials({ ...initials, [idx]: e.target.value.toUpperCase() })}
+                                placeholder="Init."
+                                className={cn(
+                                  "w-16 h-7 px-2 text-center text-[11px] font-bold font-mono border rounded focus:outline-none uppercase",
+                                  (initials[idx] ?? "").trim().length > 0
+                                    ? "border-sage bg-sage-soft/20 text-sage"
+                                    : "border-clay/40 bg-clay-soft/10 text-ink-600 placeholder:text-ink-300"
+                                )}
+                              />
+                              {(initials[idx] ?? "").trim().length > 0 && (
+                                <CheckCircle className="h-3.5 w-3.5 text-sage shrink-0" />
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
