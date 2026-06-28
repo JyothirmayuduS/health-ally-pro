@@ -1,10 +1,12 @@
 # Medora — Enterprise Hospital ERP & EHR Suite
 
-Medora is a modern, premium, Electronic Health Record (EMR) and Enterprise Resource Planning (ERP) platform designed to digitize healthcare workflows from front-desk reception to lab diagnostics, pharmacy fulfillment, patient engagement, and administrative auditing.
+Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resource Planning (ERP) platform designed to digitize healthcare workflows from front-desk reception to lab diagnostics, pharmacy fulfillment, patient engagement, and administrative auditing.
 
 ---
 
 ## 📸 Dashboard Screenshots
+
+*Note: All dashboards and portal screenshots were captured at 50% browser zoom to display the full, responsive, grid-based administrative layout.*
 
 ### 🏢 Staff Desks
 
@@ -26,8 +28,31 @@ Medora is a modern, premium, Electronic Health Record (EMR) and Enterprise Resou
 
 ---
 
+### 🩺 Doctor Workspace
+
+#### 1. Prescribe Tool
+*Build electronic prescriptions, perform medication reconciliation, and select from template protocols.*
+![Doctor Prescribe](screenshots/doctor-prescribe.png)
+
+#### 2. Schedule Grid
+*View monthly, weekly, or daily visit appointments checklist.*
+![Doctor Schedule](screenshots/doctor-schedule.png)
+
+#### 3. Referrals Log
+*Send, receive, and accept care transition handoffs across specialists.*
+![Doctor Referrals](screenshots/doctor-referrals.png)
+
+#### 4. Booking Slot Configurator
+*Adjust consultation price fees, spacing times, and weekday active shifts.*
+![Doctor Booking Slots](screenshots/doctor-booking-slots.png)
+
+#### 5. Doctor Profile
+*Manage clinical availability, review active ratings, and access technical support.*
+![Doctor Profile](screenshots/doctor-profile.png)
+
+---
+
 ### 👤 Patient Portal (Medora Care)
-*The following screenshots showcase the mobile-responsive patient dashboard taken at 50% browser zoom.*
 
 #### 1. Care Booking
 *Allows patients to search specialists, book slots instantly, and track live queue wait times.*
@@ -66,6 +91,9 @@ Medora is a modern, premium, Electronic Health Record (EMR) and Enterprise Resou
 - **Patient EMR**: Patient history logs displaying diagnostic records, vitals graphs, and medication archives.
 - **E-Prescriptions**: Virtual prescriber to build medication instructions and send them to the pharmacy.
 - **Order Panel**: Clinic order workspace to request lab tests and radiology imaging from inside encounters.
+- **Schedule Calendar**: Integrated scheduler for managing daily in-person and video consultations.
+- **Referrals Handoff**: Dedicated coordinator to exchange inbound and outbound patient referrals.
+- **Slot Manager**: Availability scheduler to adjust slot timings, consultation pricing, and clinic room.
 
 ### 🧪 Laboratory & Diagnostics (`/lab`)
 - **Collection Queue**: Phlebotomy drawer matching sample vials to barcodes.
