@@ -74,15 +74,31 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
 *Directory detailing e-prescriptions, discontinued drugs, and historical clinical rationale.*
 ![Patient Medication History](screenshots/patient-medication-history.png)
 
-#### 6. Clinical Nutrition (Diet Planner)
+#### 6. Reports List
+*Clinical reports dashboard detailing total file size and categories (Lab, Imaging, Prescription).*
+![Patient Reports List](screenshots/patient-reports-list.png)
+
+#### 7. Report Detail View
+*Individual laboratory report view demonstrating test results (Glucose, HbA1c, Cholesterol, LDL, HDL) with normal/borderline status.*
+![Patient Report Detail](screenshots/patient-report-detail.png)
+
+#### 8. Share Report Configurator
+*Modal allowing patients to share specific health reports with doctors and set access durations.*
+![Patient Share Report](screenshots/patient-share-report.png)
+
+#### 9. Archive History Timeline
+*Chronological list of all medical records activity, including uploads, downloads, and doctor share actions.*
+![Patient Archive History](screenshots/patient-archive-history.png)
+
+#### 10. Clinical Nutrition (Diet Planner)
 *Provides thyroid-safe, medication-synced recipes categorized by budget tiers.*
 ![Patient Diet Planner](screenshots/patient-diet.png)
 
-#### 7. Recovery Movement (Move Planner)
+#### 11. Recovery Movement (Move Planner)
 *Guides patient recovery with thyroid-safe physical mobility video routines.*
 ![Patient Move Planner](screenshots/patient-move.png)
 
-#### 8. User Profile & Dependents
+#### 12. User Profile & Dependents
 *Manages patient personal records, family dependents, and authorization consents.*
 ![Patient Profile](screenshots/patient-profile.png)
 
@@ -108,6 +124,10 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
 - **Health Hub**: Centralized records vault listing prescriptions, medication records, and clinical files.
 - **Dose Checkoff**: Daily checklist allowing patients to track medication consumption compliance.
 - **Med History**: Chronological archive listing current and discontinued prescriptions along with clinical rationale.
+- **Reports Directory**: Category-filtered storage showing total clinical files size, lab reports, and imaging documents.
+- **Report Reader**: Interactive document viewer displaying laboratory test values alongside status indicators.
+- **Access Share**: Encryption controller enabling users to securely share medical documents with specific doctors.
+- **Activity Ledger**: Archive history timeline displaying a log of all clinical document uploads and shares.
 - **Diet Planner**: Clinical nutrition meal planner showing budget-tiered recipes synced with medication schedules.
 - **Move Planner**: Physical rehabilitation guide offering guided movement tutorials tailored to the patient's condition.
 - **Profile & Family**: Personal identity management screen allowing users to link child and parent dependents.
