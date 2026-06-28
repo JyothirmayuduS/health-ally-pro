@@ -30,23 +30,43 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
 
 ### 🩺 Doctor Workspace
 
-#### 1. Prescribe Tool
+#### 1. Home Dashboard
+*Clinician overview featuring consult queues, active patients, critical alerts panel, next-actions, and daily stats.*
+![Doctor Home](screenshots/doctor-dashboard.png)
+
+#### 2. Patient Chart / EMR
+*Comprehensive patient file displaying clinical timelines, lab values, prescriptions, and an interactive 3D anatomy body map.*
+![Doctor Patient EMR](screenshots/doctor-patient-emr.png)
+
+#### 3. Patients Panel
+*Hospital directory displaying all active clinic patients sorted by clinical priority, status, and alerts.*
+![Doctor Patients List](screenshots/doctor-patients-list.png)
+
+#### 4. Live Queue Board
+*Interactive consultation desk tracker showing queue positions, wait durations, and check-in updates.*
+![Doctor Live Queue](screenshots/doctor-live-queue.png)
+
+#### 5. Inbox (Results to Review)
+*Unified review page to inspect laboratory results, imaging files, and patient-shared diaries.*
+![Doctor Inbox](screenshots/doctor-inbox.png)
+
+#### 6. Prescribe Tool
 *Build electronic prescriptions, perform medication reconciliation, and select from template protocols.*
 ![Doctor Prescribe](screenshots/doctor-prescribe.png)
 
-#### 2. Schedule Grid
+#### 7. Schedule Grid
 *View monthly, weekly, or daily visit appointments checklist.*
 ![Doctor Schedule](screenshots/doctor-schedule.png)
 
-#### 3. Referrals Log
+#### 8. Referrals Log
 *Send, receive, and accept care transition handoffs across specialists.*
 ![Doctor Referrals](screenshots/doctor-referrals.png)
 
-#### 4. Booking Slot Configurator
+#### 9. Booking Slot Configurator
 *Adjust consultation price fees, spacing times, and weekday active shifts.*
 ![Doctor Booking Slots](screenshots/doctor-booking-slots.png)
 
-#### 5. Doctor Profile
+#### 10. Doctor Profile
 *Manage clinical availability, review active ratings, and access technical support.*
 ![Doctor Profile](screenshots/doctor-profile.png)
 
@@ -87,13 +107,16 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
 - **Leave Request**: Portal allowing staff to check leaves and request new absences.
 
 ### 🩺 Doctor Workspace (`/doctor`)
-- **Consultation Queue**: Doctor's dashboard showing checking-in patients assigned to them for active encounters.
-- **Patient EMR**: Patient history logs displaying diagnostic records, vitals graphs, and medication archives.
+- **Home Dashboard**: Central hub displaying active consultations, wait times, approvals, next actions, and clinical stats.
+- **Patient Chart / EMR**: Detailed medical history view containing vital logs, diagnosis history, and a 3D body map.
+- **Patients Panel**: Filterable patient directory sorting active hospital patients by clinical status.
+- **Live Queue**: Real-time consultation monitor to call, pause, or check out waiting clinic queue tokens.
+- **Inbox Review**: Centralized mailbox to inspect and sign off on laboratory results and patient food diary photos.
 - **E-Prescriptions**: Virtual prescriber to build medication instructions and send them to the pharmacy.
-- **Order Panel**: Clinic order workspace to request lab tests and radiology imaging from inside encounters.
 - **Schedule Calendar**: Integrated scheduler for managing daily in-person and video consultations.
 - **Referrals Handoff**: Dedicated coordinator to exchange inbound and outbound patient referrals.
 - **Slot Manager**: Availability scheduler to adjust slot timings, consultation pricing, and clinic room.
+- **Doctor Profile**: Clinician profile management screen displaying feedback metrics and support lines.
 
 ### 🧪 Laboratory & Diagnostics (`/lab`)
 - **Collection Queue**: Phlebotomy drawer matching sample vials to barcodes.
