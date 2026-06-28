@@ -102,6 +102,10 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
 *Manages patient personal records, family dependents, and authorization consents.*
 ![Patient Profile](screenshots/patient-profile.png)
 
+#### 13. Dependent Detail View
+*Individual health profile page for child or parent dependents detailing care schedules, vitals, active medications, and coverage information.*
+![Patient Dependent Detail](screenshots/patient-dependent-detail.png)
+
 ---
 
 ## 🚀 Key Modules & Functions (One-Line Summary)
@@ -131,6 +135,7 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
 - **Diet Planner**: Clinical nutrition meal planner showing budget-tiered recipes synced with medication schedules.
 - **Move Planner**: Physical rehabilitation guide offering guided movement tutorials tailored to the patient's condition.
 - **Profile & Family**: Personal identity management screen allowing users to link child and parent dependents.
+- **Dependent Dossier**: Health status interface showcasing customized clinical records, medications list, and coverage plans for linked dependents.
 
 ---
 
