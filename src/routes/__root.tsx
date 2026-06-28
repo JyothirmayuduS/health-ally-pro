@@ -78,7 +78,19 @@ export const Route = createRootRoute({
   notFoundComponent: NotFoundComponent,
 });
 
+import { useState, useEffect } from "react";
+
 function RootShell({ children }: { children: React.ReactNode }) {
+  const [showWatermark, setShowWatermark] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("medora_owner_key") === "jyothirmayudu_owner_2026") {
+        setShowWatermark(false);
+      }
+    }
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -86,11 +98,53 @@ function RootShell({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        {showWatermark && (
+          <>
+            {/* Diagonal Grid Watermark */}
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                pointerEvents: "none",
+                zIndex: 99999,
+                opacity: 0.04,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='450' height='300' viewBox='0 0 450 300'%3E%3Ctext x='20' y='150' fill='%23000' font-family='sans-serif' font-size='13' font-weight='bold' transform='rotate(-20 150 150)'%3EMEDORA ERP - PROPRIETARY JYOTHIRMAYUDU S. - DO NOT DISTRIBUTE%3C/text%3E%3C/svg%3E")`,
+                backgroundRepeat: "repeat",
+              }}
+            />
+            {/* Floating License Tag */}
+            <div
+              style={{
+                position: "fixed",
+                bottom: "12px",
+                right: "12px",
+                pointerEvents: "auto",
+                zIndex: 99999,
+                background: "#1e293b",
+                color: "#f8fafc",
+                border: "1px solid #334155",
+                padding: "6px 12px",
+                borderRadius: "6px",
+                fontFamily: "monospace",
+                fontSize: "11px",
+                fontWeight: "bold",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                userSelect: "none",
+              }}
+            >
+              🔒 JYOTHIRMAYUDU S. - PROPRIETARY COPY
+            </div>
+          </>
+        )}
         <Scripts />
       </body>
     </html>
   );
 }
+
 
 function RootComponent() {
   const { pathname } = useLocation();
