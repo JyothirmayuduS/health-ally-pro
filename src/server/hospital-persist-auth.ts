@@ -49,6 +49,11 @@ function demoPersistAllowed(): boolean {
 /** Simple per-isolate rate limit for public onboarding (Workers: best-effort). */
 const onboardHits = new Map<string, { count: number; resetAt: number }>();
 
+/** Test-only helper */
+export function __resetOnboardRateLimitForTests() {
+  onboardHits.clear();
+}
+
 export function rateLimitOnboard(request: Request, limit = 5, windowMs = 60 * 60 * 1000): boolean {
   const ip =
     request.headers.get("cf-connecting-ip") ||

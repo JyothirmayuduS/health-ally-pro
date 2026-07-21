@@ -43,6 +43,8 @@ Goal: hospital buyers can evaluate, license, and go live without treating Medora
 **Apply migration:** `supabase/migrations/20260721183341_specialty_hospital_persistence.sql`  
 **Requires:** `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` on the server for durable writes (localStorage remains offline cache).
 
+**Tests:** `npm test` · `npm run test:smoke` · `npm run test:smoke:http` (with `npm run dev`) — see [docs/TEST_REPORT_2026-07-22.md](docs/TEST_REPORT_2026-07-22.md).
+
 ## Phase 4 — Close the deal
 
 | # | Item |
