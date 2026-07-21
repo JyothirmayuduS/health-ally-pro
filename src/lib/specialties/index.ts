@@ -18,9 +18,17 @@ export {
 } from "./catalog";
 
 export {
+  SPECIALTY_ANATOMY,
+  getSpecialtyAnatomy,
+  specialtySeedMarkers,
+  type SpecialtyAnatomyFocus,
+} from "./anatomy-focus";
+
+export {
   loadHospitalDoctors,
   saveHospitalDoctors,
   subscribeHospitalDoctors,
+  hydrateHospitalDoctorsFromRemote,
   addHospitalDoctor,
   updateHospitalDoctor,
   setDoctorSpecialty,
@@ -37,5 +45,8 @@ export {
   saveSpecialtyChartNote,
   chartsForSpecialty,
   subscribeSpecialtyCharts,
+  hydrateSpecialtyChartsFromRemote,
   type SpecialtyChartNote,
 } from "./chart-store";
+
+export * from "./remote-sync";

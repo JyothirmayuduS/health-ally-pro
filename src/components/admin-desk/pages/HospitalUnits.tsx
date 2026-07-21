@@ -27,6 +27,9 @@ export default function HospitalUnitsPage() {
   const refresh = () => setRecords(loadUnitRecords());
   useEffect(() => {
     refresh();
+    void import("@/lib/admin-desk/hospital-units").then(({ hydrateUnitRecordsFromRemote }) =>
+      hydrateUnitRecordsFromRemote().then(() => refresh()),
+    );
     return subscribeUnitRecords(refresh);
   }, []);
 

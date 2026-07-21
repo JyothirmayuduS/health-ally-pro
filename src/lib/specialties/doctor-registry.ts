@@ -141,6 +141,29 @@ export function saveHospitalDoctors(doctors: HospitalDoctorRecord[]) {
   if (typeof window === "undefined") return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(doctors));
   emit();
+  void import("@/lib/specialties/remote-sync").then(({ syncDoctorsToRemote }) =>
+    syncDoctorsToRemote(doctors).catch(() => undefined),
+  );
+}
+
+/** Pull from Supabase when available; merge into local cache */
+export async function hydrateHospitalDoctorsFromRemote(): Promise<HospitalDoctorRecord[]> {
+  const { fetchDoctorsFromRemote, syncDoctorsToRemote } = await import("@/lib/specialties/remote-sync");
+  const remote = await fetchDoctorsFromRemote();
+  if (remote && remote.length > 0) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+    emit();
+    return remote;
+  }
+  const local = loadHospitalDoctors();
+  await syncDoctorsToRemote(local).catch(() => undefined);
+  const again = await fetchDoctorsFromRemote();
+  if (again && again.length > 0) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(again));
+    emit();
+    return again;
+  }
+  return local;
 }
 
 export function subscribeHospitalDoctors(cb: () => void) {

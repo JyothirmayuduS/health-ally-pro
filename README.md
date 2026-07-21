@@ -183,6 +183,10 @@ Medora is a modern, premium Electronic Health Record (EMR) and Electronic Resour
    npm run build
    ```
 
+6. **Production deploy** — see [PRODUCTION.md](PRODUCTION.md) for flags, demo-auth kill-switch, Workers deploy, and specialty 3D anatomy notes.
+
+7. **Selling / commercial packaging** — see [SELLING_READY.md](SELLING_READY.md). Buyer site: `/for-hospitals`. License key: `VITE_MEDORA_LICENSE_KEY`.
+
 ---
 
 ## 🔒 Security & Git Policies

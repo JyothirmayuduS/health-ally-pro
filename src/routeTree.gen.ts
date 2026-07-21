@@ -14,14 +14,18 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BillingRouteImport } from './routes/billing'
 import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as DoctorsRouteImport } from './routes/doctors'
+import { Route as ForHospitalsRouteImport } from './routes/for-hospitals'
 import { Route as LabRouteImport } from './routes/lab'
+import { Route as LegalRouteImport } from './routes/legal'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NursingRouteImport } from './routes/nursing'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as QueueRouteImport } from './routes/queue'
 import { Route as ReceptionRouteImport } from './routes/reception'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as RegisterHospitalRouteImport } from './routes/register-hospital'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAccessControlRouteImport } from './routes/admin.access-control'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
@@ -92,6 +96,10 @@ import { Route as LabStorageRouteImport } from './routes/lab.storage'
 import { Route as LabTeamRouteImport } from './routes/lab.team'
 import { Route as LabValidationRouteImport } from './routes/lab.validation'
 import { Route as LabWalkInRouteImport } from './routes/lab.walk-in'
+import { Route as LegalAttributionRouteImport } from './routes/legal.attribution'
+import { Route as LegalDisclaimerRouteImport } from './routes/legal.disclaimer'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as MedicationsIndexRouteImport } from './routes/medications.index'
 import { Route as MedicationsMedIdRouteImport } from './routes/medications.$medId'
 import { Route as MedicationsRefillHistoryRouteImport } from './routes/medications.refill-history'
@@ -154,6 +162,7 @@ import { Route as ApiDietMealImageRouteImport } from './routes/api/diet/meal-ima
 import { Route as ApiDietMealMediaRouteImport } from './routes/api/diet/meal-media'
 import { Route as ApiDietYoutubeRouteImport } from './routes/api/diet/youtube'
 import { Route as ApiExerciseYoutubeRouteImport } from './routes/api/exercise/youtube'
+import { Route as ApiHospitalPersistRouteImport } from './routes/api/hospital/persist'
 import { Route as ApiPatientClinicalEventsRouteImport } from './routes/api/patient/clinical-events'
 import { Route as ApiPatientRxInboxRouteImport } from './routes/api/patient/rx-inbox'
 import { Route as CareVisitsIndexRouteImport } from './routes/care.visits.index'
@@ -208,9 +217,19 @@ const DoctorsRoute = DoctorsRouteImport.update({
   path: '/doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForHospitalsRoute = ForHospitalsRouteImport.update({
+  id: '/for-hospitals',
+  path: '/for-hospitals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LabRoute = LabRouteImport.update({
   id: '/lab',
   path: '/lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalRoute = LegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -226,6 +245,11 @@ const NursingRoute = NursingRouteImport.update({
 const PharmacyRoute = PharmacyRouteImport.update({
   id: '/pharmacy',
   path: '/pharmacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -246,6 +270,11 @@ const ReceptionRoute = ReceptionRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterHospitalRoute = RegisterHospitalRouteImport.update({
+  id: '/register-hospital',
+  path: '/register-hospital',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -598,6 +627,26 @@ const LabWalkInRoute = LabWalkInRouteImport.update({
   path: '/walk-in',
   getParentRoute: () => LabRoute,
 } as any)
+const LegalAttributionRoute = LegalAttributionRouteImport.update({
+  id: '/attribution',
+  path: '/attribution',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalDisclaimerRoute = LegalDisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => LegalRoute,
+} as any)
 const MedicationsIndexRoute = MedicationsIndexRouteImport.update({
   id: '/medications/',
   path: '/medications/',
@@ -909,6 +958,11 @@ const ApiExerciseYoutubeRoute = ApiExerciseYoutubeRouteImport.update({
   path: '/api/exercise/youtube',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHospitalPersistRoute = ApiHospitalPersistRouteImport.update({
+  id: '/api/hospital/persist',
+  path: '/api/hospital/persist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPatientClinicalEventsRoute =
   ApiPatientClinicalEventsRouteImport.update({
     id: '/api/patient/clinical-events',
@@ -1065,14 +1119,18 @@ export interface FileRoutesByFullPath {
   '/billing': typeof BillingRouteWithChildren
   '/doctor': typeof DoctorRouteWithChildren
   '/doctors': typeof DoctorsRoute
+  '/for-hospitals': typeof ForHospitalsRoute
   '/lab': typeof LabRouteWithChildren
+  '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/nursing': typeof NursingRouteWithChildren
   '/pharmacy': typeof PharmacyRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRouteWithChildren
   '/queue': typeof QueueRoute
   '/reception': typeof ReceptionRouteWithChildren
   '/register': typeof RegisterRoute
+  '/register-hospital': typeof RegisterHospitalRoute
   '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
@@ -1134,6 +1192,10 @@ export interface FileRoutesByFullPath {
   '/lab/team': typeof LabTeamRoute
   '/lab/validation': typeof LabValidationRoute
   '/lab/walk-in': typeof LabWalkInRoute
+  '/legal/attribution': typeof LegalAttributionRoute
+  '/legal/disclaimer': typeof LegalDisclaimerRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/medications/$medId': typeof MedicationsMedIdRouteWithChildren
   '/medications/refill-history': typeof MedicationsRefillHistoryRoute
   '/nursing/beds': typeof NursingBedsRoute
@@ -1205,6 +1267,7 @@ export interface FileRoutesByFullPath {
   '/api/diet/meal-media': typeof ApiDietMealMediaRoute
   '/api/diet/youtube': typeof ApiDietYoutubeRoute
   '/api/exercise/youtube': typeof ApiExerciseYoutubeRoute
+  '/api/hospital/persist': typeof ApiHospitalPersistRoute
   '/api/patient/clinical-events': typeof ApiPatientClinicalEventsRoute
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
@@ -1237,9 +1300,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/doctors': typeof DoctorsRoute
+  '/for-hospitals': typeof ForHospitalsRoute
+  '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/queue': typeof QueueRoute
   '/register': typeof RegisterRoute
+  '/register-hospital': typeof RegisterHospitalRoute
   '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
@@ -1298,6 +1365,10 @@ export interface FileRoutesByTo {
   '/lab/team': typeof LabTeamRoute
   '/lab/validation': typeof LabValidationRoute
   '/lab/walk-in': typeof LabWalkInRoute
+  '/legal/attribution': typeof LegalAttributionRoute
+  '/legal/disclaimer': typeof LegalDisclaimerRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/medications/$medId': typeof MedicationsMedIdRouteWithChildren
   '/medications/refill-history': typeof MedicationsRefillHistoryRoute
   '/nursing/beds': typeof NursingBedsRoute
@@ -1368,6 +1439,7 @@ export interface FileRoutesByTo {
   '/api/diet/meal-media': typeof ApiDietMealMediaRoute
   '/api/diet/youtube': typeof ApiDietYoutubeRoute
   '/api/exercise/youtube': typeof ApiExerciseYoutubeRoute
+  '/api/hospital/persist': typeof ApiHospitalPersistRoute
   '/api/patient/clinical-events': typeof ApiPatientClinicalEventsRoute
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
@@ -1403,14 +1475,18 @@ export interface FileRoutesById {
   '/billing': typeof BillingRouteWithChildren
   '/doctor': typeof DoctorRouteWithChildren
   '/doctors': typeof DoctorsRoute
+  '/for-hospitals': typeof ForHospitalsRoute
   '/lab': typeof LabRouteWithChildren
+  '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/nursing': typeof NursingRouteWithChildren
   '/pharmacy': typeof PharmacyRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRouteWithChildren
   '/queue': typeof QueueRoute
   '/reception': typeof ReceptionRouteWithChildren
   '/register': typeof RegisterRoute
+  '/register-hospital': typeof RegisterHospitalRoute
   '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
@@ -1472,6 +1548,10 @@ export interface FileRoutesById {
   '/lab/team': typeof LabTeamRoute
   '/lab/validation': typeof LabValidationRoute
   '/lab/walk-in': typeof LabWalkInRoute
+  '/legal/attribution': typeof LegalAttributionRoute
+  '/legal/disclaimer': typeof LegalDisclaimerRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/medications/$medId': typeof MedicationsMedIdRouteWithChildren
   '/medications/refill-history': typeof MedicationsRefillHistoryRoute
   '/nursing/beds': typeof NursingBedsRoute
@@ -1543,6 +1623,7 @@ export interface FileRoutesById {
   '/api/diet/meal-media': typeof ApiDietMealMediaRoute
   '/api/diet/youtube': typeof ApiDietYoutubeRoute
   '/api/exercise/youtube': typeof ApiExerciseYoutubeRoute
+  '/api/hospital/persist': typeof ApiHospitalPersistRoute
   '/api/patient/clinical-events': typeof ApiPatientClinicalEventsRoute
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
@@ -1580,14 +1661,18 @@ export interface FileRouteTypes {
     | '/billing'
     | '/doctor'
     | '/doctors'
+    | '/for-hospitals'
     | '/lab'
+    | '/legal'
     | '/login'
     | '/nursing'
     | '/pharmacy'
+    | '/pricing'
     | '/profile'
     | '/queue'
     | '/reception'
     | '/register'
+    | '/register-hospital'
     | '/admin/access-control'
     | '/admin/analytics'
     | '/admin/announcements'
@@ -1649,6 +1734,10 @@ export interface FileRouteTypes {
     | '/lab/team'
     | '/lab/validation'
     | '/lab/walk-in'
+    | '/legal/attribution'
+    | '/legal/disclaimer'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/medications/$medId'
     | '/medications/refill-history'
     | '/nursing/beds'
@@ -1720,6 +1809,7 @@ export interface FileRouteTypes {
     | '/api/diet/meal-media'
     | '/api/diet/youtube'
     | '/api/exercise/youtube'
+    | '/api/hospital/persist'
     | '/api/patient/clinical-events'
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
@@ -1752,9 +1842,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/doctors'
+    | '/for-hospitals'
+    | '/legal'
     | '/login'
+    | '/pricing'
     | '/queue'
     | '/register'
+    | '/register-hospital'
     | '/admin/access-control'
     | '/admin/analytics'
     | '/admin/announcements'
@@ -1813,6 +1907,10 @@ export interface FileRouteTypes {
     | '/lab/team'
     | '/lab/validation'
     | '/lab/walk-in'
+    | '/legal/attribution'
+    | '/legal/disclaimer'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/medications/$medId'
     | '/medications/refill-history'
     | '/nursing/beds'
@@ -1883,6 +1981,7 @@ export interface FileRouteTypes {
     | '/api/diet/meal-media'
     | '/api/diet/youtube'
     | '/api/exercise/youtube'
+    | '/api/hospital/persist'
     | '/api/patient/clinical-events'
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
@@ -1917,14 +2016,18 @@ export interface FileRouteTypes {
     | '/billing'
     | '/doctor'
     | '/doctors'
+    | '/for-hospitals'
     | '/lab'
+    | '/legal'
     | '/login'
     | '/nursing'
     | '/pharmacy'
+    | '/pricing'
     | '/profile'
     | '/queue'
     | '/reception'
     | '/register'
+    | '/register-hospital'
     | '/admin/access-control'
     | '/admin/analytics'
     | '/admin/announcements'
@@ -1986,6 +2089,10 @@ export interface FileRouteTypes {
     | '/lab/team'
     | '/lab/validation'
     | '/lab/walk-in'
+    | '/legal/attribution'
+    | '/legal/disclaimer'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/medications/$medId'
     | '/medications/refill-history'
     | '/nursing/beds'
@@ -2057,6 +2164,7 @@ export interface FileRouteTypes {
     | '/api/diet/meal-media'
     | '/api/diet/youtube'
     | '/api/exercise/youtube'
+    | '/api/hospital/persist'
     | '/api/patient/clinical-events'
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
@@ -2093,14 +2201,18 @@ export interface RootRouteChildren {
   BillingRoute: typeof BillingRouteWithChildren
   DoctorRoute: typeof DoctorRouteWithChildren
   DoctorsRoute: typeof DoctorsRoute
+  ForHospitalsRoute: typeof ForHospitalsRoute
   LabRoute: typeof LabRouteWithChildren
+  LegalRoute: typeof LegalRouteWithChildren
   LoginRoute: typeof LoginRoute
   NursingRoute: typeof NursingRouteWithChildren
   PharmacyRoute: typeof PharmacyRouteWithChildren
+  PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   QueueRoute: typeof QueueRoute
   ReceptionRoute: typeof ReceptionRouteWithChildren
   RegisterRoute: typeof RegisterRoute
+  RegisterHospitalRoute: typeof RegisterHospitalRoute
   BookDoctorIdRoute: typeof BookDoctorIdRoute
   CareVisitsRoute: typeof CareVisitsRouteWithChildren
   DietMealIdRoute: typeof DietMealIdRouteWithChildren
@@ -2128,6 +2240,7 @@ export interface RootRouteChildren {
   ApiDietMealMediaRoute: typeof ApiDietMealMediaRoute
   ApiDietYoutubeRoute: typeof ApiDietYoutubeRoute
   ApiExerciseYoutubeRoute: typeof ApiExerciseYoutubeRoute
+  ApiHospitalPersistRoute: typeof ApiHospitalPersistRoute
   ApiPatientClinicalEventsRoute: typeof ApiPatientClinicalEventsRoute
   ApiPatientRxInboxRoute: typeof ApiPatientRxInboxRoute
   ReportsShareReportIdRoute: typeof ReportsShareReportIdRoute
@@ -2171,11 +2284,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/for-hospitals': {
+      id: '/for-hospitals'
+      path: '/for-hospitals'
+      fullPath: '/for-hospitals'
+      preLoaderRoute: typeof ForHospitalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lab': {
       id: '/lab'
       path: '/lab'
       fullPath: '/lab'
       preLoaderRoute: typeof LabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal': {
+      id: '/legal'
+      path: '/legal'
+      fullPath: '/legal'
+      preLoaderRoute: typeof LegalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -2197,6 +2324,13 @@ declare module '@tanstack/react-router' {
       path: '/pharmacy'
       fullPath: '/pharmacy'
       preLoaderRoute: typeof PharmacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -2225,6 +2359,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register-hospital': {
+      id: '/register-hospital'
+      path: '/register-hospital'
+      fullPath: '/register-hospital'
+      preLoaderRoute: typeof RegisterHospitalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -2717,6 +2858,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LabWalkInRouteImport
       parentRoute: typeof LabRoute
     }
+    '/legal/attribution': {
+      id: '/legal/attribution'
+      path: '/attribution'
+      fullPath: '/legal/attribution'
+      preLoaderRoute: typeof LegalAttributionRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/disclaimer': {
+      id: '/legal/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/legal/disclaimer'
+      preLoaderRoute: typeof LegalDisclaimerRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof LegalRoute
+    }
     '/medications/': {
       id: '/medications/'
       path: '/medications'
@@ -3149,6 +3318,13 @@ declare module '@tanstack/react-router' {
       path: '/api/exercise/youtube'
       fullPath: '/api/exercise/youtube'
       preLoaderRoute: typeof ApiExerciseYoutubeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hospital/persist': {
+      id: '/api/hospital/persist'
+      path: '/api/hospital/persist'
+      fullPath: '/api/hospital/persist'
+      preLoaderRoute: typeof ApiHospitalPersistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/patient/clinical-events': {
@@ -3589,6 +3765,22 @@ const LabRouteChildren: LabRouteChildren = {
 
 const LabRouteWithChildren = LabRoute._addFileChildren(LabRouteChildren)
 
+interface LegalRouteChildren {
+  LegalAttributionRoute: typeof LegalAttributionRoute
+  LegalDisclaimerRoute: typeof LegalDisclaimerRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalTermsRoute: typeof LegalTermsRoute
+}
+
+const LegalRouteChildren: LegalRouteChildren = {
+  LegalAttributionRoute: LegalAttributionRoute,
+  LegalDisclaimerRoute: LegalDisclaimerRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalTermsRoute: LegalTermsRoute,
+}
+
+const LegalRouteWithChildren = LegalRoute._addFileChildren(LegalRouteChildren)
+
 interface NursingRouteChildren {
   NursingBedsRoute: typeof NursingBedsRoute
   NursingLeaveRoute: typeof NursingLeaveRoute
@@ -3781,14 +3973,18 @@ const rootRouteChildren: RootRouteChildren = {
   BillingRoute: BillingRouteWithChildren,
   DoctorRoute: DoctorRouteWithChildren,
   DoctorsRoute: DoctorsRoute,
+  ForHospitalsRoute: ForHospitalsRoute,
   LabRoute: LabRouteWithChildren,
+  LegalRoute: LegalRouteWithChildren,
   LoginRoute: LoginRoute,
   NursingRoute: NursingRouteWithChildren,
   PharmacyRoute: PharmacyRouteWithChildren,
+  PricingRoute: PricingRoute,
   ProfileRoute: ProfileRouteWithChildren,
   QueueRoute: QueueRoute,
   ReceptionRoute: ReceptionRouteWithChildren,
   RegisterRoute: RegisterRoute,
+  RegisterHospitalRoute: RegisterHospitalRoute,
   BookDoctorIdRoute: BookDoctorIdRoute,
   CareVisitsRoute: CareVisitsRouteWithChildren,
   DietMealIdRoute: DietMealIdRouteWithChildren,
@@ -3816,6 +4012,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDietMealMediaRoute: ApiDietMealMediaRoute,
   ApiDietYoutubeRoute: ApiDietYoutubeRoute,
   ApiExerciseYoutubeRoute: ApiExerciseYoutubeRoute,
+  ApiHospitalPersistRoute: ApiHospitalPersistRoute,
   ApiPatientClinicalEventsRoute: ApiPatientClinicalEventsRoute,
   ApiPatientRxInboxRoute: ApiPatientRxInboxRoute,
   ReportsShareReportIdRoute: ReportsShareReportIdRoute,

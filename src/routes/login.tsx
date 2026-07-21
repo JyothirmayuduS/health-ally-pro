@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { getAuthSession, signIn } from "@/lib/supabase/auth";
+import { allowDemoAuth } from "@/lib/production";
 import { redirectPathForRoles } from "@/lib/supabase/rbac";
 
 export const Route = createFileRoute("/login")({
@@ -184,6 +185,7 @@ function LoginPage() {
           </button>
         </form>
 
+        {allowDemoAuth() ? (
         <div className="mt-8 border-t border-ink-200 pt-6">
           <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-400">
             Demo accounts
@@ -206,6 +208,7 @@ function LoginPage() {
             ))}
           </div>
         </div>
+        ) : null}
       </div>
     </div>
   );

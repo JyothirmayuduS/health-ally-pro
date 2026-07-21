@@ -5,6 +5,14 @@ import appCss from "../styles.css?url";
 
 function usesPatientShell(pathname: string) {
   if (pathname === "/login" || pathname === "/register") return false;
+  if (
+    pathname.startsWith("/for-hospitals") ||
+    pathname.startsWith("/pricing") ||
+    pathname.startsWith("/register-hospital") ||
+    pathname.startsWith("/legal")
+  ) {
+    return false;
+  }
   if (/^\/(admin|reception|doctor|lab|pharmacy|billing|nursing)(\/|$)/.test(pathname)) {
     return false;
   }
@@ -79,6 +87,7 @@ export const Route = createRootRoute({
 });
 
 import { useState, useEffect } from "react";
+import { isEvaluationBuild, getLicenseStatus } from "@/lib/license";
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
@@ -97,24 +106,31 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { pathname } = useLocation();
-  const [showWatermark, setShowWatermark] = useState(true);
+  const [showWatermark, setShowWatermark] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (localStorage.getItem("medora_owner_key") === "jyothirmayudu_owner_2026") {
-        setShowWatermark(false);
-      }
+    // Licensed commercial builds: no evaluation watermark.
+    // Unlicensed evaluation: show watermark (owner override for vendor demos only).
+    if (typeof window === "undefined") return;
+    if (!isEvaluationBuild()) {
+      setShowWatermark(false);
+      return;
     }
+    if (localStorage.getItem("medora_owner_key") === "jyothirmayudu_owner_2026") {
+      setShowWatermark(false);
+      return;
+    }
+    setShowWatermark(true);
   }, []);
 
   const content = usesPatientShell(pathname) ? <AppShell /> : <Outlet />;
+  const license = getLicenseStatus();
 
   return (
     <>
       {content}
       {showWatermark && (
         <>
-          {/* Diagonal Grid Watermark */}
           <div
             style={{
               position: "fixed",
@@ -124,18 +140,17 @@ function RootComponent() {
               height: "100vh",
               pointerEvents: "none",
               zIndex: 99999,
-              opacity: 0.04,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='450' height='300' viewBox='0 0 450 300'%3E%3Ctext x='20' y='150' fill='%23000' font-family='sans-serif' font-size='13' font-weight='bold' transform='rotate(-20 150 150)'%3EMEDORA ERP - PROPRIETARY JYOTHIRMAYUDU S. - DO NOT DISTRIBUTE%3C/text%3E%3C/svg%3E")`,
+              opacity: 0.035,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='300' viewBox='0 0 480 300'%3E%3Ctext x='20' y='150' fill='%23000' font-family='sans-serif' font-size='13' font-weight='bold' transform='rotate(-20 150 150)'%3EMEDORA EVALUATION — NOT FOR LIVE PATIENT CARE%3C/text%3E%3C/svg%3E")`,
               backgroundRepeat: "repeat",
             }}
+            aria-hidden
           />
-          {/* Floating License Tag */}
           <div
             style={{
               position: "fixed",
               bottom: "12px",
               right: "12px",
-              pointerEvents: "auto",
               zIndex: 99999,
               background: "#1e293b",
               color: "#f8fafc",
@@ -149,7 +164,7 @@ function RootComponent() {
               userSelect: "none",
             }}
           >
-            🔒 JYOTHIRMAYUDU S. - PROPRIETARY COPY
+            EVALUATION · {license.plan.toUpperCase()} · NOT FOR LIVE PHI
           </div>
         </>
       )}

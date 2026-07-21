@@ -142,6 +142,9 @@ export function saveUnitRecords(records: UnitRecord[]) {
   if (typeof window === "undefined") return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
   emit();
+  void import("@/lib/specialties/remote-sync").then(({ syncUnitsToRemote }) =>
+    syncUnitsToRemote(records).catch(() => undefined),
+  );
 }
 
 export function subscribeUnitRecords(cb: () => void) {
@@ -155,6 +158,25 @@ export function updateUnitStatus(id: string, status: string) {
     r.id === id ? { ...r, status, updatedAt: new Date().toISOString() } : r,
   );
   saveUnitRecords(list);
+}
+
+export async function hydrateUnitRecordsFromRemote() {
+  const { fetchUnitsFromRemote, syncUnitsToRemote } = await import("@/lib/specialties/remote-sync");
+  const remote = await fetchUnitsFromRemote();
+  if (remote && remote.length > 0) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+    emit();
+    return remote;
+  }
+  const local = loadUnitRecords();
+  await syncUnitsToRemote(local).catch(() => undefined);
+  const again = await fetchUnitsFromRemote();
+  if (again && again.length > 0) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(again));
+    emit();
+    return again;
+  }
+  return local;
 }
 
 export function addUnitRecord(input: Omit<UnitRecord, "id" | "updatedAt">) {

@@ -4,6 +4,7 @@ import {
   Baby,
   Bone,
   Brain,
+  Box,
   Check,
   ClipboardList,
   Ear,
@@ -24,6 +25,7 @@ import {
   subscribeSpecialtyCharts,
   type HospitalDoctorRecord,
 } from "@/lib/specialties";
+import { SpecialtyAnatomyPanel } from "@/components/doctor/specialty/SpecialtyAnatomyPanel";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -363,14 +365,22 @@ export function SpecialtyWorkstation({
   const [activeModuleId, setActiveModuleId] = useState(specialty.modules[0]?.id ?? "");
   const [patientName, setPatientName] = useState("");
   const [tick, setTick] = useState(0);
+  const [deskTab, setDeskTab] = useState<"clinical" | "anatomy">("clinical");
 
   useEffect(() => {
     setActiveModuleId(specialty.modules[0]?.id ?? "");
+    setDeskTab("clinical");
   }, [specialty.id, specialty.modules]);
 
   useEffect(() => {
     return subscribeSpecialtyCharts(() => setTick((t) => t + 1));
   }, []);
+
+  useEffect(() => {
+    void import("@/lib/specialties").then(({ hydrateSpecialtyChartsFromRemote }) =>
+      hydrateSpecialtyChartsFromRemote(specialty.id).then(() => setTick((t) => t + 1)),
+    );
+  }, [specialty.id]);
 
   const module = specialty.modules.find((m) => m.id === activeModuleId) ?? specialty.modules[0];
   const recent = useMemo(
@@ -431,6 +441,37 @@ export function SpecialtyWorkstation({
         </div>
       </header>
 
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setDeskTab("clinical")}
+          className={cn(
+            "inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold transition",
+            deskTab === "clinical" ? "text-white" : "bg-white text-[#5C6B63] ring-1 ring-[#E8E4DE]",
+          )}
+          style={deskTab === "clinical" ? { background: specialty.accent } : undefined}
+        >
+          <ClipboardList className="h-4 w-4" />
+          Clinical charting
+        </button>
+        <button
+          type="button"
+          onClick={() => setDeskTab("anatomy")}
+          className={cn(
+            "inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold transition",
+            deskTab === "anatomy" ? "text-white" : "bg-white text-[#5C6B63] ring-1 ring-[#E8E4DE]",
+          )}
+          style={deskTab === "anatomy" ? { background: specialty.accent } : undefined}
+        >
+          <Box className="h-4 w-4" />
+          3D anatomy
+        </button>
+      </div>
+
+      {deskTab === "anatomy" ? (
+        <SpecialtyAnatomyPanel specialty={specialty} />
+      ) : (
+      <>
       <div className="rounded-[24px] border border-[#E8E4DE] bg-white p-4 sm:p-5">
         <label className="block text-xs font-semibold text-[#5C6B63]">
           Active patient for this specialty note
@@ -521,6 +562,8 @@ export function SpecialtyWorkstation({
           </ul>
         </section>
       ) : null}
+      </>
+      )}
     </div>
   );
 }

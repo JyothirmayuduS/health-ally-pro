@@ -1,5 +1,7 @@
 import { supabase } from "./client";
 import type { UserRole } from "./types";
+import { allowDemoAuth } from "@/lib/production";
+import { DEMO_STAFF_TABLE } from "./demo-credentials";
 
 export type AuthSession = {
   userId: string;
@@ -12,90 +14,17 @@ export type AuthSession = {
 
 const DEMO_AUTH_KEY = "medora_demo_auth";
 
-/** Staff demo logins — used when Supabase user is missing or credentials not synced yet. */
+/**
+ * Demo passwords are empty in production builds unless VITE_ALLOW_DEMO_AUTH=true.
+ * Combined with allowDemoAuth(), evaluation demos stay out of licensed hospital deploys.
+ */
 export const DEMO_CREDENTIALS: Record<
   string,
   { password: string; fullName: string; roles: UserRole[]; userId: string }
-> = {
-  "lab@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "J. Mensah",
-    roles: ["lab_technician"],
-    userId: "demo-lab-technician",
-  },
-  "lab.supervisor@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Rajan",
-    roles: ["lab_supervisor"],
-    userId: "demo-lab-supervisor",
-  },
-  "pharmacy@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Riley Chen",
-    roles: ["pharmacist"],
-    userId: "demo-pharmacist",
-  },
-  "reception@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Maya Kapoor",
-    roles: ["receptionist"],
-    userId: "demo-receptionist",
-  },
-  "billing@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Anita Rao",
-    roles: ["billing_staff"],
-    userId: "demo-billing",
-  },
-  "nursing@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Sunita Pillai",
-    roles: ["nurse"],
-    userId: "demo-nurse",
-  },
-  "admin@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Admin User",
-    roles: ["hospital_admin"],
-    userId: "demo-admin",
-  },
-  "doctor@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Aarav Mehta",
-    roles: ["doctor"],
-    userId: "demo-doctor",
-  },
-  "ophthalmology@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Meera Joshi",
-    roles: ["doctor"],
-    userId: "demo-doctor-ophtho",
-  },
-  "cardiology@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Vikram Shah",
-    roles: ["doctor"],
-    userId: "demo-doctor-cardio",
-  },
-  "pediatrics@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Priya Nair",
-    roles: ["doctor"],
-    userId: "demo-doctor-peds",
-  },
-  "orthopedics@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Rohan Bhatt",
-    roles: ["doctor"],
-    userId: "demo-doctor-ortho",
-  },
-  "patient@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Anjali Krishnan",
-    roles: ["patient"],
-    userId: "demo-patient",
-  },
-};
+> =
+  import.meta.env.DEV || import.meta.env.VITE_ALLOW_DEMO_AUTH === "true"
+    ? DEMO_STAFF_TABLE
+    : {};
 
 /** @deprecated Use DEMO_CREDENTIALS */
 export const LAB_DEMO_CREDENTIALS = DEMO_CREDENTIALS;
@@ -123,6 +52,7 @@ function clearDemoSession() {
 }
 
 function tryDemoSignIn(email: string, password: string): AuthSession | null {
+  if (!allowDemoAuth()) return null;
   const cred = DEMO_CREDENTIALS[email.trim().toLowerCase()];
   if (!cred || cred.password !== password) return null;
   const session: AuthSession = {
@@ -171,7 +101,7 @@ export async function getSession() {
 }
 
 export async function getAuthSession(): Promise<AuthSession | null> {
-  const demo = readDemoSession();
+  const demo = allowDemoAuth() ? readDemoSession() : null;
   if (demo) return demo;
 
   const session = await getSession();

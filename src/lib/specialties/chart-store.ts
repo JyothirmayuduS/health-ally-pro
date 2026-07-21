@@ -56,6 +56,9 @@ export function saveSpecialtyChartNote(
       const next = { ...list[idx], ...input, updatedAt: ts };
       list[idx] = next;
       saveSpecialtyCharts(list);
+      void import("@/lib/specialties/remote-sync").then(({ syncChartToRemote }) =>
+        syncChartToRemote(next).catch(() => undefined),
+      );
       return next;
     }
   }
@@ -71,7 +74,24 @@ export function saveSpecialtyChartNote(
     updatedAt: ts,
   };
   saveSpecialtyCharts([note, ...list]);
+  void import("@/lib/specialties/remote-sync").then(({ syncChartToRemote }) =>
+    syncChartToRemote(note).catch(() => undefined),
+  );
   return note;
+}
+
+export async function hydrateSpecialtyChartsFromRemote(specialtyId?: SpecialtyId) {
+  const { fetchChartsFromRemote } = await import("@/lib/specialties/remote-sync");
+  const remote = await fetchChartsFromRemote(specialtyId);
+  if (!remote || remote.length === 0) return loadSpecialtyCharts();
+  const local = loadSpecialtyCharts();
+  const byId = new Map(local.map((n) => [n.id, n]));
+  for (const n of remote) byId.set(n.id, n);
+  const merged = [...byId.values()].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  saveSpecialtyCharts(merged);
+  return merged;
 }
 
 export function chartsForSpecialty(specialtyId: SpecialtyId, doctorId?: string) {

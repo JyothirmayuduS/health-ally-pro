@@ -23,12 +23,20 @@ export default function AdminDoctors() {
   const [doctors, setDoctors] = useState<HospitalDoctorRecord[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [dbOnline, setDbOnline] = useState<boolean | null>(null);
   const roster = loadRoster();
 
   const refresh = () => setDoctors(loadHospitalDoctors());
 
   useEffect(() => {
     refresh();
+    void import("@/lib/specialties").then(({ hydrateHospitalDoctorsFromRemote, remotePersistenceStatus }) => {
+      hydrateHospitalDoctorsFromRemote().then(() => refresh());
+      remotePersistenceStatus().then((s) => {
+        if (s?.persistence) setDbOnline(true);
+        else if (s?.offline || s?.ok === false) setDbOnline(false);
+      });
+    });
     return subscribeHospitalDoctors(refresh);
   }, []);
 
@@ -156,6 +164,15 @@ export default function AdminDoctors() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-bone/30 p-4 border border-ink-100 rounded-lg surface">
         <div className="text-[12.5px] text-ink-500">
           Add doctors with a specialty. The doctor portal shows that specialty’s clinical workstation only.
+          {dbOnline === true ? (
+            <span className="ml-2 inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-800">
+              Synced to database
+            </span>
+          ) : dbOnline === false ? (
+            <span className="ml-2 inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-800">
+              Local cache only
+            </span>
+          ) : null}
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
