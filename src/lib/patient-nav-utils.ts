@@ -25,7 +25,7 @@ export function isExerciseRoute(pathname: string): boolean {
 
 export function isPatientHubRoute(pathname: string): boolean {
   return (
-    pathname === "/" ||
+    pathname === "/app" ||
     pathname.startsWith("/care") ||
     pathname === "/health" ||
     pathname.startsWith("/diet") ||

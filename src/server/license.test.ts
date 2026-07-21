@@ -12,7 +12,7 @@ describe("server license", () => {
 
     expect(getServerLicense()).toEqual({ licensed: false, plan: "evaluation" });
     expect(serverHasModule("specialty_desk")).toBe(true);
-    expect(serverHasModule("anatomy_3d")).toBe(false);
+    expect(serverHasModule("anatomy_3d")).toBe(true);
 
     process.env.MEDORA_LICENSE_KEY = prevKey;
     process.env.MEDORA_PLAN = prevPlan;

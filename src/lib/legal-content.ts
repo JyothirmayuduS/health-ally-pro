@@ -1,9 +1,16 @@
 /** Shared legal copy for public routes — replace contact emails before go-live */
 
-export const LEGAL_LAST_UPDATED = "21 July 2026";
+export const LEGAL_LAST_UPDATED = "22 July 2026";
 export const LEGAL_ENTITY = "Medora Health Technologies";
 export const LEGAL_CONTACT = "legal@medora.health";
 export const SALES_CONTACT = "sales@medora.health";
+export const SECURITY_CONTACT = "security@medora.health";
+
+export function salesMailto(subject: string, body?: string) {
+  const q = new URLSearchParams({ subject });
+  if (body) q.set("body", body);
+  return `mailto:${SALES_CONTACT}?${q.toString()}`;
+}
 
 export const MEDICAL_DISCLAIMER = `
 Medora is a hospital workflow and clinical documentation platform. It does not provide

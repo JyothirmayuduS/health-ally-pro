@@ -13,7 +13,16 @@ export type LicenseStatus = {
 };
 
 const PLAN_MODULES: Record<LicenseStatus["plan"], string[]> = {
-  evaluation: ["opd", "emr", "specialty_desk"],
+  evaluation: [
+    "opd",
+    "emr",
+    "lab",
+    "pharmacy",
+    "billing",
+    "specialty_desk",
+    "anatomy_3d",
+    "hospital_units",
+  ],
   starter: ["opd", "emr", "lab", "pharmacy", "billing", "specialty_desk"],
   professional: [
     "opd",

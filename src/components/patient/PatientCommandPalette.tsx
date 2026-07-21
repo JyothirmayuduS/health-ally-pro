@@ -21,7 +21,7 @@ import { fetchDoctors, fetchReportsForPatient } from "@/lib/supabase/queries";
 import { ChefHat, Dumbbell, FileText, Pill, Stethoscope } from "lucide-react";
 
 const QUICK_LINKS = [
-  { label: "Home dashboard", to: "/" },
+  { label: "Home dashboard", to: "/app" },
   { label: "Care hub", to: "/care" },
   { label: "Health hub", to: "/health" },
   { label: "Book appointment", to: "/book" },

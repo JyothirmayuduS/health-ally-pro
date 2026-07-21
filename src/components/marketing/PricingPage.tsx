@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
-import { SALES_CONTACT } from "@/lib/legal-content";
+import { MarketingFooter, MarketingHeader } from "@/components/marketing/MarketingChrome";
+import { salesMailto, SALES_CONTACT } from "@/lib/legal-content";
 
 const PLANS = [
   {
@@ -50,22 +51,13 @@ const PLANS = [
 export default function PricingPage() {
   return (
     <div className="min-h-dvh bg-[#F7F5F2] text-[#1B3B2E]">
-      <header className="border-b border-[#E8E4DE] bg-white/90">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <Link to="/for-hospitals" className="font-serif text-xl font-semibold">
-            Medora
-          </Link>
-          <Link to="/register-hospital" className="text-sm font-semibold text-[#B8735D]">
-            Start hospital →
-          </Link>
-        </div>
-      </header>
+      <MarketingHeader active="pricing" />
 
       <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <h1 className="font-serif text-3xl font-semibold sm:text-4xl">Pricing</h1>
         <p className="mt-2 max-w-xl text-[#5C6B63]">
-          Indicative India hospital SaaS pricing for sales conversations. Final quotes depend on
-          beds, branches, and modules. Stripe Checkout wires in Phase 2.
+          Transparent hospital SaaS pricing for India campuses. Quotes finalize on beds, branches,
+          and modules — start onboarding or email sales for a formal order form.
         </p>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
@@ -84,38 +76,58 @@ export default function PricingPage() {
               </p>
               <p className="mt-5 font-serif text-3xl font-semibold">
                 {plan.price}
-                <span className={`text-base font-sans font-normal ${plan.highlight ? "text-[#B8C5BE]" : "text-[#8A8F8C]"}`}>
+                <span
+                  className={`text-base font-sans font-normal ${plan.highlight ? "text-[#B8C5BE]" : "text-[#8A8F8C]"}`}
+                >
                   {plan.period}
                 </span>
               </p>
               <ul className="mt-6 space-y-2.5 text-sm">
                 {plan.features.map((f) => (
                   <li key={f} className="flex gap-2">
-                    <Check className={`h-4 w-4 shrink-0 ${plan.highlight ? "text-[#B8735D]" : "text-[#1B3B2E]"}`} />
+                    <Check
+                      className={`h-4 w-4 shrink-0 ${plan.highlight ? "text-[#B8735D]" : "text-[#1B3B2E]"}`}
+                    />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/register-hospital"
-                search={{ plan: plan.id as string }}
-                className={`mt-8 flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold ${
-                  plan.highlight
-                    ? "bg-[#B8735D] text-white hover:bg-[#A56450]"
-                    : "bg-[#1B3B2E] text-white hover:bg-[#244C3B]"
-                }`}
-              >
-                {plan.cta}
-              </Link>
+              <div className="mt-8 space-y-2">
+                <Link
+                  to="/register-hospital"
+                  search={{ plan: plan.id as string }}
+                  className={`flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold ${
+                    plan.highlight
+                      ? "bg-[#B8735D] text-white hover:bg-[#A56450]"
+                      : "bg-[#1B3B2E] text-white hover:bg-[#244C3B]"
+                  }`}
+                >
+                  {plan.cta}
+                </Link>
+                <a
+                  href={salesMailto(
+                    `Medora ${plan.name} plan inquiry`,
+                    `Plan: ${plan.name}\nBeds:\nBranches:\nSpecialties needed:\n`,
+                  )}
+                  className={`flex w-full items-center justify-center rounded-full border py-2.5 text-xs font-semibold ${
+                    plan.highlight
+                      ? "border-white/30 text-[#E8EFE6] hover:bg-white/10"
+                      : "border-[#E8E4DE] text-[#5C6B63] hover:bg-[#F7F5F2]"
+                  }`}
+                >
+                  Email {SALES_CONTACT}
+                </a>
+              </div>
             </article>
           ))}
         </div>
 
         <p className="mt-8 text-xs text-[#8A8F8C]">
-          *Enterprise branch limits per contract. Contact {SALES_CONTACT}. Not a binding offer —
-          formal quotation required.
+          *Enterprise branch limits per contract. Not a binding offer — formal quotation required.
+          Licensed customers receive an order form + BAA pack before go-live.
         </p>
       </main>
+      <MarketingFooter />
     </div>
   );
 }

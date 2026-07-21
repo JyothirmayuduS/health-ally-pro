@@ -43,6 +43,9 @@ export function StaffPortalShell({ portal }: Props) {
         </nav>
         <div className="mt-auto space-y-3">
           <Link to="/" className="block text-xs font-medium uppercase tracking-widest text-clay hover:text-ink">
+            Medora home
+          </Link>
+          <Link to="/app" className="block text-xs font-medium uppercase tracking-widest text-clay hover:text-ink">
             Patient app →
           </Link>
           <button

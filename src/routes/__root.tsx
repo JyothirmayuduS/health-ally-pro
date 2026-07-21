@@ -6,10 +6,14 @@ import appCss from "../styles.css?url";
 function usesPatientShell(pathname: string) {
   if (pathname === "/login" || pathname === "/register") return false;
   if (
+    pathname === "/" ||
     pathname.startsWith("/for-hospitals") ||
     pathname.startsWith("/pricing") ||
     pathname.startsWith("/register-hospital") ||
-    pathname.startsWith("/legal")
+    pathname.startsWith("/legal") ||
+    pathname.startsWith("/security") ||
+    pathname.startsWith("/sla") ||
+    pathname.startsWith("/implement")
   ) {
     return false;
   }
@@ -17,7 +21,7 @@ function usesPatientShell(pathname: string) {
     return false;
   }
   return (
-    pathname === "/" ||
+    pathname === "/app" ||
     pathname.startsWith("/care") ||
     pathname.startsWith("/health") ||
     pathname.startsWith("/book") ||
@@ -32,21 +36,40 @@ function usesPatientShell(pathname: string) {
   );
 }
 
+function isMarketingPath(pathname: string) {
+  return (
+    pathname === "/" ||
+    pathname.startsWith("/for-hospitals") ||
+    pathname.startsWith("/pricing") ||
+    pathname.startsWith("/register-hospital") ||
+    pathname.startsWith("/legal") ||
+    pathname.startsWith("/security") ||
+    pathname.startsWith("/sla") ||
+    pathname.startsWith("/implement")
+  );
+}
+
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="font-serif text-7xl text-foreground">404</h1>
-        <h2 className="mt-4 font-serif text-2xl text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+    <div className="flex min-h-screen items-center justify-center bg-[#F4F1EC] px-4">
+      <div className="max-w-md text-center text-[#1B3B2E]">
+        <h1 className="font-serif text-7xl">404</h1>
+        <h2 className="mt-4 font-serif text-2xl">Page not found</h2>
+        <p className="mt-2 text-sm text-[#5C6B63]">
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-[#1B3B2E] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#244C3B]"
           >
-            Return home
+            Hospital home
+          </Link>
+          <Link
+            to="/for-hospitals"
+            className="inline-flex items-center justify-center rounded-full border border-[#1B3B2E]/20 px-5 py-2.5 text-sm font-medium hover:bg-white"
+          >
+            Product
           </Link>
         </div>
       </div>
@@ -59,20 +82,20 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Medora — Curated medical care, on your schedule" },
+      { title: "Medora — Hospital OS for multi-specialty campuses" },
       {
         name: "description",
         content:
-          "Book trusted doctors, track your queue in real time, and securely share medical reports with the specialists who need them.",
+          "License specialty-true doctor desks, 3D anatomy, lab, pharmacy, billing, and patient engagement for your hospital.",
       },
-      { property: "og:title", content: "Medora — Curated medical care" },
+      { property: "og:title", content: "Medora — Hospital OS" },
       {
         property: "og:description",
         content:
-          "Book doctors, track queues, and share reports — calmly and securely.",
+          "Specialty-true clinical workspaces ready to license for multi-specialty hospitals.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
@@ -109,19 +132,14 @@ function RootComponent() {
   const [showWatermark, setShowWatermark] = useState(false);
 
   useEffect(() => {
-    // Licensed commercial builds: no evaluation watermark.
-    // Unlicensed evaluation: show watermark (owner override for vendor demos only).
     if (typeof window === "undefined") return;
-    if (!isEvaluationBuild()) {
-      setShowWatermark(false);
-      return;
-    }
-    if (localStorage.getItem("medora_owner_key") === "jyothirmayudu_owner_2026") {
+    // Public marketing site stays clean; evaluation watermark only on product shells.
+    if (isMarketingPath(pathname) || !isEvaluationBuild()) {
       setShowWatermark(false);
       return;
     }
     setShowWatermark(true);
-  }, []);
+  }, [pathname]);
 
   const content = usesPatientShell(pathname) ? <AppShell /> : <Outlet />;
   const license = getLicenseStatus();

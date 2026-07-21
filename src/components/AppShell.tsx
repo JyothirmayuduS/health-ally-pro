@@ -25,7 +25,7 @@ import { unreadNotificationCount } from "@/lib/patient-notifications-store";
 import { Toaster } from "@/components/ui/sonner";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/app", label: "Dashboard", icon: LayoutDashboard },
   { to: "/care", label: "Care", icon: CalendarPlus },
   { to: "/health", label: "Health", icon: Activity },
   { to: "/diet", label: "Diet", icon: UtensilsCrossed },
@@ -265,7 +265,7 @@ export function AppShell() {
 
 function Brand() {
   return (
-    <Link to="/" className="flex items-center gap-2.5">
+    <Link to="/app" className="flex items-center gap-2.5">
       <span className="grid h-9 w-9 place-items-center rounded-xl bg-ink text-primary-foreground">
         <span className="font-serif text-lg leading-none">M</span>
       </span>

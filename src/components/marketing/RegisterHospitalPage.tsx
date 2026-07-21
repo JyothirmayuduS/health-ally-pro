@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   ONBOARDING_SPECIALTIES,
   saveHospitalBrand,
   type HospitalBrand,
 } from "@/lib/hospital-brand";
-import { SALES_CONTACT } from "@/lib/legal-content";
+import { MarketingFooter, MarketingHeader } from "@/components/marketing/MarketingChrome";
+import { salesMailto, SALES_CONTACT } from "@/lib/legal-content";
 import { toast } from "sonner";
 
 type PlanId = HospitalBrand["plan"];
 
 export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: string }) {
-  const navigate = useNavigate();
+  const [done, setDone] = useState<HospitalBrand | null>(null);
   const [form, setForm] = useState({
     hospitalName: "",
     legalName: "",
@@ -62,30 +63,58 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
     const { syncOnboardingLead } = await import("@/lib/specialties/remote-sync");
     const res = await syncOnboardingLead(brand);
     const ok = res && typeof res === "object" && "ok" in res && (res as { ok?: boolean }).ok;
-    toast.success(
-      ok
-        ? "Registration received — sales will activate your license and tenant"
-        : "Saved locally — we will sync when the server is online",
-    );
-    void navigate({ to: "/login" });
+    toast.success(ok ? "Registration received" : "Saved — we will sync when online");
+    setDone(brand);
   };
+
+  if (done) {
+    return (
+      <div className="min-h-dvh bg-[#F7F5F2] text-[#1B3B2E]">
+        <MarketingHeader />
+        <main className="mx-auto max-w-xl px-4 py-16 text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8A6B5C]">
+            Application received
+          </p>
+          <h1 className="mt-3 font-serif text-3xl font-semibold">{done.hospitalName}</h1>
+          <p className="mt-3 text-sm text-[#5C6B63]">
+            Our team will send your license key, order form, and BAA pack to{" "}
+            <strong>{done.adminEmail}</strong>. Typical response within one business day.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <a
+              href={salesMailto(
+                `Follow-up: ${done.hospitalName}`,
+                `Hospital: ${done.hospitalName}\nPlan: ${done.plan}\nBeds: ${done.beds}\nAdmin: ${done.adminName} <${done.adminEmail}>\nSpecialties: ${done.specialties.join(", ")}\n`,
+              )}
+              className="rounded-full bg-[#B8735D] px-6 py-3 text-sm font-semibold text-white hover:bg-[#A56450]"
+            >
+              Email {SALES_CONTACT}
+            </a>
+            <Link
+              to="/implement"
+              className="rounded-full border border-[#1B3B2E]/15 bg-white px-6 py-3 text-sm font-semibold hover:bg-[#F4F1EC]"
+            >
+              Implementation checklist
+            </Link>
+            <Link to="/pricing" className="rounded-full px-6 py-3 text-sm font-semibold text-[#5C6B63]">
+              Back to pricing
+            </Link>
+          </div>
+        </main>
+        <MarketingFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-[#F7F5F2] text-[#1B3B2E]">
-      <header className="border-b border-[#E8E4DE] bg-white">
-        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
-          <Link to="/for-hospitals" className="font-serif text-xl font-semibold">
-            Medora
-          </Link>
-          <span className="text-xs text-[#8A8F8C]">Hospital onboarding</span>
-        </div>
-      </header>
+      <MarketingHeader />
 
       <main className="mx-auto max-w-2xl px-4 py-10">
         <h1 className="font-serif text-3xl font-semibold">Register your hospital</h1>
         <p className="mt-2 text-sm text-[#5C6B63]">
-          Saves a sales lead (rate-limited). Tenant provisioning requires sales/admin
-          authorization — not open self-serve hospital create.
+          Start a commercial onboarding lead. Sales activates your license key and tenant —
+          this is not open self-serve go-live.
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-4 rounded-[24px] border border-[#E8E4DE] bg-white p-6">
@@ -96,7 +125,7 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
               value={form.hospitalName}
               onChange={(e) => setForm((f) => ({ ...f, hospitalName: e.target.value }))}
               className="mt-1.5 w-full rounded-xl border border-[#E8E4DE] px-3 py-2.5 text-sm"
-              placeholder="Oak Haven Medical Center"
+              placeholder="Your Medical Center"
             />
           </label>
           <label className="block text-xs font-semibold">
@@ -210,13 +239,17 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
             type="submit"
             className="w-full rounded-full bg-[#B8735D] py-3 text-sm font-semibold text-white hover:bg-[#A56450]"
           >
-            Save hospital draft & continue
+            Submit hospital registration
           </button>
           <p className="text-center text-[11px] text-[#8A8F8C]">
-            Questions? {SALES_CONTACT}
+            Questions?{" "}
+            <a href={salesMailto("Medora onboarding question")} className="font-semibold text-[#B8735D]">
+              {SALES_CONTACT}
+            </a>
           </p>
         </form>
       </main>
+      <MarketingFooter />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import {
   authorizeHospitalPersist,
   authorizePublicOnboard,
 } from "@/server/hospital-persist-auth";
+import { serverHasModule } from "@/server/license";
 import {
   DEFAULT_HOSPITAL_ID,
   insertOnboardingLead,
@@ -26,6 +27,18 @@ import {
 
 function fail(auth: { status: number; error: string }) {
   return jsonResponse({ error: auth.error }, { status: auth.status });
+}
+
+function requireModule(moduleId: string, mode: string) {
+  // Demo/API key paths used for sales demos & ops; licensed JWT must match plan modules
+  if (mode === "demo" || mode === "api_key") return null;
+  if (!serverHasModule(moduleId)) {
+    return jsonResponse(
+      { error: `Module '${moduleId}' not included in current license plan` },
+      { status: 403 },
+    );
+  }
+  return null;
 }
 
 export const Route = createFileRoute("/api/hospital/persist")({
@@ -147,17 +160,21 @@ export const Route = createFileRoute("/api/hospital/persist")({
         const hospitalId = auth.hospitalId;
 
         switch (body.action) {
-          case "upsert_doctors":
+          case "upsert_doctors": {
+            const denied = requireModule("specialty_desk", auth.mode);
+            if (denied) return denied;
             return jsonResponse(
               await upsertHospitalDoctors(
                 (body.doctors ?? []).map((d) => ({
                   ...d,
-                  // Never trust client hospital_id
                   hospital_id: hospitalId,
                 })),
               ),
             );
-          case "insert_chart":
+          }
+          case "insert_chart": {
+            const denied = requireModule("specialty_desk", auth.mode);
+            if (denied) return denied;
             if (!body.chart) return jsonResponse({ error: "chart required" }, { status: 400 });
             return jsonResponse(
               await insertSpecialtyChart({
@@ -166,15 +183,20 @@ export const Route = createFileRoute("/api/hospital/persist")({
                 patient_name: String(body.chart.patient_name ?? "").slice(0, 200),
               }),
             );
-          case "upsert_units":
+          }
+          case "upsert_units": {
+            const denied = requireModule("hospital_units", auth.mode);
+            if (denied) return denied;
             return jsonResponse(
               await upsertUnitRecords(
                 (body.units ?? []).map((u) => ({ ...u, hospital_id: hospitalId })),
               ),
             );
-          case "update_unit_status":
+          }
+          case "update_unit_status": {
+            const denied = requireModule("hospital_units", auth.mode);
+            if (denied) return denied;
             if (!body.unitStatus) return jsonResponse({ error: "unitStatus required" }, { status: 400 });
-            // Status updates must target a row in the caller's hospital
             {
               const units = await listUnitRecords(hospitalId);
               const owned = (units.data ?? []).some((u) => u.id === body.unitStatus!.id);
@@ -185,7 +207,10 @@ export const Route = createFileRoute("/api/hospital/persist")({
                 await updateUnitRecordStatus(body.unitStatus.id, body.unitStatus.status),
               );
             }
-          case "save_anatomy":
+          }
+          case "save_anatomy": {
+            const denied = requireModule("anatomy_3d", auth.mode);
+            if (denied) return denied;
             if (!body.anatomy?.specialtyId) {
               return jsonResponse({ error: "anatomy.specialtyId required" }, { status: 400 });
             }
@@ -199,6 +224,7 @@ export const Route = createFileRoute("/api/hospital/persist")({
                 })),
               ),
             );
+          }
           default:
             return jsonResponse({ error: "Unknown action" }, { status: 400 });
         }

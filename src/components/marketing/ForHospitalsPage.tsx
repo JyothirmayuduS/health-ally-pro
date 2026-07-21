@@ -10,8 +10,8 @@ import {
   Shield,
   Stethoscope,
 } from "lucide-react";
-import { SALES_CONTACT } from "@/lib/legal-content";
-import { getLicenseStatus } from "@/lib/license";
+import { MarketingFooter, MarketingHeader } from "@/components/marketing/MarketingChrome";
+import { salesMailto, SALES_CONTACT } from "@/lib/legal-content";
 
 const PORTALS = [
   "Doctor specialty EMR + 3D anatomy",
@@ -31,8 +31,6 @@ const SPECIALTIES = [
 ];
 
 export default function ForHospitalsPage() {
-  const license = getLicenseStatus();
-
   return (
     <div className="min-h-dvh bg-[#F4F1EC] text-[#1B3B2E]">
       <div
@@ -43,36 +41,7 @@ export default function ForHospitalsPage() {
         }}
       />
 
-      <header className="relative z-10 border-b border-[#E4DFD8]/80 bg-[#F4F1EC]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <span className="font-serif text-2xl font-semibold tracking-tight">Medora</span>
-            <span className="hidden rounded-full bg-[#1B3B2E] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white sm:inline">
-              Hospital OS
-            </span>
-          </div>
-          <nav className="flex items-center gap-3 text-sm">
-            <Link to="/pricing" className="hidden text-[#5C6B63] hover:text-[#1B3B2E] sm:inline">
-              Pricing
-            </Link>
-            <Link to="/legal/disclaimer" className="hidden text-[#5C6B63] hover:text-[#1B3B2E] md:inline">
-              Disclaimer
-            </Link>
-            <Link
-              to="/login"
-              className="rounded-full border border-[#1B3B2E]/20 px-4 py-2 text-sm font-medium hover:bg-white"
-            >
-              Staff login
-            </Link>
-            <Link
-              to="/register-hospital"
-              className="rounded-full bg-[#1B3B2E] px-4 py-2 text-sm font-semibold text-white hover:bg-[#244C3B]"
-            >
-              Start hospital
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <MarketingHeader active="product" />
 
       <main className="relative z-10">
         <section className="mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 sm:pt-20">
@@ -94,22 +63,19 @@ export default function ForHospitalsPage() {
               Request hospital workspace
               <ArrowRight className="h-4 w-4" />
             </Link>
+            <a
+              href={salesMailto("Medora product demo request")}
+              className="inline-flex items-center gap-2 rounded-full border border-[#1B3B2E]/15 bg-white/70 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-white"
+            >
+              Book a sales call
+            </a>
             <Link
               to="/pricing"
-              className="inline-flex items-center gap-2 rounded-full border border-[#1B3B2E]/15 bg-white/70 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full border border-transparent px-4 py-3 text-sm font-semibold text-[#5C6B63] hover:text-[#1B3B2E]"
             >
               View plans
             </Link>
           </div>
-          {license.evaluation ? (
-            <p className="mt-4 text-xs text-[#8A6B5C]">
-              This deployment is in evaluation mode. Licensed hospitals run without watermarks.
-            </p>
-          ) : (
-            <p className="mt-4 text-xs text-[#2F6B4F]">
-              Licensed for {license.hospitalName} · {license.plan} plan
-            </p>
-          )}
         </section>
 
         <section className="border-y border-[#E4DFD8] bg-white/50">
@@ -154,8 +120,8 @@ export default function ForHospitalsPage() {
               <div className="mt-6 flex items-start gap-3 rounded-2xl bg-[#F7F5F2] p-4 text-sm">
                 <Shield className="mt-0.5 h-4 w-4 shrink-0 text-[#1B3B2E]" />
                 <p className="text-[#5C6B63]">
-                  Specialty desks, charts, 3D markers, and hospital units dual-write to Supabase. License
-                  key + legal pack still required for a signed enterprise go-live.
+                  Clinical data dual-writes to Supabase with authenticated hospital persistence.
+                  Licensed go-live includes order form, BAA, and implementation checklist.
                 </p>
               </div>
             </div>
@@ -167,7 +133,10 @@ export default function ForHospitalsPage() {
             <div>
               <h2 className="font-serif text-2xl font-semibold">Ready to license Medora?</h2>
               <p className="mt-2 text-sm text-[#B8C5BE]">
-                {SALES_CONTACT} · Include campus size and specialty mix
+                <a href={salesMailto("Medora hospital license")} className="underline-offset-2 hover:underline">
+                  {SALES_CONTACT}
+                </a>{" "}
+                · Include campus size and specialty mix
               </p>
             </div>
             <Link
@@ -181,25 +150,7 @@ export default function ForHospitalsPage() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-[#E4DFD8] bg-[#F4F1EC] px-4 py-6 text-xs text-[#8A8F8C] sm:px-6">
-        <div className="mx-auto flex max-w-6xl flex-wrap gap-4">
-          <Link to="/legal/terms" className="hover:text-[#1B3B2E]">
-            Terms
-          </Link>
-          <Link to="/legal/privacy" className="hover:text-[#1B3B2E]">
-            Privacy
-          </Link>
-          <Link to="/legal/disclaimer" className="hover:text-[#1B3B2E]">
-            Medical disclaimer
-          </Link>
-          <Link to="/legal/attribution" className="hover:text-[#1B3B2E]">
-            Attribution
-          </Link>
-          <Link to="/pricing" className="hover:text-[#1B3B2E]">
-            Pricing
-          </Link>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }

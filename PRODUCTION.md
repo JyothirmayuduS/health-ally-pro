@@ -30,12 +30,12 @@ Commercial packaging: [SELLING_READY.md](SELLING_READY.md) · [SECURITY.md](SECU
 
 | Area | Demo today | Production status |
 |------|------------|-------------------|
+| Public website | Buyer home `/` | Done — patient app at `/app` |
 | Auth | Demo credentials (gated) | Supabase Auth + staff memberships |
-| Specialty charts | Dual-write localStorage + `specialty_chart_notes` | Done via `/api/hospital/persist` |
-| Doctor registry | Dual-write + `hospital_doctors` | Done — admin specialty assignment syncs |
-| Anatomy markers | Dual-write + `anatomy_markers` | Done — specialty desk 3D tab |
-| Hospital units | Dual-write + `hospital_unit_records` | Done — `/admin/hospital-units` |
-| Onboarding | `/register-hospital` → lead + hospital + trial sub | Done — Stripe Checkout still pending |
+| Specialty charts | Dual-write + auth | Done |
+| Module entitlements | Plan maps | Enforced on persist API |
+| Billing | Sales mailto + Stripe scaffold | Set `STRIPE_*` for self-serve Checkout |
+| Onboarding | Lead + thank-you | Sales activates license |
 
 ## Security notes
 

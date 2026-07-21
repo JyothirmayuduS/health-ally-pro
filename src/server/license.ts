@@ -27,39 +27,48 @@ export function getServerLicense(): ServerLicense {
   return { licensed: true, plan };
 }
 
+const MODULES: Record<ServerLicense["plan"], string[]> = {
+  evaluation: [
+    "opd",
+    "emr",
+    "lab",
+    "pharmacy",
+    "billing",
+    "specialty_desk",
+    "anatomy_3d",
+    "hospital_units",
+  ],
+  starter: ["opd", "emr", "lab", "pharmacy", "billing", "specialty_desk"],
+  professional: [
+    "opd",
+    "emr",
+    "lab",
+    "pharmacy",
+    "billing",
+    "specialty_desk",
+    "anatomy_3d",
+    "ipd",
+    "ot",
+    "hospital_units",
+  ],
+  enterprise: [
+    "opd",
+    "emr",
+    "lab",
+    "pharmacy",
+    "billing",
+    "specialty_desk",
+    "anatomy_3d",
+    "ipd",
+    "ot",
+    "hospital_units",
+    "ai_cdss",
+    "white_label",
+    "multi_branch",
+  ],
+};
+
 export function serverHasModule(moduleId: string): boolean {
-  const { licensed, plan } = getServerLicense();
-  if (!licensed) return ["opd", "emr", "specialty_desk"].includes(moduleId);
-  const map: Record<ServerLicense["plan"], string[]> = {
-    evaluation: ["opd", "emr", "specialty_desk"],
-    starter: ["opd", "emr", "lab", "pharmacy", "billing", "specialty_desk"],
-    professional: [
-      "opd",
-      "emr",
-      "lab",
-      "pharmacy",
-      "billing",
-      "specialty_desk",
-      "anatomy_3d",
-      "ipd",
-      "ot",
-      "hospital_units",
-    ],
-    enterprise: [
-      "opd",
-      "emr",
-      "lab",
-      "pharmacy",
-      "billing",
-      "specialty_desk",
-      "anatomy_3d",
-      "ipd",
-      "ot",
-      "hospital_units",
-      "ai_cdss",
-      "white_label",
-      "multi_branch",
-    ],
-  };
-  return map[plan].includes(moduleId);
+  const { plan } = getServerLicense();
+  return MODULES[plan].includes(moduleId);
 }

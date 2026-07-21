@@ -225,7 +225,7 @@ export function BookingConfirmationScreen({ data }: { data: BookingConfirmationD
           </Link>
         )}
         <Link
-          to="/"
+          to="/app"
           className="inline-flex flex-1 items-center justify-center rounded-2xl border border-[#EDEAE6] bg-white px-5 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-[#F9F7F2]"
         >
           Back to dashboard
