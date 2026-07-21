@@ -9,231 +9,183 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as ReceptionRouteImport } from './routes/reception'
-import { Route as QueueRouteImport } from './routes/queue'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as PharmacyRouteImport } from './routes/pharmacy'
-import { Route as NursingRouteImport } from './routes/nursing'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LabRouteImport } from './routes/lab'
-import { Route as DoctorsRouteImport } from './routes/doctors'
-import { Route as DoctorRouteImport } from './routes/doctor'
-import { Route as BillingRouteImport } from './routes/billing'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ReportsIndexRouteImport } from './routes/reports.index'
-import { Route as ReceptionIndexRouteImport } from './routes/reception.index'
-import { Route as ProfileIndexRouteImport } from './routes/profile.index'
-import { Route as PrescriptionsIndexRouteImport } from './routes/prescriptions.index'
-import { Route as PharmacyIndexRouteImport } from './routes/pharmacy.index'
-import { Route as NursingIndexRouteImport } from './routes/nursing.index'
-import { Route as MedicationsIndexRouteImport } from './routes/medications.index'
-import { Route as LabIndexRouteImport } from './routes/lab.index'
-import { Route as HealthIndexRouteImport } from './routes/health.index'
-import { Route as ExerciseIndexRouteImport } from './routes/exercise.index'
-import { Route as DoctorIndexRouteImport } from './routes/doctor.index'
-import { Route as DietIndexRouteImport } from './routes/diet.index'
-import { Route as CareIndexRouteImport } from './routes/care.index'
-import { Route as BookIndexRouteImport } from './routes/book.index'
-import { Route as BillingIndexRouteImport } from './routes/billing.index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BillingRouteImport } from './routes/billing'
+import { Route as DoctorRouteImport } from './routes/doctor'
+import { Route as DoctorsRouteImport } from './routes/doctors'
+import { Route as LabRouteImport } from './routes/lab'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as NursingRouteImport } from './routes/nursing'
+import { Route as PharmacyRouteImport } from './routes/pharmacy'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as QueueRouteImport } from './routes/queue'
+import { Route as ReceptionRouteImport } from './routes/reception'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as ReportsHistoryRouteImport } from './routes/reports.history'
-import { Route as ReportsReportIdRouteImport } from './routes/reports.$reportId'
-import { Route as ReceptionVitalsRouteImport } from './routes/reception.vitals'
-import { Route as ReceptionTokenDisplayRouteImport } from './routes/reception.token-display'
-import { Route as ReceptionTokenBoardRouteImport } from './routes/reception.token-board'
-import { Route as ReceptionSettingsRouteImport } from './routes/reception.settings'
-import { Route as ReceptionReportsRouteImport } from './routes/reception.reports'
-import { Route as ReceptionRegisterRouteImport } from './routes/reception.register'
-import { Route as ReceptionQueueRouteImport } from './routes/reception.queue'
-import { Route as ReceptionPatientsRouteImport } from './routes/reception.patients'
-import { Route as ReceptionLeaveRouteImport } from './routes/reception.leave'
-import { Route as ReceptionInsuranceRouteImport } from './routes/reception.insurance'
-import { Route as ReceptionDaySheetRouteImport } from './routes/reception.day-sheet'
-import { Route as ReceptionCheckInRouteImport } from './routes/reception.check-in'
-import { Route as ReceptionCashDrawerRouteImport } from './routes/reception.cash-drawer'
-import { Route as ReceptionBoardRouteImport } from './routes/reception.board'
-import { Route as ReceptionBillingRouteImport } from './routes/reception.billing'
-import { Route as ReceptionAppointmentsRouteImport } from './routes/reception.appointments'
-import { Route as ReceptionAdmissionsRouteImport } from './routes/reception.admissions'
-import { Route as ProfileTermsRouteImport } from './routes/profile.terms'
-import { Route as ProfileSupportRouteImport } from './routes/profile.support'
-import { Route as ProfilePrivacyRouteImport } from './routes/profile.privacy'
-import { Route as ProfileNotificationsRouteImport } from './routes/profile.notifications'
-import { Route as ProfileMessagesRouteImport } from './routes/profile.messages'
-import { Route as PrescriptionsRxIdRouteImport } from './routes/prescriptions.$rxId'
-import { Route as PharmacyWardRouteImport } from './routes/pharmacy.ward'
-import { Route as PharmacyWalkInRouteImport } from './routes/pharmacy.walk-in'
-import { Route as PharmacySearchRouteImport } from './routes/pharmacy.search'
-import { Route as PharmacyReportsRouteImport } from './routes/pharmacy.reports'
-import { Route as PharmacyRefillsRouteImport } from './routes/pharmacy.refills'
-import { Route as PharmacyPurchaseOrdersRouteImport } from './routes/pharmacy.purchase-orders'
-import { Route as PharmacyPrescriptionsRouteImport } from './routes/pharmacy.prescriptions'
-import { Route as PharmacyOperationsRouteImport } from './routes/pharmacy.operations'
-import { Route as PharmacyMapRouteImport } from './routes/pharmacy.map'
-import { Route as PharmacyLeaveRouteImport } from './routes/pharmacy.leave'
-import { Route as PharmacyInventoryRouteImport } from './routes/pharmacy.inventory'
-import { Route as PharmacyFormularyRouteImport } from './routes/pharmacy.formulary'
-import { Route as PharmacyDispenseRouteImport } from './routes/pharmacy.dispense'
-import { Route as PharmacyCycleCountRouteImport } from './routes/pharmacy.cycle-count'
-import { Route as PharmacyControlledRouteImport } from './routes/pharmacy.controlled'
-import { Route as PharmacyBillingRouteImport } from './routes/pharmacy.billing'
-import { Route as NursingVitalsRouteImport } from './routes/nursing.vitals'
-import { Route as NursingPatientsRouteImport } from './routes/nursing.patients'
-import { Route as NursingLeaveRouteImport } from './routes/nursing.leave'
-import { Route as NursingBedsRouteImport } from './routes/nursing.beds'
-import { Route as MedicationsRefillHistoryRouteImport } from './routes/medications.refill-history'
-import { Route as MedicationsMedIdRouteImport } from './routes/medications.$medId'
-import { Route as LabWalkInRouteImport } from './routes/lab.walk-in'
-import { Route as LabValidationRouteImport } from './routes/lab.validation'
-import { Route as LabTeamRouteImport } from './routes/lab.team'
-import { Route as LabStorageRouteImport } from './routes/lab.storage'
-import { Route as LabSettingsRouteImport } from './routes/lab.settings'
-import { Route as LabSamplesRouteImport } from './routes/lab.samples'
-import { Route as LabReportsRouteImport } from './routes/lab.reports'
-import { Route as LabReagentsRouteImport } from './routes/lab.reagents'
-import { Route as LabRadiologyRouteImport } from './routes/lab.radiology'
-import { Route as LabQcRouteImport } from './routes/lab.qc'
-import { Route as LabProcessingRouteImport } from './routes/lab.processing'
-import { Route as LabOrdersRouteImport } from './routes/lab.orders'
-import { Route as LabMySubmissionsRouteImport } from './routes/lab.my-submissions'
-import { Route as LabLeaveRouteImport } from './routes/lab.leave'
-import { Route as LabCollectionRouteImport } from './routes/lab.collection'
-import { Route as LabCatalogRouteImport } from './routes/lab.catalog'
-import { Route as ExerciseRoutineIdRouteImport } from './routes/exercise.$routineId'
-import { Route as DoctorVitalsRouteImport } from './routes/doctor.vitals'
-import { Route as DoctorStatisticsRouteImport } from './routes/doctor.statistics'
-import { Route as DoctorSettingsRouteImport } from './routes/doctor.settings'
-import { Route as DoctorScheduleRouteImport } from './routes/doctor.schedule'
-import { Route as DoctorResultsRouteImport } from './routes/doctor.results'
-import { Route as DoctorReportsRouteImport } from './routes/doctor.reports'
-import { Route as DoctorReferralsRouteImport } from './routes/doctor.referrals'
-import { Route as DoctorQueueRouteImport } from './routes/doctor.queue'
-import { Route as DoctorPrescriptionsRouteImport } from './routes/doctor.prescriptions'
-import { Route as DoctorPatientsRouteImport } from './routes/doctor.patients'
-import { Route as DoctorOrdersRouteImport } from './routes/doctor.orders'
-import { Route as DoctorNotificationsRouteImport } from './routes/doctor.notifications'
-import { Route as DoctorMessagingRouteImport } from './routes/doctor.messaging'
-import { Route as DoctorLeaveRouteImport } from './routes/doctor.leave'
-import { Route as DoctorEncountersRouteImport } from './routes/doctor.encounters'
-import { Route as DoctorCoverageRouteImport } from './routes/doctor.coverage'
-import { Route as DietClinicalRulesRouteImport } from './routes/diet.clinical-rules'
-import { Route as DietChefRouteImport } from './routes/diet.chef'
-import { Route as DietMealIdRouteImport } from './routes/diet.$mealId'
-import { Route as CareVisitsRouteImport } from './routes/care.visits'
-import { Route as BookDoctorIdRouteImport } from './routes/book.$doctorId'
-import { Route as BillingPaymentsRouteImport } from './routes/billing.payments'
-import { Route as BillingLeaveRouteImport } from './routes/billing.leave'
-import { Route as BillingInvoicesRouteImport } from './routes/billing.invoices'
-import { Route as BillingEncountersRouteImport } from './routes/billing.encounters'
-import { Route as AdminStaffRouteImport } from './routes/admin.staff'
-import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AdminServicesRouteImport } from './routes/admin.services'
-import { Route as AdminRevenueRouteImport } from './routes/admin.revenue'
-import { Route as AdminPharmacyFormularyRouteImport } from './routes/admin.pharmacy-formulary'
-import { Route as AdminOtRouteImport } from './routes/admin.ot'
-import { Route as AdminOccupancyRouteImport } from './routes/admin.occupancy'
-import { Route as AdminLabCatalogRouteImport } from './routes/admin.lab-catalog'
-import { Route as AdminHrRouteImport } from './routes/admin.hr'
-import { Route as AdminHospitalRouteImport } from './routes/admin.hospital'
-import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
-import { Route as AdminDoctorRosterRouteImport } from './routes/admin.doctor-roster'
-import { Route as AdminDepartmentsRouteImport } from './routes/admin.departments'
-import { Route as AdminBranchesRouteImport } from './routes/admin.branches'
-import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
-import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAccessControlRouteImport } from './routes/admin.access-control'
-import { Route as ReportsShareIndexRouteImport } from './routes/reports.share.index'
-import { Route as ReceptionAppointmentsIndexRouteImport } from './routes/reception.appointments.index'
-import { Route as ProfileDependentsIndexRouteImport } from './routes/profile.dependents.index'
-import { Route as DoctorSettingsIndexRouteImport } from './routes/doctor.settings.index'
-import { Route as DoctorPatientsIndexRouteImport } from './routes/doctor.patients.index'
-import { Route as CareVisitsIndexRouteImport } from './routes/care.visits.index'
-import { Route as ReportsShareReportIdRouteImport } from './routes/reports.share.$reportId'
-import { Route as ReceptionAppointmentsNewRouteImport } from './routes/reception.appointments.new'
-import { Route as ProfileDependentsDependentIdRouteImport } from './routes/profile.dependents.$dependentId'
-import { Route as MedicationsMedIdRefillRouteImport } from './routes/medications.$medId.refill'
-import { Route as DoctorSettingsSlotsRouteImport } from './routes/doctor.settings.slots'
-import { Route as DoctorSettingsSecurityRouteImport } from './routes/doctor.settings.security'
-import { Route as DoctorSettingsScheduleRouteImport } from './routes/doctor.settings.schedule'
-import { Route as DoctorSettingsReferralsRouteImport } from './routes/doctor.settings.referrals'
-import { Route as DoctorSettingsPersonalRouteImport } from './routes/doctor.settings.personal'
-import { Route as DoctorSettingsNotificationsRouteImport } from './routes/doctor.settings.notifications'
-import { Route as DoctorSettingsEmergencyRouteImport } from './routes/doctor.settings.emergency'
-import { Route as DoctorSettingsAuditRouteImport } from './routes/doctor.settings.audit'
-import { Route as DoctorReferralsReferralIdRouteImport } from './routes/doctor.referrals.$referralId'
-import { Route as DoctorPatientsTasksRouteImport } from './routes/doctor.patients.tasks'
-import { Route as DoctorPatientsPatientIdRouteImport } from './routes/doctor.patients.$patientId'
-import { Route as DietMealIdClinicalRulesRouteImport } from './routes/diet.$mealId.clinical-rules'
-import { Route as CareVisitsVisitIdRouteImport } from './routes/care.visits.$visitId'
-import { Route as ApiPatientRxInboxRouteImport } from './routes/api/patient/rx-inbox'
-import { Route as ApiPatientClinicalEventsRouteImport } from './routes/api/patient/clinical-events'
-import { Route as ApiExerciseYoutubeRouteImport } from './routes/api/exercise/youtube'
-import { Route as ApiDietYoutubeRouteImport } from './routes/api/diet/youtube'
-import { Route as ApiDietMealMediaRouteImport } from './routes/api/diet/meal-media'
-import { Route as ApiDietMealImageRouteImport } from './routes/api/diet/meal-image'
-import { Route as ApiAiStatusRouteImport } from './routes/api/ai/status'
-import { Route as ApiAiPrescriptionRouteImport } from './routes/api/ai/prescription'
-import { Route as ApiAiDietRouteImport } from './routes/api/ai/diet'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
+import { Route as AdminBranchesRouteImport } from './routes/admin.branches'
+import { Route as AdminDepartmentsRouteImport } from './routes/admin.departments'
+import { Route as AdminDoctorRosterRouteImport } from './routes/admin.doctor-roster'
+import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
+import { Route as AdminHospitalRouteImport } from './routes/admin.hospital'
+import { Route as AdminHospitalUnitsRouteImport } from './routes/admin.hospital-units'
+import { Route as AdminHrRouteImport } from './routes/admin.hr'
+import { Route as AdminLabCatalogRouteImport } from './routes/admin.lab-catalog'
+import { Route as AdminOccupancyRouteImport } from './routes/admin.occupancy'
+import { Route as AdminOtRouteImport } from './routes/admin.ot'
+import { Route as AdminPharmacyFormularyRouteImport } from './routes/admin.pharmacy-formulary'
+import { Route as AdminRevenueRouteImport } from './routes/admin.revenue'
+import { Route as AdminServicesRouteImport } from './routes/admin.services'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminStaffRouteImport } from './routes/admin.staff'
+import { Route as BillingIndexRouteImport } from './routes/billing.index'
+import { Route as BillingEncountersRouteImport } from './routes/billing.encounters'
+import { Route as BillingInvoicesRouteImport } from './routes/billing.invoices'
+import { Route as BillingLeaveRouteImport } from './routes/billing.leave'
+import { Route as BillingPaymentsRouteImport } from './routes/billing.payments'
+import { Route as BookIndexRouteImport } from './routes/book.index'
+import { Route as BookDoctorIdRouteImport } from './routes/book.$doctorId'
+import { Route as CareIndexRouteImport } from './routes/care.index'
+import { Route as CareVisitsRouteImport } from './routes/care.visits'
+import { Route as DietIndexRouteImport } from './routes/diet.index'
+import { Route as DietMealIdRouteImport } from './routes/diet.$mealId'
+import { Route as DietChefRouteImport } from './routes/diet.chef'
+import { Route as DietClinicalRulesRouteImport } from './routes/diet.clinical-rules'
+import { Route as DoctorIndexRouteImport } from './routes/doctor.index'
+import { Route as DoctorCoverageRouteImport } from './routes/doctor.coverage'
+import { Route as DoctorEncountersRouteImport } from './routes/doctor.encounters'
+import { Route as DoctorLeaveRouteImport } from './routes/doctor.leave'
+import { Route as DoctorMessagingRouteImport } from './routes/doctor.messaging'
+import { Route as DoctorNotificationsRouteImport } from './routes/doctor.notifications'
+import { Route as DoctorOrdersRouteImport } from './routes/doctor.orders'
+import { Route as DoctorPatientsRouteImport } from './routes/doctor.patients'
+import { Route as DoctorPrescriptionsRouteImport } from './routes/doctor.prescriptions'
+import { Route as DoctorQueueRouteImport } from './routes/doctor.queue'
+import { Route as DoctorReferralsRouteImport } from './routes/doctor.referrals'
+import { Route as DoctorReportsRouteImport } from './routes/doctor.reports'
+import { Route as DoctorResultsRouteImport } from './routes/doctor.results'
+import { Route as DoctorScheduleRouteImport } from './routes/doctor.schedule'
+import { Route as DoctorSettingsRouteImport } from './routes/doctor.settings'
+import { Route as DoctorSpecialtyRouteImport } from './routes/doctor.specialty'
+import { Route as DoctorStatisticsRouteImport } from './routes/doctor.statistics'
+import { Route as DoctorVitalsRouteImport } from './routes/doctor.vitals'
+import { Route as ExerciseIndexRouteImport } from './routes/exercise.index'
+import { Route as ExerciseRoutineIdRouteImport } from './routes/exercise.$routineId'
+import { Route as HealthIndexRouteImport } from './routes/health.index'
+import { Route as LabIndexRouteImport } from './routes/lab.index'
+import { Route as LabCatalogRouteImport } from './routes/lab.catalog'
+import { Route as LabCollectionRouteImport } from './routes/lab.collection'
+import { Route as LabLeaveRouteImport } from './routes/lab.leave'
+import { Route as LabMySubmissionsRouteImport } from './routes/lab.my-submissions'
+import { Route as LabOrdersRouteImport } from './routes/lab.orders'
+import { Route as LabProcessingRouteImport } from './routes/lab.processing'
+import { Route as LabQcRouteImport } from './routes/lab.qc'
+import { Route as LabRadiologyRouteImport } from './routes/lab.radiology'
+import { Route as LabReagentsRouteImport } from './routes/lab.reagents'
+import { Route as LabReportsRouteImport } from './routes/lab.reports'
+import { Route as LabSamplesRouteImport } from './routes/lab.samples'
+import { Route as LabSettingsRouteImport } from './routes/lab.settings'
+import { Route as LabStorageRouteImport } from './routes/lab.storage'
+import { Route as LabTeamRouteImport } from './routes/lab.team'
+import { Route as LabValidationRouteImport } from './routes/lab.validation'
+import { Route as LabWalkInRouteImport } from './routes/lab.walk-in'
+import { Route as MedicationsIndexRouteImport } from './routes/medications.index'
+import { Route as MedicationsMedIdRouteImport } from './routes/medications.$medId'
+import { Route as MedicationsRefillHistoryRouteImport } from './routes/medications.refill-history'
+import { Route as NursingIndexRouteImport } from './routes/nursing.index'
+import { Route as NursingBedsRouteImport } from './routes/nursing.beds'
+import { Route as NursingLeaveRouteImport } from './routes/nursing.leave'
+import { Route as NursingPatientsRouteImport } from './routes/nursing.patients'
+import { Route as NursingVitalsRouteImport } from './routes/nursing.vitals'
+import { Route as PharmacyIndexRouteImport } from './routes/pharmacy.index'
+import { Route as PharmacyBillingRouteImport } from './routes/pharmacy.billing'
+import { Route as PharmacyControlledRouteImport } from './routes/pharmacy.controlled'
+import { Route as PharmacyCycleCountRouteImport } from './routes/pharmacy.cycle-count'
+import { Route as PharmacyDispenseRouteImport } from './routes/pharmacy.dispense'
+import { Route as PharmacyFormularyRouteImport } from './routes/pharmacy.formulary'
+import { Route as PharmacyInventoryRouteImport } from './routes/pharmacy.inventory'
+import { Route as PharmacyLeaveRouteImport } from './routes/pharmacy.leave'
+import { Route as PharmacyMapRouteImport } from './routes/pharmacy.map'
+import { Route as PharmacyOperationsRouteImport } from './routes/pharmacy.operations'
+import { Route as PharmacyPrescriptionsRouteImport } from './routes/pharmacy.prescriptions'
+import { Route as PharmacyPurchaseOrdersRouteImport } from './routes/pharmacy.purchase-orders'
+import { Route as PharmacyRefillsRouteImport } from './routes/pharmacy.refills'
+import { Route as PharmacyReportsRouteImport } from './routes/pharmacy.reports'
+import { Route as PharmacySearchRouteImport } from './routes/pharmacy.search'
+import { Route as PharmacyWalkInRouteImport } from './routes/pharmacy.walk-in'
+import { Route as PharmacyWardRouteImport } from './routes/pharmacy.ward'
+import { Route as PrescriptionsIndexRouteImport } from './routes/prescriptions.index'
+import { Route as PrescriptionsRxIdRouteImport } from './routes/prescriptions.$rxId'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as ProfileMessagesRouteImport } from './routes/profile.messages'
+import { Route as ProfileNotificationsRouteImport } from './routes/profile.notifications'
+import { Route as ProfilePrivacyRouteImport } from './routes/profile.privacy'
+import { Route as ProfileSupportRouteImport } from './routes/profile.support'
+import { Route as ProfileTermsRouteImport } from './routes/profile.terms'
+import { Route as ReceptionIndexRouteImport } from './routes/reception.index'
+import { Route as ReceptionAdmissionsRouteImport } from './routes/reception.admissions'
+import { Route as ReceptionAppointmentsRouteImport } from './routes/reception.appointments'
+import { Route as ReceptionBillingRouteImport } from './routes/reception.billing'
+import { Route as ReceptionBoardRouteImport } from './routes/reception.board'
+import { Route as ReceptionCashDrawerRouteImport } from './routes/reception.cash-drawer'
+import { Route as ReceptionCheckInRouteImport } from './routes/reception.check-in'
+import { Route as ReceptionDaySheetRouteImport } from './routes/reception.day-sheet'
+import { Route as ReceptionInsuranceRouteImport } from './routes/reception.insurance'
+import { Route as ReceptionLeaveRouteImport } from './routes/reception.leave'
+import { Route as ReceptionPatientsRouteImport } from './routes/reception.patients'
+import { Route as ReceptionQueueRouteImport } from './routes/reception.queue'
+import { Route as ReceptionRegisterRouteImport } from './routes/reception.register'
+import { Route as ReceptionReportsRouteImport } from './routes/reception.reports'
+import { Route as ReceptionSettingsRouteImport } from './routes/reception.settings'
+import { Route as ReceptionTokenBoardRouteImport } from './routes/reception.token-board'
+import { Route as ReceptionTokenDisplayRouteImport } from './routes/reception.token-display'
+import { Route as ReceptionVitalsRouteImport } from './routes/reception.vitals'
+import { Route as ReportsIndexRouteImport } from './routes/reports.index'
+import { Route as ReportsReportIdRouteImport } from './routes/reports.$reportId'
+import { Route as ReportsHistoryRouteImport } from './routes/reports.history'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
+import { Route as ApiAiDietRouteImport } from './routes/api/ai/diet'
+import { Route as ApiAiPrescriptionRouteImport } from './routes/api/ai/prescription'
+import { Route as ApiAiStatusRouteImport } from './routes/api/ai/status'
+import { Route as ApiDietMealImageRouteImport } from './routes/api/diet/meal-image'
+import { Route as ApiDietMealMediaRouteImport } from './routes/api/diet/meal-media'
+import { Route as ApiDietYoutubeRouteImport } from './routes/api/diet/youtube'
+import { Route as ApiExerciseYoutubeRouteImport } from './routes/api/exercise/youtube'
+import { Route as ApiPatientClinicalEventsRouteImport } from './routes/api/patient/clinical-events'
+import { Route as ApiPatientRxInboxRouteImport } from './routes/api/patient/rx-inbox'
+import { Route as CareVisitsIndexRouteImport } from './routes/care.visits.index'
+import { Route as CareVisitsVisitIdRouteImport } from './routes/care.visits.$visitId'
+import { Route as DietMealIdClinicalRulesRouteImport } from './routes/diet.$mealId.clinical-rules'
+import { Route as DoctorPatientsIndexRouteImport } from './routes/doctor.patients.index'
+import { Route as DoctorPatientsPatientIdRouteImport } from './routes/doctor.patients.$patientId'
+import { Route as DoctorPatientsTasksRouteImport } from './routes/doctor.patients.tasks'
+import { Route as DoctorReferralsReferralIdRouteImport } from './routes/doctor.referrals.$referralId'
+import { Route as DoctorSettingsIndexRouteImport } from './routes/doctor.settings.index'
+import { Route as DoctorSettingsAuditRouteImport } from './routes/doctor.settings.audit'
+import { Route as DoctorSettingsEmergencyRouteImport } from './routes/doctor.settings.emergency'
+import { Route as DoctorSettingsNotificationsRouteImport } from './routes/doctor.settings.notifications'
+import { Route as DoctorSettingsPersonalRouteImport } from './routes/doctor.settings.personal'
+import { Route as DoctorSettingsReferralsRouteImport } from './routes/doctor.settings.referrals'
+import { Route as DoctorSettingsScheduleRouteImport } from './routes/doctor.settings.schedule'
+import { Route as DoctorSettingsSecurityRouteImport } from './routes/doctor.settings.security'
+import { Route as DoctorSettingsSlotsRouteImport } from './routes/doctor.settings.slots'
+import { Route as MedicationsMedIdRefillRouteImport } from './routes/medications.$medId.refill'
+import { Route as ProfileDependentsIndexRouteImport } from './routes/profile.dependents.index'
+import { Route as ProfileDependentsDependentIdRouteImport } from './routes/profile.dependents.$dependentId'
+import { Route as ReceptionAppointmentsIndexRouteImport } from './routes/reception.appointments.index'
+import { Route as ReceptionAppointmentsNewRouteImport } from './routes/reception.appointments.new'
+import { Route as ReportsShareIndexRouteImport } from './routes/reports.share.index'
+import { Route as ReportsShareReportIdRouteImport } from './routes/reports.share.$reportId'
 import { Route as DoctorPatientsPatientIdIndexRouteImport } from './routes/doctor.patients.$patientId.index'
-import { Route as DoctorSettingsReferralsReferralIdRouteImport } from './routes/doctor.settings.referrals.$referralId'
 import { Route as DoctorPatientsPatientIdHistoryRouteImport } from './routes/doctor.patients.$patientId.history'
+import { Route as DoctorSettingsReferralsReferralIdRouteImport } from './routes/doctor.settings.referrals.$referralId'
 
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReceptionRoute = ReceptionRouteImport.update({
-  id: '/reception',
-  path: '/reception',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QueueRoute = QueueRouteImport.update({
-  id: '/queue',
-  path: '/queue',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PharmacyRoute = PharmacyRouteImport.update({
-  id: '/pharmacy',
-  path: '/pharmacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NursingRoute = NursingRouteImport.update({
-  id: '/nursing',
-  path: '/nursing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LabRoute = LabRouteImport.update({
-  id: '/lab',
-  path: '/lab',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DoctorsRoute = DoctorsRouteImport.update({
-  id: '/doctors',
-  path: '/doctors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DoctorRoute = DoctorRouteImport.update({
-  id: '/doctor',
-  path: '/doctor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BillingRoute = BillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -241,615 +193,64 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReportsIndexRoute = ReportsIndexRouteImport.update({
-  id: '/reports/',
-  path: '/reports/',
+const DoctorRoute = DoctorRouteImport.update({
+  id: '/doctor',
+  path: '/doctor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReceptionIndexRoute = ReceptionIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const PrescriptionsIndexRoute = PrescriptionsIndexRouteImport.update({
-  id: '/prescriptions/',
-  path: '/prescriptions/',
+const DoctorsRoute = DoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PharmacyIndexRoute = PharmacyIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const NursingIndexRoute = NursingIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => NursingRoute,
-} as any)
-const MedicationsIndexRoute = MedicationsIndexRouteImport.update({
-  id: '/medications/',
-  path: '/medications/',
+const LabRoute = LabRouteImport.update({
+  id: '/lab',
+  path: '/lab',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LabIndexRoute = LabIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => LabRoute,
-} as any)
-const HealthIndexRoute = HealthIndexRouteImport.update({
-  id: '/health/',
-  path: '/health/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ExerciseIndexRoute = ExerciseIndexRouteImport.update({
-  id: '/exercise/',
-  path: '/exercise/',
+const NursingRoute = NursingRouteImport.update({
+  id: '/nursing',
+  path: '/nursing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DoctorIndexRoute = DoctorIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DietIndexRoute = DietIndexRouteImport.update({
-  id: '/diet/',
-  path: '/diet/',
+const PharmacyRoute = PharmacyRouteImport.update({
+  id: '/pharmacy',
+  path: '/pharmacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CareIndexRoute = CareIndexRouteImport.update({
-  id: '/care/',
-  path: '/care/',
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookIndexRoute = BookIndexRouteImport.update({
-  id: '/book/',
-  path: '/book/',
+const QueueRoute = QueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BillingIndexRoute = BillingIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => BillingRoute,
+const ReceptionRoute = ReceptionRouteImport.update({
+  id: '/reception',
+  path: '/reception',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
-const ReportsHistoryRoute = ReportsHistoryRouteImport.update({
-  id: '/reports/history',
-  path: '/reports/history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportsReportIdRoute = ReportsReportIdRouteImport.update({
-  id: '/reports/$reportId',
-  path: '/reports/$reportId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReceptionVitalsRoute = ReceptionVitalsRouteImport.update({
-  id: '/vitals',
-  path: '/vitals',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionTokenDisplayRoute = ReceptionTokenDisplayRouteImport.update({
-  id: '/token-display',
-  path: '/token-display',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionTokenBoardRoute = ReceptionTokenBoardRouteImport.update({
-  id: '/token-board',
-  path: '/token-board',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionSettingsRoute = ReceptionSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionReportsRoute = ReceptionReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionRegisterRoute = ReceptionRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionQueueRoute = ReceptionQueueRouteImport.update({
-  id: '/queue',
-  path: '/queue',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionPatientsRoute = ReceptionPatientsRouteImport.update({
-  id: '/patients',
-  path: '/patients',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionLeaveRoute = ReceptionLeaveRouteImport.update({
-  id: '/leave',
-  path: '/leave',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionInsuranceRoute = ReceptionInsuranceRouteImport.update({
-  id: '/insurance',
-  path: '/insurance',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionDaySheetRoute = ReceptionDaySheetRouteImport.update({
-  id: '/day-sheet',
-  path: '/day-sheet',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionCheckInRoute = ReceptionCheckInRouteImport.update({
-  id: '/check-in',
-  path: '/check-in',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionCashDrawerRoute = ReceptionCashDrawerRouteImport.update({
-  id: '/cash-drawer',
-  path: '/cash-drawer',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionBoardRoute = ReceptionBoardRouteImport.update({
-  id: '/board',
-  path: '/board',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionBillingRoute = ReceptionBillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionAppointmentsRoute = ReceptionAppointmentsRouteImport.update({
-  id: '/appointments',
-  path: '/appointments',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ReceptionAdmissionsRoute = ReceptionAdmissionsRouteImport.update({
-  id: '/admissions',
-  path: '/admissions',
-  getParentRoute: () => ReceptionRoute,
-} as any)
-const ProfileTermsRoute = ProfileTermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfileSupportRoute = ProfileSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfilePrivacyRoute = ProfilePrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfileNotificationsRoute = ProfileNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const ProfileMessagesRoute = ProfileMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const PrescriptionsRxIdRoute = PrescriptionsRxIdRouteImport.update({
-  id: '/prescriptions/$rxId',
-  path: '/prescriptions/$rxId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PharmacyWardRoute = PharmacyWardRouteImport.update({
-  id: '/ward',
-  path: '/ward',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyWalkInRoute = PharmacyWalkInRouteImport.update({
-  id: '/walk-in',
-  path: '/walk-in',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacySearchRoute = PharmacySearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyReportsRoute = PharmacyReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyRefillsRoute = PharmacyRefillsRouteImport.update({
-  id: '/refills',
-  path: '/refills',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyPurchaseOrdersRoute = PharmacyPurchaseOrdersRouteImport.update({
-  id: '/purchase-orders',
-  path: '/purchase-orders',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyPrescriptionsRoute = PharmacyPrescriptionsRouteImport.update({
-  id: '/prescriptions',
-  path: '/prescriptions',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyOperationsRoute = PharmacyOperationsRouteImport.update({
-  id: '/operations',
-  path: '/operations',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyMapRoute = PharmacyMapRouteImport.update({
-  id: '/map',
-  path: '/map',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyLeaveRoute = PharmacyLeaveRouteImport.update({
-  id: '/leave',
-  path: '/leave',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyInventoryRoute = PharmacyInventoryRouteImport.update({
-  id: '/inventory',
-  path: '/inventory',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyFormularyRoute = PharmacyFormularyRouteImport.update({
-  id: '/formulary',
-  path: '/formulary',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyDispenseRoute = PharmacyDispenseRouteImport.update({
-  id: '/dispense',
-  path: '/dispense',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyCycleCountRoute = PharmacyCycleCountRouteImport.update({
-  id: '/cycle-count',
-  path: '/cycle-count',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyControlledRoute = PharmacyControlledRouteImport.update({
-  id: '/controlled',
-  path: '/controlled',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const PharmacyBillingRoute = PharmacyBillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
-  getParentRoute: () => PharmacyRoute,
-} as any)
-const NursingVitalsRoute = NursingVitalsRouteImport.update({
-  id: '/vitals',
-  path: '/vitals',
-  getParentRoute: () => NursingRoute,
-} as any)
-const NursingPatientsRoute = NursingPatientsRouteImport.update({
-  id: '/patients',
-  path: '/patients',
-  getParentRoute: () => NursingRoute,
-} as any)
-const NursingLeaveRoute = NursingLeaveRouteImport.update({
-  id: '/leave',
-  path: '/leave',
-  getParentRoute: () => NursingRoute,
-} as any)
-const NursingBedsRoute = NursingBedsRouteImport.update({
-  id: '/beds',
-  path: '/beds',
-  getParentRoute: () => NursingRoute,
-} as any)
-const MedicationsRefillHistoryRoute =
-  MedicationsRefillHistoryRouteImport.update({
-    id: '/medications/refill-history',
-    path: '/medications/refill-history',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const MedicationsMedIdRoute = MedicationsMedIdRouteImport.update({
-  id: '/medications/$medId',
-  path: '/medications/$medId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LabWalkInRoute = LabWalkInRouteImport.update({
-  id: '/walk-in',
-  path: '/walk-in',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabValidationRoute = LabValidationRouteImport.update({
-  id: '/validation',
-  path: '/validation',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabTeamRoute = LabTeamRouteImport.update({
-  id: '/team',
-  path: '/team',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabStorageRoute = LabStorageRouteImport.update({
-  id: '/storage',
-  path: '/storage',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabSettingsRoute = LabSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabSamplesRoute = LabSamplesRouteImport.update({
-  id: '/samples',
-  path: '/samples',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabReportsRoute = LabReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabReagentsRoute = LabReagentsRouteImport.update({
-  id: '/reagents',
-  path: '/reagents',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabRadiologyRoute = LabRadiologyRouteImport.update({
-  id: '/radiology',
-  path: '/radiology',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabQcRoute = LabQcRouteImport.update({
-  id: '/qc',
-  path: '/qc',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabProcessingRoute = LabProcessingRouteImport.update({
-  id: '/processing',
-  path: '/processing',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabOrdersRoute = LabOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabMySubmissionsRoute = LabMySubmissionsRouteImport.update({
-  id: '/my-submissions',
-  path: '/my-submissions',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabLeaveRoute = LabLeaveRouteImport.update({
-  id: '/leave',
-  path: '/leave',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabCollectionRoute = LabCollectionRouteImport.update({
-  id: '/collection',
-  path: '/collection',
-  getParentRoute: () => LabRoute,
-} as any)
-const LabCatalogRoute = LabCatalogRouteImport.update({
-  id: '/catalog',
-  path: '/catalog',
-  getParentRoute: () => LabRoute,
-} as any)
-const ExerciseRoutineIdRoute = ExerciseRoutineIdRouteImport.update({
-  id: '/exercise/$routineId',
-  path: '/exercise/$routineId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DoctorVitalsRoute = DoctorVitalsRouteImport.update({
-  id: '/vitals',
-  path: '/vitals',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorStatisticsRoute = DoctorStatisticsRouteImport.update({
-  id: '/statistics',
-  path: '/statistics',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorSettingsRoute = DoctorSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorScheduleRoute = DoctorScheduleRouteImport.update({
-  id: '/schedule',
-  path: '/schedule',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorResultsRoute = DoctorResultsRouteImport.update({
-  id: '/results',
-  path: '/results',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorReportsRoute = DoctorReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorReferralsRoute = DoctorReferralsRouteImport.update({
-  id: '/referrals',
-  path: '/referrals',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorQueueRoute = DoctorQueueRouteImport.update({
-  id: '/queue',
-  path: '/queue',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorPrescriptionsRoute = DoctorPrescriptionsRouteImport.update({
-  id: '/prescriptions',
-  path: '/prescriptions',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorPatientsRoute = DoctorPatientsRouteImport.update({
-  id: '/patients',
-  path: '/patients',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorOrdersRoute = DoctorOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorNotificationsRoute = DoctorNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorMessagingRoute = DoctorMessagingRouteImport.update({
-  id: '/messaging',
-  path: '/messaging',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorLeaveRoute = DoctorLeaveRouteImport.update({
-  id: '/leave',
-  path: '/leave',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorEncountersRoute = DoctorEncountersRouteImport.update({
-  id: '/encounters',
-  path: '/encounters',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DoctorCoverageRoute = DoctorCoverageRouteImport.update({
-  id: '/coverage',
-  path: '/coverage',
-  getParentRoute: () => DoctorRoute,
-} as any)
-const DietClinicalRulesRoute = DietClinicalRulesRouteImport.update({
-  id: '/diet/clinical-rules',
-  path: '/diet/clinical-rules',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DietChefRoute = DietChefRouteImport.update({
-  id: '/diet/chef',
-  path: '/diet/chef',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DietMealIdRoute = DietMealIdRouteImport.update({
-  id: '/diet/$mealId',
-  path: '/diet/$mealId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CareVisitsRoute = CareVisitsRouteImport.update({
-  id: '/care/visits',
-  path: '/care/visits',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BookDoctorIdRoute = BookDoctorIdRouteImport.update({
-  id: '/book/$doctorId',
-  path: '/book/$doctorId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BillingPaymentsRoute = BillingPaymentsRouteImport.update({
-  id: '/payments',
-  path: '/payments',
-  getParentRoute: () => BillingRoute,
-} as any)
-const BillingLeaveRoute = BillingLeaveRouteImport.update({
-  id: '/leave',
-  path: '/leave',
-  getParentRoute: () => BillingRoute,
-} as any)
-const BillingInvoicesRoute = BillingInvoicesRouteImport.update({
-  id: '/invoices',
-  path: '/invoices',
-  getParentRoute: () => BillingRoute,
-} as any)
-const BillingEncountersRoute = BillingEncountersRouteImport.update({
-  id: '/encounters',
-  path: '/encounters',
-  getParentRoute: () => BillingRoute,
-} as any)
-const AdminStaffRoute = AdminStaffRouteImport.update({
-  id: '/staff',
-  path: '/staff',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminServicesRoute = AdminServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminRevenueRoute = AdminRevenueRouteImport.update({
-  id: '/revenue',
-  path: '/revenue',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminPharmacyFormularyRoute = AdminPharmacyFormularyRouteImport.update({
-  id: '/pharmacy-formulary',
-  path: '/pharmacy-formulary',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminOtRoute = AdminOtRouteImport.update({
-  id: '/ot',
-  path: '/ot',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminOccupancyRoute = AdminOccupancyRouteImport.update({
-  id: '/occupancy',
-  path: '/occupancy',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLabCatalogRoute = AdminLabCatalogRouteImport.update({
-  id: '/lab-catalog',
-  path: '/lab-catalog',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminHrRoute = AdminHrRouteImport.update({
-  id: '/hr',
-  path: '/hr',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminHospitalRoute = AdminHospitalRouteImport.update({
-  id: '/hospital',
-  path: '/hospital',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
-  id: '/doctors',
-  path: '/doctors',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminDoctorRosterRoute = AdminDoctorRosterRouteImport.update({
-  id: '/doctor-roster',
-  path: '/doctor-roster',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminDepartmentsRoute = AdminDepartmentsRouteImport.update({
-  id: '/departments',
-  path: '/departments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBranchesRoute = AdminBranchesRouteImport.update({
-  id: '/branches',
-  path: '/branches',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
-  id: '/announcements',
-  path: '/announcements',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAccessControlRoute = AdminAccessControlRouteImport.update({
@@ -857,129 +258,655 @@ const AdminAccessControlRoute = AdminAccessControlRouteImport.update({
   path: '/access-control',
   getParentRoute: () => AdminRoute,
 } as any)
-const ReportsShareIndexRoute = ReportsShareIndexRouteImport.update({
-  id: '/reports/share/',
-  path: '/reports/share/',
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBranchesRoute = AdminBranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDepartmentsRoute = AdminDepartmentsRouteImport.update({
+  id: '/departments',
+  path: '/departments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDoctorRosterRoute = AdminDoctorRosterRouteImport.update({
+  id: '/doctor-roster',
+  path: '/doctor-roster',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDoctorsRoute = AdminDoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHospitalRoute = AdminHospitalRouteImport.update({
+  id: '/hospital',
+  path: '/hospital',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHospitalUnitsRoute = AdminHospitalUnitsRouteImport.update({
+  id: '/hospital-units',
+  path: '/hospital-units',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHrRoute = AdminHrRouteImport.update({
+  id: '/hr',
+  path: '/hr',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLabCatalogRoute = AdminLabCatalogRouteImport.update({
+  id: '/lab-catalog',
+  path: '/lab-catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOccupancyRoute = AdminOccupancyRouteImport.update({
+  id: '/occupancy',
+  path: '/occupancy',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOtRoute = AdminOtRouteImport.update({
+  id: '/ot',
+  path: '/ot',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPharmacyFormularyRoute = AdminPharmacyFormularyRouteImport.update({
+  id: '/pharmacy-formulary',
+  path: '/pharmacy-formulary',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRevenueRoute = AdminRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminServicesRoute = AdminServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStaffRoute = AdminStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AdminRoute,
+} as any)
+const BillingIndexRoute = BillingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BillingRoute,
+} as any)
+const BillingEncountersRoute = BillingEncountersRouteImport.update({
+  id: '/encounters',
+  path: '/encounters',
+  getParentRoute: () => BillingRoute,
+} as any)
+const BillingInvoicesRoute = BillingInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => BillingRoute,
+} as any)
+const BillingLeaveRoute = BillingLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => BillingRoute,
+} as any)
+const BillingPaymentsRoute = BillingPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => BillingRoute,
+} as any)
+const BookIndexRoute = BookIndexRouteImport.update({
+  id: '/book/',
+  path: '/book/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReceptionAppointmentsIndexRoute =
-  ReceptionAppointmentsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => ReceptionAppointmentsRoute,
-  } as any)
-const ProfileDependentsIndexRoute = ProfileDependentsIndexRouteImport.update({
-  id: '/dependents/',
-  path: '/dependents/',
-  getParentRoute: () => ProfileRoute,
-} as any)
-const DoctorSettingsIndexRoute = DoctorSettingsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DoctorSettingsRoute,
-} as any)
-const DoctorPatientsIndexRoute = DoctorPatientsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DoctorPatientsRoute,
-} as any)
-const CareVisitsIndexRoute = CareVisitsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => CareVisitsRoute,
-} as any)
-const ReportsShareReportIdRoute = ReportsShareReportIdRouteImport.update({
-  id: '/reports/share/$reportId',
-  path: '/reports/share/$reportId',
+const BookDoctorIdRoute = BookDoctorIdRouteImport.update({
+  id: '/book/$doctorId',
+  path: '/book/$doctorId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReceptionAppointmentsNewRoute =
-  ReceptionAppointmentsNewRouteImport.update({
-    id: '/new',
-    path: '/new',
-    getParentRoute: () => ReceptionAppointmentsRoute,
-  } as any)
-const ProfileDependentsDependentIdRoute =
-  ProfileDependentsDependentIdRouteImport.update({
-    id: '/dependents/$dependentId',
-    path: '/dependents/$dependentId',
-    getParentRoute: () => ProfileRoute,
-  } as any)
-const MedicationsMedIdRefillRoute = MedicationsMedIdRefillRouteImport.update({
-  id: '/refill',
-  path: '/refill',
-  getParentRoute: () => MedicationsMedIdRoute,
+const CareIndexRoute = CareIndexRouteImport.update({
+  id: '/care/',
+  path: '/care/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const DoctorSettingsSlotsRoute = DoctorSettingsSlotsRouteImport.update({
-  id: '/slots',
-  path: '/slots',
-  getParentRoute: () => DoctorSettingsRoute,
+const CareVisitsRoute = CareVisitsRouteImport.update({
+  id: '/care/visits',
+  path: '/care/visits',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const DoctorSettingsSecurityRoute = DoctorSettingsSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
-  getParentRoute: () => DoctorSettingsRoute,
+const DietIndexRoute = DietIndexRouteImport.update({
+  id: '/diet/',
+  path: '/diet/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const DoctorSettingsScheduleRoute = DoctorSettingsScheduleRouteImport.update({
-  id: '/schedule',
-  path: '/schedule',
-  getParentRoute: () => DoctorSettingsRoute,
+const DietMealIdRoute = DietMealIdRouteImport.update({
+  id: '/diet/$mealId',
+  path: '/diet/$mealId',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const DoctorSettingsReferralsRoute = DoctorSettingsReferralsRouteImport.update({
+const DietChefRoute = DietChefRouteImport.update({
+  id: '/diet/chef',
+  path: '/diet/chef',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DietClinicalRulesRoute = DietClinicalRulesRouteImport.update({
+  id: '/diet/clinical-rules',
+  path: '/diet/clinical-rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorIndexRoute = DoctorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorCoverageRoute = DoctorCoverageRouteImport.update({
+  id: '/coverage',
+  path: '/coverage',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorEncountersRoute = DoctorEncountersRouteImport.update({
+  id: '/encounters',
+  path: '/encounters',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorLeaveRoute = DoctorLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorMessagingRoute = DoctorMessagingRouteImport.update({
+  id: '/messaging',
+  path: '/messaging',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorNotificationsRoute = DoctorNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorOrdersRoute = DoctorOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorPatientsRoute = DoctorPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorPrescriptionsRoute = DoctorPrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorQueueRoute = DoctorQueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorReferralsRoute = DoctorReferralsRouteImport.update({
   id: '/referrals',
   path: '/referrals',
-  getParentRoute: () => DoctorSettingsRoute,
+  getParentRoute: () => DoctorRoute,
 } as any)
-const DoctorSettingsPersonalRoute = DoctorSettingsPersonalRouteImport.update({
-  id: '/personal',
-  path: '/personal',
-  getParentRoute: () => DoctorSettingsRoute,
+const DoctorReportsRoute = DoctorReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => DoctorRoute,
 } as any)
-const DoctorSettingsNotificationsRoute =
-  DoctorSettingsNotificationsRouteImport.update({
-    id: '/notifications',
-    path: '/notifications',
-    getParentRoute: () => DoctorSettingsRoute,
+const DoctorResultsRoute = DoctorResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorScheduleRoute = DoctorScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorSettingsRoute = DoctorSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorSpecialtyRoute = DoctorSpecialtyRouteImport.update({
+  id: '/specialty',
+  path: '/specialty',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorStatisticsRoute = DoctorStatisticsRouteImport.update({
+  id: '/statistics',
+  path: '/statistics',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorVitalsRoute = DoctorVitalsRouteImport.update({
+  id: '/vitals',
+  path: '/vitals',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const ExerciseIndexRoute = ExerciseIndexRouteImport.update({
+  id: '/exercise/',
+  path: '/exercise/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExerciseRoutineIdRoute = ExerciseRoutineIdRouteImport.update({
+  id: '/exercise/$routineId',
+  path: '/exercise/$routineId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthIndexRoute = HealthIndexRouteImport.update({
+  id: '/health/',
+  path: '/health/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabIndexRoute = LabIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabCatalogRoute = LabCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabCollectionRoute = LabCollectionRouteImport.update({
+  id: '/collection',
+  path: '/collection',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabLeaveRoute = LabLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabMySubmissionsRoute = LabMySubmissionsRouteImport.update({
+  id: '/my-submissions',
+  path: '/my-submissions',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabOrdersRoute = LabOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabProcessingRoute = LabProcessingRouteImport.update({
+  id: '/processing',
+  path: '/processing',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabQcRoute = LabQcRouteImport.update({
+  id: '/qc',
+  path: '/qc',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabRadiologyRoute = LabRadiologyRouteImport.update({
+  id: '/radiology',
+  path: '/radiology',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabReagentsRoute = LabReagentsRouteImport.update({
+  id: '/reagents',
+  path: '/reagents',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabReportsRoute = LabReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabSamplesRoute = LabSamplesRouteImport.update({
+  id: '/samples',
+  path: '/samples',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabSettingsRoute = LabSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabStorageRoute = LabStorageRouteImport.update({
+  id: '/storage',
+  path: '/storage',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabTeamRoute = LabTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabValidationRoute = LabValidationRouteImport.update({
+  id: '/validation',
+  path: '/validation',
+  getParentRoute: () => LabRoute,
+} as any)
+const LabWalkInRoute = LabWalkInRouteImport.update({
+  id: '/walk-in',
+  path: '/walk-in',
+  getParentRoute: () => LabRoute,
+} as any)
+const MedicationsIndexRoute = MedicationsIndexRouteImport.update({
+  id: '/medications/',
+  path: '/medications/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicationsMedIdRoute = MedicationsMedIdRouteImport.update({
+  id: '/medications/$medId',
+  path: '/medications/$medId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicationsRefillHistoryRoute =
+  MedicationsRefillHistoryRouteImport.update({
+    id: '/medications/refill-history',
+    path: '/medications/refill-history',
+    getParentRoute: () => rootRouteImport,
   } as any)
-const DoctorSettingsEmergencyRoute = DoctorSettingsEmergencyRouteImport.update({
-  id: '/emergency',
-  path: '/emergency',
-  getParentRoute: () => DoctorSettingsRoute,
+const NursingIndexRoute = NursingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NursingRoute,
 } as any)
-const DoctorSettingsAuditRoute = DoctorSettingsAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => DoctorSettingsRoute,
+const NursingBedsRoute = NursingBedsRouteImport.update({
+  id: '/beds',
+  path: '/beds',
+  getParentRoute: () => NursingRoute,
 } as any)
-const DoctorReferralsReferralIdRoute =
-  DoctorReferralsReferralIdRouteImport.update({
-    id: '/$referralId',
-    path: '/$referralId',
-    getParentRoute: () => DoctorReferralsRoute,
-  } as any)
-const DoctorPatientsTasksRoute = DoctorPatientsTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => DoctorPatientsRoute,
+const NursingLeaveRoute = NursingLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => NursingRoute,
 } as any)
-const DoctorPatientsPatientIdRoute = DoctorPatientsPatientIdRouteImport.update({
-  id: '/$patientId',
-  path: '/$patientId',
-  getParentRoute: () => DoctorPatientsRoute,
+const NursingPatientsRoute = NursingPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => NursingRoute,
 } as any)
-const DietMealIdClinicalRulesRoute = DietMealIdClinicalRulesRouteImport.update({
-  id: '/clinical-rules',
-  path: '/clinical-rules',
-  getParentRoute: () => DietMealIdRoute,
+const NursingVitalsRoute = NursingVitalsRouteImport.update({
+  id: '/vitals',
+  path: '/vitals',
+  getParentRoute: () => NursingRoute,
 } as any)
-const CareVisitsVisitIdRoute = CareVisitsVisitIdRouteImport.update({
-  id: '/$visitId',
-  path: '/$visitId',
-  getParentRoute: () => CareVisitsRoute,
+const PharmacyIndexRoute = PharmacyIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PharmacyRoute,
 } as any)
-const ApiPatientRxInboxRoute = ApiPatientRxInboxRouteImport.update({
-  id: '/api/patient/rx-inbox',
-  path: '/api/patient/rx-inbox',
+const PharmacyBillingRoute = PharmacyBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyControlledRoute = PharmacyControlledRouteImport.update({
+  id: '/controlled',
+  path: '/controlled',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyCycleCountRoute = PharmacyCycleCountRouteImport.update({
+  id: '/cycle-count',
+  path: '/cycle-count',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyDispenseRoute = PharmacyDispenseRouteImport.update({
+  id: '/dispense',
+  path: '/dispense',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyFormularyRoute = PharmacyFormularyRouteImport.update({
+  id: '/formulary',
+  path: '/formulary',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyInventoryRoute = PharmacyInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyLeaveRoute = PharmacyLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyMapRoute = PharmacyMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyOperationsRoute = PharmacyOperationsRouteImport.update({
+  id: '/operations',
+  path: '/operations',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyPrescriptionsRoute = PharmacyPrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyPurchaseOrdersRoute = PharmacyPurchaseOrdersRouteImport.update({
+  id: '/purchase-orders',
+  path: '/purchase-orders',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyRefillsRoute = PharmacyRefillsRouteImport.update({
+  id: '/refills',
+  path: '/refills',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyReportsRoute = PharmacyReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacySearchRoute = PharmacySearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyWalkInRoute = PharmacyWalkInRouteImport.update({
+  id: '/walk-in',
+  path: '/walk-in',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PharmacyWardRoute = PharmacyWardRouteImport.update({
+  id: '/ward',
+  path: '/ward',
+  getParentRoute: () => PharmacyRoute,
+} as any)
+const PrescriptionsIndexRoute = PrescriptionsIndexRouteImport.update({
+  id: '/prescriptions/',
+  path: '/prescriptions/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrescriptionsRxIdRoute = PrescriptionsRxIdRouteImport.update({
+  id: '/prescriptions/$rxId',
+  path: '/prescriptions/$rxId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileMessagesRoute = ProfileMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileNotificationsRoute = ProfileNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfilePrivacyRoute = ProfilePrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileSupportRoute = ProfileSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileTermsRoute = ProfileTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ReceptionIndexRoute = ReceptionIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionAdmissionsRoute = ReceptionAdmissionsRouteImport.update({
+  id: '/admissions',
+  path: '/admissions',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionAppointmentsRoute = ReceptionAppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionBillingRoute = ReceptionBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionBoardRoute = ReceptionBoardRouteImport.update({
+  id: '/board',
+  path: '/board',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionCashDrawerRoute = ReceptionCashDrawerRouteImport.update({
+  id: '/cash-drawer',
+  path: '/cash-drawer',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionCheckInRoute = ReceptionCheckInRouteImport.update({
+  id: '/check-in',
+  path: '/check-in',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionDaySheetRoute = ReceptionDaySheetRouteImport.update({
+  id: '/day-sheet',
+  path: '/day-sheet',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionInsuranceRoute = ReceptionInsuranceRouteImport.update({
+  id: '/insurance',
+  path: '/insurance',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionLeaveRoute = ReceptionLeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionPatientsRoute = ReceptionPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionQueueRoute = ReceptionQueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionRegisterRoute = ReceptionRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionReportsRoute = ReceptionReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionSettingsRoute = ReceptionSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionTokenBoardRoute = ReceptionTokenBoardRouteImport.update({
+  id: '/token-board',
+  path: '/token-board',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionTokenDisplayRoute = ReceptionTokenDisplayRouteImport.update({
+  id: '/token-display',
+  path: '/token-display',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionVitalsRoute = ReceptionVitalsRouteImport.update({
+  id: '/vitals',
+  path: '/vitals',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReportsIndexRoute = ReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsReportIdRoute = ReportsReportIdRouteImport.update({
+  id: '/reports/$reportId',
+  path: '/reports/$reportId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsHistoryRoute = ReportsHistoryRouteImport.update({
+  id: '/reports/history',
+  path: '/reports/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai/chat',
+  path: '/api/ai/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiDietRoute = ApiAiDietRouteImport.update({
+  id: '/api/ai/diet',
+  path: '/api/ai/diet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiPrescriptionRoute = ApiAiPrescriptionRouteImport.update({
+  id: '/api/ai/prescription',
+  path: '/api/ai/prescription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiStatusRoute = ApiAiStatusRouteImport.update({
+  id: '/api/ai/status',
+  path: '/api/ai/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDietMealImageRoute = ApiDietMealImageRouteImport.update({
+  id: '/api/diet/meal-image',
+  path: '/api/diet/meal-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDietMealMediaRoute = ApiDietMealMediaRouteImport.update({
+  id: '/api/diet/meal-media',
+  path: '/api/diet/meal-media',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDietYoutubeRoute = ApiDietYoutubeRouteImport.update({
+  id: '/api/diet/youtube',
+  path: '/api/diet/youtube',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExerciseYoutubeRoute = ApiExerciseYoutubeRouteImport.update({
+  id: '/api/exercise/youtube',
+  path: '/api/exercise/youtube',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPatientClinicalEventsRoute =
@@ -988,44 +915,129 @@ const ApiPatientClinicalEventsRoute =
     path: '/api/patient/clinical-events',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiExerciseYoutubeRoute = ApiExerciseYoutubeRouteImport.update({
-  id: '/api/exercise/youtube',
-  path: '/api/exercise/youtube',
+const ApiPatientRxInboxRoute = ApiPatientRxInboxRouteImport.update({
+  id: '/api/patient/rx-inbox',
+  path: '/api/patient/rx-inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDietYoutubeRoute = ApiDietYoutubeRouteImport.update({
-  id: '/api/diet/youtube',
-  path: '/api/diet/youtube',
+const CareVisitsIndexRoute = CareVisitsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CareVisitsRoute,
+} as any)
+const CareVisitsVisitIdRoute = CareVisitsVisitIdRouteImport.update({
+  id: '/$visitId',
+  path: '/$visitId',
+  getParentRoute: () => CareVisitsRoute,
+} as any)
+const DietMealIdClinicalRulesRoute = DietMealIdClinicalRulesRouteImport.update({
+  id: '/clinical-rules',
+  path: '/clinical-rules',
+  getParentRoute: () => DietMealIdRoute,
+} as any)
+const DoctorPatientsIndexRoute = DoctorPatientsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DoctorPatientsRoute,
+} as any)
+const DoctorPatientsPatientIdRoute = DoctorPatientsPatientIdRouteImport.update({
+  id: '/$patientId',
+  path: '/$patientId',
+  getParentRoute: () => DoctorPatientsRoute,
+} as any)
+const DoctorPatientsTasksRoute = DoctorPatientsTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => DoctorPatientsRoute,
+} as any)
+const DoctorReferralsReferralIdRoute =
+  DoctorReferralsReferralIdRouteImport.update({
+    id: '/$referralId',
+    path: '/$referralId',
+    getParentRoute: () => DoctorReferralsRoute,
+  } as any)
+const DoctorSettingsIndexRoute = DoctorSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsAuditRoute = DoctorSettingsAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsEmergencyRoute = DoctorSettingsEmergencyRouteImport.update({
+  id: '/emergency',
+  path: '/emergency',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsNotificationsRoute =
+  DoctorSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => DoctorSettingsRoute,
+  } as any)
+const DoctorSettingsPersonalRoute = DoctorSettingsPersonalRouteImport.update({
+  id: '/personal',
+  path: '/personal',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsReferralsRoute = DoctorSettingsReferralsRouteImport.update({
+  id: '/referrals',
+  path: '/referrals',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsScheduleRoute = DoctorSettingsScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsSecurityRoute = DoctorSettingsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const DoctorSettingsSlotsRoute = DoctorSettingsSlotsRouteImport.update({
+  id: '/slots',
+  path: '/slots',
+  getParentRoute: () => DoctorSettingsRoute,
+} as any)
+const MedicationsMedIdRefillRoute = MedicationsMedIdRefillRouteImport.update({
+  id: '/refill',
+  path: '/refill',
+  getParentRoute: () => MedicationsMedIdRoute,
+} as any)
+const ProfileDependentsIndexRoute = ProfileDependentsIndexRouteImport.update({
+  id: '/dependents/',
+  path: '/dependents/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileDependentsDependentIdRoute =
+  ProfileDependentsDependentIdRouteImport.update({
+    id: '/dependents/$dependentId',
+    path: '/dependents/$dependentId',
+    getParentRoute: () => ProfileRoute,
+  } as any)
+const ReceptionAppointmentsIndexRoute =
+  ReceptionAppointmentsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ReceptionAppointmentsRoute,
+  } as any)
+const ReceptionAppointmentsNewRoute =
+  ReceptionAppointmentsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => ReceptionAppointmentsRoute,
+  } as any)
+const ReportsShareIndexRoute = ReportsShareIndexRouteImport.update({
+  id: '/reports/share/',
+  path: '/reports/share/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDietMealMediaRoute = ApiDietMealMediaRouteImport.update({
-  id: '/api/diet/meal-media',
-  path: '/api/diet/meal-media',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDietMealImageRoute = ApiDietMealImageRouteImport.update({
-  id: '/api/diet/meal-image',
-  path: '/api/diet/meal-image',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiStatusRoute = ApiAiStatusRouteImport.update({
-  id: '/api/ai/status',
-  path: '/api/ai/status',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiPrescriptionRoute = ApiAiPrescriptionRouteImport.update({
-  id: '/api/ai/prescription',
-  path: '/api/ai/prescription',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiDietRoute = ApiAiDietRouteImport.update({
-  id: '/api/ai/diet',
-  path: '/api/ai/diet',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiChatRoute = ApiAiChatRouteImport.update({
-  id: '/api/ai/chat',
-  path: '/api/ai/chat',
+const ReportsShareReportIdRoute = ReportsShareReportIdRouteImport.update({
+  id: '/reports/share/$reportId',
+  path: '/reports/share/$reportId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoctorPatientsPatientIdIndexRoute =
@@ -1034,17 +1046,17 @@ const DoctorPatientsPatientIdIndexRoute =
     path: '/',
     getParentRoute: () => DoctorPatientsPatientIdRoute,
   } as any)
-const DoctorSettingsReferralsReferralIdRoute =
-  DoctorSettingsReferralsReferralIdRouteImport.update({
-    id: '/$referralId',
-    path: '/$referralId',
-    getParentRoute: () => DoctorSettingsReferralsRoute,
-  } as any)
 const DoctorPatientsPatientIdHistoryRoute =
   DoctorPatientsPatientIdHistoryRouteImport.update({
     id: '/history',
     path: '/history',
     getParentRoute: () => DoctorPatientsPatientIdRoute,
+  } as any)
+const DoctorSettingsReferralsReferralIdRoute =
+  DoctorSettingsReferralsReferralIdRouteImport.update({
+    id: '/$referralId',
+    path: '/$referralId',
+    getParentRoute: () => DoctorSettingsReferralsRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -1069,6 +1081,7 @@ export interface FileRoutesByFullPath {
   '/admin/doctor-roster': typeof AdminDoctorRosterRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/hospital': typeof AdminHospitalRoute
+  '/admin/hospital-units': typeof AdminHospitalUnitsRoute
   '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
   '/admin/occupancy': typeof AdminOccupancyRoute
@@ -1101,6 +1114,7 @@ export interface FileRoutesByFullPath {
   '/doctor/results': typeof DoctorResultsRoute
   '/doctor/schedule': typeof DoctorScheduleRoute
   '/doctor/settings': typeof DoctorSettingsRouteWithChildren
+  '/doctor/specialty': typeof DoctorSpecialtyRoute
   '/doctor/statistics': typeof DoctorStatisticsRoute
   '/doctor/vitals': typeof DoctorVitalsRoute
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
@@ -1234,6 +1248,7 @@ export interface FileRoutesByTo {
   '/admin/doctor-roster': typeof AdminDoctorRosterRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/hospital': typeof AdminHospitalRoute
+  '/admin/hospital-units': typeof AdminHospitalUnitsRoute
   '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
   '/admin/occupancy': typeof AdminOccupancyRoute
@@ -1263,6 +1278,7 @@ export interface FileRoutesByTo {
   '/doctor/reports': typeof DoctorReportsRoute
   '/doctor/results': typeof DoctorResultsRoute
   '/doctor/schedule': typeof DoctorScheduleRoute
+  '/doctor/specialty': typeof DoctorSpecialtyRoute
   '/doctor/statistics': typeof DoctorStatisticsRoute
   '/doctor/vitals': typeof DoctorVitalsRoute
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
@@ -1403,6 +1419,7 @@ export interface FileRoutesById {
   '/admin/doctor-roster': typeof AdminDoctorRosterRoute
   '/admin/doctors': typeof AdminDoctorsRoute
   '/admin/hospital': typeof AdminHospitalRoute
+  '/admin/hospital-units': typeof AdminHospitalUnitsRoute
   '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
   '/admin/occupancy': typeof AdminOccupancyRoute
@@ -1435,6 +1452,7 @@ export interface FileRoutesById {
   '/doctor/results': typeof DoctorResultsRoute
   '/doctor/schedule': typeof DoctorScheduleRoute
   '/doctor/settings': typeof DoctorSettingsRouteWithChildren
+  '/doctor/specialty': typeof DoctorSpecialtyRoute
   '/doctor/statistics': typeof DoctorStatisticsRoute
   '/doctor/vitals': typeof DoctorVitalsRoute
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
@@ -1578,6 +1596,7 @@ export interface FileRouteTypes {
     | '/admin/doctor-roster'
     | '/admin/doctors'
     | '/admin/hospital'
+    | '/admin/hospital-units'
     | '/admin/hr'
     | '/admin/lab-catalog'
     | '/admin/occupancy'
@@ -1610,6 +1629,7 @@ export interface FileRouteTypes {
     | '/doctor/results'
     | '/doctor/schedule'
     | '/doctor/settings'
+    | '/doctor/specialty'
     | '/doctor/statistics'
     | '/doctor/vitals'
     | '/exercise/$routineId'
@@ -1743,6 +1763,7 @@ export interface FileRouteTypes {
     | '/admin/doctor-roster'
     | '/admin/doctors'
     | '/admin/hospital'
+    | '/admin/hospital-units'
     | '/admin/hr'
     | '/admin/lab-catalog'
     | '/admin/occupancy'
@@ -1772,6 +1793,7 @@ export interface FileRouteTypes {
     | '/doctor/reports'
     | '/doctor/results'
     | '/doctor/schedule'
+    | '/doctor/specialty'
     | '/doctor/statistics'
     | '/doctor/vitals'
     | '/exercise/$routineId'
@@ -1911,6 +1933,7 @@ export interface FileRouteTypes {
     | '/admin/doctor-roster'
     | '/admin/doctors'
     | '/admin/hospital'
+    | '/admin/hospital-units'
     | '/admin/hr'
     | '/admin/lab-catalog'
     | '/admin/occupancy'
@@ -1943,6 +1966,7 @@ export interface FileRouteTypes {
     | '/doctor/results'
     | '/doctor/schedule'
     | '/doctor/settings'
+    | '/doctor/specialty'
     | '/doctor/statistics'
     | '/doctor/vitals'
     | '/exercise/$routineId'
@@ -2112,81 +2136,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reception': {
-      id: '/reception'
-      path: '/reception'
-      fullPath: '/reception'
-      preLoaderRoute: typeof ReceptionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/queue': {
-      id: '/queue'
-      path: '/queue'
-      fullPath: '/queue'
-      preLoaderRoute: typeof QueueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pharmacy': {
-      id: '/pharmacy'
-      path: '/pharmacy'
-      fullPath: '/pharmacy'
-      preLoaderRoute: typeof PharmacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nursing': {
-      id: '/nursing'
-      path: '/nursing'
-      fullPath: '/nursing'
-      preLoaderRoute: typeof NursingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lab': {
-      id: '/lab'
-      path: '/lab'
-      fullPath: '/lab'
-      preLoaderRoute: typeof LabRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/doctors': {
-      id: '/doctors'
-      path: '/doctors'
-      fullPath: '/doctors'
-      preLoaderRoute: typeof DoctorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/doctor': {
-      id: '/doctor'
-      path: '/doctor'
-      fullPath: '/doctor'
-      preLoaderRoute: typeof DoctorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/billing': {
-      id: '/billing'
-      path: '/billing'
-      fullPath: '/billing'
-      preLoaderRoute: typeof BillingRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -2196,858 +2150,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reports/': {
-      id: '/reports/'
-      path: '/reports'
-      fullPath: '/reports/'
-      preLoaderRoute: typeof ReportsIndexRouteImport
+    '/doctor': {
+      id: '/doctor'
+      path: '/doctor'
+      fullPath: '/doctor'
+      preLoaderRoute: typeof DoctorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reception/': {
-      id: '/reception/'
-      path: '/'
-      fullPath: '/reception/'
-      preLoaderRoute: typeof ReceptionIndexRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/profile/': {
-      id: '/profile/'
-      path: '/'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/prescriptions/': {
-      id: '/prescriptions/'
-      path: '/prescriptions'
-      fullPath: '/prescriptions/'
-      preLoaderRoute: typeof PrescriptionsIndexRouteImport
+    '/doctors': {
+      id: '/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof DoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pharmacy/': {
-      id: '/pharmacy/'
-      path: '/'
-      fullPath: '/pharmacy/'
-      preLoaderRoute: typeof PharmacyIndexRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/nursing/': {
-      id: '/nursing/'
-      path: '/'
-      fullPath: '/nursing/'
-      preLoaderRoute: typeof NursingIndexRouteImport
-      parentRoute: typeof NursingRoute
-    }
-    '/medications/': {
-      id: '/medications/'
-      path: '/medications'
-      fullPath: '/medications/'
-      preLoaderRoute: typeof MedicationsIndexRouteImport
+    '/lab': {
+      id: '/lab'
+      path: '/lab'
+      fullPath: '/lab'
+      preLoaderRoute: typeof LabRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lab/': {
-      id: '/lab/'
-      path: '/'
-      fullPath: '/lab/'
-      preLoaderRoute: typeof LabIndexRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/health/': {
-      id: '/health/'
-      path: '/health'
-      fullPath: '/health/'
-      preLoaderRoute: typeof HealthIndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/exercise/': {
-      id: '/exercise/'
-      path: '/exercise'
-      fullPath: '/exercise/'
-      preLoaderRoute: typeof ExerciseIndexRouteImport
+    '/nursing': {
+      id: '/nursing'
+      path: '/nursing'
+      fullPath: '/nursing'
+      preLoaderRoute: typeof NursingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/doctor/': {
-      id: '/doctor/'
-      path: '/'
-      fullPath: '/doctor/'
-      preLoaderRoute: typeof DoctorIndexRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/diet/': {
-      id: '/diet/'
-      path: '/diet'
-      fullPath: '/diet/'
-      preLoaderRoute: typeof DietIndexRouteImport
+    '/pharmacy': {
+      id: '/pharmacy'
+      path: '/pharmacy'
+      fullPath: '/pharmacy'
+      preLoaderRoute: typeof PharmacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/care/': {
-      id: '/care/'
-      path: '/care'
-      fullPath: '/care/'
-      preLoaderRoute: typeof CareIndexRouteImport
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/book/': {
-      id: '/book/'
-      path: '/book'
-      fullPath: '/book/'
-      preLoaderRoute: typeof BookIndexRouteImport
+    '/queue': {
+      id: '/queue'
+      path: '/queue'
+      fullPath: '/queue'
+      preLoaderRoute: typeof QueueRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/billing/': {
-      id: '/billing/'
-      path: '/'
-      fullPath: '/billing/'
-      preLoaderRoute: typeof BillingIndexRouteImport
-      parentRoute: typeof BillingRoute
+    '/reception': {
+      id: '/reception'
+      path: '/reception'
+      fullPath: '/reception'
+      preLoaderRoute: typeof ReceptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/reports/history': {
-      id: '/reports/history'
-      path: '/reports/history'
-      fullPath: '/reports/history'
-      preLoaderRoute: typeof ReportsHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reports/$reportId': {
-      id: '/reports/$reportId'
-      path: '/reports/$reportId'
-      fullPath: '/reports/$reportId'
-      preLoaderRoute: typeof ReportsReportIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reception/vitals': {
-      id: '/reception/vitals'
-      path: '/vitals'
-      fullPath: '/reception/vitals'
-      preLoaderRoute: typeof ReceptionVitalsRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/token-display': {
-      id: '/reception/token-display'
-      path: '/token-display'
-      fullPath: '/reception/token-display'
-      preLoaderRoute: typeof ReceptionTokenDisplayRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/token-board': {
-      id: '/reception/token-board'
-      path: '/token-board'
-      fullPath: '/reception/token-board'
-      preLoaderRoute: typeof ReceptionTokenBoardRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/settings': {
-      id: '/reception/settings'
-      path: '/settings'
-      fullPath: '/reception/settings'
-      preLoaderRoute: typeof ReceptionSettingsRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/reports': {
-      id: '/reception/reports'
-      path: '/reports'
-      fullPath: '/reception/reports'
-      preLoaderRoute: typeof ReceptionReportsRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/register': {
-      id: '/reception/register'
-      path: '/register'
-      fullPath: '/reception/register'
-      preLoaderRoute: typeof ReceptionRegisterRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/queue': {
-      id: '/reception/queue'
-      path: '/queue'
-      fullPath: '/reception/queue'
-      preLoaderRoute: typeof ReceptionQueueRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/patients': {
-      id: '/reception/patients'
-      path: '/patients'
-      fullPath: '/reception/patients'
-      preLoaderRoute: typeof ReceptionPatientsRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/leave': {
-      id: '/reception/leave'
-      path: '/leave'
-      fullPath: '/reception/leave'
-      preLoaderRoute: typeof ReceptionLeaveRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/insurance': {
-      id: '/reception/insurance'
-      path: '/insurance'
-      fullPath: '/reception/insurance'
-      preLoaderRoute: typeof ReceptionInsuranceRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/day-sheet': {
-      id: '/reception/day-sheet'
-      path: '/day-sheet'
-      fullPath: '/reception/day-sheet'
-      preLoaderRoute: typeof ReceptionDaySheetRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/check-in': {
-      id: '/reception/check-in'
-      path: '/check-in'
-      fullPath: '/reception/check-in'
-      preLoaderRoute: typeof ReceptionCheckInRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/cash-drawer': {
-      id: '/reception/cash-drawer'
-      path: '/cash-drawer'
-      fullPath: '/reception/cash-drawer'
-      preLoaderRoute: typeof ReceptionCashDrawerRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/board': {
-      id: '/reception/board'
-      path: '/board'
-      fullPath: '/reception/board'
-      preLoaderRoute: typeof ReceptionBoardRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/billing': {
-      id: '/reception/billing'
-      path: '/billing'
-      fullPath: '/reception/billing'
-      preLoaderRoute: typeof ReceptionBillingRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/appointments': {
-      id: '/reception/appointments'
-      path: '/appointments'
-      fullPath: '/reception/appointments'
-      preLoaderRoute: typeof ReceptionAppointmentsRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/reception/admissions': {
-      id: '/reception/admissions'
-      path: '/admissions'
-      fullPath: '/reception/admissions'
-      preLoaderRoute: typeof ReceptionAdmissionsRouteImport
-      parentRoute: typeof ReceptionRoute
-    }
-    '/profile/terms': {
-      id: '/profile/terms'
-      path: '/terms'
-      fullPath: '/profile/terms'
-      preLoaderRoute: typeof ProfileTermsRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/support': {
-      id: '/profile/support'
-      path: '/support'
-      fullPath: '/profile/support'
-      preLoaderRoute: typeof ProfileSupportRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/privacy': {
-      id: '/profile/privacy'
-      path: '/privacy'
-      fullPath: '/profile/privacy'
-      preLoaderRoute: typeof ProfilePrivacyRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/notifications': {
-      id: '/profile/notifications'
-      path: '/notifications'
-      fullPath: '/profile/notifications'
-      preLoaderRoute: typeof ProfileNotificationsRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/profile/messages': {
-      id: '/profile/messages'
-      path: '/messages'
-      fullPath: '/profile/messages'
-      preLoaderRoute: typeof ProfileMessagesRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/prescriptions/$rxId': {
-      id: '/prescriptions/$rxId'
-      path: '/prescriptions/$rxId'
-      fullPath: '/prescriptions/$rxId'
-      preLoaderRoute: typeof PrescriptionsRxIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pharmacy/ward': {
-      id: '/pharmacy/ward'
-      path: '/ward'
-      fullPath: '/pharmacy/ward'
-      preLoaderRoute: typeof PharmacyWardRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/walk-in': {
-      id: '/pharmacy/walk-in'
-      path: '/walk-in'
-      fullPath: '/pharmacy/walk-in'
-      preLoaderRoute: typeof PharmacyWalkInRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/search': {
-      id: '/pharmacy/search'
-      path: '/search'
-      fullPath: '/pharmacy/search'
-      preLoaderRoute: typeof PharmacySearchRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/reports': {
-      id: '/pharmacy/reports'
-      path: '/reports'
-      fullPath: '/pharmacy/reports'
-      preLoaderRoute: typeof PharmacyReportsRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/refills': {
-      id: '/pharmacy/refills'
-      path: '/refills'
-      fullPath: '/pharmacy/refills'
-      preLoaderRoute: typeof PharmacyRefillsRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/purchase-orders': {
-      id: '/pharmacy/purchase-orders'
-      path: '/purchase-orders'
-      fullPath: '/pharmacy/purchase-orders'
-      preLoaderRoute: typeof PharmacyPurchaseOrdersRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/prescriptions': {
-      id: '/pharmacy/prescriptions'
-      path: '/prescriptions'
-      fullPath: '/pharmacy/prescriptions'
-      preLoaderRoute: typeof PharmacyPrescriptionsRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/operations': {
-      id: '/pharmacy/operations'
-      path: '/operations'
-      fullPath: '/pharmacy/operations'
-      preLoaderRoute: typeof PharmacyOperationsRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/map': {
-      id: '/pharmacy/map'
-      path: '/map'
-      fullPath: '/pharmacy/map'
-      preLoaderRoute: typeof PharmacyMapRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/leave': {
-      id: '/pharmacy/leave'
-      path: '/leave'
-      fullPath: '/pharmacy/leave'
-      preLoaderRoute: typeof PharmacyLeaveRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/inventory': {
-      id: '/pharmacy/inventory'
-      path: '/inventory'
-      fullPath: '/pharmacy/inventory'
-      preLoaderRoute: typeof PharmacyInventoryRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/formulary': {
-      id: '/pharmacy/formulary'
-      path: '/formulary'
-      fullPath: '/pharmacy/formulary'
-      preLoaderRoute: typeof PharmacyFormularyRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/dispense': {
-      id: '/pharmacy/dispense'
-      path: '/dispense'
-      fullPath: '/pharmacy/dispense'
-      preLoaderRoute: typeof PharmacyDispenseRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/cycle-count': {
-      id: '/pharmacy/cycle-count'
-      path: '/cycle-count'
-      fullPath: '/pharmacy/cycle-count'
-      preLoaderRoute: typeof PharmacyCycleCountRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/controlled': {
-      id: '/pharmacy/controlled'
-      path: '/controlled'
-      fullPath: '/pharmacy/controlled'
-      preLoaderRoute: typeof PharmacyControlledRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/pharmacy/billing': {
-      id: '/pharmacy/billing'
-      path: '/billing'
-      fullPath: '/pharmacy/billing'
-      preLoaderRoute: typeof PharmacyBillingRouteImport
-      parentRoute: typeof PharmacyRoute
-    }
-    '/nursing/vitals': {
-      id: '/nursing/vitals'
-      path: '/vitals'
-      fullPath: '/nursing/vitals'
-      preLoaderRoute: typeof NursingVitalsRouteImport
-      parentRoute: typeof NursingRoute
-    }
-    '/nursing/patients': {
-      id: '/nursing/patients'
-      path: '/patients'
-      fullPath: '/nursing/patients'
-      preLoaderRoute: typeof NursingPatientsRouteImport
-      parentRoute: typeof NursingRoute
-    }
-    '/nursing/leave': {
-      id: '/nursing/leave'
-      path: '/leave'
-      fullPath: '/nursing/leave'
-      preLoaderRoute: typeof NursingLeaveRouteImport
-      parentRoute: typeof NursingRoute
-    }
-    '/nursing/beds': {
-      id: '/nursing/beds'
-      path: '/beds'
-      fullPath: '/nursing/beds'
-      preLoaderRoute: typeof NursingBedsRouteImport
-      parentRoute: typeof NursingRoute
-    }
-    '/medications/refill-history': {
-      id: '/medications/refill-history'
-      path: '/medications/refill-history'
-      fullPath: '/medications/refill-history'
-      preLoaderRoute: typeof MedicationsRefillHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/medications/$medId': {
-      id: '/medications/$medId'
-      path: '/medications/$medId'
-      fullPath: '/medications/$medId'
-      preLoaderRoute: typeof MedicationsMedIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lab/walk-in': {
-      id: '/lab/walk-in'
-      path: '/walk-in'
-      fullPath: '/lab/walk-in'
-      preLoaderRoute: typeof LabWalkInRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/validation': {
-      id: '/lab/validation'
-      path: '/validation'
-      fullPath: '/lab/validation'
-      preLoaderRoute: typeof LabValidationRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/team': {
-      id: '/lab/team'
-      path: '/team'
-      fullPath: '/lab/team'
-      preLoaderRoute: typeof LabTeamRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/storage': {
-      id: '/lab/storage'
-      path: '/storage'
-      fullPath: '/lab/storage'
-      preLoaderRoute: typeof LabStorageRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/settings': {
-      id: '/lab/settings'
-      path: '/settings'
-      fullPath: '/lab/settings'
-      preLoaderRoute: typeof LabSettingsRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/samples': {
-      id: '/lab/samples'
-      path: '/samples'
-      fullPath: '/lab/samples'
-      preLoaderRoute: typeof LabSamplesRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/reports': {
-      id: '/lab/reports'
-      path: '/reports'
-      fullPath: '/lab/reports'
-      preLoaderRoute: typeof LabReportsRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/reagents': {
-      id: '/lab/reagents'
-      path: '/reagents'
-      fullPath: '/lab/reagents'
-      preLoaderRoute: typeof LabReagentsRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/radiology': {
-      id: '/lab/radiology'
-      path: '/radiology'
-      fullPath: '/lab/radiology'
-      preLoaderRoute: typeof LabRadiologyRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/qc': {
-      id: '/lab/qc'
-      path: '/qc'
-      fullPath: '/lab/qc'
-      preLoaderRoute: typeof LabQcRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/processing': {
-      id: '/lab/processing'
-      path: '/processing'
-      fullPath: '/lab/processing'
-      preLoaderRoute: typeof LabProcessingRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/orders': {
-      id: '/lab/orders'
-      path: '/orders'
-      fullPath: '/lab/orders'
-      preLoaderRoute: typeof LabOrdersRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/my-submissions': {
-      id: '/lab/my-submissions'
-      path: '/my-submissions'
-      fullPath: '/lab/my-submissions'
-      preLoaderRoute: typeof LabMySubmissionsRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/leave': {
-      id: '/lab/leave'
-      path: '/leave'
-      fullPath: '/lab/leave'
-      preLoaderRoute: typeof LabLeaveRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/collection': {
-      id: '/lab/collection'
-      path: '/collection'
-      fullPath: '/lab/collection'
-      preLoaderRoute: typeof LabCollectionRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/lab/catalog': {
-      id: '/lab/catalog'
-      path: '/catalog'
-      fullPath: '/lab/catalog'
-      preLoaderRoute: typeof LabCatalogRouteImport
-      parentRoute: typeof LabRoute
-    }
-    '/exercise/$routineId': {
-      id: '/exercise/$routineId'
-      path: '/exercise/$routineId'
-      fullPath: '/exercise/$routineId'
-      preLoaderRoute: typeof ExerciseRoutineIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/doctor/vitals': {
-      id: '/doctor/vitals'
-      path: '/vitals'
-      fullPath: '/doctor/vitals'
-      preLoaderRoute: typeof DoctorVitalsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/statistics': {
-      id: '/doctor/statistics'
-      path: '/statistics'
-      fullPath: '/doctor/statistics'
-      preLoaderRoute: typeof DoctorStatisticsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/settings': {
-      id: '/doctor/settings'
-      path: '/settings'
-      fullPath: '/doctor/settings'
-      preLoaderRoute: typeof DoctorSettingsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/schedule': {
-      id: '/doctor/schedule'
-      path: '/schedule'
-      fullPath: '/doctor/schedule'
-      preLoaderRoute: typeof DoctorScheduleRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/results': {
-      id: '/doctor/results'
-      path: '/results'
-      fullPath: '/doctor/results'
-      preLoaderRoute: typeof DoctorResultsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/reports': {
-      id: '/doctor/reports'
-      path: '/reports'
-      fullPath: '/doctor/reports'
-      preLoaderRoute: typeof DoctorReportsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/referrals': {
-      id: '/doctor/referrals'
-      path: '/referrals'
-      fullPath: '/doctor/referrals'
-      preLoaderRoute: typeof DoctorReferralsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/queue': {
-      id: '/doctor/queue'
-      path: '/queue'
-      fullPath: '/doctor/queue'
-      preLoaderRoute: typeof DoctorQueueRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/prescriptions': {
-      id: '/doctor/prescriptions'
-      path: '/prescriptions'
-      fullPath: '/doctor/prescriptions'
-      preLoaderRoute: typeof DoctorPrescriptionsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/patients': {
-      id: '/doctor/patients'
-      path: '/patients'
-      fullPath: '/doctor/patients'
-      preLoaderRoute: typeof DoctorPatientsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/orders': {
-      id: '/doctor/orders'
-      path: '/orders'
-      fullPath: '/doctor/orders'
-      preLoaderRoute: typeof DoctorOrdersRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/notifications': {
-      id: '/doctor/notifications'
-      path: '/notifications'
-      fullPath: '/doctor/notifications'
-      preLoaderRoute: typeof DoctorNotificationsRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/messaging': {
-      id: '/doctor/messaging'
-      path: '/messaging'
-      fullPath: '/doctor/messaging'
-      preLoaderRoute: typeof DoctorMessagingRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/leave': {
-      id: '/doctor/leave'
-      path: '/leave'
-      fullPath: '/doctor/leave'
-      preLoaderRoute: typeof DoctorLeaveRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/encounters': {
-      id: '/doctor/encounters'
-      path: '/encounters'
-      fullPath: '/doctor/encounters'
-      preLoaderRoute: typeof DoctorEncountersRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/doctor/coverage': {
-      id: '/doctor/coverage'
-      path: '/coverage'
-      fullPath: '/doctor/coverage'
-      preLoaderRoute: typeof DoctorCoverageRouteImport
-      parentRoute: typeof DoctorRoute
-    }
-    '/diet/clinical-rules': {
-      id: '/diet/clinical-rules'
-      path: '/diet/clinical-rules'
-      fullPath: '/diet/clinical-rules'
-      preLoaderRoute: typeof DietClinicalRulesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/diet/chef': {
-      id: '/diet/chef'
-      path: '/diet/chef'
-      fullPath: '/diet/chef'
-      preLoaderRoute: typeof DietChefRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/diet/$mealId': {
-      id: '/diet/$mealId'
-      path: '/diet/$mealId'
-      fullPath: '/diet/$mealId'
-      preLoaderRoute: typeof DietMealIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/care/visits': {
-      id: '/care/visits'
-      path: '/care/visits'
-      fullPath: '/care/visits'
-      preLoaderRoute: typeof CareVisitsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/book/$doctorId': {
-      id: '/book/$doctorId'
-      path: '/book/$doctorId'
-      fullPath: '/book/$doctorId'
-      preLoaderRoute: typeof BookDoctorIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/billing/payments': {
-      id: '/billing/payments'
-      path: '/payments'
-      fullPath: '/billing/payments'
-      preLoaderRoute: typeof BillingPaymentsRouteImport
-      parentRoute: typeof BillingRoute
-    }
-    '/billing/leave': {
-      id: '/billing/leave'
-      path: '/leave'
-      fullPath: '/billing/leave'
-      preLoaderRoute: typeof BillingLeaveRouteImport
-      parentRoute: typeof BillingRoute
-    }
-    '/billing/invoices': {
-      id: '/billing/invoices'
-      path: '/invoices'
-      fullPath: '/billing/invoices'
-      preLoaderRoute: typeof BillingInvoicesRouteImport
-      parentRoute: typeof BillingRoute
-    }
-    '/billing/encounters': {
-      id: '/billing/encounters'
-      path: '/encounters'
-      fullPath: '/billing/encounters'
-      preLoaderRoute: typeof BillingEncountersRouteImport
-      parentRoute: typeof BillingRoute
-    }
-    '/admin/staff': {
-      id: '/admin/staff'
-      path: '/staff'
-      fullPath: '/admin/staff'
-      preLoaderRoute: typeof AdminStaffRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/services': {
-      id: '/admin/services'
-      path: '/services'
-      fullPath: '/admin/services'
-      preLoaderRoute: typeof AdminServicesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/revenue': {
-      id: '/admin/revenue'
-      path: '/revenue'
-      fullPath: '/admin/revenue'
-      preLoaderRoute: typeof AdminRevenueRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/pharmacy-formulary': {
-      id: '/admin/pharmacy-formulary'
-      path: '/pharmacy-formulary'
-      fullPath: '/admin/pharmacy-formulary'
-      preLoaderRoute: typeof AdminPharmacyFormularyRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/ot': {
-      id: '/admin/ot'
-      path: '/ot'
-      fullPath: '/admin/ot'
-      preLoaderRoute: typeof AdminOtRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/occupancy': {
-      id: '/admin/occupancy'
-      path: '/occupancy'
-      fullPath: '/admin/occupancy'
-      preLoaderRoute: typeof AdminOccupancyRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/lab-catalog': {
-      id: '/admin/lab-catalog'
-      path: '/lab-catalog'
-      fullPath: '/admin/lab-catalog'
-      preLoaderRoute: typeof AdminLabCatalogRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/hr': {
-      id: '/admin/hr'
-      path: '/hr'
-      fullPath: '/admin/hr'
-      preLoaderRoute: typeof AdminHrRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/hospital': {
-      id: '/admin/hospital'
-      path: '/hospital'
-      fullPath: '/admin/hospital'
-      preLoaderRoute: typeof AdminHospitalRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/doctors': {
-      id: '/admin/doctors'
-      path: '/doctors'
-      fullPath: '/admin/doctors'
-      preLoaderRoute: typeof AdminDoctorsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/doctor-roster': {
-      id: '/admin/doctor-roster'
-      path: '/doctor-roster'
-      fullPath: '/admin/doctor-roster'
-      preLoaderRoute: typeof AdminDoctorRosterRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/departments': {
-      id: '/admin/departments'
-      path: '/departments'
-      fullPath: '/admin/departments'
-      preLoaderRoute: typeof AdminDepartmentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/branches': {
-      id: '/admin/branches'
-      path: '/branches'
-      fullPath: '/admin/branches'
-      preLoaderRoute: typeof AdminBranchesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/announcements': {
-      id: '/admin/announcements'
-      path: '/announcements'
-      fullPath: '/admin/announcements'
-      preLoaderRoute: typeof AdminAnnouncementsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/analytics': {
-      id: '/admin/analytics'
-      path: '/analytics'
-      fullPath: '/admin/analytics'
-      preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/access-control': {
@@ -3057,228 +2241,858 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAccessControlRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/reports/share/': {
-      id: '/reports/share/'
-      path: '/reports/share'
-      fullPath: '/reports/share/'
-      preLoaderRoute: typeof ReportsShareIndexRouteImport
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/branches': {
+      id: '/admin/branches'
+      path: '/branches'
+      fullPath: '/admin/branches'
+      preLoaderRoute: typeof AdminBranchesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/departments': {
+      id: '/admin/departments'
+      path: '/departments'
+      fullPath: '/admin/departments'
+      preLoaderRoute: typeof AdminDepartmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/doctor-roster': {
+      id: '/admin/doctor-roster'
+      path: '/doctor-roster'
+      fullPath: '/admin/doctor-roster'
+      preLoaderRoute: typeof AdminDoctorRosterRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/doctors': {
+      id: '/admin/doctors'
+      path: '/doctors'
+      fullPath: '/admin/doctors'
+      preLoaderRoute: typeof AdminDoctorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/hospital': {
+      id: '/admin/hospital'
+      path: '/hospital'
+      fullPath: '/admin/hospital'
+      preLoaderRoute: typeof AdminHospitalRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/hospital-units': {
+      id: '/admin/hospital-units'
+      path: '/hospital-units'
+      fullPath: '/admin/hospital-units'
+      preLoaderRoute: typeof AdminHospitalUnitsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/hr': {
+      id: '/admin/hr'
+      path: '/hr'
+      fullPath: '/admin/hr'
+      preLoaderRoute: typeof AdminHrRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lab-catalog': {
+      id: '/admin/lab-catalog'
+      path: '/lab-catalog'
+      fullPath: '/admin/lab-catalog'
+      preLoaderRoute: typeof AdminLabCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/occupancy': {
+      id: '/admin/occupancy'
+      path: '/occupancy'
+      fullPath: '/admin/occupancy'
+      preLoaderRoute: typeof AdminOccupancyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ot': {
+      id: '/admin/ot'
+      path: '/ot'
+      fullPath: '/admin/ot'
+      preLoaderRoute: typeof AdminOtRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/pharmacy-formulary': {
+      id: '/admin/pharmacy-formulary'
+      path: '/pharmacy-formulary'
+      fullPath: '/admin/pharmacy-formulary'
+      preLoaderRoute: typeof AdminPharmacyFormularyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/revenue': {
+      id: '/admin/revenue'
+      path: '/revenue'
+      fullPath: '/admin/revenue'
+      preLoaderRoute: typeof AdminRevenueRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/services': {
+      id: '/admin/services'
+      path: '/services'
+      fullPath: '/admin/services'
+      preLoaderRoute: typeof AdminServicesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff': {
+      id: '/admin/staff'
+      path: '/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AdminStaffRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/billing/': {
+      id: '/billing/'
+      path: '/'
+      fullPath: '/billing/'
+      preLoaderRoute: typeof BillingIndexRouteImport
+      parentRoute: typeof BillingRoute
+    }
+    '/billing/encounters': {
+      id: '/billing/encounters'
+      path: '/encounters'
+      fullPath: '/billing/encounters'
+      preLoaderRoute: typeof BillingEncountersRouteImport
+      parentRoute: typeof BillingRoute
+    }
+    '/billing/invoices': {
+      id: '/billing/invoices'
+      path: '/invoices'
+      fullPath: '/billing/invoices'
+      preLoaderRoute: typeof BillingInvoicesRouteImport
+      parentRoute: typeof BillingRoute
+    }
+    '/billing/leave': {
+      id: '/billing/leave'
+      path: '/leave'
+      fullPath: '/billing/leave'
+      preLoaderRoute: typeof BillingLeaveRouteImport
+      parentRoute: typeof BillingRoute
+    }
+    '/billing/payments': {
+      id: '/billing/payments'
+      path: '/payments'
+      fullPath: '/billing/payments'
+      preLoaderRoute: typeof BillingPaymentsRouteImport
+      parentRoute: typeof BillingRoute
+    }
+    '/book/': {
+      id: '/book/'
+      path: '/book'
+      fullPath: '/book/'
+      preLoaderRoute: typeof BookIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reception/appointments/': {
-      id: '/reception/appointments/'
-      path: '/'
-      fullPath: '/reception/appointments/'
-      preLoaderRoute: typeof ReceptionAppointmentsIndexRouteImport
-      parentRoute: typeof ReceptionAppointmentsRoute
-    }
-    '/profile/dependents/': {
-      id: '/profile/dependents/'
-      path: '/dependents'
-      fullPath: '/profile/dependents/'
-      preLoaderRoute: typeof ProfileDependentsIndexRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/doctor/settings/': {
-      id: '/doctor/settings/'
-      path: '/'
-      fullPath: '/doctor/settings/'
-      preLoaderRoute: typeof DoctorSettingsIndexRouteImport
-      parentRoute: typeof DoctorSettingsRoute
-    }
-    '/doctor/patients/': {
-      id: '/doctor/patients/'
-      path: '/'
-      fullPath: '/doctor/patients/'
-      preLoaderRoute: typeof DoctorPatientsIndexRouteImport
-      parentRoute: typeof DoctorPatientsRoute
-    }
-    '/care/visits/': {
-      id: '/care/visits/'
-      path: '/'
-      fullPath: '/care/visits/'
-      preLoaderRoute: typeof CareVisitsIndexRouteImport
-      parentRoute: typeof CareVisitsRoute
-    }
-    '/reports/share/$reportId': {
-      id: '/reports/share/$reportId'
-      path: '/reports/share/$reportId'
-      fullPath: '/reports/share/$reportId'
-      preLoaderRoute: typeof ReportsShareReportIdRouteImport
+    '/book/$doctorId': {
+      id: '/book/$doctorId'
+      path: '/book/$doctorId'
+      fullPath: '/book/$doctorId'
+      preLoaderRoute: typeof BookDoctorIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reception/appointments/new': {
-      id: '/reception/appointments/new'
-      path: '/new'
-      fullPath: '/reception/appointments/new'
-      preLoaderRoute: typeof ReceptionAppointmentsNewRouteImport
-      parentRoute: typeof ReceptionAppointmentsRoute
+    '/care/': {
+      id: '/care/'
+      path: '/care'
+      fullPath: '/care/'
+      preLoaderRoute: typeof CareIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/profile/dependents/$dependentId': {
-      id: '/profile/dependents/$dependentId'
-      path: '/dependents/$dependentId'
-      fullPath: '/profile/dependents/$dependentId'
-      preLoaderRoute: typeof ProfileDependentsDependentIdRouteImport
-      parentRoute: typeof ProfileRoute
+    '/care/visits': {
+      id: '/care/visits'
+      path: '/care/visits'
+      fullPath: '/care/visits'
+      preLoaderRoute: typeof CareVisitsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/medications/$medId/refill': {
-      id: '/medications/$medId/refill'
-      path: '/refill'
-      fullPath: '/medications/$medId/refill'
-      preLoaderRoute: typeof MedicationsMedIdRefillRouteImport
-      parentRoute: typeof MedicationsMedIdRoute
+    '/diet/': {
+      id: '/diet/'
+      path: '/diet'
+      fullPath: '/diet/'
+      preLoaderRoute: typeof DietIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/doctor/settings/slots': {
-      id: '/doctor/settings/slots'
-      path: '/slots'
-      fullPath: '/doctor/settings/slots'
-      preLoaderRoute: typeof DoctorSettingsSlotsRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/diet/$mealId': {
+      id: '/diet/$mealId'
+      path: '/diet/$mealId'
+      fullPath: '/diet/$mealId'
+      preLoaderRoute: typeof DietMealIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/doctor/settings/security': {
-      id: '/doctor/settings/security'
-      path: '/security'
-      fullPath: '/doctor/settings/security'
-      preLoaderRoute: typeof DoctorSettingsSecurityRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/diet/chef': {
+      id: '/diet/chef'
+      path: '/diet/chef'
+      fullPath: '/diet/chef'
+      preLoaderRoute: typeof DietChefRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/doctor/settings/schedule': {
-      id: '/doctor/settings/schedule'
-      path: '/schedule'
-      fullPath: '/doctor/settings/schedule'
-      preLoaderRoute: typeof DoctorSettingsScheduleRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/diet/clinical-rules': {
+      id: '/diet/clinical-rules'
+      path: '/diet/clinical-rules'
+      fullPath: '/diet/clinical-rules'
+      preLoaderRoute: typeof DietClinicalRulesRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/doctor/settings/referrals': {
-      id: '/doctor/settings/referrals'
-      path: '/referrals'
-      fullPath: '/doctor/settings/referrals'
-      preLoaderRoute: typeof DoctorSettingsReferralsRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/doctor/': {
+      id: '/doctor/'
+      path: '/'
+      fullPath: '/doctor/'
+      preLoaderRoute: typeof DoctorIndexRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/settings/personal': {
-      id: '/doctor/settings/personal'
-      path: '/personal'
-      fullPath: '/doctor/settings/personal'
-      preLoaderRoute: typeof DoctorSettingsPersonalRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/doctor/coverage': {
+      id: '/doctor/coverage'
+      path: '/coverage'
+      fullPath: '/doctor/coverage'
+      preLoaderRoute: typeof DoctorCoverageRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/settings/notifications': {
-      id: '/doctor/settings/notifications'
+    '/doctor/encounters': {
+      id: '/doctor/encounters'
+      path: '/encounters'
+      fullPath: '/doctor/encounters'
+      preLoaderRoute: typeof DoctorEncountersRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/leave': {
+      id: '/doctor/leave'
+      path: '/leave'
+      fullPath: '/doctor/leave'
+      preLoaderRoute: typeof DoctorLeaveRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/messaging': {
+      id: '/doctor/messaging'
+      path: '/messaging'
+      fullPath: '/doctor/messaging'
+      preLoaderRoute: typeof DoctorMessagingRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/notifications': {
+      id: '/doctor/notifications'
       path: '/notifications'
-      fullPath: '/doctor/settings/notifications'
-      preLoaderRoute: typeof DoctorSettingsNotificationsRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+      fullPath: '/doctor/notifications'
+      preLoaderRoute: typeof DoctorNotificationsRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/settings/emergency': {
-      id: '/doctor/settings/emergency'
-      path: '/emergency'
-      fullPath: '/doctor/settings/emergency'
-      preLoaderRoute: typeof DoctorSettingsEmergencyRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/doctor/orders': {
+      id: '/doctor/orders'
+      path: '/orders'
+      fullPath: '/doctor/orders'
+      preLoaderRoute: typeof DoctorOrdersRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/settings/audit': {
-      id: '/doctor/settings/audit'
-      path: '/audit'
-      fullPath: '/doctor/settings/audit'
-      preLoaderRoute: typeof DoctorSettingsAuditRouteImport
-      parentRoute: typeof DoctorSettingsRoute
+    '/doctor/patients': {
+      id: '/doctor/patients'
+      path: '/patients'
+      fullPath: '/doctor/patients'
+      preLoaderRoute: typeof DoctorPatientsRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/referrals/$referralId': {
-      id: '/doctor/referrals/$referralId'
-      path: '/$referralId'
-      fullPath: '/doctor/referrals/$referralId'
-      preLoaderRoute: typeof DoctorReferralsReferralIdRouteImport
-      parentRoute: typeof DoctorReferralsRoute
+    '/doctor/prescriptions': {
+      id: '/doctor/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/doctor/prescriptions'
+      preLoaderRoute: typeof DoctorPrescriptionsRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/patients/tasks': {
-      id: '/doctor/patients/tasks'
-      path: '/tasks'
-      fullPath: '/doctor/patients/tasks'
-      preLoaderRoute: typeof DoctorPatientsTasksRouteImport
-      parentRoute: typeof DoctorPatientsRoute
+    '/doctor/queue': {
+      id: '/doctor/queue'
+      path: '/queue'
+      fullPath: '/doctor/queue'
+      preLoaderRoute: typeof DoctorQueueRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/doctor/patients/$patientId': {
-      id: '/doctor/patients/$patientId'
-      path: '/$patientId'
-      fullPath: '/doctor/patients/$patientId'
-      preLoaderRoute: typeof DoctorPatientsPatientIdRouteImport
-      parentRoute: typeof DoctorPatientsRoute
+    '/doctor/referrals': {
+      id: '/doctor/referrals'
+      path: '/referrals'
+      fullPath: '/doctor/referrals'
+      preLoaderRoute: typeof DoctorReferralsRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/diet/$mealId/clinical-rules': {
-      id: '/diet/$mealId/clinical-rules'
-      path: '/clinical-rules'
-      fullPath: '/diet/$mealId/clinical-rules'
-      preLoaderRoute: typeof DietMealIdClinicalRulesRouteImport
-      parentRoute: typeof DietMealIdRoute
+    '/doctor/reports': {
+      id: '/doctor/reports'
+      path: '/reports'
+      fullPath: '/doctor/reports'
+      preLoaderRoute: typeof DoctorReportsRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/care/visits/$visitId': {
-      id: '/care/visits/$visitId'
-      path: '/$visitId'
-      fullPath: '/care/visits/$visitId'
-      preLoaderRoute: typeof CareVisitsVisitIdRouteImport
-      parentRoute: typeof CareVisitsRoute
+    '/doctor/results': {
+      id: '/doctor/results'
+      path: '/results'
+      fullPath: '/doctor/results'
+      preLoaderRoute: typeof DoctorResultsRouteImport
+      parentRoute: typeof DoctorRoute
     }
-    '/api/patient/rx-inbox': {
-      id: '/api/patient/rx-inbox'
-      path: '/api/patient/rx-inbox'
-      fullPath: '/api/patient/rx-inbox'
-      preLoaderRoute: typeof ApiPatientRxInboxRouteImport
+    '/doctor/schedule': {
+      id: '/doctor/schedule'
+      path: '/schedule'
+      fullPath: '/doctor/schedule'
+      preLoaderRoute: typeof DoctorScheduleRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/settings': {
+      id: '/doctor/settings'
+      path: '/settings'
+      fullPath: '/doctor/settings'
+      preLoaderRoute: typeof DoctorSettingsRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/specialty': {
+      id: '/doctor/specialty'
+      path: '/specialty'
+      fullPath: '/doctor/specialty'
+      preLoaderRoute: typeof DoctorSpecialtyRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/statistics': {
+      id: '/doctor/statistics'
+      path: '/statistics'
+      fullPath: '/doctor/statistics'
+      preLoaderRoute: typeof DoctorStatisticsRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/vitals': {
+      id: '/doctor/vitals'
+      path: '/vitals'
+      fullPath: '/doctor/vitals'
+      preLoaderRoute: typeof DoctorVitalsRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/exercise/': {
+      id: '/exercise/'
+      path: '/exercise'
+      fullPath: '/exercise/'
+      preLoaderRoute: typeof ExerciseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/patient/clinical-events': {
-      id: '/api/patient/clinical-events'
-      path: '/api/patient/clinical-events'
-      fullPath: '/api/patient/clinical-events'
-      preLoaderRoute: typeof ApiPatientClinicalEventsRouteImport
+    '/exercise/$routineId': {
+      id: '/exercise/$routineId'
+      path: '/exercise/$routineId'
+      fullPath: '/exercise/$routineId'
+      preLoaderRoute: typeof ExerciseRoutineIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/exercise/youtube': {
-      id: '/api/exercise/youtube'
-      path: '/api/exercise/youtube'
-      fullPath: '/api/exercise/youtube'
-      preLoaderRoute: typeof ApiExerciseYoutubeRouteImport
+    '/health/': {
+      id: '/health/'
+      path: '/health'
+      fullPath: '/health/'
+      preLoaderRoute: typeof HealthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/diet/youtube': {
-      id: '/api/diet/youtube'
-      path: '/api/diet/youtube'
-      fullPath: '/api/diet/youtube'
-      preLoaderRoute: typeof ApiDietYoutubeRouteImport
+    '/lab/': {
+      id: '/lab/'
+      path: '/'
+      fullPath: '/lab/'
+      preLoaderRoute: typeof LabIndexRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/catalog': {
+      id: '/lab/catalog'
+      path: '/catalog'
+      fullPath: '/lab/catalog'
+      preLoaderRoute: typeof LabCatalogRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/collection': {
+      id: '/lab/collection'
+      path: '/collection'
+      fullPath: '/lab/collection'
+      preLoaderRoute: typeof LabCollectionRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/leave': {
+      id: '/lab/leave'
+      path: '/leave'
+      fullPath: '/lab/leave'
+      preLoaderRoute: typeof LabLeaveRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/my-submissions': {
+      id: '/lab/my-submissions'
+      path: '/my-submissions'
+      fullPath: '/lab/my-submissions'
+      preLoaderRoute: typeof LabMySubmissionsRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/orders': {
+      id: '/lab/orders'
+      path: '/orders'
+      fullPath: '/lab/orders'
+      preLoaderRoute: typeof LabOrdersRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/processing': {
+      id: '/lab/processing'
+      path: '/processing'
+      fullPath: '/lab/processing'
+      preLoaderRoute: typeof LabProcessingRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/qc': {
+      id: '/lab/qc'
+      path: '/qc'
+      fullPath: '/lab/qc'
+      preLoaderRoute: typeof LabQcRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/radiology': {
+      id: '/lab/radiology'
+      path: '/radiology'
+      fullPath: '/lab/radiology'
+      preLoaderRoute: typeof LabRadiologyRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/reagents': {
+      id: '/lab/reagents'
+      path: '/reagents'
+      fullPath: '/lab/reagents'
+      preLoaderRoute: typeof LabReagentsRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/reports': {
+      id: '/lab/reports'
+      path: '/reports'
+      fullPath: '/lab/reports'
+      preLoaderRoute: typeof LabReportsRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/samples': {
+      id: '/lab/samples'
+      path: '/samples'
+      fullPath: '/lab/samples'
+      preLoaderRoute: typeof LabSamplesRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/settings': {
+      id: '/lab/settings'
+      path: '/settings'
+      fullPath: '/lab/settings'
+      preLoaderRoute: typeof LabSettingsRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/storage': {
+      id: '/lab/storage'
+      path: '/storage'
+      fullPath: '/lab/storage'
+      preLoaderRoute: typeof LabStorageRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/team': {
+      id: '/lab/team'
+      path: '/team'
+      fullPath: '/lab/team'
+      preLoaderRoute: typeof LabTeamRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/validation': {
+      id: '/lab/validation'
+      path: '/validation'
+      fullPath: '/lab/validation'
+      preLoaderRoute: typeof LabValidationRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/lab/walk-in': {
+      id: '/lab/walk-in'
+      path: '/walk-in'
+      fullPath: '/lab/walk-in'
+      preLoaderRoute: typeof LabWalkInRouteImport
+      parentRoute: typeof LabRoute
+    }
+    '/medications/': {
+      id: '/medications/'
+      path: '/medications'
+      fullPath: '/medications/'
+      preLoaderRoute: typeof MedicationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/diet/meal-media': {
-      id: '/api/diet/meal-media'
-      path: '/api/diet/meal-media'
-      fullPath: '/api/diet/meal-media'
-      preLoaderRoute: typeof ApiDietMealMediaRouteImport
+    '/medications/$medId': {
+      id: '/medications/$medId'
+      path: '/medications/$medId'
+      fullPath: '/medications/$medId'
+      preLoaderRoute: typeof MedicationsMedIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/diet/meal-image': {
-      id: '/api/diet/meal-image'
-      path: '/api/diet/meal-image'
-      fullPath: '/api/diet/meal-image'
-      preLoaderRoute: typeof ApiDietMealImageRouteImport
+    '/medications/refill-history': {
+      id: '/medications/refill-history'
+      path: '/medications/refill-history'
+      fullPath: '/medications/refill-history'
+      preLoaderRoute: typeof MedicationsRefillHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/ai/status': {
-      id: '/api/ai/status'
-      path: '/api/ai/status'
-      fullPath: '/api/ai/status'
-      preLoaderRoute: typeof ApiAiStatusRouteImport
+    '/nursing/': {
+      id: '/nursing/'
+      path: '/'
+      fullPath: '/nursing/'
+      preLoaderRoute: typeof NursingIndexRouteImport
+      parentRoute: typeof NursingRoute
+    }
+    '/nursing/beds': {
+      id: '/nursing/beds'
+      path: '/beds'
+      fullPath: '/nursing/beds'
+      preLoaderRoute: typeof NursingBedsRouteImport
+      parentRoute: typeof NursingRoute
+    }
+    '/nursing/leave': {
+      id: '/nursing/leave'
+      path: '/leave'
+      fullPath: '/nursing/leave'
+      preLoaderRoute: typeof NursingLeaveRouteImport
+      parentRoute: typeof NursingRoute
+    }
+    '/nursing/patients': {
+      id: '/nursing/patients'
+      path: '/patients'
+      fullPath: '/nursing/patients'
+      preLoaderRoute: typeof NursingPatientsRouteImport
+      parentRoute: typeof NursingRoute
+    }
+    '/nursing/vitals': {
+      id: '/nursing/vitals'
+      path: '/vitals'
+      fullPath: '/nursing/vitals'
+      preLoaderRoute: typeof NursingVitalsRouteImport
+      parentRoute: typeof NursingRoute
+    }
+    '/pharmacy/': {
+      id: '/pharmacy/'
+      path: '/'
+      fullPath: '/pharmacy/'
+      preLoaderRoute: typeof PharmacyIndexRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/billing': {
+      id: '/pharmacy/billing'
+      path: '/billing'
+      fullPath: '/pharmacy/billing'
+      preLoaderRoute: typeof PharmacyBillingRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/controlled': {
+      id: '/pharmacy/controlled'
+      path: '/controlled'
+      fullPath: '/pharmacy/controlled'
+      preLoaderRoute: typeof PharmacyControlledRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/cycle-count': {
+      id: '/pharmacy/cycle-count'
+      path: '/cycle-count'
+      fullPath: '/pharmacy/cycle-count'
+      preLoaderRoute: typeof PharmacyCycleCountRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/dispense': {
+      id: '/pharmacy/dispense'
+      path: '/dispense'
+      fullPath: '/pharmacy/dispense'
+      preLoaderRoute: typeof PharmacyDispenseRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/formulary': {
+      id: '/pharmacy/formulary'
+      path: '/formulary'
+      fullPath: '/pharmacy/formulary'
+      preLoaderRoute: typeof PharmacyFormularyRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/inventory': {
+      id: '/pharmacy/inventory'
+      path: '/inventory'
+      fullPath: '/pharmacy/inventory'
+      preLoaderRoute: typeof PharmacyInventoryRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/leave': {
+      id: '/pharmacy/leave'
+      path: '/leave'
+      fullPath: '/pharmacy/leave'
+      preLoaderRoute: typeof PharmacyLeaveRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/map': {
+      id: '/pharmacy/map'
+      path: '/map'
+      fullPath: '/pharmacy/map'
+      preLoaderRoute: typeof PharmacyMapRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/operations': {
+      id: '/pharmacy/operations'
+      path: '/operations'
+      fullPath: '/pharmacy/operations'
+      preLoaderRoute: typeof PharmacyOperationsRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/prescriptions': {
+      id: '/pharmacy/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/pharmacy/prescriptions'
+      preLoaderRoute: typeof PharmacyPrescriptionsRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/purchase-orders': {
+      id: '/pharmacy/purchase-orders'
+      path: '/purchase-orders'
+      fullPath: '/pharmacy/purchase-orders'
+      preLoaderRoute: typeof PharmacyPurchaseOrdersRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/refills': {
+      id: '/pharmacy/refills'
+      path: '/refills'
+      fullPath: '/pharmacy/refills'
+      preLoaderRoute: typeof PharmacyRefillsRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/reports': {
+      id: '/pharmacy/reports'
+      path: '/reports'
+      fullPath: '/pharmacy/reports'
+      preLoaderRoute: typeof PharmacyReportsRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/search': {
+      id: '/pharmacy/search'
+      path: '/search'
+      fullPath: '/pharmacy/search'
+      preLoaderRoute: typeof PharmacySearchRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/walk-in': {
+      id: '/pharmacy/walk-in'
+      path: '/walk-in'
+      fullPath: '/pharmacy/walk-in'
+      preLoaderRoute: typeof PharmacyWalkInRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/pharmacy/ward': {
+      id: '/pharmacy/ward'
+      path: '/ward'
+      fullPath: '/pharmacy/ward'
+      preLoaderRoute: typeof PharmacyWardRouteImport
+      parentRoute: typeof PharmacyRoute
+    }
+    '/prescriptions/': {
+      id: '/prescriptions/'
+      path: '/prescriptions'
+      fullPath: '/prescriptions/'
+      preLoaderRoute: typeof PrescriptionsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/ai/prescription': {
-      id: '/api/ai/prescription'
-      path: '/api/ai/prescription'
-      fullPath: '/api/ai/prescription'
-      preLoaderRoute: typeof ApiAiPrescriptionRouteImport
+    '/prescriptions/$rxId': {
+      id: '/prescriptions/$rxId'
+      path: '/prescriptions/$rxId'
+      fullPath: '/prescriptions/$rxId'
+      preLoaderRoute: typeof PrescriptionsRxIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/ai/diet': {
-      id: '/api/ai/diet'
-      path: '/api/ai/diet'
-      fullPath: '/api/ai/diet'
-      preLoaderRoute: typeof ApiAiDietRouteImport
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/messages': {
+      id: '/profile/messages'
+      path: '/messages'
+      fullPath: '/profile/messages'
+      preLoaderRoute: typeof ProfileMessagesRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/notifications': {
+      id: '/profile/notifications'
+      path: '/notifications'
+      fullPath: '/profile/notifications'
+      preLoaderRoute: typeof ProfileNotificationsRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/privacy': {
+      id: '/profile/privacy'
+      path: '/privacy'
+      fullPath: '/profile/privacy'
+      preLoaderRoute: typeof ProfilePrivacyRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/support': {
+      id: '/profile/support'
+      path: '/support'
+      fullPath: '/profile/support'
+      preLoaderRoute: typeof ProfileSupportRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/terms': {
+      id: '/profile/terms'
+      path: '/terms'
+      fullPath: '/profile/terms'
+      preLoaderRoute: typeof ProfileTermsRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/reception/': {
+      id: '/reception/'
+      path: '/'
+      fullPath: '/reception/'
+      preLoaderRoute: typeof ReceptionIndexRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/admissions': {
+      id: '/reception/admissions'
+      path: '/admissions'
+      fullPath: '/reception/admissions'
+      preLoaderRoute: typeof ReceptionAdmissionsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/appointments': {
+      id: '/reception/appointments'
+      path: '/appointments'
+      fullPath: '/reception/appointments'
+      preLoaderRoute: typeof ReceptionAppointmentsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/billing': {
+      id: '/reception/billing'
+      path: '/billing'
+      fullPath: '/reception/billing'
+      preLoaderRoute: typeof ReceptionBillingRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/board': {
+      id: '/reception/board'
+      path: '/board'
+      fullPath: '/reception/board'
+      preLoaderRoute: typeof ReceptionBoardRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/cash-drawer': {
+      id: '/reception/cash-drawer'
+      path: '/cash-drawer'
+      fullPath: '/reception/cash-drawer'
+      preLoaderRoute: typeof ReceptionCashDrawerRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/check-in': {
+      id: '/reception/check-in'
+      path: '/check-in'
+      fullPath: '/reception/check-in'
+      preLoaderRoute: typeof ReceptionCheckInRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/day-sheet': {
+      id: '/reception/day-sheet'
+      path: '/day-sheet'
+      fullPath: '/reception/day-sheet'
+      preLoaderRoute: typeof ReceptionDaySheetRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/insurance': {
+      id: '/reception/insurance'
+      path: '/insurance'
+      fullPath: '/reception/insurance'
+      preLoaderRoute: typeof ReceptionInsuranceRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/leave': {
+      id: '/reception/leave'
+      path: '/leave'
+      fullPath: '/reception/leave'
+      preLoaderRoute: typeof ReceptionLeaveRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/patients': {
+      id: '/reception/patients'
+      path: '/patients'
+      fullPath: '/reception/patients'
+      preLoaderRoute: typeof ReceptionPatientsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/queue': {
+      id: '/reception/queue'
+      path: '/queue'
+      fullPath: '/reception/queue'
+      preLoaderRoute: typeof ReceptionQueueRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/register': {
+      id: '/reception/register'
+      path: '/register'
+      fullPath: '/reception/register'
+      preLoaderRoute: typeof ReceptionRegisterRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/reports': {
+      id: '/reception/reports'
+      path: '/reports'
+      fullPath: '/reception/reports'
+      preLoaderRoute: typeof ReceptionReportsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/settings': {
+      id: '/reception/settings'
+      path: '/settings'
+      fullPath: '/reception/settings'
+      preLoaderRoute: typeof ReceptionSettingsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/token-board': {
+      id: '/reception/token-board'
+      path: '/token-board'
+      fullPath: '/reception/token-board'
+      preLoaderRoute: typeof ReceptionTokenBoardRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/token-display': {
+      id: '/reception/token-display'
+      path: '/token-display'
+      fullPath: '/reception/token-display'
+      preLoaderRoute: typeof ReceptionTokenDisplayRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/vitals': {
+      id: '/reception/vitals'
+      path: '/vitals'
+      fullPath: '/reception/vitals'
+      preLoaderRoute: typeof ReceptionVitalsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reports/': {
+      id: '/reports/'
+      path: '/reports'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof ReportsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/$reportId': {
+      id: '/reports/$reportId'
+      path: '/reports/$reportId'
+      fullPath: '/reports/$reportId'
+      preLoaderRoute: typeof ReportsReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/history': {
+      id: '/reports/history'
+      path: '/reports/history'
+      fullPath: '/reports/history'
+      preLoaderRoute: typeof ReportsHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ai/chat': {
@@ -3288,11 +3102,242 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ai/diet': {
+      id: '/api/ai/diet'
+      path: '/api/ai/diet'
+      fullPath: '/api/ai/diet'
+      preLoaderRoute: typeof ApiAiDietRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/prescription': {
+      id: '/api/ai/prescription'
+      path: '/api/ai/prescription'
+      fullPath: '/api/ai/prescription'
+      preLoaderRoute: typeof ApiAiPrescriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/status': {
+      id: '/api/ai/status'
+      path: '/api/ai/status'
+      fullPath: '/api/ai/status'
+      preLoaderRoute: typeof ApiAiStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/diet/meal-image': {
+      id: '/api/diet/meal-image'
+      path: '/api/diet/meal-image'
+      fullPath: '/api/diet/meal-image'
+      preLoaderRoute: typeof ApiDietMealImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/diet/meal-media': {
+      id: '/api/diet/meal-media'
+      path: '/api/diet/meal-media'
+      fullPath: '/api/diet/meal-media'
+      preLoaderRoute: typeof ApiDietMealMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/diet/youtube': {
+      id: '/api/diet/youtube'
+      path: '/api/diet/youtube'
+      fullPath: '/api/diet/youtube'
+      preLoaderRoute: typeof ApiDietYoutubeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/exercise/youtube': {
+      id: '/api/exercise/youtube'
+      path: '/api/exercise/youtube'
+      fullPath: '/api/exercise/youtube'
+      preLoaderRoute: typeof ApiExerciseYoutubeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/patient/clinical-events': {
+      id: '/api/patient/clinical-events'
+      path: '/api/patient/clinical-events'
+      fullPath: '/api/patient/clinical-events'
+      preLoaderRoute: typeof ApiPatientClinicalEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/patient/rx-inbox': {
+      id: '/api/patient/rx-inbox'
+      path: '/api/patient/rx-inbox'
+      fullPath: '/api/patient/rx-inbox'
+      preLoaderRoute: typeof ApiPatientRxInboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/care/visits/': {
+      id: '/care/visits/'
+      path: '/'
+      fullPath: '/care/visits/'
+      preLoaderRoute: typeof CareVisitsIndexRouteImport
+      parentRoute: typeof CareVisitsRoute
+    }
+    '/care/visits/$visitId': {
+      id: '/care/visits/$visitId'
+      path: '/$visitId'
+      fullPath: '/care/visits/$visitId'
+      preLoaderRoute: typeof CareVisitsVisitIdRouteImport
+      parentRoute: typeof CareVisitsRoute
+    }
+    '/diet/$mealId/clinical-rules': {
+      id: '/diet/$mealId/clinical-rules'
+      path: '/clinical-rules'
+      fullPath: '/diet/$mealId/clinical-rules'
+      preLoaderRoute: typeof DietMealIdClinicalRulesRouteImport
+      parentRoute: typeof DietMealIdRoute
+    }
+    '/doctor/patients/': {
+      id: '/doctor/patients/'
+      path: '/'
+      fullPath: '/doctor/patients/'
+      preLoaderRoute: typeof DoctorPatientsIndexRouteImport
+      parentRoute: typeof DoctorPatientsRoute
+    }
+    '/doctor/patients/$patientId': {
+      id: '/doctor/patients/$patientId'
+      path: '/$patientId'
+      fullPath: '/doctor/patients/$patientId'
+      preLoaderRoute: typeof DoctorPatientsPatientIdRouteImport
+      parentRoute: typeof DoctorPatientsRoute
+    }
+    '/doctor/patients/tasks': {
+      id: '/doctor/patients/tasks'
+      path: '/tasks'
+      fullPath: '/doctor/patients/tasks'
+      preLoaderRoute: typeof DoctorPatientsTasksRouteImport
+      parentRoute: typeof DoctorPatientsRoute
+    }
+    '/doctor/referrals/$referralId': {
+      id: '/doctor/referrals/$referralId'
+      path: '/$referralId'
+      fullPath: '/doctor/referrals/$referralId'
+      preLoaderRoute: typeof DoctorReferralsReferralIdRouteImport
+      parentRoute: typeof DoctorReferralsRoute
+    }
+    '/doctor/settings/': {
+      id: '/doctor/settings/'
+      path: '/'
+      fullPath: '/doctor/settings/'
+      preLoaderRoute: typeof DoctorSettingsIndexRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/audit': {
+      id: '/doctor/settings/audit'
+      path: '/audit'
+      fullPath: '/doctor/settings/audit'
+      preLoaderRoute: typeof DoctorSettingsAuditRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/emergency': {
+      id: '/doctor/settings/emergency'
+      path: '/emergency'
+      fullPath: '/doctor/settings/emergency'
+      preLoaderRoute: typeof DoctorSettingsEmergencyRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/notifications': {
+      id: '/doctor/settings/notifications'
+      path: '/notifications'
+      fullPath: '/doctor/settings/notifications'
+      preLoaderRoute: typeof DoctorSettingsNotificationsRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/personal': {
+      id: '/doctor/settings/personal'
+      path: '/personal'
+      fullPath: '/doctor/settings/personal'
+      preLoaderRoute: typeof DoctorSettingsPersonalRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/referrals': {
+      id: '/doctor/settings/referrals'
+      path: '/referrals'
+      fullPath: '/doctor/settings/referrals'
+      preLoaderRoute: typeof DoctorSettingsReferralsRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/schedule': {
+      id: '/doctor/settings/schedule'
+      path: '/schedule'
+      fullPath: '/doctor/settings/schedule'
+      preLoaderRoute: typeof DoctorSettingsScheduleRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/security': {
+      id: '/doctor/settings/security'
+      path: '/security'
+      fullPath: '/doctor/settings/security'
+      preLoaderRoute: typeof DoctorSettingsSecurityRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/doctor/settings/slots': {
+      id: '/doctor/settings/slots'
+      path: '/slots'
+      fullPath: '/doctor/settings/slots'
+      preLoaderRoute: typeof DoctorSettingsSlotsRouteImport
+      parentRoute: typeof DoctorSettingsRoute
+    }
+    '/medications/$medId/refill': {
+      id: '/medications/$medId/refill'
+      path: '/refill'
+      fullPath: '/medications/$medId/refill'
+      preLoaderRoute: typeof MedicationsMedIdRefillRouteImport
+      parentRoute: typeof MedicationsMedIdRoute
+    }
+    '/profile/dependents/': {
+      id: '/profile/dependents/'
+      path: '/dependents'
+      fullPath: '/profile/dependents/'
+      preLoaderRoute: typeof ProfileDependentsIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/dependents/$dependentId': {
+      id: '/profile/dependents/$dependentId'
+      path: '/dependents/$dependentId'
+      fullPath: '/profile/dependents/$dependentId'
+      preLoaderRoute: typeof ProfileDependentsDependentIdRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/reception/appointments/': {
+      id: '/reception/appointments/'
+      path: '/'
+      fullPath: '/reception/appointments/'
+      preLoaderRoute: typeof ReceptionAppointmentsIndexRouteImport
+      parentRoute: typeof ReceptionAppointmentsRoute
+    }
+    '/reception/appointments/new': {
+      id: '/reception/appointments/new'
+      path: '/new'
+      fullPath: '/reception/appointments/new'
+      preLoaderRoute: typeof ReceptionAppointmentsNewRouteImport
+      parentRoute: typeof ReceptionAppointmentsRoute
+    }
+    '/reports/share/': {
+      id: '/reports/share/'
+      path: '/reports/share'
+      fullPath: '/reports/share/'
+      preLoaderRoute: typeof ReportsShareIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/share/$reportId': {
+      id: '/reports/share/$reportId'
+      path: '/reports/share/$reportId'
+      fullPath: '/reports/share/$reportId'
+      preLoaderRoute: typeof ReportsShareReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/doctor/patients/$patientId/': {
       id: '/doctor/patients/$patientId/'
       path: '/'
       fullPath: '/doctor/patients/$patientId/'
       preLoaderRoute: typeof DoctorPatientsPatientIdIndexRouteImport
+      parentRoute: typeof DoctorPatientsPatientIdRoute
+    }
+    '/doctor/patients/$patientId/history': {
+      id: '/doctor/patients/$patientId/history'
+      path: '/history'
+      fullPath: '/doctor/patients/$patientId/history'
+      preLoaderRoute: typeof DoctorPatientsPatientIdHistoryRouteImport
       parentRoute: typeof DoctorPatientsPatientIdRoute
     }
     '/doctor/settings/referrals/$referralId': {
@@ -3301,13 +3346,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/doctor/settings/referrals/$referralId'
       preLoaderRoute: typeof DoctorSettingsReferralsReferralIdRouteImport
       parentRoute: typeof DoctorSettingsReferralsRoute
-    }
-    '/doctor/patients/$patientId/history': {
-      id: '/doctor/patients/$patientId/history'
-      path: '/history'
-      fullPath: '/doctor/patients/$patientId/history'
-      preLoaderRoute: typeof DoctorPatientsPatientIdHistoryRouteImport
-      parentRoute: typeof DoctorPatientsPatientIdRoute
     }
   }
 }
@@ -3321,6 +3359,7 @@ interface AdminRouteChildren {
   AdminDoctorRosterRoute: typeof AdminDoctorRosterRoute
   AdminDoctorsRoute: typeof AdminDoctorsRoute
   AdminHospitalRoute: typeof AdminHospitalRoute
+  AdminHospitalUnitsRoute: typeof AdminHospitalUnitsRoute
   AdminHrRoute: typeof AdminHrRoute
   AdminLabCatalogRoute: typeof AdminLabCatalogRoute
   AdminOccupancyRoute: typeof AdminOccupancyRoute
@@ -3342,6 +3381,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDoctorRosterRoute: AdminDoctorRosterRoute,
   AdminDoctorsRoute: AdminDoctorsRoute,
   AdminHospitalRoute: AdminHospitalRoute,
+  AdminHospitalUnitsRoute: AdminHospitalUnitsRoute,
   AdminHrRoute: AdminHrRoute,
   AdminLabCatalogRoute: AdminLabCatalogRoute,
   AdminOccupancyRoute: AdminOccupancyRoute,
@@ -3477,6 +3517,7 @@ interface DoctorRouteChildren {
   DoctorResultsRoute: typeof DoctorResultsRoute
   DoctorScheduleRoute: typeof DoctorScheduleRoute
   DoctorSettingsRoute: typeof DoctorSettingsRouteWithChildren
+  DoctorSpecialtyRoute: typeof DoctorSpecialtyRoute
   DoctorStatisticsRoute: typeof DoctorStatisticsRoute
   DoctorVitalsRoute: typeof DoctorVitalsRoute
   DoctorIndexRoute: typeof DoctorIndexRoute
@@ -3497,6 +3538,7 @@ const DoctorRouteChildren: DoctorRouteChildren = {
   DoctorResultsRoute: DoctorResultsRoute,
   DoctorScheduleRoute: DoctorScheduleRoute,
   DoctorSettingsRoute: DoctorSettingsRouteWithChildren,
+  DoctorSpecialtyRoute: DoctorSpecialtyRoute,
   DoctorStatisticsRoute: DoctorStatisticsRoute,
   DoctorVitalsRoute: DoctorVitalsRoute,
   DoctorIndexRoute: DoctorIndexRoute,
@@ -3782,12 +3824,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

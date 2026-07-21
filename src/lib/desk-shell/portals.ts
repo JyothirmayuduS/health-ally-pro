@@ -27,6 +27,7 @@ import {
   Megaphone,
   TrendingUp,
   CalendarOff,
+  Droplets,
 } from "lucide-react";
 import type { DeskPortalConfig } from "./types";
 
@@ -169,6 +170,7 @@ export const ADMIN_DESK: DeskPortalConfig = {
         { to: "/admin/doctors", label: "Doctors", icon: Stethoscope, dot: "bg-teal" },
         { to: "/admin/doctor-roster", label: "Doctor roster", icon: CalendarRange, dot: "bg-teal" },
         { to: "/admin/ot", label: "Operation theatre", icon: Activity, dot: "bg-plum" },
+        { to: "/admin/hospital-units", label: "Hospital units", icon: Droplets, dot: "bg-sage" },
         { to: "/admin/services", label: "Services & fees", icon: Briefcase, dot: "bg-money" },
         { to: "/admin/lab-catalog", label: "Lab catalog", icon: FlaskConical, dot: "bg-sage" },
         { to: "/admin/pharmacy-formulary", label: "Pharmacy formulary", icon: Pill, dot: "bg-mustard" },
@@ -184,6 +186,8 @@ export const ADMIN_DESK: DeskPortalConfig = {
   titleFromPath: (pathname) => {
     if (pathname === "/admin" || pathname === "/admin/")
       return { eyebrow: "Control", title: "Hospital command center" };
+    if (pathname.startsWith("/admin/hospital-units"))
+      return { eyebrow: "Clinical ops", title: "Hospital support units" };
     if (pathname.startsWith("/admin/hospital"))
       return { eyebrow: "Organization", title: "Hospital profile" };
     if (pathname.startsWith("/admin/branches"))

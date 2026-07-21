@@ -61,9 +61,33 @@ export const DEMO_CREDENTIALS: Record<
   },
   "doctor@oakhaven.demo": {
     password: "Demo1234!",
-    fullName: "Tyra Dhillon",
+    fullName: "Dr. Aarav Mehta",
     roles: ["doctor"],
     userId: "demo-doctor",
+  },
+  "ophthalmology@oakhaven.demo": {
+    password: "Demo1234!",
+    fullName: "Dr. Meera Joshi",
+    roles: ["doctor"],
+    userId: "demo-doctor-ophtho",
+  },
+  "cardiology@oakhaven.demo": {
+    password: "Demo1234!",
+    fullName: "Dr. Vikram Shah",
+    roles: ["doctor"],
+    userId: "demo-doctor-cardio",
+  },
+  "pediatrics@oakhaven.demo": {
+    password: "Demo1234!",
+    fullName: "Dr. Priya Nair",
+    roles: ["doctor"],
+    userId: "demo-doctor-peds",
+  },
+  "orthopedics@oakhaven.demo": {
+    password: "Demo1234!",
+    fullName: "Dr. Rohan Bhatt",
+    roles: ["doctor"],
+    userId: "demo-doctor-ortho",
   },
   "patient@oakhaven.demo": {
     password: "Demo1234!",

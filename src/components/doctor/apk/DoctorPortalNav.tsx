@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { DoctorGlobalActions } from "@/components/doctor/DoctorGlobalActions";
-import { DOCTOR_CLINICAL_TOOLS, DOCTOR_PRIMARY_NAV } from "@/lib/doctor-portal-nav";
+import { clinicalToolsForSpecialty, DOCTOR_PRIMARY_NAV } from "@/lib/doctor-portal-nav";
 import { apkDoctor } from "@/lib/doctor-apk-data";
 import { useDoctorMobileChrome } from "@/lib/doctor-mobile-chrome";
 import { useLiveQueue } from "@/lib/doctor-live-queue-store";
@@ -11,6 +11,7 @@ import {
   formatQueueBadge,
   panelCounts,
 } from "@/lib/doctor-clinic-overview";
+import { useDoctorSpecialty } from "@/lib/specialties";
 import { cn } from "@/lib/utils";
 
 function isActive(pathname: string, to: string, exact?: boolean) {
@@ -57,12 +58,14 @@ function useReportsBadge() {
 
 function ClinicalToolsSidebar() {
   const { pathname } = useLocation();
+  const { specialty } = useDoctorSpecialty();
+  const tools = clinicalToolsForSpecialty(specialty);
 
   return (
     <>
       <p className="mb-2 mt-5 px-3 text-[10px] font-semibold tracking-[0.14em] text-[#8A8F8C]">CLINICAL TOOLS</p>
       <ul className="flex flex-col gap-1">
-        {DOCTOR_CLINICAL_TOOLS.map(({ to, label, icon: Icon }) => {
+        {tools.map(({ to, label, icon: Icon }) => {
           const active = pathname.startsWith(to);
           return (
             <li key={to}>
@@ -201,6 +204,16 @@ export function DoctorBottomNav() {
 }
 
 export function DoctorSideNav() {
+  const { specialty, doctor, session } = useDoctorSpecialty();
+  const displayName = doctor?.name ?? session?.fullName ?? apkDoctor.shortName;
+  const initials = displayName
+    .replace(/^Dr\.?\s*/i, "")
+    .split(" ")
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[260px] flex-col border-r border-[#E8E4DF] bg-white lg:flex xl:w-[280px]">
       <div className="border-b border-[#E8E4DF] px-5 py-6">
@@ -208,11 +221,11 @@ export function DoctorSideNav() {
         <p className="mt-0.5 text-[10px] font-medium tracking-[0.14em] text-[#8A8F8C]">DOCTOR PORTAL</p>
         <div className="mt-5 flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-full bg-[#1B3B2E] text-sm font-semibold text-white">
-            {apkDoctor.initials}
+            {initials || apkDoctor.initials}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[#1B3B2E]">{apkDoctor.shortName}</p>
-            <p className="truncate text-xs text-[#B8735D]">{apkDoctor.specialty}</p>
+            <p className="truncate text-sm font-semibold text-[#1B3B2E]">{displayName}</p>
+            <p className="truncate text-xs text-[#B8735D]">{specialty.name}</p>
           </div>
         </div>
       </div>

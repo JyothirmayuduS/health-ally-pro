@@ -12,10 +12,12 @@ import {
   Settings,
   Shield,
   Share2,
+  Stethoscope,
   TestTube,
   User,
   Users,
 } from "lucide-react";
+import type { SpecialtyDefinition } from "@/lib/specialties/types";
 
 export type DoctorNavItem = {
   to: string;
@@ -35,11 +37,21 @@ export const DOCTOR_PRIMARY_NAV: DoctorNavItem[] = [
 
 /** Secondary clinical tools — sidebar (desktop) + FAB (mobile) only */
 export const DOCTOR_CLINICAL_TOOLS = [
+  { to: "/doctor/specialty", label: "Specialty desk", icon: Stethoscope },
   { to: "/doctor/prescriptions", label: "Prescribe", icon: Pill },
   { to: "/doctor/schedule", label: "Schedule", icon: CalendarDays },
   { to: "/doctor/settings/referrals", label: "Referrals", icon: Send },
   { to: "/doctor/settings/slots", label: "Booking slots", icon: Grid3X3 },
 ] as const;
+
+/** Specialty-aware clinical tools — first item labels with the assigned specialty */
+export function clinicalToolsForSpecialty(specialty: SpecialtyDefinition) {
+  return DOCTOR_CLINICAL_TOOLS.map((item) =>
+    item.to === "/doctor/specialty"
+      ? { ...item, label: specialty.shortName + " desk" }
+      : item,
+  );
+}
 
 export type DoctorModuleLink = {
   to: string;
@@ -49,6 +61,7 @@ export type DoctorModuleLink = {
 };
 
 export const DOCTOR_CLINICAL_MODULES: DoctorModuleLink[] = [
+  { to: "/doctor/specialty", label: "Specialty desk", description: "Specialty-specific clinical workstation", icon: Stethoscope },
   { to: "/doctor/queue", label: "Live queue", description: "Today's queue board", icon: ListOrdered },
   { to: "/doctor/prescriptions", label: "Prescriptions", description: "E-prescribe to pharmacy", icon: Pill },
   { to: "/doctor/orders", label: "Lab orders", description: "Send orders to lab desk", icon: TestTube },

@@ -43,8 +43,20 @@ const DEFAULT_DEPARTMENTS: Department[] = [
   { id: "DEP-01", name: "General Medicine", head: "Dr. Aarav Mehta", floor: "2" },
   { id: "DEP-02", name: "Pediatrics", head: "Dr. Priya Nair", floor: "3" },
   { id: "DEP-03", name: "Orthopedics", head: "Dr. Rohan Bhatt", floor: "4" },
-  { id: "DEP-04", name: "Laboratory", head: "Dr. Rajan", floor: "1" },
-  { id: "DEP-05", name: "Pharmacy", head: "Riley Chen", floor: "G" },
+  { id: "DEP-04", name: "Cardiology", head: "Dr. Vikram Shah", floor: "5" },
+  { id: "DEP-05", name: "Ophthalmology", head: "Dr. Meera Joshi", floor: "2" },
+  { id: "DEP-06", name: "Neurology", head: "TBD", floor: "5" },
+  { id: "DEP-07", name: "Dermatology", head: "Dr. Sara Iyer", floor: "2" },
+  { id: "DEP-08", name: "ENT", head: "TBD", floor: "2" },
+  { id: "DEP-09", name: "Obstetrics & Gynecology", head: "TBD", floor: "3" },
+  { id: "DEP-10", name: "Emergency", head: "TBD", floor: "G" },
+  { id: "DEP-11", name: "ICU / Critical Care", head: "TBD", floor: "6" },
+  { id: "DEP-12", name: "Laboratory", head: "Dr. Rajan", floor: "1" },
+  { id: "DEP-13", name: "Pharmacy", head: "Riley Chen", floor: "G" },
+  { id: "DEP-14", name: "Radiology", head: "TBD", floor: "1" },
+  { id: "DEP-15", name: "Blood Bank", head: "TBD", floor: "1" },
+  { id: "DEP-16", name: "Dialysis", head: "TBD", floor: "1" },
+  { id: "DEP-17", name: "Physiotherapy", head: "TBD", floor: "B1" },
 ];
 
 export const DEFAULT_STAFF: StaffMember[] = [

@@ -5,6 +5,7 @@ import {
   ChevronRight,
   ClipboardList,
   Clock,
+  Stethoscope,
   Users,
 } from "lucide-react";
 import { useLiveQueue } from "@/lib/doctor-live-queue-store";
@@ -17,6 +18,7 @@ import { DoctorHomeNextActions } from "@/components/doctor/DoctorHomeNextActions
 import { DoctorHomeTriage } from "@/components/doctor/DoctorHomeTriage";
 import { DoctorResultsInboxStrip } from "@/components/doctor/DoctorResultsInboxStrip";
 import { DoctorTodayTimeline } from "@/components/doctor/DoctorTodayTimeline";
+import { useDoctorSpecialty } from "@/lib/specialties";
 
 function panelHealthItems() {
   return [
@@ -56,6 +58,7 @@ export function DoctorHomeDashboard() {
   const overview = computeClinicOverview({ accepting, room, entries, bookingRequests });
   const counts = panelCounts();
   const panelHealth = panelHealthItems();
+  const { specialty, doctor } = useDoctorSpecialty();
 
   const kpiCards = [
     {
@@ -100,6 +103,30 @@ export function DoctorHomeDashboard() {
   return (
     <div className="space-y-5">
       <DoctorClinicOnboardingBanner />
+
+      <Link
+        to="/doctor/specialty"
+        className="flex items-center gap-4 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5"
+        style={{ borderLeftWidth: 4, borderLeftColor: specialty.accent }}
+      >
+        <span
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl"
+          style={{ background: specialty.accentSoft, color: specialty.accent }}
+        >
+          <Stethoscope className="h-6 w-6" strokeWidth={1.75} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
+            Your specialty workstation
+          </p>
+          <p className="font-semibold text-[#1B3B2E]">{specialty.name}</p>
+          <p className="text-sm text-[#8A8F8C]">
+            {specialty.tagline}
+            {doctor?.room ? ` · ${doctor.room}` : ""}
+          </p>
+        </div>
+        <ChevronRight className="h-5 w-5 shrink-0 text-[#B8735D]" />
+      </Link>
 
       {/* Now — live triage */}
       <DoctorHomeTriage layout="grid" />

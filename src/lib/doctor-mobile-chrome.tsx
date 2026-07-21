@@ -18,6 +18,7 @@ export const DOCTOR_MOBILE_BOTTOM_INSET_WITH_FAB = `calc(${DOCTOR_TAB_BAR_HEIGHT
 /** Hide FAB on focused clinical / queue / inbox screens */
 export function shouldHideDoctorClinicalFab(pathname: string): boolean {
   if (pathname.startsWith("/doctor/prescriptions")) return true;
+  if (pathname.startsWith("/doctor/specialty")) return true;
   if (/^\/doctor\/patients\/[^/]+/.test(pathname)) return true;
   if (
     pathname.startsWith("/doctor/vitals") ||

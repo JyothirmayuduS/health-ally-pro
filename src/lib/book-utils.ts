@@ -4,11 +4,24 @@ import { patientMedications } from "@/lib/mock-data";
 export const BOOK_SPECIALTIES = [
   "All",
   "Cardiology",
+  "Ophthalmology",
+  "Pediatrics",
+  "Orthopedics",
   "Neurology",
   "Dermatology",
-  "Orthopedics",
-  "General Physician",
+  "ENT",
+  "Gastroenterology",
+  "Nephrology",
+  "Pulmonology",
+  "Oncology",
+  "Obstetrics & Gynecology",
+  "Psychiatry",
+  "Dental / Oral Surgery",
+  "Urology",
   "Endocrinology",
+  "Rheumatology",
+  "General Physician",
+  "Physiotherapy & Rehab",
 ] as const;
 
 export type BookSort = "top_rated" | "lowest_fee" | "experience";
