@@ -13,8 +13,7 @@ function read(key: string): string | undefined {
 }
 
 export function getServerLicense(): ServerLicense {
-  const key =
-    (read("MEDORA_LICENSE_KEY") ?? read("VITE_MEDORA_LICENSE_KEY") ?? "").trim();
+  const key = (read("MEDORA_LICENSE_KEY") ?? read("VITE_MEDORA_LICENSE_KEY") ?? "").trim();
   const planRaw = (read("MEDORA_PLAN") ?? read("VITE_MEDORA_PLAN") ?? "").toLowerCase();
   const plan =
     planRaw === "starter" || planRaw === "professional" || planRaw === "enterprise"

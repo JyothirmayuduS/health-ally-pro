@@ -39,9 +39,7 @@ export async function runPrescriptionAi(
     input.dossier,
     ragBlock ? `Relevant formulary & hospital context:\n${ragBlock}` : "",
     `Local analysis summary: ${input.localSummary}`,
-    input.suggestionNames.length
-      ? `Ranked suggestions: ${input.suggestionNames.join(", ")}`
-      : "",
+    input.suggestionNames.length ? `Ranked suggestions: ${input.suggestionNames.join(", ")}` : "",
     input.alertTitles.length ? `Safety alerts: ${input.alertTitles.join("; ")}` : "",
     input.draftDrugIds.length
       ? `Draft lines: ${input.draftDrugIds.join(", ")}`

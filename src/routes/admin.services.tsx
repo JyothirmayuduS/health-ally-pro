@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { loadServiceFees, updateServiceFee, type ServiceFee } from "@/lib/shared/services";
 import { Input } from "@/components/ui/input";
@@ -65,10 +65,18 @@ function AdminServices() {
           <table className="w-full text-[13px]">
             <thead className="border-b border-ink-100 bg-bone/40 font-mono">
               <tr>
-                <th className="px-5 py-3.5 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Doctor</th>
-                <th className="px-5 py-3.5 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Specialty</th>
-                <th className="px-5 py-3.5 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400 w-44">Consultation Rate (₹)</th>
-                <th className="px-5 py-3.5 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400 w-36">Actions</th>
+                <th className="px-5 py-3.5 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                  Doctor
+                </th>
+                <th className="px-5 py-3.5 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                  Specialty
+                </th>
+                <th className="px-5 py-3.5 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400 w-44">
+                  Consultation Rate (₹)
+                </th>
+                <th className="px-5 py-3.5 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400 w-36">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
@@ -104,8 +112,8 @@ function AdminServices() {
                           isSaved
                             ? "bg-status-doneBg border-status-doneBorder text-status-doneText"
                             : isDraft
-                            ? "bg-plum text-white border-plum hover:bg-plum-soft hover:text-plum"
-                            : "bg-white border-stone-200 text-ink-400 cursor-not-allowed"
+                              ? "bg-plum text-white border-plum hover:bg-plum-soft hover:text-plum"
+                              : "bg-white border-stone-200 text-ink-400 cursor-not-allowed"
                         }`}
                       >
                         {isSaved ? "Saved" : "Save Row"}

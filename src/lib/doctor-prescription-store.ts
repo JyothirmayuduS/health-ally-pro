@@ -2,10 +2,7 @@ import { deskForKey, loadPersistedJson, savePersistedJson } from "@/lib/shared/p
 import { apkDoctor } from "@/lib/doctor-apk-data";
 import { PANEL_PATIENTS } from "@/lib/doctor-patients-apk-data";
 import type { PrescriptionDraft, RxFrequency } from "@/lib/doctor-prescription-workflow";
-import {
-  createLineFromDrug,
-  defaultPrescriptionDraft,
-} from "@/lib/doctor-prescription-workflow";
+import { createLineFromDrug, defaultPrescriptionDraft } from "@/lib/doctor-prescription-workflow";
 import { DRUGS } from "@/lib/pharmacy-desk/mockData";
 
 export type DoctorRxDispatchTarget = "pharmacy" | "patient" | "both";
@@ -91,9 +88,7 @@ function seedSentIfEmpty() {
     ...defaultPrescriptionDraft("p1"),
     diagnosis: "Persistent asthma — maintenance",
     diagnosisIcd: "ICD-10 J45.9",
-    lines: [
-      createLineFromDrug("drug-sal100", { frequency: "SOS", durationDays: 90 }),
-    ],
+    lines: [createLineFromDrug("drug-sal100", { frequency: "SOS", durationDays: 90 })],
     patientInstructions: "Use inhaler for wheeze. Seek urgent care if no relief.",
     updatedAt: new Date(Date.now() - 5 * 86400000).toISOString(),
   };
@@ -155,7 +150,9 @@ export function getDoctorSentRx(rxNumber: string): DoctorSentRxRecord | undefine
   return loadSent().find((r) => r.rx_number === rxNumber);
 }
 
-export function recordDoctorSentRx(input: Omit<DoctorSentRxRecord, "id" | "status">): DoctorSentRxRecord {
+export function recordDoctorSentRx(
+  input: Omit<DoctorSentRxRecord, "id" | "status">,
+): DoctorSentRxRecord {
   const record: DoctorSentRxRecord = {
     ...input,
     id: `doc-rx-${Date.now()}`,
@@ -167,7 +164,10 @@ export function recordDoctorSentRx(input: Omit<DoctorSentRxRecord, "id" | "statu
   return record;
 }
 
-export function cancelDoctorSentRx(rxNumber: string, reason?: string): DoctorSentRxRecord | undefined {
+export function cancelDoctorSentRx(
+  rxNumber: string,
+  reason?: string,
+): DoctorSentRxRecord | undefined {
   const list = loadSent();
   const idx = list.findIndex((r) => r.rx_number === rxNumber && r.status === "sent");
   if (idx < 0) return undefined;

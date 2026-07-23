@@ -68,7 +68,11 @@ export function expiryStatus(expiry: string) {
   if (days < 0) return { level: "expired", label: "Expired", days };
   if (days <= 30) return { level: "critical", label: `${days}d left`, days };
   if (days <= 90) return { level: "warning", label: `${days}d left`, days };
-  return { level: "ok", label: new Date(expiry).toLocaleDateString([], { month: "short", year: "numeric" }), days };
+  return {
+    level: "ok",
+    label: new Date(expiry).toLocaleDateString([], { month: "short", year: "numeric" }),
+    days,
+  };
 }
 
 export type SearchHit = {

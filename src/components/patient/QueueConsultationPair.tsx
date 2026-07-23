@@ -30,9 +30,7 @@ export function QueueConsultationPair({ patient, doctorGender, className }: Prop
         size="sm"
         invert={personaImageNeedsInvert(patient)}
       />
-      <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-700">
-        With
-      </span>
+      <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-700">With</span>
       <QueueBustAvatar
         src={DOCTOR_QUEUE_IMAGES[doctorGender]}
         role="doctor"

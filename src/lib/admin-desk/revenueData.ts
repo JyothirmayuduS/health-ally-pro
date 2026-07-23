@@ -58,8 +58,20 @@ export const DAILY_REVENUE: DailyRevenue[] = Array.from({ length: 30 }, (_, i) =
 
 // Department breakdown
 export const DEPARTMENT_REVENUE: DepartmentRevenue[] = [
-  { department: "OPD Consultation", invoiced: 285000, collected: 241000, outstanding: 44000, rate: 85 },
-  { department: "IPD Bed Stay", invoiced: 512000, collected: 390000, outstanding: 122000, rate: 76 },
+  {
+    department: "OPD Consultation",
+    invoiced: 285000,
+    collected: 241000,
+    outstanding: 44000,
+    rate: 85,
+  },
+  {
+    department: "IPD Bed Stay",
+    invoiced: 512000,
+    collected: 390000,
+    outstanding: 122000,
+    rate: 76,
+  },
   { department: "Laboratory", invoiced: 189000, collected: 163000, outstanding: 26000, rate: 86 },
   { department: "Pharmacy OTC", invoiced: 94000, collected: 94000, outstanding: 0, rate: 100 },
   { department: "Pharmacy Rx", invoiced: 148000, collected: 121000, outstanding: 27000, rate: 82 },

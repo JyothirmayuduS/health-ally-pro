@@ -29,9 +29,7 @@ export function PrescriptionMobileCdssDrawer({
         onClick={() => setOpen(true)}
         className={cn(
           "inline-flex min-h-[40px] items-center gap-1.5 rounded-lg px-3 text-xs font-semibold",
-          alertCount > 0
-            ? "bg-[#FDF5F4] text-[#C45C4A]"
-            : "bg-[#F5F2ED] text-[#1B3B2E]",
+          alertCount > 0 ? "bg-[#FDF5F4] text-[#C45C4A]" : "bg-[#F5F2ED] text-[#1B3B2E]",
         )}
       >
         {alertCount > 0 ? (
@@ -41,12 +39,17 @@ export function PrescriptionMobileCdssDrawer({
         )}
         Safety
         {alertCount > 0 && (
-          <span className="rounded-full bg-[#C45C4A] px-1.5 text-[10px] font-bold text-white">{alertCount}</span>
+          <span className="rounded-full bg-[#C45C4A] px-1.5 text-[10px] font-bold text-white">
+            {alertCount}
+          </span>
         )}
       </button>
 
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-[24px] border-[#EDEAE6]">
+        <SheetContent
+          side="bottom"
+          className="max-h-[85dvh] overflow-y-auto rounded-t-[24px] border-[#EDEAE6]"
+        >
           <SheetHeader className="text-left">
             <SheetTitle className="flex items-center gap-2 font-serif text-[#1B3B2E]">
               <Sparkles className="h-5 w-5 text-[#B8735D]" strokeWidth={1.75} />

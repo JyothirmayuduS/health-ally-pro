@@ -250,8 +250,7 @@ export const patientMedications: PatientMedication[] = [
     time: "Dinner",
     taken: false,
     frequency: "Daily",
-    reason:
-      "Insulin resistance management often linked with Hashimoto's metabolic decline.",
+    reason: "Insulin resistance management often linked with Hashimoto's metabolic decline.",
     clinicalReason:
       "Insulin resistance management often linked with Hashimoto's metabolic decline.",
     prescribedBy: "Dr. Eleanor Thorne",

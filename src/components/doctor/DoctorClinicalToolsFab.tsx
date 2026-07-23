@@ -56,7 +56,11 @@ export function DoctorClinicalToolsFab() {
           aria-label={open ? "Close clinical tools" : "Clinical tools"}
           aria-expanded={open}
         >
-          {open ? <X className="h-6 w-6" strokeWidth={1.75} /> : <Plus className="h-6 w-6" strokeWidth={1.75} />}
+          {open ? (
+            <X className="h-6 w-6" strokeWidth={1.75} />
+          ) : (
+            <Plus className="h-6 w-6" strokeWidth={1.75} />
+          )}
         </button>
       </div>
     </>

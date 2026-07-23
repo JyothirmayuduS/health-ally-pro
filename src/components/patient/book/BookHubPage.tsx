@@ -41,9 +41,7 @@ export function BookHubPage() {
   return (
     <div className="w-full pb-8 lg:pb-0">
       <header className="mb-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">
-          Specialists
-        </p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">Specialists</p>
         <h1 className="mt-1.5 font-serif text-[38px] leading-tight tracking-tight text-ink">
           Find a <span className="italic text-clay">doctor</span>
         </h1>

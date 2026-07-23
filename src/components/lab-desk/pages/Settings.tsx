@@ -23,11 +23,7 @@ export default function Settings() {
     <div className="space-y-6" data-testid="settings-page">
       <SectionLabel>Settings &amp; operations</SectionLabel>
 
-      <LabCatalogEditor
-        mode="lab"
-        catalog={catalog}
-        onUpdatePrice={updateCatalogPrice}
-      />
+      <LabCatalogEditor mode="lab" catalog={catalog} onUpdatePrice={updateCatalogPrice} />
 
       <div className="grid lg:grid-cols-2 gap-6">
         <div className="surface p-5">
@@ -36,9 +32,18 @@ export default function Settings() {
             <h3 className="font-display font-semibold">Lab profile</h3>
           </div>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-ink-400">Hospital</span><span className="font-medium">{hospital.name}</span></div>
-            <div className="flex justify-between"><span className="text-ink-400">Director</span><span>{hospital.lab_director}</span></div>
-            <div className="flex justify-between"><span className="text-ink-400">CLIA</span><span className="font-mono">{hospital.clia}</span></div>
+            <div className="flex justify-between">
+              <span className="text-ink-400">Hospital</span>
+              <span className="font-medium">{hospital.name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ink-400">Director</span>
+              <span>{hospital.lab_director}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ink-400">CLIA</span>
+              <span className="font-mono">{hospital.clia}</span>
+            </div>
           </div>
         </div>
 
@@ -48,7 +53,10 @@ export default function Settings() {
               <Users2 className="h-4 w-4 text-[var(--sage-700)]" />
               <h3 className="font-display font-semibold">Team</h3>
             </div>
-            <Link to="/lab/settings" className="text-xs font-mono uppercase tracking-wider text-sage hover:underline">
+            <Link
+              to="/lab/settings"
+              className="text-xs font-mono uppercase tracking-wider text-sage hover:underline"
+            >
               Settings →
             </Link>
           </div>
@@ -56,7 +64,9 @@ export default function Settings() {
             {staff.map((s) => (
               <div key={s.id} className="flex items-center justify-between text-sm">
                 <span className="truncate">{s.name}</span>
-                <span className="text-xs font-mono text-ink-400 uppercase tracking-wide">{s.role?.replace("_", " ")}</span>
+                <span className="text-xs font-mono text-ink-400 uppercase tracking-wide">
+                  {s.role?.replace("_", " ")}
+                </span>
               </div>
             ))}
           </div>
@@ -71,14 +81,18 @@ export default function Settings() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-medium">Auto-alert supervisor</div>
-                <div className="text-xs text-ink-400">Surface critical values on validation queue</div>
+                <div className="text-xs text-ink-400">
+                  Surface critical values on validation queue
+                </div>
               </div>
               <Switch defaultChecked data-testid="toggle-auto-alert" />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-medium">Dual sign-off for criticals</div>
-                <div className="text-xs text-ink-400">Require supervisor approval on panic values</div>
+                <div className="text-xs text-ink-400">
+                  Require supervisor approval on panic values
+                </div>
               </div>
               <Switch defaultChecked data-testid="toggle-dual-signoff" />
             </div>
@@ -91,9 +105,18 @@ export default function Settings() {
             <h3 className="font-display font-semibold">Notifications</h3>
           </div>
           <div className="space-y-3 text-sm">
-            <div className="flex items-center justify-between"><div>STAT order alert sound</div><Switch defaultChecked data-testid="toggle-stat-sound" /></div>
-            <div className="flex items-center justify-between"><div>Email validated reports to ordering doctor</div><Switch defaultChecked data-testid="toggle-email-doctor" /></div>
-            <div className="flex items-center justify-between"><div>SMS patient on result release</div><Switch data-testid="toggle-sms-patient" /></div>
+            <div className="flex items-center justify-between">
+              <div>STAT order alert sound</div>
+              <Switch defaultChecked data-testid="toggle-stat-sound" />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>Email validated reports to ordering doctor</div>
+              <Switch defaultChecked data-testid="toggle-email-doctor" />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>SMS patient on result release</div>
+              <Switch data-testid="toggle-sms-patient" />
+            </div>
           </div>
         </div>
 
@@ -103,8 +126,22 @@ export default function Settings() {
             <h3 className="font-display font-semibold">Label printer</h3>
           </div>
           <div className="space-y-3 text-sm">
-            <div><Label className="text-xs">Default template</Label><Input defaultValue="MEDORA-STD-340x200" className="font-mono mt-1" data-testid="label-template" /></div>
-            <div><Label className="text-xs">Printer queue</Label><Input defaultValue="lab-printer-01" className="font-mono mt-1" data-testid="printer-queue" /></div>
+            <div>
+              <Label className="text-xs">Default template</Label>
+              <Input
+                defaultValue="MEDORA-STD-340x200"
+                className="font-mono mt-1"
+                data-testid="label-template"
+              />
+            </div>
+            <div>
+              <Label className="text-xs">Printer queue</Label>
+              <Input
+                defaultValue="lab-printer-01"
+                className="font-mono mt-1"
+                data-testid="printer-queue"
+              />
+            </div>
           </div>
         </div>
 
@@ -115,7 +152,10 @@ export default function Settings() {
           </div>
           <div className="space-y-2 text-sm">
             {SECTIONS.map((s) => (
-              <div key={s.id} className="flex justify-between"><span>{s.label}</span><span className="font-mono">{s.tat}</span></div>
+              <div key={s.id} className="flex justify-between">
+                <span>{s.label}</span>
+                <span className="font-mono">{s.tat}</span>
+              </div>
             ))}
           </div>
         </div>

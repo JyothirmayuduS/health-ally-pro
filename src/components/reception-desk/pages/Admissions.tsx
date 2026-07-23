@@ -133,7 +133,9 @@ export default function Admissions() {
   // Forms and actions states
   const [admitPatientId, setAdmitPatientId] = useState("");
   const [admitDoctorId, setAdmitDoctorId] = useState("DOC-001");
-  const [admitTariff, setAdmitTariff] = useState<"standard" | "star-corporate" | "cghs" | "staff">("standard");
+  const [admitTariff, setAdmitTariff] = useState<"standard" | "star-corporate" | "cghs" | "staff">(
+    "standard",
+  );
   const [admitDeposit, setAdmitDeposit] = useState("5000");
   const [patientSearchQuery, setPatientSearchQuery] = useState("");
 
@@ -155,7 +157,9 @@ export default function Admissions() {
   // Selected active admission (if occupied)
   const activeAdmissionForSelectedBed = useMemo(() => {
     if (!selectedBed || selectedBed.status !== "occupied") return null;
-    return admissions.find((a: AdmissionRecord) => a.bedId === selectedBed.id && a.status !== "discharged");
+    return admissions.find(
+      (a: AdmissionRecord) => a.bedId === selectedBed.id && a.status !== "discharged",
+    );
   }, [selectedBed, admissions]);
 
   // Active admissions listing
@@ -199,12 +203,14 @@ export default function Admissions() {
     }
   };
 
-  const handleApplyRecommendation = (rec: typeof MOCK_RECOMMENDATIONS[0]) => {
+  const handleApplyRecommendation = (rec: (typeof MOCK_RECOMMENDATIONS)[0]) => {
     setAdmitPatientId(rec.patientId);
     setAdmitDoctorId(rec.recommendedBy);
     setPatientSearchQuery(rec.name);
     // Find first available bed in recommended ward
-    const availBed = beds.find((b: Bed) => b.wardCategory === rec.recommendedWard && b.status === "available");
+    const availBed = beds.find(
+      (b: Bed) => b.wardCategory === rec.recommendedWard && b.status === "available",
+    );
     if (availBed) {
       setSelectedBedId(availBed.id);
     }
@@ -224,7 +230,7 @@ export default function Admissions() {
 
     const depositVal = parseFloat(admitDeposit) || 0;
     admitPatient(admitPatientId, selectedBed.id, admitDoctorId, admitTariff, depositVal);
-    
+
     // Reset form
     setAdmitPatientId("");
     setPatientSearchQuery("");
@@ -254,14 +260,19 @@ export default function Admissions() {
 
   const handleFinalizeDischarge = () => {
     if (!activeAdmissionForSelectedBed) return;
-    if (!dischargeChecklist.clinicalClearance || !dischargeChecklist.medsDispensed || !dischargeChecklist.interimBillGenerated || !dischargeChecklist.duesCleared) {
+    if (
+      !dischargeChecklist.clinicalClearance ||
+      !dischargeChecklist.medsDispensed ||
+      !dischargeChecklist.interimBillGenerated ||
+      !dischargeChecklist.duesCleared
+    ) {
       toast.error("Please clear all items in the discharge checklist.");
       return;
     }
 
     finalizeDischarge(activeAdmissionForSelectedBed.id);
     toast.success("Discharge finalized. Bed set to maintenance cleaning.");
-    
+
     // Reset checklists
     setDischargeChecklist({
       clinicalClearance: false,
@@ -281,15 +292,15 @@ export default function Admissions() {
   const stayStats = useMemo(() => {
     if (!activeAdmissionForSelectedBed) return null;
     const rate = WARD_CATEGORIES.find((w) => w.id === selectedBed.wardCategory)?.ratePerDay || 0;
-    
+
     // Calculate days hospitalized
     const start = new Date(activeAdmissionForSelectedBed.admittedAt);
     const now = new Date();
     const diffTime = Math.max(0, now.getTime() - start.getTime());
     const days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-    
+
     const rawCost = rate * days;
-    
+
     // Apply tariff discount
     let discount = 0;
     let tariffName = "Standard Rates";
@@ -297,7 +308,7 @@ export default function Admissions() {
       discount = rawCost * 0.15;
       tariffName = "Star Health Corporate (15% Disc)";
     } else if (activeAdmissionForSelectedBed.tariffPlan === "staff") {
-      discount = rawCost * 0.50;
+      discount = rawCost * 0.5;
       tariffName = "Staff Discount (50% Disc)";
     } else if (activeAdmissionForSelectedBed.tariffPlan === "cghs") {
       // CGHS capped rates, let's say capped at 1000 per day max
@@ -345,7 +356,7 @@ export default function Admissions() {
                 const doc = doctors.find((d: any) => d.id === adm.doctorId);
                 const bed = beds.find((b: Bed) => b.id === adm.bedId);
                 const active = selectedBedId === adm.bedId;
-                
+
                 return (
                   <button
                     key={adm.id}
@@ -423,8 +434,12 @@ export default function Admissions() {
       {/* ─── MIDDLE PANEL: INTERACTIVE BED BOARD ──────────────────────── */}
       <div className="bg-white border border-ink-200 rounded-xl shadow-sm p-5 lg:col-span-5 flex flex-col gap-4">
         <div>
-          <h2 className="font-heading text-[16px] font-semibold text-ink-900">Bed Allocation Board</h2>
-          <p className="text-[12px] text-ink-400 mt-0.5">Click any bed to manage admission, transfer, or discharge.</p>
+          <h2 className="font-heading text-[16px] font-semibold text-ink-900">
+            Bed Allocation Board
+          </h2>
+          <p className="text-[12px] text-ink-400 mt-0.5">
+            Click any bed to manage admission, transfer, or discharge.
+          </p>
         </div>
 
         {/* Legend */}
@@ -454,21 +469,26 @@ export default function Admissions() {
                     {cat.name}
                   </span>
                   <span className="font-mono text-[11px] text-ink-400">
-                    ₹{cat.ratePerDay}/day · {wardBeds.filter((b: Bed) => b.status === "available").length} empty
+                    ₹{cat.ratePerDay}/day ·{" "}
+                    {wardBeds.filter((b: Bed) => b.status === "available").length} empty
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {wardBeds.map((bed: Bed) => {
                     const active = selectedBedId === bed.id;
-                    const adm = admissions.find((a: AdmissionRecord) => a.bedId === bed.id && a.status !== "discharged");
+                    const adm = admissions.find(
+                      (a: AdmissionRecord) => a.bedId === bed.id && a.status !== "discharged",
+                    );
                     const pat = adm ? patients.find((p: any) => p.id === adm.patientId) : null;
-                    
+
                     let bgCls = "";
                     let dotCls = "";
                     let statusBadge = null;
                     if (bed.status === "available") {
-                      bgCls = active ? "bg-sage-soft border-sage text-sage font-medium" : "bg-bone border-ink-100 text-ink-600 hover:border-sage/40 hover:bg-sage-soft/30";
+                      bgCls = active
+                        ? "bg-sage-soft border-sage text-sage font-medium"
+                        : "bg-bone border-ink-100 text-ink-600 hover:border-sage/40 hover:bg-sage-soft/30";
                       dotCls = "bg-sage";
                       statusBadge = (
                         <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-money-soft text-money border border-money/20 uppercase tracking-wide">
@@ -476,7 +496,9 @@ export default function Admissions() {
                         </span>
                       );
                     } else if (bed.status === "occupied") {
-                      bgCls = active ? "bg-teal-soft border-teal text-teal font-medium" : "bg-white border-ink-200 text-ink-800 hover:border-teal/40 hover:bg-teal-soft/30";
+                      bgCls = active
+                        ? "bg-teal-soft border-teal text-teal font-medium"
+                        : "bg-white border-ink-200 text-ink-800 hover:border-teal/40 hover:bg-teal-soft/30";
                       dotCls = "bg-teal";
                       statusBadge = (
                         <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-teal-soft text-teal border border-teal/20 uppercase tracking-wide">
@@ -484,7 +506,9 @@ export default function Admissions() {
                         </span>
                       );
                     } else {
-                      bgCls = active ? "bg-mustard-soft border-mustard text-mustard font-medium" : "bg-bone border-ink-100 text-ink-600 hover:border-mustard/40 hover:bg-mustard-soft/30";
+                      bgCls = active
+                        ? "bg-mustard-soft border-mustard text-mustard font-medium"
+                        : "bg-bone border-ink-100 text-ink-600 hover:border-mustard/40 hover:bg-mustard-soft/30";
                       dotCls = "bg-mustard";
                       statusBadge = (
                         <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-mustard-soft text-mustard border border-mustard/20 uppercase tracking-wide">
@@ -517,7 +541,13 @@ export default function Admissions() {
                               </div>
                               <div className="text-[10.5px] text-ink-500 font-medium flex justify-between">
                                 <span>MRN: {pat.mrn}</span>
-                                <span>Dr. {doctors.find(d => d.id === adm?.doctorId)?.name.split(" ").pop()}</span>
+                                <span>
+                                  Dr.{" "}
+                                  {doctors
+                                    .find((d) => d.id === adm?.doctorId)
+                                    ?.name.split(" ")
+                                    .pop()}
+                                </span>
                               </div>
                               <div className="text-[10.5px] text-ink-400 font-mono mt-0.5 flex justify-between items-center">
                                 <span>{calcDaysAdmittedStr(adm?.admittedAt || "")}</span>
@@ -622,7 +652,9 @@ export default function Admissions() {
 
               {admitPatientId && (
                 <div className="flex items-center justify-between bg-sage-soft/50 border border-sage/20 rounded-lg px-2.5 py-1.5 mt-1">
-                  <span className="text-[12.5px] font-medium text-sage">Selected: {patientSearchQuery}</span>
+                  <span className="text-[12.5px] font-medium text-sage">
+                    Selected: {patientSearchQuery}
+                  </span>
                   <button
                     type="button"
                     onClick={() => {
@@ -698,28 +730,45 @@ export default function Admissions() {
             <div className="bg-bone border border-ink-150 rounded-xl p-3 flex flex-col gap-1.5">
               <div className="flex items-center justify-between text-[11.5px] font-mono text-ink-400">
                 <span>Admission: {activeAdmissionForSelectedBed.id}</span>
-                <span className="uppercase text-teal font-semibold">{activeAdmissionForSelectedBed.status}</span>
+                <span className="uppercase text-teal font-semibold">
+                  {activeAdmissionForSelectedBed.status}
+                </span>
               </div>
               <div className="text-[14.5px] font-bold text-ink-900">
-                {patients.find((p: any) => p.id === activeAdmissionForSelectedBed.patientId)?.name || activeAdmissionForSelectedBed.patientId}
+                {patients.find((p: any) => p.id === activeAdmissionForSelectedBed.patientId)
+                  ?.name || activeAdmissionForSelectedBed.patientId}
               </div>
               <div className="text-[12px] text-ink-600 flex flex-col gap-1 font-medium mt-1">
                 <div className="flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-ink-400" />
                   <span>
-                    MRN: {patients.find((p: any) => p.id === activeAdmissionForSelectedBed.patientId)?.mrn}
+                    MRN:{" "}
+                    {
+                      patients.find((p: any) => p.id === activeAdmissionForSelectedBed.patientId)
+                        ?.mrn
+                    }
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Stethoscope className="w-3.5 h-3.5 text-ink-400" />
                   <span>
-                    Doctor: Dr. {doctors.find((d: any) => d.id === activeAdmissionForSelectedBed.doctorId)?.name}
+                    Doctor: Dr.{" "}
+                    {
+                      doctors.find((d: any) => d.id === activeAdmissionForSelectedBed.doctorId)
+                        ?.name
+                    }
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-ink-400" />
                   <span>
-                    Admitted: {new Date(activeAdmissionForSelectedBed.admittedAt).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    Admitted:{" "}
+                    {new Date(activeAdmissionForSelectedBed.admittedAt).toLocaleDateString([], {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
               </div>
@@ -741,7 +790,9 @@ export default function Admissions() {
                 </div>
                 <div className="flex justify-between">
                   <span>Tariff Rule:</span>
-                  <span className="font-mono text-[11px] text-plum font-semibold">{stayStats.tariffName}</span>
+                  <span className="font-mono text-[11px] text-plum font-semibold">
+                    {stayStats.tariffName}
+                  </span>
                 </div>
                 {stayStats.discount > 0 && (
                   <div className="flex justify-between text-clay font-medium">
@@ -774,7 +825,10 @@ export default function Admissions() {
               </div>
 
               {/* A. Transfer Patient Form */}
-              <form onSubmit={handleTransfer} className="bg-bone border border-ink-100 rounded-lg p-2.5 flex flex-col gap-2">
+              <form
+                onSubmit={handleTransfer}
+                className="bg-bone border border-ink-100 rounded-lg p-2.5 flex flex-col gap-2"
+              >
                 <div className="flex items-center gap-1 text-[11.5px] font-semibold text-ink-700">
                   <ArrowRightLeft className="w-3.5 h-3.5" />
                   Room/Bed Transfer
@@ -791,7 +845,8 @@ export default function Admissions() {
                       .filter((b: Bed) => b.status === "available")
                       .map((b: Bed) => (
                         <option key={b.id} value={b.id}>
-                          {b.id} - {getWardName(b.wardCategory)} (₹{WARD_CATEGORIES.find((w) => w.id === b.wardCategory)?.ratePerDay})
+                          {b.id} - {getWardName(b.wardCategory)} (₹
+                          {WARD_CATEGORIES.find((w) => w.id === b.wardCategory)?.ratePerDay})
                         </option>
                       ))}
                   </select>
@@ -818,7 +873,12 @@ export default function Admissions() {
                           type="checkbox"
                           className="rounded border-ink-200 text-sage focus:ring-sage"
                           checked={dischargeChecklist.clinicalClearance}
-                          onChange={(e) => setDischargeChecklist({ ...dischargeChecklist, clinicalClearance: e.target.checked })}
+                          onChange={(e) =>
+                            setDischargeChecklist({
+                              ...dischargeChecklist,
+                              clinicalClearance: e.target.checked,
+                            })
+                          }
                         />
                         Clinical discharge approved by doctor
                       </label>
@@ -827,7 +887,12 @@ export default function Admissions() {
                           type="checkbox"
                           className="rounded border-ink-200 text-sage focus:ring-sage"
                           checked={dischargeChecklist.medsDispensed}
-                          onChange={(e) => setDischargeChecklist({ ...dischargeChecklist, medsDispensed: e.target.checked })}
+                          onChange={(e) =>
+                            setDischargeChecklist({
+                              ...dischargeChecklist,
+                              medsDispensed: e.target.checked,
+                            })
+                          }
                         />
                         Take-home medications dispensed
                       </label>
@@ -836,7 +901,12 @@ export default function Admissions() {
                           type="checkbox"
                           className="rounded border-ink-200 text-sage focus:ring-sage"
                           checked={dischargeChecklist.interimBillGenerated}
-                          onChange={(e) => setDischargeChecklist({ ...dischargeChecklist, interimBillGenerated: e.target.checked })}
+                          onChange={(e) =>
+                            setDischargeChecklist({
+                              ...dischargeChecklist,
+                              interimBillGenerated: e.target.checked,
+                            })
+                          }
                         />
                         Interim stay billing processed
                       </label>
@@ -846,7 +916,11 @@ export default function Admissions() {
                   <button
                     type="button"
                     onClick={handleInitiateDischarge}
-                    disabled={!dischargeChecklist.clinicalClearance || !dischargeChecklist.medsDispensed || !dischargeChecklist.interimBillGenerated}
+                    disabled={
+                      !dischargeChecklist.clinicalClearance ||
+                      !dischargeChecklist.medsDispensed ||
+                      !dischargeChecklist.interimBillGenerated
+                    }
                     className="w-full h-9 bg-clay hover:bg-clay-hover text-white rounded-lg font-medium text-[12.5px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 shadow-sm"
                   >
                     Initiate Discharge
@@ -859,7 +933,8 @@ export default function Admissions() {
                     Final Clearance Billing Check
                   </div>
                   <div className="text-[12px] text-ink-600">
-                    Admission is in pending clearance status. Please complete the final billing payment.
+                    Admission is in pending clearance status. Please complete the final billing
+                    payment.
                   </div>
                   <div className="flex flex-col gap-1.5 text-[11.5px] text-ink-600 font-medium">
                     <label className="flex items-center gap-2 cursor-pointer text-ink-800">
@@ -867,7 +942,12 @@ export default function Admissions() {
                         type="checkbox"
                         className="rounded border-ink-200 text-sage focus:ring-sage"
                         checked={dischargeChecklist.duesCleared}
-                        onChange={(e) => setDischargeChecklist({ ...dischargeChecklist, duesCleared: e.target.checked })}
+                        onChange={(e) =>
+                          setDischargeChecklist({
+                            ...dischargeChecklist,
+                            duesCleared: e.target.checked,
+                          })
+                        }
                       />
                       Billing Cleared (Dues paid: {fmt(Math.max(0, stayStats.balanceDue))})
                     </label>
@@ -890,7 +970,9 @@ export default function Admissions() {
           <div className="flex-1 flex flex-col justify-center items-center gap-4 text-center py-10 bg-mustard-soft/20 border border-dashed border-mustard/30 rounded-xl p-5">
             <AlertTriangle className="w-12 h-12 text-mustard animate-bounce" />
             <div>
-              <h4 className="font-heading text-[15.5px] font-bold text-ink-900">Bed Under Sanitation</h4>
+              <h4 className="font-heading text-[15.5px] font-bold text-ink-900">
+                Bed Under Sanitation
+              </h4>
               <p className="text-[12px] text-ink-500 mt-1 max-w-[220px]">
                 This bed is undergoing sanitization following patient discharge.
               </p>

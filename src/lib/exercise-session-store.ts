@@ -130,7 +130,5 @@ export function setExerciseSessionActive(active: boolean) {
   if (typeof document !== "undefined") {
     document.documentElement.classList.toggle("exercise-session-active", active);
   }
-  window.dispatchEvent(
-    new CustomEvent(EXERCISE_ACTIVE_SESSION_EVENT, { detail: { active } }),
-  );
+  window.dispatchEvent(new CustomEvent(EXERCISE_ACTIVE_SESSION_EVENT, { detail: { active } }));
 }

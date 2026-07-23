@@ -14,9 +14,7 @@ export function getPatientQueueStatus(
   patientId: string,
   entries: LiveQueueEntry[],
 ): PatientQueueStatus {
-  const active = entries.find(
-    (e) => e.patientId === patientId && e.status !== "completed",
-  );
+  const active = entries.find((e) => e.patientId === patientId && e.status !== "completed");
   if (active) {
     const token = formatDisplayToken(active.token);
     if (active.status === "serving") {
@@ -30,9 +28,7 @@ export function getPatientQueueStatus(
     };
   }
 
-  const done = entries.find(
-    (e) => e.patientId === patientId && e.status === "completed",
-  );
+  const done = entries.find((e) => e.patientId === patientId && e.status === "completed");
   if (done) {
     const token = formatDisplayToken(done.token);
     return { kind: "completed", token, label: `Done · ${token}` };
@@ -58,7 +54,12 @@ export function buildTodayTimeline(state: LiveQueueState) {
       id: entry.id,
       time: entry.slot ?? entry.checkInTime,
       patientId: entry.patientId,
-      label: entry.status === "serving" ? "In consult" : entry.status === "waiting" ? "Waiting" : "Completed",
+      label:
+        entry.status === "serving"
+          ? "In consult"
+          : entry.status === "waiting"
+            ? "Waiting"
+            : "Completed",
       reason: entry.reason,
       status: entry.status,
       token: entry.token,

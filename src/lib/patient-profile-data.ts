@@ -192,9 +192,7 @@ export const DEPENDENTS: Dependent[] = [
       { id: "m5", name: "Metoprolol succinate", detail: "25 mg · Twice daily" },
       { id: "m6", name: "Atorvastatin", detail: "10 mg · At bedtime" },
     ],
-    reports: [
-      { id: "r2", title: "Cardiac MRI Summary", type: "Imaging", date: "Sep 12, 2024" },
-    ],
+    reports: [{ id: "r2", title: "Cardiac MRI Summary", type: "Imaging", date: "Sep 12, 2024" }],
     lastVisit: "Jun 10, 2026",
     medsTakenToday: 2,
     medsTotalToday: 3,

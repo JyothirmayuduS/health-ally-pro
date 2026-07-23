@@ -1,14 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { LEGAL_CONTACT, LEGAL_ENTITY, LEGAL_LAST_UPDATED, SALES_CONTACT } from "@/lib/legal-content";
+import {
+  LEGAL_CONTACT,
+  LEGAL_ENTITY,
+  LEGAL_LAST_UPDATED,
+  SALES_CONTACT,
+} from "@/lib/legal-content";
 
-export function LegalShell({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
+export function LegalShell({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="min-h-dvh bg-[#F7F5F2] text-[#1B3B2E]">
       <header className="border-b border-[#E8E4DE] bg-white/90 backdrop-blur">

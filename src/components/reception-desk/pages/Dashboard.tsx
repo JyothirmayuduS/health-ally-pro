@@ -17,7 +17,11 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import WalkInModal from "@/components/reception-desk/WalkInModal";
-import { getAnnouncements, ANNOUNCEMENTS_EVENT, type Announcement } from "@/lib/shared/announcements";
+import {
+  getAnnouncements,
+  ANNOUNCEMENTS_EVENT,
+  type Announcement,
+} from "@/lib/shared/announcements";
 
 type KpiProps = {
   label: string;
@@ -68,15 +72,18 @@ export default function Dashboard() {
   const [walkOpen, setWalkOpen] = useState(false);
   const [announcement, setAnnouncement] = useState(() => {
     if (typeof window === "undefined") return "";
-    return localStorage.getItem("medora-reception-announcement-v1") || "Welcome to Oakhaven Hospital. Please wait for your token to be called. Keep your physical slips ready.";
+    return (
+      localStorage.getItem("medora-reception-announcement-v1") ||
+      "Welcome to Oakhaven Hospital. Please wait for your token to be called. Keep your physical slips ready."
+    );
   });
 
   const [activeAnnouncements, setActiveAnnouncements] = useState<Announcement[]>(() =>
     getAnnouncements().filter(
       (a) =>
         a.status === "active" &&
-        (a.targetModules.includes("all") || a.targetModules.includes("reception"))
-    )
+        (a.targetModules.includes("all") || a.targetModules.includes("reception")),
+    ),
   );
 
   useEffect(() => {
@@ -85,8 +92,8 @@ export default function Dashboard() {
         getAnnouncements().filter(
           (a) =>
             a.status === "active" &&
-            (a.targetModules.includes("all") || a.targetModules.includes("reception"))
-        )
+            (a.targetModules.includes("all") || a.targetModules.includes("reception")),
+        ),
       );
     };
     window.addEventListener(ANNOUNCEMENTS_EVENT, handleUpdate);
@@ -135,8 +142,8 @@ export default function Dashboard() {
               ann.priority === "emergency"
                 ? "bg-red-50 border-red-200 text-red-900"
                 : ann.priority === "urgent"
-                ? "bg-status-waitBg border-status-waitBorder text-status-waitText"
-                : "bg-bone border-stone-200 text-ink-700"
+                  ? "bg-status-waitBg border-status-waitBorder text-status-waitText"
+                  : "bg-bone border-stone-200 text-ink-700"
             }`}
           >
             <AlertTriangle className="h-4.5 w-4.5 shrink-0 mt-0.5" />
@@ -352,7 +359,10 @@ export default function Dashboard() {
           </h2>
           <div className="flex flex-col md:flex-row gap-4 items-end">
             <div className="flex-grow w-full">
-              <label htmlFor="lobby-announcement" className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">
+              <label
+                htmlFor="lobby-announcement"
+                className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5"
+              >
                 Marquee Announcement Text
               </label>
               <input

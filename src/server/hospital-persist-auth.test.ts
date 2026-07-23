@@ -16,10 +16,7 @@ import {
 const OAK = "a0000001-0001-4001-8001-000000000001";
 const OTHER = "b0000001-0001-4001-8001-000000000002";
 
-function req(init?: {
-  headers?: Record<string, string>;
-  url?: string;
-}) {
+function req(init?: { headers?: Record<string, string>; url?: string }) {
   return new Request(init?.url ?? "http://localhost:3000/api/hospital/persist", {
     headers: {
       host: "localhost:3000",
@@ -48,7 +45,10 @@ describe("authorizeHospitalPersist", () => {
   });
 
   it("allows demo header in non-production and locks hospital to Oak Haven", async () => {
-    const auth = await authorizeHospitalPersist(req({ headers: { "x-medora-persist-demo": "1" } }), OTHER);
+    const auth = await authorizeHospitalPersist(
+      req({ headers: { "x-medora-persist-demo": "1" } }),
+      OTHER,
+    );
     expect(auth.ok).toBe(true);
     if (!auth.ok) return;
     expect(auth.mode).toBe("demo");
@@ -170,7 +170,11 @@ describe("authorizePublicOnboard + rate limit", () => {
   it("rejects cross-origin onboard without API key", () => {
     process.env.MEDORA_AI_API_KEY = "required-in-prod-like";
     const r = new Request("http://localhost:3000/api/hospital/persist", {
-      headers: { host: "localhost:3000", origin: "https://evil.example", "sec-fetch-site": "cross-site" },
+      headers: {
+        host: "localhost:3000",
+        origin: "https://evil.example",
+        "sec-fetch-site": "cross-site",
+      },
     });
     const auth = authorizePublicOnboard(r);
     expect(auth.ok).toBe(false);

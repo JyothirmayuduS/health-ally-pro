@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { BodyAnatomyMarker } from "@/components/clinical/BodyAnatomyMarker";
 import type { SpecialtyDefinition } from "@/lib/specialties/types";
-import {
-  getSpecialtyAnatomy,
-  specialtySeedMarkers,
-} from "@/lib/specialties/anatomy-focus";
-import {
-  fetchAnatomyMarkers,
-  syncAnatomyMarkers,
-} from "@/lib/specialties/remote-sync";
+import { getSpecialtyAnatomy, specialtySeedMarkers } from "@/lib/specialties/anatomy-focus";
+import { fetchAnatomyMarkers, syncAnatomyMarkers } from "@/lib/specialties/remote-sync";
 import type { BodyMarker } from "@/lib/shared/body-anatomy";
 
 type Props = {

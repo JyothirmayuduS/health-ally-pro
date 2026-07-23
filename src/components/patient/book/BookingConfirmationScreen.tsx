@@ -87,9 +87,7 @@ export function BookingConfirmationScreen({ data }: { data: BookingConfirmationD
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink-muted">
                 Confirmation
               </p>
-              <p className="mt-0.5 font-mono text-sm font-semibold tabular-nums text-ink">
-                {ref}
-              </p>
+              <p className="mt-0.5 font-mono text-sm font-semibold tabular-nums text-ink">{ref}</p>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E8F3EE] px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-[#2D6B4F]">
               <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />

@@ -45,8 +45,8 @@ export const LAB_ORDER_SETS: LabOrderSet[] = [
 ];
 
 export function suggestedOrderSets(condition: string): LabOrderSet[] {
-  const matched = LAB_ORDER_SETS.filter(
-    (set) => set.conditions?.some((c) => condition.toLowerCase().includes(c.toLowerCase())),
+  const matched = LAB_ORDER_SETS.filter((set) =>
+    set.conditions?.some((c) => condition.toLowerCase().includes(c.toLowerCase())),
   );
   if (matched.length > 0) return matched;
   return LAB_ORDER_SETS.slice(0, 2);

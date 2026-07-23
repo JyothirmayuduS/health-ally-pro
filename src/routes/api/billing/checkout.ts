@@ -53,7 +53,11 @@ export const Route = createFileRoute("/api/billing/checkout")({
               },
               body: params,
             });
-            const data = (await res.json()) as { id?: string; url?: string; error?: { message?: string } };
+            const data = (await res.json()) as {
+              id?: string;
+              url?: string;
+              error?: { message?: string };
+            };
             if (!res.ok || !data.url) {
               return jsonResponse(
                 { ok: false, error: data.error?.message || "Stripe session failed", mode: "sales" },

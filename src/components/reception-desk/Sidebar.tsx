@@ -1,11 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Menu, Activity } from "lucide-react";
 import {
   LayoutDashboard,
@@ -56,7 +51,6 @@ const businessItems = [
   { to: "/reception/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" },
 ];
 
-
 const disabled: { label: string; icon: typeof Settings }[] = [];
 
 type NavItemProps = {
@@ -79,7 +73,9 @@ function NavItem({ to, label, icon: Icon, exact, dot, onClick }: NavItemProps) {
       data-testid={`nav-${label.toLowerCase().replace(/\s+/g, "-")}`}
       className={cn(
         "group relative flex items-center gap-3 rounded-md py-2 pl-3 pr-3 text-[13px] transition-colors",
-        active ? "bg-sage-soft font-medium text-sage" : "text-ink-600 hover:bg-white hover:text-ink-900",
+        active
+          ? "bg-sage-soft font-medium text-sage"
+          : "text-ink-600 hover:bg-white hover:text-ink-900",
       )}
     >
       {active && (

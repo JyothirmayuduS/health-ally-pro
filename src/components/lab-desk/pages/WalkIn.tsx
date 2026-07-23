@@ -286,7 +286,10 @@ export default function WalkIn() {
           ) : (
             <p className="text-sm text-ink-400">Select a test to see details.</p>
           )}
-          <Link to="/lab/catalog" className="mt-4 inline-block text-xs font-medium text-sage hover:underline">
+          <Link
+            to="/lab/catalog"
+            className="mt-4 inline-block text-xs font-medium text-sage hover:underline"
+          >
             Browse full catalog →
           </Link>
         </div>

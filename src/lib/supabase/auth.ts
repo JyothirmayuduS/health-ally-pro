@@ -141,9 +141,8 @@ export async function getAuthSession(): Promise<AuthSession | null> {
   if (!session?.user) return null;
 
   const { fetchPhiResource } = await import("@/lib/supabase/phi-api");
-  const membershipRes = await fetchPhiResource<
-    Array<{ role: UserRole; hospital_id: string }>
-  >("hospital_memberships");
+  const membershipRes =
+    await fetchPhiResource<Array<{ role: UserRole; hospital_id: string }>>("hospital_memberships");
   const memberships = membershipRes.ok ? (membershipRes.data ?? []) : [];
 
   const roles = memberships.map((m) => m.role as UserRole);

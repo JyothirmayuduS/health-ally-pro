@@ -2,11 +2,7 @@ import { useState } from "react";
 import { loadHospital } from "@/lib/admin-desk/config";
 import { toast } from "sonner";
 import { ShieldAlert, Building2, Save, CreditCard, Mail, Barcode, ImagePlus } from "lucide-react";
-import {
-  displayHospitalLogo,
-  loadHospitalBrand,
-  updateHospitalLogo,
-} from "@/lib/hospital-brand";
+import { displayHospitalLogo, loadHospitalBrand, updateHospitalLogo } from "@/lib/hospital-brand";
 import { getLicenseStatus, getSeatLimits, hasModule } from "@/lib/license";
 
 const SETTINGS_KEY = "medora-admin-settings-v1";

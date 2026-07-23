@@ -14,10 +14,7 @@ import { cn } from "@/lib/utils";
 const HIDE_SCROLLBAR =
   "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
-export const EXERCISE_SLOT_LABELS: Record<
-  ExerciseTimeSlot,
-  { label: string; subtitle: string }
-> = {
+export const EXERCISE_SLOT_LABELS: Record<ExerciseTimeSlot, { label: string; subtitle: string }> = {
   morning: { label: "Morning", subtitle: "After meds" },
   midday: { label: "Midday", subtitle: "Active window" },
   evening: { label: "Evening", subtitle: "Recovery focus" },

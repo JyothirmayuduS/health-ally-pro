@@ -15,19 +15,24 @@ export default function DaySheet() {
   const kpis = useMemo(() => {
     const footfall = today.length;
     const noShow = today.filter((a) => a.status === "no-show").length;
-    
+
     // Invoices paid today (gross)
     const paidInvoices = invoices.filter(
-      (i) => (i.status === "paid" || i.status === "partial-refund" || i.status === "refunded") && i.date === TODAY_STR
+      (i) =>
+        (i.status === "paid" || i.status === "partial-refund" || i.status === "refunded") &&
+        i.date === TODAY_STR,
     );
-    const grossRevenue = paidInvoices.reduce((s, i) => s + computeTotals(i.items, i.discount).total, 0);
-    
+    const grossRevenue = paidInvoices.reduce(
+      (s, i) => s + computeTotals(i.items, i.discount).total,
+      0,
+    );
+
     // Refunds processed today
     const totalRefundsToday = invoices.reduce((sum, i) => {
       const todayRefunds = (i.refunds || []).filter((r) => r.processedAt.startsWith(TODAY_STR));
       return sum + todayRefunds.reduce((sSum, r) => sSum + r.amount, 0);
     }, 0);
-    
+
     const netRevenue = grossRevenue - totalRefundsToday;
     return {
       footfall,
@@ -40,7 +45,9 @@ export default function DaySheet() {
 
   const byMethod = useMemo(() => {
     const paid = invoices.filter(
-      (i) => (i.status === "paid" || i.status === "partial-refund" || i.status === "refunded") && i.date === TODAY_STR
+      (i) =>
+        (i.status === "paid" || i.status === "partial-refund" || i.status === "refunded") &&
+        i.date === TODAY_STR,
     );
     const map: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
     paid.forEach((i) => {
@@ -48,7 +55,7 @@ export default function DaySheet() {
       const invoiceRefundsToday = (i.refunds || [])
         .filter((r) => r.processedAt.startsWith(TODAY_STR))
         .reduce((sum, r) => sum + r.amount, 0);
-      if (i.method && map[i.method] !== undefined) map[i.method] += (t - invoiceRefundsToday);
+      if (i.method && map[i.method] !== undefined) map[i.method] += t - invoiceRefundsToday;
     });
     return Object.entries(map).map(([k, v]) => ({ method: k.toUpperCase(), value: v }));
   }, [invoices]);
@@ -62,7 +69,7 @@ export default function DaySheet() {
             (i) =>
               (i.status === "paid" || i.status === "partial-refund" || i.status === "refunded") &&
               i.date === TODAY_STR &&
-              i.doctorId === d.id
+              i.doctorId === d.id,
           )
           .reduce((s, i) => {
             const invoiceTotal = computeTotals(i.items, i.discount).total;
@@ -85,7 +92,7 @@ export default function DaySheet() {
           (r) =>
             r.method === "cash" &&
             r.processedAt >= s.openedAt &&
-            (!s.closedAt || r.processedAt <= s.closedAt)
+            (!s.closedAt || r.processedAt <= s.closedAt),
         );
         return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
       }, 0);
@@ -226,7 +233,9 @@ export default function DaySheet() {
           <DeskPanel title={`Cancellations · ${cancellations.length}`} className="lg:col-span-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Reason Breakdown</div>
+                <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">
+                  Reason Breakdown
+                </div>
                 <table className="w-full text-[13px]">
                   <tbody className="divide-y divide-ink-100">
                     {Object.entries(cancelReasons).map(([reason, count]) => (
@@ -239,7 +248,9 @@ export default function DaySheet() {
                 </table>
               </div>
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Cancelled Appointments</div>
+                <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">
+                  Cancelled Appointments
+                </div>
                 <div className="divide-y divide-ink-100 max-h-[200px] overflow-y-auto pr-2">
                   {cancellations.map((a, i) => {
                     const p = patients.find((x) => x.id === a.patientId);
@@ -249,9 +260,13 @@ export default function DaySheet() {
                         <div>
                           <span className="font-mono text-ink-500 mr-2">{a.time}</span>
                           <span className="font-medium text-ink-900">{p?.name || "—"}</span>
-                          <span className="text-ink-400 text-[11px] block">Doctor: {d?.name || "—"}</span>
+                          <span className="text-ink-400 text-[11px] block">
+                            Doctor: {d?.name || "—"}
+                          </span>
                         </div>
-                        <span className="text-status-noshowText font-medium text-[11.5px] uppercase tracking-wider">{a.cancellationReason || "Other"}</span>
+                        <span className="text-status-noshowText font-medium text-[11.5px] uppercase tracking-wider">
+                          {a.cancellationReason || "Other"}
+                        </span>
                       </div>
                     );
                   })}
@@ -283,7 +298,9 @@ export default function DaySheet() {
                     <td className="px-3 py-2.5 font-mono">{s.opened}</td>
                     <td className="px-3 py-2.5 font-mono">{s.closed || "—"}</td>
                     <td className="px-3 py-2.5 text-right font-mono">{fmt(s.cash)}</td>
-                    <td className="px-3 py-2.5 text-right font-mono text-status-noshowText">{fmt(s.refunds)}</td>
+                    <td className="px-3 py-2.5 text-right font-mono text-status-noshowText">
+                      {fmt(s.refunds)}
+                    </td>
                     <td
                       className={`px-5 py-2.5 text-right font-mono ${
                         s.variance === 0

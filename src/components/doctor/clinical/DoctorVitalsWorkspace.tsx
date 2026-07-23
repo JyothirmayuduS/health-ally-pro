@@ -24,7 +24,9 @@ export function DoctorVitalsWorkspace({ searchPatientId }: Props) {
       patientId={patientId}
       recordedBy="Dr. Rajesh"
       chartPatientId={searchPatientId}
-      patientCard={searchPatientId ? <DoctorClinicalPatientCard patientId={searchPatientId} /> : undefined}
+      patientCard={
+        searchPatientId ? <DoctorClinicalPatientCard patientId={searchPatientId} /> : undefined
+      }
       patientSelect={
         searchPatientId ? undefined : (
           <section className="rounded-[20px] border border-[#EDEAE6] bg-white p-4">

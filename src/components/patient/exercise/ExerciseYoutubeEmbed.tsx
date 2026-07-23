@@ -1,9 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import type { ExerciseYoutubeVideo } from "@/lib/exercise-mock-data";
-import {
-  youtubeEmbedUrl,
-  youtubeWatchUrl,
-} from "@/lib/exercise-youtube-curated";
+import { youtubeEmbedUrl, youtubeWatchUrl } from "@/lib/exercise-youtube-curated";
 
 type Props = {
   video: ExerciseYoutubeVideo;

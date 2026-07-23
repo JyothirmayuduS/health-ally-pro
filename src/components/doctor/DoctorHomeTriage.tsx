@@ -40,16 +40,9 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
     return () => window.clearInterval(id);
   }, []);
 
-  const overview = computeClinicOverview(
-    { accepting, room, entries, bookingRequests },
-    nowMs,
-  );
-  const servingPatient = overview.serving
-    ? getQueuePatient(overview.serving.patientId)
-    : null;
-  const nextPatient = overview.nextWaiting
-    ? getQueuePatient(overview.nextWaiting.patientId)
-    : null;
+  const overview = computeClinicOverview({ accepting, room, entries, bookingRequests }, nowMs);
+  const servingPatient = overview.serving ? getQueuePatient(overview.serving.patientId) : null;
+  const nextPatient = overview.nextWaiting ? getQueuePatient(overview.nextWaiting.patientId) : null;
 
   const handleApprove = (id: string, name: string) => {
     const token = approveBooking(id);
@@ -157,8 +150,12 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
           <p className="mt-2 text-2xl font-bold tabular-nums text-[#1B3B2E] sm:text-3xl">
             {formatDisplayToken(overview.nextWaiting.token)}
           </p>
-          <p className="mt-0.5 text-base font-semibold text-[#1B3B2E] sm:text-lg">{nextPatient.name}</p>
-          <p className="mt-0.5 line-clamp-2 text-sm text-[#8A8F8C]">{overview.nextWaiting.reason}</p>
+          <p className="mt-0.5 text-base font-semibold text-[#1B3B2E] sm:text-lg">
+            {nextPatient.name}
+          </p>
+          <p className="mt-0.5 line-clamp-2 text-sm text-[#8A8F8C]">
+            {overview.nextWaiting.reason}
+          </p>
           <p className="mt-auto pt-3 text-xs text-[#8A8F8C]">
             Avg wait {overview.avgWaitLabel} · {room}
           </p>
@@ -262,11 +259,7 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
             </Link>
           </p>
         </div>
-        <div
-          className={cn(
-            layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3",
-          )}
-        >
+        <div className={cn(layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3")}>
           {nowCard}
           {nextCard}
           {approvalsCard}
@@ -276,11 +269,7 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
   }
 
   return (
-    <div
-      className={cn(
-        layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3",
-      )}
-    >
+    <div className={cn(layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3")}>
       {nowCard}
       {nextCard}
       {approvalsCard}

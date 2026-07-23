@@ -1,7 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { loadPatientReminders, savePatientReminders, type PatientReminder } from "@/lib/hospital-masters";
-import { DeskPanel, DeskTable, DeskThead, DeskTh, DeskTd, DeskTr } from "@/components/desk-shell/ui";
+import {
+  loadPatientReminders,
+  savePatientReminders,
+  type PatientReminder,
+} from "@/lib/hospital-masters";
+import {
+  DeskPanel,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskTd,
+  DeskTr,
+} from "@/components/desk-shell/ui";
 import { Bell, Check } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,16 +34,19 @@ function PatientRemindersPage() {
 
   return (
     <div className="space-y-4" data-testid="reception-reminders">
-      <DeskPanel title="Patient reminders" subtitle="Follow-ups, vaccines, investigations, birthdays">
+      <DeskPanel
+        title="Patient reminders"
+        subtitle="Follow-ups, vaccines, investigations, birthdays"
+      >
         <DeskTable>
           <DeskThead>
             <DeskTh>Patient</DeskTh>
-              <DeskTh>Type</DeskTh>
-              <DeskTh>Due</DeskTh>
-              <DeskTh>Phone</DeskTh>
-              <DeskTh>Note</DeskTh>
-              <DeskTh />
-            </DeskThead>
+            <DeskTh>Type</DeskTh>
+            <DeskTh>Due</DeskTh>
+            <DeskTh>Phone</DeskTh>
+            <DeskTh>Note</DeskTh>
+            <DeskTh />
+          </DeskThead>
           <tbody>
             {pending.map((r) => (
               <DeskTr key={r.id}>

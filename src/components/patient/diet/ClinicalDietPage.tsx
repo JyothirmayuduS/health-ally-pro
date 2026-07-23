@@ -65,10 +65,7 @@ export function ClinicalDietPage() {
   const allMeals = useMemo(() => {
     const ai = listAiDietMeals();
     const ids = new Set(ai.map((m) => m.id));
-    return dedupeDietMealsByName([
-      ...ai,
-      ...dietMeals.filter((m) => !ids.has(m.id)),
-    ]);
+    return dedupeDietMealsByName([...ai, ...dietMeals.filter((m) => !ids.has(m.id))]);
   }, [storeTick]);
 
   const filteredMeals = useMemo(
@@ -108,9 +105,7 @@ export function ClinicalDietPage() {
         <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">
           Clinical nutrition
         </p>
-        <h1 className="mt-1 font-serif text-[32px] leading-tight text-ink sm:text-[38px]">
-          Diet
-        </h1>
+        <h1 className="mt-1 font-serif text-[32px] leading-tight text-ink sm:text-[38px]">Diet</h1>
         <p className="mt-2 max-w-prose text-sm text-ink-muted">
           Thyroid-safe meals across every budget — AI-powered recipes with video tutorials.
         </p>
@@ -177,9 +172,7 @@ export function ClinicalDietPage() {
             onClick={() => setDietType(id)}
             className={cn(
               "inline-flex shrink-0 items-center gap-2 rounded-full border bg-white px-4 py-2.5 text-[13px] font-medium transition-colors",
-              dietType === id
-                ? "border-clay text-ink"
-                : "border-[#EDEAE6] text-ink-muted",
+              dietType === id ? "border-clay text-ink" : "border-[#EDEAE6] text-ink-muted",
             )}
           >
             <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
@@ -206,7 +199,8 @@ export function ClinicalDietPage() {
           Video tutorial language
         </p>
         <p className="mb-3 text-[13px] text-ink-muted">
-          YouTube recipes load in {DIET_LANGUAGE_LABELS[videoLanguage]} — applies to Chef Medora and meal pages.
+          YouTube recipes load in {DIET_LANGUAGE_LABELS[videoLanguage]} — applies to Chef Medora and
+          meal pages.
         </p>
         <DietLanguagePicker
           value={videoLanguage}

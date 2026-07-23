@@ -1,11 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import {
-  alertTierBorderClass,
-  alertTierDotClass,
-  type AlertTier,
-} from "@/lib/doctor-alert-tiers";
+import { alertTierBorderClass, alertTierDotClass, type AlertTier } from "@/lib/doctor-alert-tiers";
 import {
   buildAuthoritativeWorkQueue,
   type WorkQueueItem,
@@ -20,10 +16,10 @@ function WorkQueueRow({ item, compact }: { item: WorkQueueItem; compact?: boolea
     <>
       <span className={cn("mt-1.5 h-2 w-2 shrink-0 rounded-full", alertTierDotClass(item.tier))} />
       <div className="min-w-0 flex-1">
-        <p className={cn("font-semibold text-[#1B3B2E]", compact ? "text-sm" : "text-sm")}>{item.title}</p>
-        {item.subtitle && (
-          <p className="mt-0.5 truncate text-xs text-[#8A8F8C]">{item.subtitle}</p>
-        )}
+        <p className={cn("font-semibold text-[#1B3B2E]", compact ? "text-sm" : "text-sm")}>
+          {item.title}
+        </p>
+        {item.subtitle && <p className="mt-0.5 truncate text-xs text-[#8A8F8C]">{item.subtitle}</p>}
       </div>
       <ChevronRight className="h-4 w-4 shrink-0 text-[#C5D9C0]" strokeWidth={1.75} />
     </>
@@ -37,7 +33,12 @@ function WorkQueueRow({ item, compact }: { item: WorkQueueItem; compact?: boolea
 
   if (item.params) {
     return (
-      <Link to={item.to as "/doctor/patients/$patientId"} params={item.params} search={item.search} className={className}>
+      <Link
+        to={item.to as "/doctor/patients/$patientId"}
+        params={item.params}
+        search={item.search}
+        className={className}
+      >
         {content}
       </Link>
     );
@@ -83,7 +84,13 @@ export function DoctorAuthoritativeWorkQueue({
 
   const items = useMemo(
     () => buildAuthoritativeWorkQueue(queueState),
-    [queueState.entries, queueState.bookingRequests, queueState.accepting, queueState.room, clinicalTick],
+    [
+      queueState.entries,
+      queueState.bookingRequests,
+      queueState.accepting,
+      queueState.room,
+      clinicalTick,
+    ],
   );
 
   const visible = items.slice(0, limit);
@@ -91,23 +98,34 @@ export function DoctorAuthoritativeWorkQueue({
 
   if (items.length === 0) {
     return (
-      <section className={cn("rounded-2xl border border-[#E8E4DF] bg-white p-5 shadow-sm", className)}>
+      <section
+        className={cn("rounded-2xl border border-[#E8E4DF] bg-white p-5 shadow-sm", className)}
+      >
         {showHeader && (
           <h2 className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">WORK QUEUE</h2>
         )}
-        <p className={cn("text-sm text-[#8A8F8C]", showHeader && "mt-2")}>All caught up — no pending clinical actions.</p>
+        <p className={cn("text-sm text-[#8A8F8C]", showHeader && "mt-2")}>
+          All caught up — no pending clinical actions.
+        </p>
       </section>
     );
   }
 
   return (
-    <section className={cn("overflow-hidden rounded-2xl border border-[#EDEAE6] bg-white shadow-sm", className)}>
+    <section
+      className={cn(
+        "overflow-hidden rounded-2xl border border-[#EDEAE6] bg-white shadow-sm",
+        className,
+      )}
+    >
       {showHeader && (
         <div className="flex items-center justify-between border-b border-[#F0EDE8] px-4 py-3">
           <div>
             <h2 className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">WORK QUEUE</h2>
             {topTier && (topTier === "critical" || topTier === "urgent") && (
-              <p className="mt-0.5 text-xs font-medium text-[#C45C4A]">{TIER_LABEL[topTier]} items need action</p>
+              <p className="mt-0.5 text-xs font-medium text-[#C45C4A]">
+                {TIER_LABEL[topTier]} items need action
+              </p>
             )}
           </div>
           {items.length > limit && (

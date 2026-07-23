@@ -236,7 +236,12 @@ export function ExerciseDetailPage({ routineId }: { routineId: string }) {
         ref={heroRef}
         className="relative h-[220px] w-full overflow-hidden sm:h-[260px] lg:h-[300px]"
       >
-        <ExerciseRoutineThumbnail routine={routine} size="hero" overlay className="h-full min-h-0 rounded-none" />
+        <ExerciseRoutineThumbnail
+          routine={routine}
+          size="hero"
+          overlay
+          className="h-full min-h-0 rounded-none"
+        />
         <Link
           to="/exercise"
           className="absolute left-4 top-[max(1rem,env(safe-area-inset-top))] z-10 grid h-11 w-11 place-items-center rounded-2xl border border-white/20 bg-black/30 backdrop-blur-sm lg:left-8"
@@ -353,11 +358,15 @@ export function ExerciseDetailPage({ routineId }: { routineId: string }) {
               <Info className="h-4 w-4 text-clay" strokeWidth={1.75} />
               Why this for you?
             </span>
-            <ChevronDown className={cn("h-5 w-5 text-ink-muted transition-transform", whyOpen && "rotate-180")} />
+            <ChevronDown
+              className={cn("h-5 w-5 text-ink-muted transition-transform", whyOpen && "rotate-180")}
+            />
           </button>
           {whyOpen ? (
             <div className="mt-2 rounded-[20px] border border-[#EDEAE6] bg-white p-4 sm:p-5">
-              <p className="text-[15px] leading-relaxed text-ink-muted">{routine.clinicalRationale}</p>
+              <p className="text-[15px] leading-relaxed text-ink-muted">
+                {routine.clinicalRationale}
+              </p>
             </div>
           ) : null}
         </section>
@@ -369,7 +378,12 @@ export function ExerciseDetailPage({ routineId }: { routineId: string }) {
             className="flex w-full items-center justify-between rounded-[20px] border border-[#EDEAE6] bg-white px-4 py-4 text-left"
           >
             <span className="font-serif text-lg text-ink">What happens when you do this</span>
-            <ChevronDown className={cn("h-5 w-5 text-ink-muted transition-transform", effectsOpen && "rotate-180")} />
+            <ChevronDown
+              className={cn(
+                "h-5 w-5 text-ink-muted transition-transform",
+                effectsOpen && "rotate-180",
+              )}
+            />
           </button>
           {effectsOpen ? (
             <div className="mt-2 rounded-[20px] border border-[#EDEAE6] bg-white p-4">
@@ -381,7 +395,9 @@ export function ExerciseDetailPage({ routineId }: { routineId: string }) {
                       <span className="font-bold text-clay">{effect.time}</span>{" "}
                       <span className="font-bold text-ink">{effect.effect}</span>
                     </p>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-muted">{effect.description}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+                      {effect.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -417,7 +433,9 @@ export function ExerciseDetailPage({ routineId }: { routineId: string }) {
             className="mt-6 flex items-center justify-between gap-3 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-colors hover:border-clay/30"
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Up next</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">
+                Up next
+              </p>
               <p className="mt-1 font-semibold text-ink">{nextRoutine.name}</p>
               <p className="text-sm text-ink-muted">
                 {nextRoutine.durationMinutes} min · {nextRoutine.intensity}
@@ -448,7 +466,9 @@ function MetaChip({
     <span
       className={cn(
         "inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold capitalize",
-        accent ? "border-clay/30 bg-clay/10 text-clay" : "border-[#EDEAE6] bg-[#F9F7F2] text-ink-muted",
+        accent
+          ? "border-clay/30 bg-clay/10 text-clay"
+          : "border-[#EDEAE6] bg-[#F9F7F2] text-ink-muted",
       )}
     >
       <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />

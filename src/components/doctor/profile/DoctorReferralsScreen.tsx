@@ -2,12 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Check, Clock, Inbox, Plus, Send } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   DoctorProfileSubpage,
   ProfileEmptyState,
@@ -116,11 +111,19 @@ function ReferralDetailBody({
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-[10px] font-semibold tracking-[0.12em] text-[#8A8F8C]">
-            {referral.direction === "sent" ? "OUTGOING" : "INCOMING"} · {referral.specialty.toUpperCase()}
+            {referral.direction === "sent" ? "OUTGOING" : "INCOMING"} ·{" "}
+            {referral.specialty.toUpperCase()}
           </p>
-          <h2 className="font-serif text-xl font-semibold text-[#1B3B2E]">{referral.patientName}</h2>
+          <h2 className="font-serif text-xl font-semibold text-[#1B3B2E]">
+            {referral.patientName}
+          </h2>
           <div className="mt-1 flex flex-wrap items-center gap-2">
-            <span className={cn("rounded-full px-2.5 py-0.5 text-[10px] font-bold", STATUS_STYLE[referral.status])}>
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-0.5 text-[10px] font-bold",
+                STATUS_STYLE[referral.status],
+              )}
+            >
               {referral.status}
             </span>
             <span className="text-xs text-[#8A8F8C]">
@@ -226,46 +229,50 @@ function ReferralCard({
         selected ? "border-[#B8735D] ring-2 ring-[#B8735D]/20" : "border-[#EDEAE6]",
       )}
     >
-      <button type="button" onClick={() => onOpen(referral.id)} className="block w-full text-left active:scale-[0.99]">
-      <div className="p-4">
-        <div className="flex items-start gap-3">
-          <span
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-full"
-            style={{ backgroundColor: iconBg }}
-          >
-            <Icon className="h-[18px] w-[18px] text-[#1B3B2E]" strokeWidth={1.75} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <p className="font-semibold text-[#1B3B2E]">{referral.patientName}</p>
-                <p className="text-xs text-[#8A8F8C]">{referral.facility}</p>
+      <button
+        type="button"
+        onClick={() => onOpen(referral.id)}
+        className="block w-full text-left active:scale-[0.99]"
+      >
+        <div className="p-4">
+          <div className="flex items-start gap-3">
+            <span
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full"
+              style={{ backgroundColor: iconBg }}
+            >
+              <Icon className="h-[18px] w-[18px] text-[#1B3B2E]" strokeWidth={1.75} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-[#1B3B2E]">{referral.patientName}</p>
+                  <p className="text-xs text-[#8A8F8C]">{referral.facility}</p>
+                </div>
+                <span
+                  className={cn(
+                    "shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold",
+                    STATUS_STYLE[referral.status],
+                  )}
+                >
+                  {referral.status}
+                </span>
               </div>
-              <span
-                className={cn(
-                  "shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold",
-                  STATUS_STYLE[referral.status],
-                )}
-              >
-                {referral.status}
-              </span>
+              <p className="mt-2 line-clamp-2 text-sm text-[#1B3B2E]">{referral.clinicalReason}</p>
+              <p className="mt-1 text-xs text-[#8A8F8C]">
+                {referral.direction === "sent" ? "To" : "From"} {referral.specialty} · From{" "}
+                {referral.fromDoctor}
+              </p>
             </div>
-            <p className="mt-2 line-clamp-2 text-sm text-[#1B3B2E]">{referral.clinicalReason}</p>
-            <p className="mt-1 text-xs text-[#8A8F8C]">
-              {referral.direction === "sent" ? "To" : "From"} {referral.specialty} · From{" "}
-              {referral.fromDoctor}
-            </p>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5 text-xs text-[#8A8F8C]">
+            {referral.status === "Pending" ? (
+              <Clock className="h-3.5 w-3.5" strokeWidth={1.75} />
+            ) : (
+              <Check className="h-3.5 w-3.5 text-[#7A9B7E]" strokeWidth={1.75} />
+            )}
+            <span>{referral.statusDetail}</span>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-1.5 text-xs text-[#8A8F8C]">
-          {referral.status === "Pending" ? (
-            <Clock className="h-3.5 w-3.5" strokeWidth={1.75} />
-          ) : (
-            <Check className="h-3.5 w-3.5 text-[#7A9B7E]" strokeWidth={1.75} />
-          )}
-          <span>{referral.statusDetail}</span>
-        </div>
-      </div>
       </button>
       {showActions && (
         <div
@@ -339,9 +346,12 @@ export function DoctorReferralsWorkspace({
   useEffect(() => {
     if (!activeReferralId) return undefined;
     const targetId = isMobileLayout ? "referral-history" : "referral-history-desktop";
-    const timer = window.setTimeout(() => {
-      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, isMobileLayout ? 320 : 80);
+    const timer = window.setTimeout(
+      () => {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      },
+      isMobileLayout ? 320 : 80,
+    );
     return () => window.clearTimeout(timer);
   }, [activeReferralId, isMobileLayout]);
 
@@ -350,7 +360,8 @@ export function DoctorReferralsWorkspace({
 
   const selectedReferral =
     activeReferralId != null
-      ? store.referrals.find((r) => r.id === activeReferralId) ?? getReferralById(activeReferralId)
+      ? (store.referrals.find((r) => r.id === activeReferralId) ??
+        getReferralById(activeReferralId))
       : undefined;
 
   const openReferral = (id: string) => {
@@ -429,10 +440,7 @@ export function DoctorReferralsWorkspace({
         title="Referrals"
         subtitle={`${awaiting} awaiting action`}
         backTo={backTo}
-        breadcrumbs={[
-          { label: "Profile", to: "/doctor/settings" },
-          { label: "Referrals" },
-        ]}
+        breadcrumbs={[{ label: "Profile", to: "/doctor/settings" }, { label: "Referrals" }]}
         action={
           <button
             type="button"

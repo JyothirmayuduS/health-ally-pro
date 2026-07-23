@@ -58,9 +58,7 @@ export const SUPERVISOR_NAV: LabNavConfig = {
   sections: [
     {
       title: "Overview",
-      items: [
-        { to: "/lab", label: "Control desk", icon: LayoutDashboard, exact: true },
-      ],
+      items: [{ to: "/lab", label: "Control desk", icon: LayoutDashboard, exact: true }],
     },
     {
       title: "Oversight",
@@ -100,7 +98,14 @@ export const TECHNICIAN_NAV: LabNavConfig = {
     {
       title: "Overview",
       items: [
-        { to: "/lab", label: "My bench", icon: LayoutDashboard, exact: true, countKey: "bench", urgentBadge: true },
+        {
+          to: "/lab",
+          label: "My bench",
+          icon: LayoutDashboard,
+          exact: true,
+          countKey: "bench",
+          urgentBadge: true,
+        },
       ],
     },
     {
@@ -171,7 +176,8 @@ export function labRoleLabel(roles: UserRole[]) {
 
 export async function requireLabSupervisor() {
   // Demo auth is client-only (sessionStorage/cookie). SSR beforeLoad cannot see it.
-  if (typeof window === "undefined") return null as unknown as Awaited<ReturnType<typeof requirePortalAccess>>;
+  if (typeof window === "undefined")
+    return null as unknown as Awaited<ReturnType<typeof requirePortalAccess>>;
   const session = await requirePortalAccess("lab");
   if (!isLabSupervisor(session.roles)) {
     throw redirect({ to: "/lab", search: { denied: "supervisor" } });
@@ -180,7 +186,8 @@ export async function requireLabSupervisor() {
 }
 
 export async function requireLabTechnician() {
-  if (typeof window === "undefined") return null as unknown as Awaited<ReturnType<typeof requirePortalAccess>>;
+  if (typeof window === "undefined")
+    return null as unknown as Awaited<ReturnType<typeof requirePortalAccess>>;
   const session = await requirePortalAccess("lab");
   if (isLabSupervisor(session.roles)) {
     throw redirect({ to: "/lab", search: { denied: "technician" } });

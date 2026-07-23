@@ -4,7 +4,17 @@ import { quickSafetyScan } from "@/lib/doctor-prescription-ai";
 import { DRUGS, type Drug } from "@/lib/pharmacy-desk/mockData";
 import type { DoctorRxLine } from "@/lib/pharmacy-desk/prescription-bridge";
 
-export type RxFrequency = "OD" | "BD" | "TDS" | "QID" | "HS" | "SOS" | "Q6H" | "Q8H" | "Weekly" | "Custom";
+export type RxFrequency =
+  | "OD"
+  | "BD"
+  | "TDS"
+  | "QID"
+  | "HS"
+  | "SOS"
+  | "Q6H"
+  | "Q8H"
+  | "Weekly"
+  | "Custom";
 export type RxType = "regular" | "controlled" | "narcotic";
 export type PatientLanguage = "en" | "hi" | "te" | "ta";
 
@@ -184,45 +194,58 @@ const MONOGRAPHS: Record<string, DrugMonograph> = {
       "Adults and children per weight-based dosing. Avoid if history of anaphylaxis to penicillins. Adjust dose in severe renal impairment.",
     howToTake:
       "500 mg orally every 8 hours (or as prescribed). May take with or without food. Space doses evenly and complete the full course even if symptoms improve.",
-    warnings: "Cross-reactivity possible with cephalosporins in penicillin-allergic patients. Not for viral infections.",
-    commonSideEffects: "Nausea, diarrhoea, rash. Seek care for urticaria, breathing difficulty, or severe diarrhoea.",
+    warnings:
+      "Cross-reactivity possible with cephalosporins in penicillin-allergic patients. Not for viral infections.",
+    commonSideEffects:
+      "Nausea, diarrhoea, rash. Seek care for urticaria, breathing difficulty, or severe diarrhoea.",
   },
   "drug-hct25": {
     drugClass: "Thiazide diuretic",
     whyUsed:
       "First-line for hypertension and mild oedema. Reduces cardiovascular events when combined with lifestyle changes and other antihypertensives.",
-    whoShouldReceive: "Adults. Monitor electrolytes in elderly and those on digoxin or loop diuretics. Use caution in gout.",
-    howToTake: "25 mg once daily in the morning. Take at the same time each day. May combine with ACE inhibitor or ARB.",
+    whoShouldReceive:
+      "Adults. Monitor electrolytes in elderly and those on digoxin or loop diuretics. Use caution in gout.",
+    howToTake:
+      "25 mg once daily in the morning. Take at the same time each day. May combine with ACE inhibitor or ARB.",
     warnings: "Can cause hypokalaemia, hyperuricaemia, and photosensitivity.",
     commonSideEffects: "Dizziness, polyuria, muscle cramps, mild hyperglycaemia.",
   },
   "drug-aml5": {
     drugClass: "CCB",
-    whyUsed: "First-line calcium channel blocker for hypertension and angina. Reduces BP with favourable metabolic profile.",
+    whyUsed:
+      "First-line calcium channel blocker for hypertension and angina. Reduces BP with favourable metabolic profile.",
     whoShouldReceive: "Adults and elderly. Avoid in severe aortic stenosis and cardiogenic shock.",
-    howToTake: "5 mg once daily; may titrate to 10 mg. Swallow whole; take at the same time each day.",
-    warnings: "Peripheral oedema and flushing are common; not interchangeable with other dihydropyridines at equal mg.",
+    howToTake:
+      "5 mg once daily; may titrate to 10 mg. Swallow whole; take at the same time each day.",
+    warnings:
+      "Peripheral oedema and flushing are common; not interchangeable with other dihydropyridines at equal mg.",
     commonSideEffects: "Ankle swelling, headache, flushing, fatigue.",
   },
   "drug-met500": {
     drugClass: "Biguanide",
-    whyUsed: "First-line therapy for type 2 diabetes. Improves insulin sensitivity and lowers HbA1c without causing hypoglycaemia alone.",
-    whoShouldReceive: "Adults with T2DM. Avoid if eGFR <30. Hold before iodinated contrast and restart per protocol.",
+    whyUsed:
+      "First-line therapy for type 2 diabetes. Improves insulin sensitivity and lowers HbA1c without causing hypoglycaemia alone.",
+    whoShouldReceive:
+      "Adults with T2DM. Avoid if eGFR <30. Hold before iodinated contrast and restart per protocol.",
     howToTake: "500 mg twice daily with meals. Titrate slowly over weeks to reduce GI upset.",
     warnings: "Risk of lactic acidosis (rare). Avoid excess alcohol.",
-    commonSideEffects: "Nausea, diarrhoea, metallic taste, vitamin B12 deficiency with long-term use.",
+    commonSideEffects:
+      "Nausea, diarrhoea, metallic taste, vitamin B12 deficiency with long-term use.",
   },
   "drug-lis10": {
     drugClass: "ACE inhibitor",
-    whyUsed: "Treats hypertension, heart failure, and post-MI LV dysfunction. Reduces proteinuria in diabetic nephropathy.",
+    whyUsed:
+      "Treats hypertension, heart failure, and post-MI LV dysfunction. Reduces proteinuria in diabetic nephropathy.",
     whoShouldReceive: "Adults. Avoid in pregnancy. Monitor K⁺ and creatinine after initiation.",
-    howToTake: "10 mg once daily. First dose may cause hypotension — counsel on dizziness when standing.",
+    howToTake:
+      "10 mg once daily. First dose may cause hypotension — counsel on dizziness when standing.",
     warnings: "Contraindicated in bilateral renal artery stenosis and pregnancy.",
     commonSideEffects: "Dry cough, hyperkalaemia, angioedema (rare but serious).",
   },
   "drug-los50": {
     drugClass: "ARB",
-    whyUsed: "Alternative to ACE inhibitors for hypertension and heart failure; useful when ACE-I cough occurs.",
+    whyUsed:
+      "Alternative to ACE inhibitors for hypertension and heart failure; useful when ACE-I cough occurs.",
     whoShouldReceive: "Adults. Avoid in pregnancy. Monitor renal function and potassium.",
     howToTake: "50 mg once daily with or without food. May increase to 100 mg once daily.",
     warnings: "Do not combine with ACE inhibitor. Avoid in pregnancy.",
@@ -230,64 +253,81 @@ const MONOGRAPHS: Record<string, DrugMonograph> = {
   },
   "drug-par500": {
     drugClass: "Analgesic / antipyretic",
-    whyUsed: "Mild-to-moderate pain and fever. Preferred over NSAIDs when GI bleed risk or in children (weight-based).",
-    whoShouldReceive: "Most patients. Use lowest effective dose. Hepatic dose adjustment if cirrhosis.",
-    howToTake: "500 mg–1 g every 4–6 hours PRN; max 4 g/day in adults. Do not exceed labelled maximum.",
-    warnings: "Hepatotoxicity with overdose. Check combination cold/flu products for duplicate paracetamol.",
+    whyUsed:
+      "Mild-to-moderate pain and fever. Preferred over NSAIDs when GI bleed risk or in children (weight-based).",
+    whoShouldReceive:
+      "Most patients. Use lowest effective dose. Hepatic dose adjustment if cirrhosis.",
+    howToTake:
+      "500 mg–1 g every 4–6 hours PRN; max 4 g/day in adults. Do not exceed labelled maximum.",
+    warnings:
+      "Hepatotoxicity with overdose. Check combination cold/flu products for duplicate paracetamol.",
     commonSideEffects: "Generally well tolerated at therapeutic doses.",
   },
   "drug-ibu400": {
     drugClass: "NSAID",
     whyUsed: "Inflammatory pain, dysmenorrhoea, and fever. Anti-inflammatory at higher doses.",
-    whoShouldReceive: "Avoid in active peptic ulcer, severe heart failure, third trimester pregnancy, and significant renal impairment.",
+    whoShouldReceive:
+      "Avoid in active peptic ulcer, severe heart failure, third trimester pregnancy, and significant renal impairment.",
     howToTake: "400 mg every 6–8 hours with food or milk. Use shortest duration needed.",
     warnings: "GI bleed, renal injury, and cardiovascular risk with prolonged use.",
     commonSideEffects: "Dyspepsia, nausea, dizziness, fluid retention.",
   },
   "drug-azt250": {
     drugClass: "Macrolide antibiotic",
-    whyUsed: "Respiratory tract infections, atypical pneumonia, and penicillin allergy alternatives.",
-    whoShouldReceive: "Adults and children per weight. Caution with QT prolongation and hepatic impairment.",
-    howToTake: "250 mg once daily × 3 days (or 500 mg day 1 then 250 mg × 4 days per protocol). Take 1 hour before or 2 hours after food.",
+    whyUsed:
+      "Respiratory tract infections, atypical pneumonia, and penicillin allergy alternatives.",
+    whoShouldReceive:
+      "Adults and children per weight. Caution with QT prolongation and hepatic impairment.",
+    howToTake:
+      "250 mg once daily × 3 days (or 500 mg day 1 then 250 mg × 4 days per protocol). Take 1 hour before or 2 hours after food.",
     warnings: "QT prolongation; avoid with certain statins and antiarrhythmics.",
     commonSideEffects: "GI upset, diarrhoea, taste disturbance.",
   },
   "drug-ome20": {
     drugClass: "PPI",
     whyUsed: "GERD, peptic ulcer disease, and H. pylori regimens. Reduces gastric acid secretion.",
-    whoShouldReceive: "Short-term use preferred. Review long-term need; consider B12 and Mg monitoring.",
+    whoShouldReceive:
+      "Short-term use preferred. Review long-term need; consider B12 and Mg monitoring.",
     howToTake: "20 mg once daily 30 minutes before breakfast. Swallow capsule whole; do not crush.",
     warnings: "Long-term use linked to fracture risk, C. difficile, and hypomagnesaemia.",
     commonSideEffects: "Headache, abdominal pain, constipation.",
   },
   "drug-ato40": {
     drugClass: "Statin",
-    whyUsed: "Hyperlipidaemia and cardiovascular risk reduction in primary and secondary prevention.",
+    whyUsed:
+      "Hyperlipidaemia and cardiovascular risk reduction in primary and secondary prevention.",
     whoShouldReceive: "Adults per CV risk. Avoid in active liver disease and pregnancy.",
-    howToTake: "40 mg once daily at any time; consistency helps adherence. Avoid large grapefruit intake.",
+    howToTake:
+      "40 mg once daily at any time; consistency helps adherence. Avoid large grapefruit intake.",
     warnings: "Monitor LFTs and report unexplained myalgia.",
     commonSideEffects: "Myalgia, headache, GI upset; rhabdomyolysis is rare.",
   },
   "drug-asp75": {
     drugClass: "Antiplatelet",
-    whyUsed: "Secondary prevention after ACS/stroke and primary prevention in select high-risk patients.",
-    whoShouldReceive: "Avoid in active bleeding, children with viral illness (Reye syndrome), and third trimester.",
+    whyUsed:
+      "Secondary prevention after ACS/stroke and primary prevention in select high-risk patients.",
+    whoShouldReceive:
+      "Avoid in active bleeding, children with viral illness (Reye syndrome), and third trimester.",
     howToTake: "75 mg once daily with food if GI sensitivity. Use enteric-coated if dyspepsia.",
     warnings: "Bleeding risk increases with anticoagulants, NSAIDs, and alcohol.",
     commonSideEffects: "Dyspepsia, bruising, tinnitus at high doses.",
   },
   "drug-pred5": {
     drugClass: "Corticosteroid",
-    whyUsed: "Anti-inflammatory and immunosuppressive therapy for asthma exacerbations, allergies, and autoimmune flares.",
+    whyUsed:
+      "Anti-inflammatory and immunosuppressive therapy for asthma exacerbations, allergies, and autoimmune flares.",
     whoShouldReceive: "Taper when used >2 weeks. Monitor glucose, BP, and infection risk.",
-    howToTake: "5 mg once daily in the morning with food unless directed otherwise. Do not stop abruptly after prolonged use.",
+    howToTake:
+      "5 mg once daily in the morning with food unless directed otherwise. Do not stop abruptly after prolonged use.",
     warnings: "Adrenal suppression, osteoporosis, hyperglycaemia with prolonged courses.",
     commonSideEffects: "Insomnia, appetite increase, mood changes, fluid retention.",
   },
   "drug-sal100": {
     drugClass: "SABA bronchodilator",
-    whyUsed: "Rapid relief of bronchospasm in asthma and COPD. Rescue inhaler — not for maintenance alone.",
-    whoShouldReceive: "Patients with reactive airway disease. Overuse signals poor control — review preventer therapy.",
+    whyUsed:
+      "Rapid relief of bronchospasm in asthma and COPD. Rescue inhaler — not for maintenance alone.",
+    whoShouldReceive:
+      "Patients with reactive airway disease. Overuse signals poor control — review preventer therapy.",
     howToTake: "1–2 puffs via spacer as needed; max 8–12 puffs/24 h. Rinse mouth after use.",
     warnings: "Tremor and tachycardia; seek urgent care if rescue use exceeds 3 days/week.",
     commonSideEffects: "Tremor, palpitations, headache.",
@@ -295,7 +335,8 @@ const MONOGRAPHS: Record<string, DrugMonograph> = {
   "drug-gli1": {
     drugClass: "Sulfonylurea",
     whyUsed: "Lowers blood glucose by stimulating pancreatic insulin release in type 2 diabetes.",
-    whoShouldReceive: "Avoid in severe hepatic/renal impairment. Counsel on hypoglycaemia recognition.",
+    whoShouldReceive:
+      "Avoid in severe hepatic/renal impairment. Counsel on hypoglycaemia recognition.",
     howToTake: "1 mg once daily before breakfast; titrate per glucose. Take with first main meal.",
     warnings: "Hypoglycaemia risk, especially with skipped meals, alcohol, or renal decline.",
     commonSideEffects: "Hypoglycaemia, weight gain, GI upset.",
@@ -303,17 +344,22 @@ const MONOGRAPHS: Record<string, DrugMonograph> = {
   "drug-ins100": {
     drugClass: "Basal insulin",
     whyUsed: "Long-acting glucose control in diabetes; basal coverage overnight and between meals.",
-    whoShouldReceive: "Diabetes requiring insulin. Teach injection technique and hypoglycaemia management.",
+    whoShouldReceive:
+      "Diabetes requiring insulin. Teach injection technique and hypoglycaemia management.",
     howToTake: "Inject subcutaneously at same time daily (often bedtime). Rotate injection sites.",
-    warnings: "Never mix with other insulins in same syringe unless trained. Hypoglycaemia if dose mismatched to intake.",
+    warnings:
+      "Never mix with other insulins in same syringe unless trained. Hypoglycaemia if dose mismatched to intake.",
     commonSideEffects: "Hypoglycaemia, lipohypertrophy at repeated sites, weight gain.",
   },
   "drug-oxy5": {
     drugClass: "Opioid analgesic",
-    whyUsed: "Moderate-to-severe acute pain when non-opioids insufficient. Schedule II controlled substance.",
-    whoShouldReceive: "Short courses preferred. Avoid in respiratory depression, paralytic ileus, and MAOI use.",
+    whyUsed:
+      "Moderate-to-severe acute pain when non-opioids insufficient. Schedule II controlled substance.",
+    whoShouldReceive:
+      "Short courses preferred. Avoid in respiratory depression, paralytic ileus, and MAOI use.",
     howToTake: "5 mg every 4–6 hours PRN severe pain. Lowest effective dose for shortest duration.",
-    warnings: "Respiratory depression, dependence, and sedation — no driving. Risk with benzodiazepines.",
+    warnings:
+      "Respiratory depression, dependence, and sedation — no driving. Risk with benzodiazepines.",
     commonSideEffects: "Constipation, nausea, sedation, dizziness.",
   },
   "drug-vacflu": {
@@ -321,7 +367,8 @@ const MONOGRAPHS: Record<string, DrugMonograph> = {
     whyUsed: "Seasonal influenza prevention per national immunisation schedule.",
     whoShouldReceive: "Eligible adults per local guidelines; egg allergy — consult protocol.",
     howToTake: "Single IM dose annually before flu season. Observe 15 minutes post-vaccination.",
-    warnings: "Not a live vaccine; cannot cause influenza. Febrile illness — defer until recovered.",
+    warnings:
+      "Not a live vaccine; cannot cause influenza. Febrile illness — defer until recovered.",
     commonSideEffects: "Injection-site soreness, low-grade fever, myalgia for 1–2 days.",
   },
 };
@@ -412,13 +459,19 @@ export function calcQuantity(frequency: RxFrequency, durationDays: number): numb
   return Math.max(1, Math.ceil(perDay * durationDays));
 }
 
-export function buildSig(line: Pick<PrescriptionLineDraft, "frequency" | "timing" | "route" | "durationDays">, drug: Drug): string {
+export function buildSig(
+  line: Pick<PrescriptionLineDraft, "frequency" | "timing" | "route" | "durationDays">,
+  drug: Drug,
+): string {
   const timing = line.timing.length ? ` ${line.timing.join(", ").toLowerCase()}` : "";
   const freqLabel = line.frequency === "Custom" ? "as directed" : line.frequency;
   return `${drug.strength} ${line.route.toLowerCase()} ${freqLabel}${timing} × ${line.durationDays} days`;
 }
 
-export function createLineFromDrug(drugId: string, partial?: Partial<PrescriptionLineDraft>): PrescriptionLineDraft {
+export function createLineFromDrug(
+  drugId: string,
+  partial?: Partial<PrescriptionLineDraft>,
+): PrescriptionLineDraft {
   const drug = DRUGS.find((d) => d.id === drugId)!;
   const frequency: RxFrequency = partial?.frequency ?? "OD";
   const durationDays = partial?.durationDays ?? 30;
@@ -504,7 +557,10 @@ export function clearStoredDraft(patientId: string) {
 }
 
 export function lineToDoctorRx(line: PrescriptionLineDraft): DoctorRxLine {
-  const notes = [line.drugNotes, line.allowGeneric ? "Generic substitution allowed" : "Dispense as written"]
+  const notes = [
+    line.drugNotes,
+    line.allowGeneric ? "Generic substitution allowed" : "Dispense as written",
+  ]
     .filter(Boolean)
     .join(" · ");
   return {

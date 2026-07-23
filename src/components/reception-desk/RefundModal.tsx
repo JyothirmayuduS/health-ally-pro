@@ -139,7 +139,8 @@ export default function RefundModal({ open, onClose, invoice, onRefund }: Refund
               </div>
               {numericAmount > maxRefundable && (
                 <div className="mt-1 text-[11px] text-status-noshowText flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" /> Cannot exceed max refundable amount of ₹{maxRefundable}
+                  <AlertCircle className="w-3.5 h-3.5" /> Cannot exceed max refundable amount of ₹
+                  {maxRefundable}
                 </div>
               )}
             </div>
@@ -155,9 +156,13 @@ export default function RefundModal({ open, onClose, invoice, onRefund }: Refund
                 onChange={(e) => setReason(e.target.value)}
                 className="w-full h-9 px-2 text-[13px] bg-white border border-ink-200 rounded-sm focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage text-ink-900"
               >
-                <option value="" disabled>Select refund reason...</option>
+                <option value="" disabled>
+                  Select refund reason...
+                </option>
                 {REASONS.map((r) => (
-                  <option key={r} value={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
                 ))}
               </select>
             </div>
@@ -187,7 +192,8 @@ export default function RefundModal({ open, onClose, invoice, onRefund }: Refund
               disabled={!isValid}
               className="btn-money flex-1 flex items-center justify-center gap-1.5"
             >
-              <CheckCircle2 className="w-4 h-4" /> Issue {type === "credit" ? "Credit Note" : "Refund"}
+              <CheckCircle2 className="w-4 h-4" /> Issue{" "}
+              {type === "credit" ? "Credit Note" : "Refund"}
             </button>
           </div>
         </form>

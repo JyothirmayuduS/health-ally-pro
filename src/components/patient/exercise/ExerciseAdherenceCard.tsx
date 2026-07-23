@@ -75,9 +75,7 @@ export function ExerciseAdherenceCard({
             {minutesDone > 0 ? `${minutesDone} min completed` : "Start your prescription"}
           </p>
           {streak > 0 ? (
-            <p className="mt-1.5 text-xs font-medium text-clay">
-              {streak}-day streak · keep it up
-            </p>
+            <p className="mt-1.5 text-xs font-medium text-clay">{streak}-day streak · keep it up</p>
           ) : null}
         </div>
       </div>

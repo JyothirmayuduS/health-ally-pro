@@ -7,7 +7,6 @@ import { DEMO_STAFF_TABLE } from "@/lib/supabase/demo-credentials";
 
 type LoginSearch = { redirect?: string; error?: string };
 
-
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>): LoginSearch => ({
     redirect: (search.redirect as string) || undefined,
@@ -198,28 +197,28 @@ function LoginPage() {
         </form>
 
         {allowDemoAuth() ? (
-        <div className="mt-8 border-t border-ink-200 pt-6">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-400">
-            Demo accounts
-          </p>
-          <div className="mt-3 space-y-2">
-            {DEMO_ACCOUNTS.map((account) => (
-              <button
-                key={account.email}
-                type="button"
-                disabled={loading}
-                onClick={() => signInDemo(account)}
-                className={`surface row-hover w-full border-l-4 px-4 py-3 text-left transition-colors disabled:opacity-60 ${account.accent}`}
-              >
-                <div className="text-[13px] font-medium text-ink-900">{account.role}</div>
-                <div className="mt-0.5 text-[12px] text-ink-600">{account.workspace}</div>
-                <div className="mt-1 font-mono text-[11px] text-ink-600">
-                  {account.email} · {account.password}
-                </div>
-              </button>
-            ))}
+          <div className="mt-8 border-t border-ink-200 pt-6">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-400">
+              Demo accounts
+            </p>
+            <div className="mt-3 space-y-2">
+              {DEMO_ACCOUNTS.map((account) => (
+                <button
+                  key={account.email}
+                  type="button"
+                  disabled={loading}
+                  onClick={() => signInDemo(account)}
+                  className={`surface row-hover w-full border-l-4 px-4 py-3 text-left transition-colors disabled:opacity-60 ${account.accent}`}
+                >
+                  <div className="text-[13px] font-medium text-ink-900">{account.role}</div>
+                  <div className="mt-0.5 text-[12px] text-ink-600">{account.workspace}</div>
+                  <div className="mt-1 font-mono text-[11px] text-ink-600">
+                    {account.email} · {account.password}
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
         ) : null}
       </div>
     </div>

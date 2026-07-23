@@ -21,7 +21,9 @@ export default function AdminAccessControl() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="surface px-5 py-4 flex items-center justify-between">
           <div>
-            <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">Defined Roles</div>
+            <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">
+              Defined Roles
+            </div>
             <div className="mt-1 text-3xl font-heading font-semibold text-plum">{totalRoles}</div>
             <div className="text-[11px] text-ink-400 mt-1">Configured RBAC mappings</div>
           </div>
@@ -32,8 +34,12 @@ export default function AdminAccessControl() {
 
         <div className="surface px-5 py-4 flex items-center justify-between">
           <div>
-            <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">Active Sessions</div>
-            <div className="mt-1 text-3xl font-heading font-semibold text-teal">{activeSessionsCount}</div>
+            <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">
+              Active Sessions
+            </div>
+            <div className="mt-1 text-3xl font-heading font-semibold text-teal">
+              {activeSessionsCount}
+            </div>
             <div className="text-[11px] text-ink-400 mt-1">Users online across all modules</div>
           </div>
           <div className="h-10 w-10 rounded bg-teal-soft text-teal grid place-items-center">
@@ -47,7 +53,9 @@ export default function AdminAccessControl() {
         <button
           onClick={() => setActiveTab("roles")}
           className={`flex-1 rounded-md px-3 py-2 text-[12px] font-medium transition-colors ${
-            activeTab === "roles" ? "bg-white shadow-sm text-ink-900 border border-ink-100" : "text-ink-500 hover:text-ink-800"
+            activeTab === "roles"
+              ? "bg-white shadow-sm text-ink-900 border border-ink-100"
+              : "text-ink-500 hover:text-ink-800"
           }`}
         >
           Staff Roles & Permissions
@@ -55,7 +63,9 @@ export default function AdminAccessControl() {
         <button
           onClick={() => setActiveTab("sessions")}
           className={`flex-1 rounded-md px-3 py-2 text-[12px] font-medium transition-colors ${
-            activeTab === "sessions" ? "bg-white shadow-sm text-ink-900 border border-ink-100" : "text-ink-500 hover:text-ink-800"
+            activeTab === "sessions"
+              ? "bg-white shadow-sm text-ink-900 border border-ink-100"
+              : "text-ink-500 hover:text-ink-800"
           }`}
         >
           Active Sessions ({activeSessionsCount})
@@ -65,25 +75,44 @@ export default function AdminAccessControl() {
       {activeTab === "roles" && (
         <div className="surface overflow-hidden">
           <div className="border-b border-ink-100 px-5 py-3 flex items-center justify-between bg-bone/20">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">RBAC Matrix</span>
-            <span className="text-[11px] text-ink-400">Role-Based Access Control configuration</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
+              RBAC Matrix
+            </span>
+            <span className="text-[11px] text-ink-400">
+              Role-Based Access Control configuration
+            </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-[13px] whitespace-nowrap">
               <thead className="border-b border-ink-100 bg-bone/40 font-mono">
                 <tr>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Role</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Reception Desk</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Lab Desk</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Pharmacy Desk</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">IPD Ward</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Admin Desk</th>
-                  <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400">Actions</th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Role
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Reception Desk
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Lab Desk
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Pharmacy Desk
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    IPD Ward
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Admin Desk
+                  </th>
+                  <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink-100">
                 {rolePermissions?.map((rp) => {
-                  const checkCount = (obj: Record<string, boolean>) => Object.values(obj).filter(Boolean).length;
+                  const checkCount = (obj: Record<string, boolean>) =>
+                    Object.values(obj).filter(Boolean).length;
                   const totalCount = (obj: Record<string, boolean>) => Object.keys(obj).length;
 
                   return (
@@ -93,7 +122,8 @@ export default function AdminAccessControl() {
                       </td>
                       <td className="px-5 py-3">
                         <span className="text-[11px] text-ink-500 font-mono">
-                          {checkCount(rp.permissions.reception)}/{totalCount(rp.permissions.reception)} actions
+                          {checkCount(rp.permissions.reception)}/
+                          {totalCount(rp.permissions.reception)} actions
                         </span>
                       </td>
                       <td className="px-5 py-3">
@@ -103,7 +133,8 @@ export default function AdminAccessControl() {
                       </td>
                       <td className="px-5 py-3">
                         <span className="text-[11px] text-ink-500 font-mono">
-                          {checkCount(rp.permissions.pharmacy)}/{totalCount(rp.permissions.pharmacy)} actions
+                          {checkCount(rp.permissions.pharmacy)}/
+                          {totalCount(rp.permissions.pharmacy)} actions
                         </span>
                       </td>
                       <td className="px-5 py-3">
@@ -113,7 +144,8 @@ export default function AdminAccessControl() {
                       </td>
                       <td className="px-5 py-3">
                         <span className="text-[11px] text-ink-500 font-mono">
-                          {checkCount(rp.permissions.admin)}/{totalCount(rp.permissions.admin)} actions
+                          {checkCount(rp.permissions.admin)}/{totalCount(rp.permissions.admin)}{" "}
+                          actions
                         </span>
                       </td>
                       <td className="px-5 py-3 text-right">
@@ -136,19 +168,35 @@ export default function AdminAccessControl() {
       {activeTab === "sessions" && (
         <div className="surface overflow-hidden">
           <div className="border-b border-ink-100 px-5 py-3 flex items-center justify-between bg-bone/20">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400 text-teal">Active User Sessions</span>
-            <span className="text-[11px] text-ink-400">Force termination available for audit/incident response</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400 text-teal">
+              Active User Sessions
+            </span>
+            <span className="text-[11px] text-ink-400">
+              Force termination available for audit/incident response
+            </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-[13px] whitespace-nowrap">
               <thead className="border-b border-ink-100 bg-bone/40 font-mono">
                 <tr>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">User</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Role</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Module Access</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Login Time</th>
-                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">Last Active</th>
-                  <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400">Action</th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    User
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Role
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Module Access
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Login Time
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Last Active
+                  </th>
+                  <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink-100">
@@ -165,10 +213,16 @@ export default function AdminAccessControl() {
                       </span>
                     </td>
                     <td className="px-5 py-3 font-mono text-[11px] text-ink-500">
-                      {new Date(session.loginTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(session.loginTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </td>
                     <td className="px-5 py-3 font-mono text-[11px] text-ink-500">
-                      {new Date(session.lastActivity).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(session.lastActivity).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </td>
                     <td className="px-5 py-3 text-right">
                       <button
@@ -195,23 +249,39 @@ export default function AdminAccessControl() {
             <div className="border-b border-ink-100 px-6 py-4 flex items-center justify-between">
               <div>
                 <h3 className="font-heading font-semibold text-ink-950">Modify Permissions</h3>
-                <p className="text-[12px] text-ink-400 font-mono mt-0.5">Role: {editingRole.role}</p>
+                <p className="text-[12px] text-ink-400 font-mono mt-0.5">
+                  Role: {editingRole.role}
+                </p>
               </div>
-              <button onClick={() => setEditingRole(null)} className="text-ink-400 hover:text-ink-600">
+              <button
+                onClick={() => setEditingRole(null)}
+                className="text-ink-400 hover:text-ink-600"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="p-6 overflow-y-auto space-y-5 flex-1">
-              {(Object.keys(editingRole.permissions) as Array<keyof typeof editingRole.permissions>).map((module) => (
-                <div key={module} className="space-y-2 border-b border-ink-100 pb-4 last:border-0 last:pb-0">
-                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-plum capitalize">{module} Desk</h4>
+              {(
+                Object.keys(editingRole.permissions) as Array<keyof typeof editingRole.permissions>
+              ).map((module) => (
+                <div
+                  key={module}
+                  className="space-y-2 border-b border-ink-100 pb-4 last:border-0 last:pb-0"
+                >
+                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-plum capitalize">
+                    {module} Desk
+                  </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.keys(editingRole.permissions[module]).map((permission) => {
-                      const typedPermission = permission as keyof typeof editingRole.permissions[typeof module];
+                      const typedPermission =
+                        permission as keyof (typeof editingRole.permissions)[typeof module];
                       const isChecked = editingRole.permissions[module][typedPermission] as boolean;
                       return (
-                        <label key={permission} className="flex items-center gap-2 cursor-pointer select-none">
+                        <label
+                          key={permission}
+                          className="flex items-center gap-2 cursor-pointer select-none"
+                        >
                           <input
                             type="checkbox"
                             checked={isChecked}

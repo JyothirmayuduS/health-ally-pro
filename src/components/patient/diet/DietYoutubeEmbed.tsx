@@ -1,10 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import type { DietYoutubeVideo } from "@/lib/diet-mock-data";
-import {
-  youtubeEmbedUrl,
-  youtubeThumbnailUrl,
-  youtubeWatchUrl,
-} from "@/lib/diet-youtube-curated";
+import { youtubeEmbedUrl, youtubeThumbnailUrl, youtubeWatchUrl } from "@/lib/diet-youtube-curated";
 
 type Props = {
   video: DietYoutubeVideo;

@@ -47,9 +47,7 @@ export const DOCTOR_CLINICAL_TOOLS = [
 /** Specialty-aware clinical tools — first item labels with the assigned specialty */
 export function clinicalToolsForSpecialty(specialty: SpecialtyDefinition) {
   return DOCTOR_CLINICAL_TOOLS.map((item) =>
-    item.to === "/doctor/specialty"
-      ? { ...item, label: specialty.shortName + " desk" }
-      : item,
+    item.to === "/doctor/specialty" ? { ...item, label: specialty.shortName + " desk" } : item,
   );
 }
 
@@ -61,17 +59,67 @@ export type DoctorModuleLink = {
 };
 
 export const DOCTOR_CLINICAL_MODULES: DoctorModuleLink[] = [
-  { to: "/doctor/specialty", label: "Specialty desk", description: "Specialty-specific clinical workstation", icon: Stethoscope },
-  { to: "/doctor/queue", label: "Live queue", description: "Today's queue board", icon: ListOrdered },
-  { to: "/doctor/prescriptions", label: "Prescriptions", description: "E-prescribe to pharmacy", icon: Pill },
-  { to: "/doctor/orders", label: "Lab orders", description: "Send orders to lab desk", icon: TestTube },
-  { to: "/doctor/results", label: "Lab results", description: "Review released results", icon: FlaskConical },
-  { to: "/doctor/reports", label: "Inbox", description: "Results, messages, referrals & tasks", icon: ClipboardList },
-  { to: "/doctor/settings/emergency", label: "Coverage", description: "Colleague handoffs", icon: Shield },
-  { to: "/doctor/settings/referrals", label: "Referrals", description: "Outbound referrals", icon: Share2 },
-  { to: "/doctor/messaging", label: "Messaging", description: "Secure patient chat", icon: MessageSquare },
+  {
+    to: "/doctor/specialty",
+    label: "Specialty desk",
+    description: "Specialty-specific clinical workstation",
+    icon: Stethoscope,
+  },
+  {
+    to: "/doctor/queue",
+    label: "Live queue",
+    description: "Today's queue board",
+    icon: ListOrdered,
+  },
+  {
+    to: "/doctor/prescriptions",
+    label: "Prescriptions",
+    description: "E-prescribe to pharmacy",
+    icon: Pill,
+  },
+  {
+    to: "/doctor/orders",
+    label: "Lab orders",
+    description: "Send orders to lab desk",
+    icon: TestTube,
+  },
+  {
+    to: "/doctor/results",
+    label: "Lab results",
+    description: "Review released results",
+    icon: FlaskConical,
+  },
+  {
+    to: "/doctor/reports",
+    label: "Inbox",
+    description: "Results, messages, referrals & tasks",
+    icon: ClipboardList,
+  },
+  {
+    to: "/doctor/settings/emergency",
+    label: "Coverage",
+    description: "Colleague handoffs",
+    icon: Shield,
+  },
+  {
+    to: "/doctor/settings/referrals",
+    label: "Referrals",
+    description: "Outbound referrals",
+    icon: Share2,
+  },
+  {
+    to: "/doctor/messaging",
+    label: "Messaging",
+    description: "Secure patient chat",
+    icon: MessageSquare,
+  },
 ];
 
 export const DOCTOR_SETTINGS_LINKS: DoctorModuleLink[] = [
-  { to: "/doctor/settings", label: "Profile", description: "Profile, slots & availability", icon: User },
+  {
+    to: "/doctor/settings",
+    label: "Profile",
+    description: "Profile, slots & availability",
+    icon: User,
+  },
 ];

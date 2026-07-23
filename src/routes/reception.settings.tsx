@@ -15,8 +15,12 @@ function ReceptionSettings() {
   return (
     <div data-testid="reception-settings" className="mx-auto max-w-3xl space-y-6">
       <div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">Configuration</div>
-        <h1 className="mt-1 font-heading text-[22px] font-semibold text-ink-900">Reception desk settings</h1>
+        <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
+          Configuration
+        </div>
+        <h1 className="mt-1 font-heading text-[22px] font-semibold text-ink-900">
+          Reception desk settings
+        </h1>
         <p className="mt-1 text-[13px] text-ink-500">Hospital front-desk preferences (mock).</p>
       </div>
 
@@ -50,7 +54,9 @@ function ReceptionSettings() {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium">Auto-invoice on check-in</div>
-              <div className="text-xs text-ink-400">Create consult invoice when patient checks in</div>
+              <div className="text-xs text-ink-400">
+                Create consult invoice when patient checks in
+              </div>
             </div>
             <Switch defaultChecked />
           </div>
@@ -100,11 +106,7 @@ function ReceptionSettings() {
             <Input className="mt-1 border-ink-200" defaultValue="GST 5%" />
           </div>
         </div>
-        <button
-          type="button"
-          className="btn-outline mt-4"
-          onClick={() => refreshServiceFees()}
-        >
+        <button type="button" className="btn-outline mt-4" onClick={() => refreshServiceFees()}>
           Refresh consult fees from admin
         </button>
       </div>

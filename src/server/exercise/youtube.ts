@@ -66,9 +66,7 @@ async function searchYoutubeOnce(
         videoId: item.id,
         title: item.snippet?.title ?? searchQuery,
         channel: item.snippet?.channelTitle ?? "YouTube",
-        viewCount: item.statistics?.viewCount
-          ? formatCount(item.statistics.viewCount)
-          : undefined,
+        viewCount: item.statistics?.viewCount ? formatCount(item.statistics.viewCount) : undefined,
         durationLabel: parseIsoDuration(item.contentDetails?.duration),
         language,
         _audioLang: item.snippet?.defaultAudioLanguage ?? item.snippet?.defaultLanguage,

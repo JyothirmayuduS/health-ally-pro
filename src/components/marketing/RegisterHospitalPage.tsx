@@ -106,7 +106,10 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
             >
               Implementation checklist
             </Link>
-            <Link to="/pricing" className="rounded-full px-6 py-3 text-sm font-semibold text-[#5C6B63]">
+            <Link
+              to="/pricing"
+              className="rounded-full px-6 py-3 text-sm font-semibold text-[#5C6B63]"
+            >
               Back to pricing
             </Link>
           </div>
@@ -123,11 +126,14 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
       <main className="mx-auto max-w-2xl px-4 py-10">
         <h1 className="font-serif text-3xl font-semibold">Register your hospital</h1>
         <p className="mt-2 text-sm text-[#5C6B63]">
-          Start a commercial onboarding lead. Sales activates your license key and tenant —
-          this is not open self-serve go-live.
+          Start a commercial onboarding lead. Sales activates your license key and tenant — this is
+          not open self-serve go-live.
         </p>
 
-        <form onSubmit={submit} className="mt-8 space-y-4 rounded-[24px] border border-[#E8E4DE] bg-white p-6">
+        <form
+          onSubmit={submit}
+          className="mt-8 space-y-4 rounded-[24px] border border-[#E8E4DE] bg-white p-6"
+        >
           <label className="block text-xs font-semibold">
             Hospital display name
             <input
@@ -255,7 +261,10 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
           </button>
           <p className="text-center text-[11px] text-[#8A8F8C]">
             Questions?{" "}
-            <a href={salesMailto("Medora onboarding question")} className="font-semibold text-[#B8735D]">
+            <a
+              href={salesMailto("Medora onboarding question")}
+              className="font-semibold text-[#B8735D]"
+            >
               {SALES_CONTACT}
             </a>
           </p>

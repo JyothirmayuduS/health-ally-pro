@@ -6,19 +6,33 @@ import { getSpecimenMeta, hasPhysicalSpecimen, tubeVisual } from "@/lib/lab-desk
 import { PriorityPill, EmptyState } from "@/components/lab-desk/Pills";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  TestTube2, CheckCircle2, XCircle, Printer, UserCheck, Droplets, ArrowRight, Syringe,
+  TestTube2,
+  CheckCircle2,
+  XCircle,
+  Printer,
+  UserCheck,
+  Droplets,
+  ArrowRight,
+  Syringe,
 } from "lucide-react";
 
 export default function Collection() {
   const { patients, findCatalog, collect, rejectCollect } = useLabStore();
   const myOrders = useTechnicianOrders();
-  const [collectFor, setCollectFor] = useState<ReturnType<typeof useTechnicianOrders>[0] | null>(null);
+  const [collectFor, setCollectFor] = useState<ReturnType<typeof useTechnicianOrders>[0] | null>(
+    null,
+  );
   const [rejectFor, setRejectFor] = useState<typeof collectFor>(null);
   const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
@@ -57,7 +71,10 @@ export default function Collection() {
       <div class="row"><span>Fasting</span><b>${order.fasting ? "YES" : "NO"}</b></div>
       </div><script>window.print();</script></body></html>`;
     const w = window.open("", "_blank", "width=420,height=560");
-    if (w) { w.document.write(html); w.document.close(); }
+    if (w) {
+      w.document.write(html);
+      w.document.close();
+    }
   };
 
   return (
@@ -73,7 +90,9 @@ export default function Collection() {
           <span className="text-ink-400">→</span>
           <span>Draw tube</span>
           <span className="text-ink-400">→</span>
-          <Link to="/lab/samples" className="font-medium text-plum hover:underline">Track in My samples</Link>
+          <Link to="/lab/samples" className="font-medium text-plum hover:underline">
+            Track in My samples
+          </Link>
         </div>
       </div>
 
@@ -120,7 +139,9 @@ export default function Collection() {
                 data-testid={`collect-card-${o.id}`}
                 className="surface flex flex-col gap-4 border-l-4 border-plum p-4 sm:flex-row sm:items-center"
               >
-                <div className={`flex h-14 w-10 shrink-0 flex-col items-center rounded-full border-2 ${tube.ring} bg-white`}>
+                <div
+                  className={`flex h-14 w-10 shrink-0 flex-col items-center rounded-full border-2 ${tube.ring} bg-white`}
+                >
                   <div className={`h-3 w-full rounded-t-full ${tube.cap}`} />
                   <div className="flex-1" />
                   <span className="pb-1 font-mono text-[8px] text-ink-400">{tube.label}</span>
@@ -138,18 +159,27 @@ export default function Collection() {
                   </div>
                   <div className="mt-1 font-medium text-ink-900">{p?.name}</div>
                   <div className="text-[12px] text-ink-500">
-                    {p?.mrn} · {p?.age}{p?.sex} · {o.test_code} — {cat?.tube} · {formatRelative(o.ordered_at)}
+                    {p?.mrn} · {p?.age}
+                    {p?.sex} · {o.test_code} — {cat?.tube} · {formatRelative(o.ordered_at)}
                   </div>
                 </div>
 
                 <div className="flex shrink-0 flex-wrap gap-2">
-                  <Button size="sm" variant="outline" className="border-plum/30" onClick={() => printLabel(o)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-plum/30"
+                    onClick={() => printLabel(o)}
+                  >
                     <Printer className="h-3.5 w-3.5" /> Label
                   </Button>
                   <Button
                     size="sm"
                     className="bg-plum text-white hover:bg-plum/90"
-                    onClick={() => { setCollectFor(o); setNote(""); }}
+                    onClick={() => {
+                      setCollectFor(o);
+                      setNote("");
+                    }}
                   >
                     <Droplets className="h-3.5 w-3.5" /> Draw & collect
                   </Button>
@@ -157,7 +187,10 @@ export default function Collection() {
                     size="sm"
                     variant="ghost"
                     className="text-clay"
-                    onClick={() => { setRejectFor(o); setReason(""); }}
+                    onClick={() => {
+                      setRejectFor(o);
+                      setReason("");
+                    }}
                   >
                     <XCircle className="h-3.5 w-3.5" />
                   </Button>
@@ -174,65 +207,106 @@ export default function Collection() {
             <DialogTitle className="flex items-center gap-2 text-plum">
               <UserCheck className="h-4 w-4" /> Two-ID verify & draw
             </DialogTitle>
-            <DialogDescription>Confirm wristband + verbal ID before venipuncture.</DialogDescription>
+            <DialogDescription>
+              Confirm wristband + verbal ID before venipuncture.
+            </DialogDescription>
           </DialogHeader>
-          {collectFor && (() => {
-            const p = getPatient(collectFor, patients);
-            const cat = findCatalog(collectFor.test_code);
-            const isNonAdequate = condition && condition !== "Adequate";
-            return (
-              <div className="space-y-4">
-                <div className="rounded-lg border border-plum/30 bg-plum-soft/50 p-4">
-                  <div className="font-display text-lg font-semibold">{p?.name}</div>
-                  <div className="text-sm text-ink-600">{p?.mrn} · DOB age {p?.age} · {p?.phone}</div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div><span className="text-ink-400">Tube required</span><div className="font-medium">{cat?.tube}</div></div>
-                  <div><span className="text-ink-400">Volume</span><div className="font-medium">~4 mL</div></div>
-                  <div><span className="text-ink-400">Test</span><div className="font-medium">{collectFor.test_code}</div></div>
-                  <div><span className="text-ink-400">Fasting</span><div className="font-medium">{collectFor.fasting ? "Required" : "Not required"}</div></div>
-                </div>
-
-                {/* Specimen Condition — required field */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold uppercase tracking-wide">
-                    Specimen Condition <span className="text-clay">*</span>
-                  </Label>
-                  <select
-                    value={condition}
-                    onChange={(e) => setCondition(e.target.value)}
-                    className="w-full rounded-md border border-ink-200 bg-white px-3 py-2 text-sm outline-none focus:border-plum focus:ring-1 focus:ring-plum/20"
-                  >
-                    <option value="">— Select condition —</option>
-                    <option value="Adequate">✅ Adequate</option>
-                    <option value="Hemolyzed">⚠️ Hemolyzed</option>
-                    <option value="Lipemic">⚠️ Lipemic</option>
-                    <option value="Clotted">🚫 Clotted</option>
-                    <option value="Insufficient volume">🚫 Insufficient volume</option>
-                  </select>
-                </div>
-
-                {/* Warning banner for non-adequate */}
-                {isNonAdequate && (
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12px] text-amber-800">
-                    <div className="font-bold mb-0.5">⚠️ Non-adequate specimen</div>
-                    <div>Bench processing will be <strong>blocked</strong> until a Lab Supervisor grants an override. Record why sample is being accepted below.</div>
+          {collectFor &&
+            (() => {
+              const p = getPatient(collectFor, patients);
+              const cat = findCatalog(collectFor.test_code);
+              const isNonAdequate = condition && condition !== "Adequate";
+              return (
+                <div className="space-y-4">
+                  <div className="rounded-lg border border-plum/30 bg-plum-soft/50 p-4">
+                    <div className="font-display text-lg font-semibold">{p?.name}</div>
+                    <div className="text-sm text-ink-600">
+                      {p?.mrn} · DOB age {p?.age} · {p?.phone}
+                    </div>
                   </div>
-                )}
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-ink-400">Tube required</span>
+                      <div className="font-medium">{cat?.tube}</div>
+                    </div>
+                    <div>
+                      <span className="text-ink-400">Volume</span>
+                      <div className="font-medium">~4 mL</div>
+                    </div>
+                    <div>
+                      <span className="text-ink-400">Test</span>
+                      <div className="font-medium">{collectFor.test_code}</div>
+                    </div>
+                    <div>
+                      <span className="text-ink-400">Fasting</span>
+                      <div className="font-medium">
+                        {collectFor.fasting ? "Required" : "Not required"}
+                      </div>
+                    </div>
+                  </div>
 
-                <div>
-                  <Label className="text-xs">Draw note {isNonAdequate && <span className="text-clay font-bold">(required — reason for accepting non-adequate sample)</span>}</Label>
-                  <Input
-                    placeholder={isNonAdequate ? "e.g. patient difficult draw, only sample available — supervisor notified" : "e.g. difficult vein, right antecubital"}
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
+                  {/* Specimen Condition — required field */}
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold uppercase tracking-wide">
+                      Specimen Condition <span className="text-clay">*</span>
+                    </Label>
+                    <select
+                      value={condition}
+                      onChange={(e) => setCondition(e.target.value)}
+                      className="w-full rounded-md border border-ink-200 bg-white px-3 py-2 text-sm outline-none focus:border-plum focus:ring-1 focus:ring-plum/20"
+                    >
+                      <option value="">— Select condition —</option>
+                      <option value="Adequate">✅ Adequate</option>
+                      <option value="Hemolyzed">⚠️ Hemolyzed</option>
+                      <option value="Lipemic">⚠️ Lipemic</option>
+                      <option value="Clotted">🚫 Clotted</option>
+                      <option value="Insufficient volume">🚫 Insufficient volume</option>
+                    </select>
+                  </div>
+
+                  {/* Warning banner for non-adequate */}
+                  {isNonAdequate && (
+                    <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12px] text-amber-800">
+                      <div className="font-bold mb-0.5">⚠️ Non-adequate specimen</div>
+                      <div>
+                        Bench processing will be <strong>blocked</strong> until a Lab Supervisor
+                        grants an override. Record why sample is being accepted below.
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <Label className="text-xs">
+                      Draw note{" "}
+                      {isNonAdequate && (
+                        <span className="text-clay font-bold">
+                          (required — reason for accepting non-adequate sample)
+                        </span>
+                      )}
+                    </Label>
+                    <Input
+                      placeholder={
+                        isNonAdequate
+                          ? "e.g. patient difficult draw, only sample available — supervisor notified"
+                          : "e.g. difficult vein, right antecubital"
+                      }
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })()}
+              );
+            })()}
           <DialogFooter>
-            <Button variant="ghost" onClick={() => { setCollectFor(null); setCondition(""); }}>Cancel</Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setCollectFor(null);
+                setCondition("");
+              }}
+            >
+              Cancel
+            </Button>
             <Button
               className="bg-plum text-white hover:bg-plum/90"
               disabled={!condition || (condition !== "Adequate" && !note.trim())}
@@ -253,12 +327,27 @@ export default function Collection() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Cannot collect</DialogTitle>
-            <DialogDescription>Patient not fasting, refused draw, or wrong order.</DialogDescription>
+            <DialogDescription>
+              Patient not fasting, refused draw, or wrong order.
+            </DialogDescription>
           </DialogHeader>
-          <Textarea placeholder="Reason…" value={reason} onChange={(e) => setReason(e.target.value)} />
+          <Textarea
+            placeholder="Reason…"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setRejectFor(null)}>Back</Button>
-            <Button className="bg-clay text-white" disabled={!reason.trim()} onClick={() => { rejectCollect(rejectFor!.id, reason); setRejectFor(null); }}>
+            <Button variant="ghost" onClick={() => setRejectFor(null)}>
+              Back
+            </Button>
+            <Button
+              className="bg-clay text-white"
+              disabled={!reason.trim()}
+              onClick={() => {
+                rejectCollect(rejectFor!.id, reason);
+                setRejectFor(null);
+              }}
+            >
               Return to queue
             </Button>
           </DialogFooter>
@@ -268,8 +357,10 @@ export default function Collection() {
       {queue.length > 0 && (
         <p className="text-center text-[12px] text-ink-400">
           After collection, specimens appear in{" "}
-          <Link to="/lab/samples" className="text-plum hover:underline">My samples</Link>
-          {" "}for rack placement and chain-of-custody.
+          <Link to="/lab/samples" className="text-plum hover:underline">
+            My samples
+          </Link>{" "}
+          for rack placement and chain-of-custody.
         </p>
       )}
     </div>

@@ -51,9 +51,7 @@ export async function buildChefAssistantReply(
     const lines = [
       `Based on your medications (${ctx.medNames.join(", ")}), here are clinical meal rules:`,
       ...ctx.restrictions.map((r) => `• ${r}`),
-      ctx.timingNotes.length
-        ? `\nTiming: ${ctx.timingNotes.slice(0, 2).join(" · ")}`
-        : "",
+      ctx.timingNotes.length ? `\nTiming: ${ctx.timingNotes.slice(0, 2).join(" · ")}` : "",
       mealIdeas,
     ];
     return { content: lines.filter(Boolean).join("\n") };

@@ -35,15 +35,15 @@ export function DoctorHomeHeader({ className }: { className?: string }) {
             {displayName}
           </h1>
           <p className="mt-0.5 text-sm font-medium text-[#B8735D]">{specialtyLabel}</p>
-          <p className="mt-2 text-[10px] font-medium tracking-[0.1em] text-[#8A8F8C]">{formatDate()}</p>
+          <p className="mt-2 text-[10px] font-medium tracking-[0.1em] text-[#8A8F8C]">
+            {formatDate()}
+          </p>
         </div>
         <Link
           to="/doctor/settings/notifications"
           className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#E8E4DF] bg-white text-[#8A8F8C] transition-colors hover:bg-[#FAFAF8] hover:text-[#1B3B2E]"
           aria-label={
-            notificationBadge > 0
-              ? `Notifications, ${notificationBadge} unread`
-              : "Notifications"
+            notificationBadge > 0 ? `Notifications, ${notificationBadge} unread` : "Notifications"
           }
         >
           <Bell className="h-[18px] w-[18px]" strokeWidth={1.75} />

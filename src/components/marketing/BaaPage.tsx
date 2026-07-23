@@ -2,9 +2,21 @@ import { MarketingFooter, MarketingHeader } from "@/components/marketing/Marketi
 import { LEGAL_CONTACT, LEGAL_ENTITY, salesMailto } from "@/lib/legal-content";
 
 const DOWNLOADS = [
-  { href: "/legal/baa-template.md", label: "BAA template (.md)", desc: "HIPAA Business Associate Agreement draft" },
-  { href: "/legal/dpa-template.md", label: "DPA template (.md)", desc: "Data Processing Agreement draft" },
-  { href: "/legal/subprocessors.md", label: "Subprocessors list", desc: "Current infrastructure processors" },
+  {
+    href: "/legal/baa-template.md",
+    label: "BAA template (.md)",
+    desc: "HIPAA Business Associate Agreement draft",
+  },
+  {
+    href: "/legal/dpa-template.md",
+    label: "DPA template (.md)",
+    desc: "Data Processing Agreement draft",
+  },
+  {
+    href: "/legal/subprocessors.md",
+    label: "Subprocessors list",
+    desc: "Current infrastructure processors",
+  },
 ];
 
 export default function BaaPage() {
@@ -44,15 +56,19 @@ export default function BaaPage() {
           <section className="rounded-2xl border border-[#E8E4DE] bg-white p-5">
             <h2 className="font-serif text-lg font-semibold">Data Processing Agreement (DPA)</h2>
             <p className="mt-2">
-              For jurisdictions requiring processor terms: roles, subprocessors (Cloudflare, Supabase,
-              optional Stripe/AI under BAA flags), international transfers, and audit rights.
+              For jurisdictions requiring processor terms: roles, subprocessors (Cloudflare,
+              Supabase, optional Stripe/AI under BAA flags), international transfers, and audit
+              rights.
             </p>
           </section>
           <section className="rounded-2xl border border-[#E8E4DE] bg-white p-5">
             <h2 className="font-serif text-lg font-semibold">Countersigned pack</h2>
             <p className="mt-2">
               Email{" "}
-              <a className="font-semibold text-[#B8735D]" href={salesMailto("Request BAA / DPA pack")}>
+              <a
+                className="font-semibold text-[#B8735D]"
+                href={salesMailto("Request BAA / DPA pack")}
+              >
                 sales
               </a>{" "}
               or {LEGAL_CONTACT} with your hospital legal name and intended go-live date after

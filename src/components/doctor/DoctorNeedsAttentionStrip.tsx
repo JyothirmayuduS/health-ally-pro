@@ -8,7 +8,9 @@ export function DoctorNeedsAttentionStrip() {
 
   return (
     <section aria-label="Needs attention">
-      <h2 className="mb-2 text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">NEEDS ATTENTION</h2>
+      <h2 className="mb-2 text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">
+        NEEDS ATTENTION
+      </h2>
       <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none lg:flex-wrap lg:overflow-visible">
         {items.map((item) => (
           <Link

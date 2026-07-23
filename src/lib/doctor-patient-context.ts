@@ -39,7 +39,11 @@ export function toEncounterPatientId(patientId: string): string {
 
 /** Patients for clinical module pickers — panel is canonical */
 export function listClinicalPatients() {
-  return PANEL_PATIENTS.map((p) => ({ id: p.id, name: p.name, encounterId: toEncounterPatientId(p.id) }));
+  return PANEL_PATIENTS.map((p) => ({
+    id: p.id,
+    name: p.name,
+    encounterId: toEncounterPatientId(p.id),
+  }));
 }
 
 export function clinicalSearchParams(patientId: string) {

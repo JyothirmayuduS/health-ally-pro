@@ -42,10 +42,16 @@ export function StaffPortalShell({ portal }: Props) {
           })}
         </nav>
         <div className="mt-auto space-y-3">
-          <Link to="/" className="block text-xs font-medium uppercase tracking-widest text-clay hover:text-ink">
+          <Link
+            to="/"
+            className="block text-xs font-medium uppercase tracking-widest text-clay hover:text-ink"
+          >
             Medora home
           </Link>
-          <Link to="/app" className="block text-xs font-medium uppercase tracking-widest text-clay hover:text-ink">
+          <Link
+            to="/app"
+            className="block text-xs font-medium uppercase tracking-widest text-clay hover:text-ink"
+          >
             Patient app →
           </Link>
           <button
@@ -63,7 +69,10 @@ export function StaffPortalShell({ portal }: Props) {
           <aside className="absolute inset-y-0 left-0 w-72 bg-sidebar p-6">
             <div className="flex items-center justify-between">
               <PortalBrand portal={portal} label={label} accent={accent} />
-              <button onClick={() => setOpen(false)} className="rounded-full p-2 hover:bg-surface-2">
+              <button
+                onClick={() => setOpen(false)}
+                className="rounded-full p-2 hover:bg-surface-2"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>

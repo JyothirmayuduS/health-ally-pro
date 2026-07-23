@@ -26,7 +26,7 @@ export default function Controlled() {
       <div className="flex rounded-md border border-ink-200 bg-stone-50 p-0.5 max-w-sm">
         {[
           { value: "narcotic", label: "Controlled Substance Register" },
-          { value: "ddi", label: "DDI Overrides History" }
+          { value: "ddi", label: "DDI Overrides History" },
         ].map((t) => (
           <button
             key={t.value}
@@ -34,7 +34,9 @@ export default function Controlled() {
             onClick={() => setTab(t.value as any)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
-              tab === t.value ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-700",
+              tab === t.value
+                ? "bg-white text-ink-900 shadow-sm"
+                : "text-ink-500 hover:text-ink-700",
             )}
           >
             {t.label}
@@ -45,7 +47,8 @@ export default function Controlled() {
       {tab === "narcotic" && (
         <>
           <div className="rounded-lg border border-plum/30 bg-plum-soft/30 px-4 py-3 text-[13px] text-ink-600">
-            <strong className="text-plum">DEA compliance.</strong> All Schedule II–IV movements require pharmacist ID and witness signature on dispense.
+            <strong className="text-plum">DEA compliance.</strong> All Schedule II–IV movements
+            require pharmacist ID and witness signature on dispense.
           </div>
 
           <div className="surface overflow-hidden">
@@ -63,7 +66,11 @@ export default function Controlled() {
               </thead>
               <tbody>
                 {controlled.length === 0 ? (
-                  <tr><td colSpan={7}><EmptyState icon={ShieldAlert} title="No entries yet" /></td></tr>
+                  <tr>
+                    <td colSpan={7}>
+                      <EmptyState icon={ShieldAlert} title="No entries yet" />
+                    </td>
+                  </tr>
                 ) : (
                   controlled.map((e) => {
                     const drug = findDrug(e.drug_id);
@@ -87,13 +94,20 @@ export default function Controlled() {
 
           {controlledDrugs.length > 0 && (
             <div className="surface p-5">
-              <h3 className="font-heading text-[16px] font-semibold text-plum">Pending controlled dispenses</h3>
+              <h3 className="font-heading text-[16px] font-semibold text-plum">
+                Pending controlled dispenses
+              </h3>
               <div className="mt-3 space-y-2">
                 {controlledDrugs.map(({ rx, drug }) => {
                   const patient = getPatient(rx, patients);
                   return (
-                    <div key={`${rx.id}-${drug.id}`} className="flex items-center justify-between rounded-md border border-plum/20 px-4 py-2 text-[13px]">
-                      <span>{drug.generic_name} — {patient?.name}</span>
+                    <div
+                      key={`${rx.id}-${drug.id}`}
+                      className="flex items-center justify-between rounded-md border border-plum/20 px-4 py-2 text-[13px]"
+                    >
+                      <span>
+                        {drug.generic_name} — {patient?.name}
+                      </span>
                       <span className="font-mono text-ink-400">{rx.rx_number}</span>
                     </div>
                   );
@@ -107,7 +121,8 @@ export default function Controlled() {
       {tab === "ddi" && (
         <>
           <div className="rounded-lg border border-clay/30 bg-clay-soft/30 px-4 py-3 text-[13px] text-ink-600">
-            <strong className="text-clay">Clinical Safety Overrides.</strong> Review overrides of clinical drug-drug interactions logged during dispensing.
+            <strong className="text-clay">Clinical Safety Overrides.</strong> Review overrides of
+            clinical drug-drug interactions logged during dispensing.
           </div>
 
           <div className="surface overflow-hidden">
@@ -124,25 +139,42 @@ export default function Controlled() {
               </thead>
               <tbody>
                 {ddiOverrides.length === 0 ? (
-                  <tr><td colSpan={6}><EmptyState icon={AlertTriangle} title="No overrides recorded" hint="All interaction alerts are logged here if overridden." /></td></tr>
+                  <tr>
+                    <td colSpan={6}>
+                      <EmptyState
+                        icon={AlertTriangle}
+                        title="No overrides recorded"
+                        hint="All interaction alerts are logged here if overridden."
+                      />
+                    </td>
+                  </tr>
                 ) : (
                   ddiOverrides.map((o) => (
                     <tr key={o.id} className="border-b border-stone-100 text-[13px]">
                       <td className="px-4 py-3 text-[12px]">{formatDateTime(o.timestamp)}</td>
                       <td className="px-4 py-3 font-mono font-medium">{o.rxRef}</td>
                       <td className="px-4 py-3">
-                        <span className="font-semibold text-ink-900">{o.drugA}</span> + <span className="font-semibold text-ink-900">{o.drugB}</span>
+                        <span className="font-semibold text-ink-900">{o.drugA}</span> +{" "}
+                        <span className="font-semibold text-ink-900">{o.drugB}</span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={cn(
-                          "px-2 py-0.5 text-[10px] font-bold uppercase rounded border",
-                          o.severity === "major" ? "bg-clay-soft border-clay text-clay" : o.severity === "moderate" ? "bg-mustard-soft border-mustard text-mustard" : "bg-teal-soft border-teal text-teal"
-                        )}>
+                        <span
+                          className={cn(
+                            "px-2 py-0.5 text-[10px] font-bold uppercase rounded border",
+                            o.severity === "major"
+                              ? "bg-clay-soft border-clay text-clay"
+                              : o.severity === "moderate"
+                                ? "bg-mustard-soft border-mustard text-mustard"
+                                : "bg-teal-soft border-teal text-teal",
+                          )}
+                        >
                           {o.severity}
                         </span>
                       </td>
                       <td className="px-4 py-3">{o.pharmacistId}</td>
-                      <td className="px-4 py-3 text-ink-600 max-w-xs truncate" title={o.reason}>{o.reason}</td>
+                      <td className="px-4 py-3 text-ink-600 max-w-xs truncate" title={o.reason}>
+                        {o.reason}
+                      </td>
                     </tr>
                   ))
                 )}

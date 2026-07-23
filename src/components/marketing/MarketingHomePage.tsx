@@ -29,8 +29,8 @@ export default function MarketingHomePage() {
               Specialty-true hospital software — license it for your campus.
             </h1>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-[#5C6B63] sm:text-base">
-              Assign a doctor’s specialty. They get the matching clinical desk and 3D anatomy —
-              not another generic EMR screen.
+              Assign a doctor’s specialty. They get the matching clinical desk and 3D anatomy — not
+              another generic EMR screen.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -52,8 +52,7 @@ export default function MarketingHomePage() {
           <div
             className="relative min-h-[280px] overflow-hidden rounded-[2px] sm:min-h-[360px]"
             style={{
-              background:
-                "linear-gradient(145deg, #1B3B2E 0%, #2A5342 45%, #3D6B55 100%)",
+              background: "linear-gradient(145deg, #1B3B2E 0%, #2A5342 45%, #3D6B55 100%)",
             }}
           >
             <div

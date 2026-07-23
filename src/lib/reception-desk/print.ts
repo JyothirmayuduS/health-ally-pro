@@ -1,7 +1,8 @@
 // Real print utilities — opens a new window with formatted HTML and triggers print.
 import type { Invoice, InvoiceItem } from "./store";
 
-const fmt = (n: number | string | null | undefined) => `Rs. ${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | null | undefined) =>
+  `Rs. ${Number(n || 0).toLocaleString("en-IN")}`;
 
 const HOSPITAL = {
   name: "Oak Haven Medical",
@@ -204,10 +205,7 @@ export function printDaySheet({
   noShows: DaySheetNoShowRow[];
 }) {
   const methodRows = byMethod
-    .map(
-      (m) =>
-        `<tr><td>${m.method}</td><td class="right mono">${fmt(m.value)}</td></tr>`,
-    )
+    .map((m) => `<tr><td>${m.method}</td><td class="right mono">${fmt(m.value)}</td></tr>`)
     .join("");
   const docRows = byDoctor
     .map(
@@ -223,10 +221,7 @@ export function printDaySheet({
     .join("");
   const nsRows = noShows.length
     ? noShows
-        .map(
-          (n) =>
-            `<tr><td>${n.time}</td><td>${n.patient}</td><td>${n.doctor}</td></tr>`,
-        )
+        .map((n) => `<tr><td>${n.time}</td><td>${n.patient}</td><td>${n.doctor}</td></tr>`)
         .join("")
     : `<tr><td colspan="3" class="center sm">No-shows: none recorded</td></tr>`;
   const body = `
@@ -306,11 +301,17 @@ export function printDayReport({
   cancellations: Record<string, number>;
 }) {
   const methodRows = Object.entries(collections)
-    .map(([method, amount]) => `<tr><td>${method.toUpperCase()}</td><td class="right mono">${fmt(amount)}</td></tr>`)
+    .map(
+      ([method, amount]) =>
+        `<tr><td>${method.toUpperCase()}</td><td class="right mono">${fmt(amount)}</td></tr>`,
+    )
     .join("");
 
   const serviceRows = topServices
-    .map((s, idx) => `<tr><td class="mono">#${idx + 1}</td><td>${s.name}</td><td class="right mono">${s.count}</td><td class="right mono">${fmt(s.revenue)}</td></tr>`)
+    .map(
+      (s, idx) =>
+        `<tr><td class="mono">#${idx + 1}</td><td>${s.name}</td><td class="right mono">${s.count}</td><td class="right mono">${fmt(s.revenue)}</td></tr>`,
+    )
     .join("");
 
   const cancelRows = Object.entries(cancellations)

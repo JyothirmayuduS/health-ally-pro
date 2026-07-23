@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  HOSPITAL_SCOPED_TABLES,
-  PERSIST_API_SCOPED_TABLES,
-} from "@/server/hospital-scoped-tables";
+import { HOSPITAL_SCOPED_TABLES, PERSIST_API_SCOPED_TABLES } from "@/server/hospital-scoped-tables";
 
 /**
  * Live pg_policies inventory (project wsnpwyqypgclsclktoyf, after

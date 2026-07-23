@@ -32,8 +32,8 @@ export default function SecurityPage() {
           <section className="rounded-2xl border border-[#E8E4DE] bg-white p-5">
             <h2 className="font-serif text-lg font-semibold">Customer responsibilities</h2>
             <p className="mt-3">
-              The hospital remains controller of PHI. Complete DPA/BAA before live patient data.
-              Do not enable demo auth on production patient systems.
+              The hospital remains controller of PHI. Complete DPA/BAA before live patient data. Do
+              not enable demo auth on production patient systems.
             </p>
           </section>
           <p>
@@ -42,7 +42,10 @@ export default function SecurityPage() {
               {SECURITY_CONTACT}
             </a>
             {" · "}
-            <a className="font-semibold text-[#B8735D]" href={salesMailto("Security questionnaire")}>
+            <a
+              className="font-semibold text-[#B8735D]"
+              href={salesMailto("Security questionnaire")}
+            >
               Request security pack
             </a>
           </p>

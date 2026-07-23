@@ -19,8 +19,7 @@ export function ChipGroup<T extends string>({
 }: ChipGroupProps<T>) {
   const normalized = options.map((o) => (typeof o === "string" ? { id: o, label: o } : o));
 
-  const isSelected = (id: T) =>
-    multiple ? (value as T[]).includes(id) : value === id;
+  const isSelected = (id: T) => (multiple ? (value as T[]).includes(id) : value === id);
 
   const toggle = (id: T) => {
     if (multiple) {
@@ -34,14 +33,11 @@ export function ChipGroup<T extends string>({
   return (
     <div className="min-w-0">
       {label ? (
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[#ADADAD]">{label}</p>
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-[#ADADAD]">
+          {label}
+        </p>
       ) : null}
-      <div
-        className={cn(
-          "flex flex-wrap gap-1.5",
-          compact && "max-h-24 overflow-y-auto pr-1",
-        )}
-      >
+      <div className={cn("flex flex-wrap gap-1.5", compact && "max-h-24 overflow-y-auto pr-1")}>
         {normalized.map((opt) => (
           <button
             key={opt.id}

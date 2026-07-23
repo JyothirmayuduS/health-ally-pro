@@ -70,10 +70,20 @@ function DoctorPatientTasks() {
               <Circle className="mt-0.5 h-5 w-5 shrink-0 text-[#C5D9C0]" strokeWidth={1.75} />
             )}
             <div className="min-w-0 flex-1">
-              <p className={cn("text-sm", task.done ? "text-[#ADADAD] line-through" : "font-medium text-[#1B3B2E]")}>
+              <p
+                className={cn(
+                  "text-sm",
+                  task.done ? "text-[#ADADAD] line-through" : "font-medium text-[#1B3B2E]",
+                )}
+              >
                 {task.title}
               </p>
-              <p className={cn("mt-0.5 text-xs", task.urgent && !task.done ? "font-medium text-[#C45C4A]" : "text-[#8A8F8C]")}>
+              <p
+                className={cn(
+                  "mt-0.5 text-xs",
+                  task.urgent && !task.done ? "font-medium text-[#C45C4A]" : "text-[#8A8F8C]",
+                )}
+              >
                 {task.patientName} · {task.due}
               </p>
             </div>

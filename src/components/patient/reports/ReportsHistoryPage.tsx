@@ -96,9 +96,7 @@ export function ReportsHistoryPage({ reports = mockReports }: { reports?: Report
   );
 
   const uploadCount = history.filter((e) => e.kind === "upload").length;
-  const shareCount = history.filter(
-    (e) => e.kind === "share" || e.kind === "access",
-  ).length;
+  const shareCount = history.filter((e) => e.kind === "share" || e.kind === "access").length;
 
   const grouped = useMemo(() => {
     const map = new Map<string, HistoryEntry[]>();
@@ -331,11 +329,7 @@ function HistoryRow({
 
   if (entry.reportId) {
     return (
-      <Link
-        to="/reports/$reportId"
-        params={{ reportId: entry.reportId }}
-        className="block"
-      >
+      <Link to="/reports/$reportId" params={{ reportId: entry.reportId }} className="block">
         {content}
       </Link>
     );

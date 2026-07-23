@@ -12,7 +12,7 @@ export interface CriticalAlert {
 
 export function checkCriticalValues(
   results: Record<string, string> | undefined | null,
-  parameters: CatalogParameter[] | undefined | null
+  parameters: CatalogParameter[] | undefined | null,
 ): CriticalAlert[] {
   if (!results || !parameters) return [];
   const alerts: CriticalAlert[] = [];

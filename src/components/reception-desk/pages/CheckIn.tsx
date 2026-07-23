@@ -80,7 +80,9 @@ function TokenCard({
 
       {/* Token number — hero */}
       <div className="flex flex-col items-center px-6 pt-6 pb-4">
-        <div className="text-[9px] uppercase tracking-[0.2em] text-ink-400 font-mono mb-1">Now serving</div>
+        <div className="text-[9px] uppercase tracking-[0.2em] text-ink-400 font-mono mb-1">
+          Now serving
+        </div>
         <div
           className="text-[80px] leading-none font-heading font-bold tabular-nums"
           style={{ color: "#2c5e4e", textShadow: "0 2px 0 rgba(44,94,78,0.1)" }}
@@ -191,10 +193,7 @@ function EmptyTokenCard({ onWalkIn }: { onWalkIn: () => void }) {
           Check a patient in to issue their token.
         </div>
       </div>
-      <button
-        onClick={onWalkIn}
-        className="btn-primary mt-1 gap-2"
-      >
+      <button onClick={onWalkIn} className="btn-primary mt-1 gap-2">
         <Zap className="w-3.5 h-3.5" /> Quick walk-in
       </button>
     </div>
@@ -221,10 +220,7 @@ export default function CheckIn() {
     time: string;
   } | null>(null);
 
-  const today = useMemo(
-    () => appointments.filter((a) => a.date === TODAY_STR),
-    [appointments],
-  );
+  const today = useMemo(() => appointments.filter((a) => a.date === TODAY_STR), [appointments]);
 
   const arrivals = useMemo(() => {
     const list = appointments
@@ -244,10 +240,7 @@ export default function CheckIn() {
   }, [appointments, patients, q]);
 
   const recentlyCheckedIn = useMemo(
-    () =>
-      appointments
-        .filter((a) => a.date === TODAY_STR && a.status === "checked-in")
-        .slice(0, 6),
+    () => appointments.filter((a) => a.date === TODAY_STR && a.status === "checked-in").slice(0, 6),
     [appointments],
   );
 
@@ -268,7 +261,6 @@ export default function CheckIn() {
 
   return (
     <div data-testid="checkin-page" className="space-y-5">
-
       {/* ── Stat strip ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatChip label="Awaiting" value={scheduled} color="text-status-waitText" />
@@ -321,10 +313,8 @@ export default function CheckIn() {
 
       {/* ── Main two-column content area ────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
         {/* ── Arrivals list ────────────────────────────────── */}
         <section className="lg:col-span-8 surface flex flex-col" style={{ minHeight: "520px" }}>
-
           {/* Section header */}
           <div className="flex items-center gap-3 px-5 py-4 border-b border-ink-200">
             <div className="w-8 h-8 rounded-lg bg-status-waitBg flex items-center justify-center shrink-0">
@@ -356,11 +346,12 @@ export default function CheckIn() {
             {arrivals.map((a) => {
               const p = patients.find((x) => x.id === a.patientId);
               const d = doctors.find((x) => x.id === a.doctorId);
-              const initials = p?.name
-                .split(" ")
-                .map((s: string) => s[0])
-                .slice(0, 2)
-                .join("") ?? "?";
+              const initials =
+                p?.name
+                  .split(" ")
+                  .map((s: string) => s[0])
+                  .slice(0, 2)
+                  .join("") ?? "?";
 
               return (
                 <li
@@ -407,9 +398,7 @@ export default function CheckIn() {
                   {/* Doctor */}
                   <div className="hidden md:block min-w-0 w-44 shrink-0">
                     <div className="text-[12.5px] text-ink-900 truncate">{d?.name}</div>
-                    <div className="text-[11px] text-ink-400 font-mono truncate">
-                      Rm {d?.room}
-                    </div>
+                    <div className="text-[11px] text-ink-400 font-mono truncate">Rm {d?.room}</div>
                   </div>
 
                   {/* Check-in button */}
@@ -431,9 +420,7 @@ export default function CheckIn() {
                   <CheckCircle2 className="w-5 h-5 text-money" />
                 </div>
                 <div>
-                  <div className="text-[13.5px] font-medium text-ink-900">
-                    All caught up!
-                  </div>
+                  <div className="text-[13.5px] font-medium text-ink-900">All caught up!</div>
                   <div className="text-[12px] text-ink-400 mt-1">
                     {q ? "No results for your search." : "No scheduled arrivals remaining."}
                   </div>
@@ -474,7 +461,6 @@ export default function CheckIn() {
 
         {/* ── Right panel ─────────────────────────────────────── */}
         <aside className="lg:col-span-4 space-y-4">
-
           {/* Token card */}
           {lastToken ? (
             <TokenCard
@@ -533,8 +519,12 @@ export default function CheckIn() {
                 <Zap className="w-3.5 h-3.5 text-sage group-hover:text-white" />
               </div>
               <div className="flex-1 min-w-0 text-left">
-                <div className="text-[13px] font-medium text-sage group-hover:text-white">Quick walk-in</div>
-                <div className="text-[11px] text-sage/60 group-hover:text-white/70">One-flow: register → book → token</div>
+                <div className="text-[13px] font-medium text-sage group-hover:text-white">
+                  Quick walk-in
+                </div>
+                <div className="text-[11px] text-sage/60 group-hover:text-white/70">
+                  One-flow: register → book → token
+                </div>
               </div>
               <ChevronRight className="w-4 h-4 text-sage/50 group-hover:text-white/70 transition-colors shrink-0" />
             </button>

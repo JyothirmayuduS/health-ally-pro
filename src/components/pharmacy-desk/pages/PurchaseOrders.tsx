@@ -3,20 +3,30 @@ import { usePharmacyStore } from "@/lib/pharmacy-desk/store";
 import { SectionLabel, EmptyState, LocationChip } from "@/components/pharmacy-desk/Pills";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, X, Check, Truck, ShoppingBag, Receipt, AlertCircle, ShoppingCart } from "lucide-react";
-import { SUPPLIERS, type PurchaseOrder, type POItem, type GRN, type GRNItem } from "@/lib/pharmacy-desk/purchaseOrdersData";
+import {
+  Search,
+  Plus,
+  X,
+  Check,
+  Truck,
+  ShoppingBag,
+  Receipt,
+  AlertCircle,
+  ShoppingCart,
+} from "lucide-react";
+import {
+  SUPPLIERS,
+  type PurchaseOrder,
+  type POItem,
+  type GRN,
+  type GRNItem,
+} from "@/lib/pharmacy-desk/purchaseOrdersData";
 import { formatDateTime } from "@/lib/pharmacy-desk/utils";
 import { cn } from "@/lib/utils";
 
 export default function PurchaseOrders() {
-  const {
-    purchaseOrders,
-    grns,
-    drugs,
-    createPurchaseOrder,
-    cancelPurchaseOrder,
-    createGRN,
-  } = usePharmacyStore();
+  const { purchaseOrders, grns, drugs, createPurchaseOrder, cancelPurchaseOrder, createGRN } =
+    usePharmacyStore();
 
   const [activeTab, setActiveTab] = useState<"po" | "grn">("po");
 
@@ -26,7 +36,7 @@ export default function PurchaseOrders() {
   const [expectedDate, setExpectedDate] = useState("");
   const [poNotes, setPoNotes] = useState("");
   const [poItems, setPoItems] = useState<{ drugId: string; qty: number; cost: number }[]>([
-    { drugId: "", qty: 100, cost: 0.20 },
+    { drugId: "", qty: 100, cost: 0.2 },
   ]);
 
   // GRN Modal State
@@ -57,13 +67,13 @@ export default function PurchaseOrders() {
         condition: "Good",
         batchNumber: `LOT-GRN-${Date.now().toString().slice(-4)}`,
         expiryDate: new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-      }))
+      })),
     );
     setGrnModalOpen(true);
   };
 
   const handleAddPOLine = () => {
-    setPoItems([...poItems, { drugId: "", qty: 100, cost: 0.10 }]);
+    setPoItems([...poItems, { drugId: "", qty: 100, cost: 0.1 }]);
   };
 
   const handleRemovePOLine = (idx: number) => {
@@ -89,14 +99,15 @@ export default function PurchaseOrders() {
     createPurchaseOrder({
       supplier_name: selectedSupplier,
       order_date: new Date().toISOString().slice(0, 10),
-      expected_delivery_date: expectedDate || new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+      expected_delivery_date:
+        expectedDate || new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString().slice(0, 10),
       notes: poNotes,
       items,
     });
 
     setPoModalOpen(false);
     setPoNotes("");
-    setPoItems([{ drugId: "", qty: 100, cost: 0.20 }]);
+    setPoItems([{ drugId: "", qty: 100, cost: 0.2 }]);
   };
 
   const handleGRNSubmit = (e: React.FormEvent) => {
@@ -116,7 +127,7 @@ export default function PurchaseOrders() {
 
     // Check discrepancy
     const hasDiscrepancy = items.some(
-      (it) => it.qty_received < it.qty_ordered || it.qty_damaged > 0 || it.condition === "Damaged"
+      (it) => it.qty_received < it.qty_ordered || it.qty_damaged > 0 || it.condition === "Damaged",
     );
 
     createGRN({
@@ -133,15 +144,17 @@ export default function PurchaseOrders() {
 
   return (
     <div className="space-y-6">
-      <SectionLabel action={
-        <div className="flex gap-2">
-          {activeTab === "po" && (
-            <Button className="btn-primary" onClick={() => setPoModalOpen(true)}>
-              <Plus className="mr-1.5 h-4 w-4" /> New Purchase Order
-            </Button>
-          )}
-        </div>
-      }>
+      <SectionLabel
+        action={
+          <div className="flex gap-2">
+            {activeTab === "po" && (
+              <Button className="btn-primary" onClick={() => setPoModalOpen(true)}>
+                <Plus className="mr-1.5 h-4 w-4" /> New Purchase Order
+              </Button>
+            )}
+          </div>
+        }
+      >
         Procurement & GRN Logs
       </SectionLabel>
 
@@ -149,7 +162,7 @@ export default function PurchaseOrders() {
       <div className="flex rounded-md border border-ink-200 bg-stone-50 p-0.5 max-w-sm">
         {[
           { value: "po", label: "Purchase Orders" },
-          { value: "grn", label: "Goods Received (GRN)" }
+          { value: "grn", label: "Goods Received (GRN)" },
         ].map((t) => (
           <button
             key={t.value}
@@ -157,7 +170,9 @@ export default function PurchaseOrders() {
             onClick={() => setActiveTab(t.value as any)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
-              activeTab === t.value ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-700",
+              activeTab === t.value
+                ? "bg-white text-ink-900 shadow-sm"
+                : "text-ink-500 hover:text-ink-700",
             )}
           >
             {t.label}
@@ -183,7 +198,11 @@ export default function PurchaseOrders() {
             </thead>
             <tbody>
               {purchaseOrders.length === 0 ? (
-                <tr><td colSpan={8}><EmptyState icon={ShoppingCart} title="No purchase orders" /></td></tr>
+                <tr>
+                  <td colSpan={8}>
+                    <EmptyState icon={ShoppingCart} title="No purchase orders" />
+                  </td>
+                </tr>
               ) : (
                 purchaseOrders.map((po) => {
                   const qtyTotal = po.items.reduce((sum, it) => sum + it.qty_ordered, 0);
@@ -192,22 +211,30 @@ export default function PurchaseOrders() {
 
                   return (
                     <tr key={po.id} className="border-b border-stone-100 text-[13px]">
-                      <td className="px-4 py-3 font-mono font-medium text-ink-900">{po.po_number}</td>
+                      <td className="px-4 py-3 font-mono font-medium text-ink-900">
+                        {po.po_number}
+                      </td>
                       <td className="px-4 py-3">{po.supplier_name}</td>
                       <td className="px-4 py-3">{po.order_date}</td>
                       <td className="px-4 py-3 text-ink-500">{po.expected_delivery_date}</td>
                       <td className="px-4 py-3">
-                        <span className="font-semibold">{po.items.length} meds</span> ({qtyTotal} units)
+                        <span className="font-semibold">{po.items.length} meds</span> ({qtyTotal}{" "}
+                        units)
                       </td>
                       <td className="px-4 py-3 font-mono">₹{(po.total_value * 90).toFixed(2)}</td>
                       <td className="px-4 py-3">
-                        <span className={cn(
-                          "px-2 py-0.5 rounded border text-[10.5px] font-bold uppercase",
-                          po.status === "received" ? "bg-sage-soft border-sage text-sage" :
-                          po.status === "partially-received" ? "bg-mustard-soft border-mustard text-mustard" :
-                          po.status === "submitted" ? "bg-teal-soft border-teal text-teal" :
-                          "bg-bone border-ink-200 text-ink-400"
-                        )}>
+                        <span
+                          className={cn(
+                            "px-2 py-0.5 rounded border text-[10.5px] font-bold uppercase",
+                            po.status === "received"
+                              ? "bg-sage-soft border-sage text-sage"
+                              : po.status === "partially-received"
+                                ? "bg-mustard-soft border-mustard text-mustard"
+                                : po.status === "submitted"
+                                  ? "bg-teal-soft border-teal text-teal"
+                                  : "bg-bone border-ink-200 text-ink-400",
+                          )}
+                        >
                           {po.status}
                         </span>
                       </td>
@@ -260,7 +287,11 @@ export default function PurchaseOrders() {
             </thead>
             <tbody>
               {grns.length === 0 ? (
-                <tr><td colSpan={7}><EmptyState icon={Receipt} title="No GRN logs" /></td></tr>
+                <tr>
+                  <td colSpan={7}>
+                    <EmptyState icon={Receipt} title="No GRN logs" />
+                  </td>
+                </tr>
               ) : (
                 grns.map((g) => (
                   <tr key={g.id} className="border-b border-stone-100 text-[13px]">
@@ -273,11 +304,14 @@ export default function PurchaseOrders() {
                       <span className="font-semibold">{g.items.length} items logged</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className={cn(
-                        "px-2 py-0.5 rounded border text-[10.5px] font-bold uppercase",
-                        g.status === "complete" ? "bg-sage-soft border-sage text-sage" :
-                        "bg-clay-soft border-clay text-clay"
-                      )}>
+                      <span
+                        className={cn(
+                          "px-2 py-0.5 rounded border text-[10.5px] font-bold uppercase",
+                          g.status === "complete"
+                            ? "bg-sage-soft border-sage text-sage"
+                            : "bg-clay-soft border-clay text-clay",
+                        )}
+                      >
                         {g.status}
                       </span>
                     </td>
@@ -295,25 +329,33 @@ export default function PurchaseOrders() {
           <div className="w-full max-w-3xl bg-white rounded-lg shadow-xl border border-ink-200 overflow-hidden max-h-[90vh] flex flex-col">
             <div className="px-5 py-3 border-b border-ink-200 bg-stone-50 flex items-center justify-between">
               <h3 className="font-heading font-semibold text-ink-900">Create Purchase Order</h3>
-              <button onClick={() => setPoModalOpen(false)} className="btn-icon"><X className="h-4 w-4" /></button>
+              <button onClick={() => setPoModalOpen(false)} className="btn-icon">
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
             <form onSubmit={handlePOSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[12px] font-medium text-ink-600 mb-1">Supplier</label>
+                  <label className="block text-[12px] font-medium text-ink-600 mb-1">
+                    Supplier
+                  </label>
                   <select
                     value={selectedSupplier}
                     onChange={(e) => setSelectedSupplier(e.target.value)}
                     className="w-full h-9 px-2 border border-ink-200 bg-white text-[13px] rounded focus:outline-none"
                   >
                     {SUPPLIERS.map((s) => (
-                      <option key={s} value={s}>{s}</option>
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[12px] font-medium text-ink-600 mb-1">Expected Delivery Date</label>
+                  <label className="block text-[12px] font-medium text-ink-600 mb-1">
+                    Expected Delivery Date
+                  </label>
                   <input
                     type="date"
                     required
@@ -325,7 +367,9 @@ export default function PurchaseOrders() {
               </div>
 
               <div>
-                <label className="block text-[12px] font-medium text-ink-600 mb-1">Items List</label>
+                <label className="block text-[12px] font-medium text-ink-600 mb-1">
+                  Items List
+                </label>
                 <div className="border border-ink-200 rounded-md overflow-hidden bg-bone">
                   <table className="w-full text-xs">
                     <thead>
@@ -352,9 +396,13 @@ export default function PurchaseOrders() {
                               }}
                               className="w-full h-8 border border-ink-200 bg-white px-2 focus:outline-none"
                             >
-                              <option value="" disabled>Select drug...</option>
+                              <option value="" disabled>
+                                Select drug...
+                              </option>
                               {drugs.map((d) => (
-                                <option key={d.id} value={d.id}>{d.generic_name} {d.strength} ({d.form})</option>
+                                <option key={d.id} value={d.id}>
+                                  {d.generic_name} {d.strength} ({d.form})
+                                </option>
                               ))}
                             </select>
                           </td>
@@ -399,7 +447,13 @@ export default function PurchaseOrders() {
                     </tbody>
                   </table>
                   <div className="p-2 bg-stone-50 border-t border-ink-200">
-                    <Button type="button" size="sm" variant="outline" className="border-ink-200" onClick={handleAddPOLine}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="border-ink-200"
+                      onClick={handleAddPOLine}
+                    >
                       + Add Row
                     </Button>
                   </div>
@@ -417,7 +471,12 @@ export default function PurchaseOrders() {
               </div>
 
               <div className="flex gap-2 justify-end pt-3">
-                <Button type="button" variant="outline" className="border-ink-200" onClick={() => setPoModalOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="border-ink-200"
+                  onClick={() => setPoModalOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" className="btn-primary">
@@ -435,10 +494,16 @@ export default function PurchaseOrders() {
           <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl border border-ink-200 overflow-hidden max-h-[90vh] flex flex-col">
             <div className="px-5 py-3 border-b border-ink-200 bg-stone-50 flex items-center justify-between">
               <div>
-                <h3 className="font-heading font-semibold text-ink-900">Goods Received Note (GRN) Verification</h3>
-                <p className="text-[12px] text-ink-400">Linked to PO: {activePO.po_number} · Supplier: {activePO.supplier_name}</p>
+                <h3 className="font-heading font-semibold text-ink-900">
+                  Goods Received Note (GRN) Verification
+                </h3>
+                <p className="text-[12px] text-ink-400">
+                  Linked to PO: {activePO.po_number} · Supplier: {activePO.supplier_name}
+                </p>
               </div>
-              <button onClick={() => setGrnModalOpen(false)} className="btn-icon"><X className="h-4 w-4" /></button>
+              <button onClick={() => setGrnModalOpen(false)} className="btn-icon">
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
             <form onSubmit={handleGRNSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
@@ -535,7 +600,12 @@ export default function PurchaseOrders() {
               </div>
 
               <div className="flex gap-2 justify-end pt-3">
-                <Button type="button" variant="outline" className="border-ink-200" onClick={() => setGrnModalOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="border-ink-200"
+                  onClick={() => setGrnModalOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" className="btn-primary bg-sage hover:bg-sage/90 text-white">

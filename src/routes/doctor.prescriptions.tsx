@@ -15,8 +15,7 @@ type PrescriptionSearch = {
 export const Route = createFileRoute("/doctor/prescriptions")({
   validateSearch: (search: Record<string, unknown>): PrescriptionSearch => {
     const view = search.view;
-    const validView =
-      view === "write" || view === "sent" || view === "templates" ? view : "write";
+    const validView = view === "write" || view === "sent" || view === "templates" ? view : "write";
     return {
       patientId: typeof search.patientId === "string" ? search.patientId : undefined,
       view: validView,

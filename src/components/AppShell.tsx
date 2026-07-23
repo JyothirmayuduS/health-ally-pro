@@ -102,9 +102,7 @@ export function AppShell() {
         </nav>
         <div className="mt-auto rounded-2xl border border-border bg-surface p-5">
           <p className="label-eyebrow">Need help</p>
-          <p className="mt-2 font-serif text-lg leading-tight">
-            Speak with a care concierge.
-          </p>
+          <p className="mt-2 font-serif text-lg leading-tight">Speak with a care concierge.</p>
           <Link
             to="/profile/messages"
             className="mt-4 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-clay transition-colors hover:text-ink"
@@ -141,14 +139,14 @@ export function AppShell() {
                       ? isHealthRoute(location.pathname)
                       : location.pathname.startsWith(item.to);
                 return (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="nav-item text-sm font-medium"
-                data-active={active}
-                aria-current={active ? "page" : undefined}
-              >
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className="nav-item text-sm font-medium"
+                    data-active={active}
+                    aria-current={active ? "page" : undefined}
+                  >
                     <Icon className="h-4 w-4" strokeWidth={1.75} />
                     <span>{item.label}</span>
                   </Link>
@@ -162,63 +160,63 @@ export function AppShell() {
       {/* Main */}
       <div className="lg:pl-64">
         {!hideTopHeader && (
-        <header className="sticky top-0 z-30 border-b border-border bg-[#F9F7F2]/90 backdrop-blur-sm pt-[env(safe-area-inset-top)] lg:block">
-          <div className="flex items-center gap-4 px-6 py-4 lg:px-10">
-            <button
-              onClick={() => setOpen(true)}
-              className="rounded-full border border-border p-2 text-ink-muted hover:bg-surface-2 lg:hidden"
-              aria-label="Open menu"
-            >
-              <Menu className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => openPatientSearch()}
-              className="relative flex-1 max-w-md rounded-full border border-border bg-surface py-2.5 pl-10 pr-4 text-left text-sm text-ink-muted md:hidden"
-              aria-label="Search"
-            >
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-              Search doctors, reports, meds…
-            </button>
-            <button
-              type="button"
-              onClick={() => openPatientSearch()}
-              className="relative hidden flex-1 max-w-md md:block"
-              aria-label="Search"
-            >
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
-              <span className="block w-full rounded-full border border-border bg-surface py-2.5 pl-10 pr-4 text-left text-sm text-ink-muted">
+          <header className="sticky top-0 z-30 border-b border-border bg-[#F9F7F2]/90 backdrop-blur-sm pt-[env(safe-area-inset-top)] lg:block">
+            <div className="flex items-center gap-4 px-6 py-4 lg:px-10">
+              <button
+                onClick={() => setOpen(true)}
+                className="rounded-full border border-border p-2 text-ink-muted hover:bg-surface-2 lg:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => openPatientSearch()}
+                className="relative flex-1 max-w-md rounded-full border border-border bg-surface py-2.5 pl-10 pr-4 text-left text-sm text-ink-muted md:hidden"
+                aria-label="Search"
+              >
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
                 Search doctors, reports, meds…
-                <kbd className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-ink-muted lg:inline">
-                  ⌘K
-                </kbd>
-              </span>
-            </button>
-            <div className="ml-auto flex items-center gap-3">
-              <Link
-                to="/profile/notifications"
-                aria-label="Notifications"
-                className="relative rounded-full border border-border bg-surface p-2.5 text-ink transition-colors hover:bg-surface-2"
+              </button>
+              <button
+                type="button"
+                onClick={() => openPatientSearch()}
+                className="relative hidden flex-1 max-w-md md:block"
+                aria-label="Search"
               >
-                <Bell className="h-4 w-4" strokeWidth={1.75} />
-                {unreadCount > 0 ? (
-                  <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-clay animate-pulse-soft" />
-                ) : null}
-              </Link>
-              <Link
-                to="/profile"
-                className="flex items-center gap-3 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-4 transition-colors hover:bg-surface-2"
-              >
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-clay-soft font-serif text-sm text-ink">
-                  {patient.initials}
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                <span className="block w-full rounded-full border border-border bg-surface py-2.5 pl-10 pr-4 text-left text-sm text-ink-muted">
+                  Search doctors, reports, meds…
+                  <kbd className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-ink-muted lg:inline">
+                    ⌘K
+                  </kbd>
                 </span>
-                <span className="hidden text-sm font-medium sm:inline">
-                  {patient.name.split(" ")[0]}
-                </span>
-              </Link>
+              </button>
+              <div className="ml-auto flex items-center gap-3">
+                <Link
+                  to="/profile/notifications"
+                  aria-label="Notifications"
+                  className="relative rounded-full border border-border bg-surface p-2.5 text-ink transition-colors hover:bg-surface-2"
+                >
+                  <Bell className="h-4 w-4" strokeWidth={1.75} />
+                  {unreadCount > 0 ? (
+                    <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-clay animate-pulse-soft" />
+                  ) : null}
+                </Link>
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-4 transition-colors hover:bg-surface-2"
+                >
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-clay-soft font-serif text-sm text-ink">
+                    {patient.initials}
+                  </span>
+                  <span className="hidden text-sm font-medium sm:inline">
+                    {patient.name.split(" ")[0]}
+                  </span>
+                </Link>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
         )}
 
         <main
@@ -266,9 +264,7 @@ function Brand() {
         <span className="font-serif text-lg leading-none">M</span>
       </span>
       <span>
-        <span className="block font-serif text-xl leading-none tracking-tight">
-          Medora
-        </span>
+        <span className="block font-serif text-xl leading-none tracking-tight">Medora</span>
         <span className="block text-[10px] uppercase tracking-[0.2em] text-ink-muted">
           Care · Curated
         </span>

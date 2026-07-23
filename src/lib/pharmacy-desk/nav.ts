@@ -51,10 +51,28 @@ export const PHARMACY_NAV: PharmacyNavSection[] = [
   {
     title: "Queue",
     items: [
-      { to: "/pharmacy/prescriptions", label: "Prescriptions inbox", icon: Pill, countKey: "inbox", urgentBadge: true },
-      { to: "/pharmacy/billing", label: "Billing counter", icon: Receipt, countKey: "billing", urgentBadge: true },
+      {
+        to: "/pharmacy/prescriptions",
+        label: "Prescriptions inbox",
+        icon: Pill,
+        countKey: "inbox",
+        urgentBadge: true,
+      },
+      {
+        to: "/pharmacy/billing",
+        label: "Billing counter",
+        icon: Receipt,
+        countKey: "billing",
+        urgentBadge: true,
+      },
       { to: "/pharmacy/dispense", label: "Dispense counter", icon: Package, countKey: "dispense" },
-      { to: "/pharmacy/ward", label: "Ward deliveries", icon: BedDouble, countKey: "ward", urgentBadge: true },
+      {
+        to: "/pharmacy/ward",
+        label: "Ward deliveries",
+        icon: BedDouble,
+        countKey: "ward",
+        urgentBadge: true,
+      },
       { to: "/pharmacy/refills", label: "Refills", icon: RefreshCw, countKey: "refills" },
       { to: "/pharmacy/walk-in", label: "Walk-in OTC", icon: Store },
     ],
@@ -74,7 +92,13 @@ export const PHARMACY_NAV: PharmacyNavSection[] = [
     title: "Compliance",
     items: [
       { to: "/pharmacy/controlled", label: "Controlled register", icon: ShieldAlert },
-      { to: "/pharmacy/operations", label: "Operations center", icon: Activity, countKey: "alerts", urgentBadge: true },
+      {
+        to: "/pharmacy/operations",
+        label: "Operations center",
+        icon: Activity,
+        countKey: "alerts",
+        urgentBadge: true,
+      },
       { to: "/pharmacy/leave", label: "My Leaves", icon: CalendarOff },
     ],
   },

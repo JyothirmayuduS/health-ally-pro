@@ -118,14 +118,16 @@ export const Route = createFileRoute("/api/hospital/phi")({
         switch (resource) {
           case "staff_profiles": {
             const res = await listStaffProfiles(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditAfter(request, auth, "read", "staff_profiles", { count: res.data.length });
             return finish(response, authMeta);
           }
           case "patients": {
             const res = await getPatientForUser(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditCorePhiRead(request, auth, "patients", res.data);
             return finish(response, authMeta);
@@ -140,21 +142,24 @@ export const Route = createFileRoute("/api/hospital/phi")({
           }
           case "appointments": {
             const res = await listAppointmentsForAuth(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditCorePhiRead(request, auth, "appointments", res.data);
             return finish(response, authMeta);
           }
           case "lab_results": {
             const res = await listLabResultsForAuth(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditCorePhiRead(request, auth, "lab_results", res.data);
             return finish(response, authMeta);
           }
           case "lab_findings": {
             const res = await getLabFindings(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditAfter(request, auth, "read", "lab_results", {
               view: "findings",
@@ -164,10 +169,14 @@ export const Route = createFileRoute("/api/hospital/phi")({
           }
           case "lab_items": {
             if (!reportLegacyId) {
-              return finish(jsonResponse({ error: "reportLegacyId required" }, { status: 400 }), authMeta);
+              return finish(
+                jsonResponse({ error: "reportLegacyId required" }, { status: 400 }),
+                authMeta,
+              );
             }
             const res = await getLabItemsForReport(auth, reportLegacyId);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditAfter(request, auth, "read", "lab_results", {
               view: "items",
@@ -178,21 +187,24 @@ export const Route = createFileRoute("/api/hospital/phi")({
           }
           case "patient_medications": {
             const res = await listPatientMedicationsForAuth(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditCorePhiRead(request, auth, "patient_medications", res.data);
             return finish(response, authMeta);
           }
           case "hospital_memberships": {
             const res = await listMembershipsForAuth(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditAfter(request, auth, "read", "hospital_memberships", { count: res.data.length });
             return finish(response, authMeta);
           }
           case "queue_entries": {
             const res = await listQueueEntriesForAuth(auth);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditAfter(request, auth, "read", "queue_entries", { count: res.data.length });
             return finish(response, authMeta);
@@ -210,7 +222,8 @@ export const Route = createFileRoute("/api/hospital/phi")({
           case "ot_rooms":
           case "ot_cases": {
             const res = await listClinicalResource(auth, resource as ClinicalResource);
-            if (res.error) return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
+            if (res.error)
+              return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
             auditAfter(request, auth, "read", resource, { count: res.data.length });
             return finish(response, authMeta);
@@ -261,7 +274,10 @@ export const Route = createFileRoute("/api/hospital/phi")({
         }
         const { auth } = authz;
 
-        let body: { resource?: ClinicalResource; rows?: Array<{ legacy_id: string; payload: Record<string, unknown> }> };
+        let body: {
+          resource?: ClinicalResource;
+          rows?: Array<{ legacy_id: string; payload: Record<string, unknown> }>;
+        };
         try {
           body = (await request.json()) as typeof body;
         } catch {

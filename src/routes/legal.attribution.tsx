@@ -7,9 +7,9 @@ export const Route = createFileRoute("/legal/attribution")({
     return (
       <LegalShell title="Open source & anatomy attribution">
         <p>
-          Medora includes a 3D anatomical atlas (`body-atlas.glb`) derived from open anatomical
-          mesh projects in the Z-Anatomy tradition. Confirm upstream license terms before
-          redistribution. See repository file <code>ATTRIBUTION.md</code>.
+          Medora includes a 3D anatomical atlas (`body-atlas.glb`) derived from open anatomical mesh
+          projects in the Z-Anatomy tradition. Confirm upstream license terms before redistribution.
+          See repository file <code>ATTRIBUTION.md</code>.
         </p>
         <p>
           Application dependencies (React, TanStack, Three.js, Radix, Supabase, and others) are

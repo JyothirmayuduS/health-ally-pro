@@ -76,7 +76,9 @@ export function FlagBadge({ level, label }: { level: string; label: string }) {
     critical: "bg-status-noshowBg text-status-noshowText ring-1 ring-status-noshowBorder",
   };
   return (
-    <span className={cn("rounded-sm px-2 py-0.5 text-[10px] font-medium uppercase", palette[level])}>
+    <span
+      className={cn("rounded-sm px-2 py-0.5 text-[10px] font-medium uppercase", palette[level])}
+    >
       {label}
     </span>
   );
@@ -122,7 +124,7 @@ export function KpiCard({
       onClick={onClick}
       className={cn(
         "surface border-l-4 border-l-sage px-5 py-4",
-        onClick && "cursor-pointer hover:shadow-md transition-shadow active:bg-stone-50"
+        onClick && "cursor-pointer hover:shadow-md transition-shadow active:bg-stone-50",
       )}
     >
       <div className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-400">

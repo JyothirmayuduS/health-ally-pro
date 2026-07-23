@@ -80,9 +80,7 @@ export function TurnstileWidget({ onToken }: Props) {
   return (
     <div className="pt-1">
       <div id={`cf-turnstile-${mountId}`} />
-      {!ready ? (
-        <p className="text-[11px] text-[#8A8F8C]">Loading verification…</p>
-      ) : null}
+      {!ready ? <p className="text-[11px] text-[#8A8F8C]">Loading verification…</p> : null}
     </div>
   );
 }

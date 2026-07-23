@@ -105,7 +105,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "fields",
             name: "Visual fields & biometry",
             category: "imaging",
-            items: ["Humphrey 24-2", "Humphrey 10-2", "A-scan biometry", "IOL Master", "Corneal topography"],
+            items: [
+              "Humphrey 24-2",
+              "Humphrey 10-2",
+              "A-scan biometry",
+              "IOL Master",
+              "Corneal topography",
+            ],
           },
         ],
       },
@@ -117,7 +123,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
         procedures: [
           { id: "yag", name: "YAG capsulotomy", durationMin: 20, requiresConsent: true },
           { id: "inj", name: "Intravitreal injection", durationMin: 30, requiresConsent: true },
-          { id: "cat", name: "Phaco + IOL", durationMin: 45, requiresConsent: true, implantPossible: true },
+          {
+            id: "cat",
+            name: "Phaco + IOL",
+            durationMin: 45,
+            requiresConsent: true,
+            implantPossible: true,
+          },
           { id: "trab", name: "Trabeculectomy", durationMin: 90, requiresConsent: true },
           { id: "pter", name: "Pterygium excision", durationMin: 40, requiresConsent: true },
           { id: "chal", name: "Chalazion I&D", durationMin: 25, requiresConsent: true },
@@ -188,12 +200,27 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
         title: "Cardiac exam",
         description: "JVP, heart sounds, edema",
         fields: [
-          { id: "jvp", label: "JVP", type: "select", options: ["Normal", "Elevated", "Not assessed"] },
+          {
+            id: "jvp",
+            label: "JVP",
+            type: "select",
+            options: ["Normal", "Elevated", "Not assessed"],
+          },
           { id: "s1s2", label: "S1 / S2", type: "text" },
           { id: "murmur", label: "Murmur", type: "textarea" },
-          { id: "edema", label: "Pedal edema", type: "select", options: ["None", "1+", "2+", "3+", "4+"] },
+          {
+            id: "edema",
+            label: "Pedal edema",
+            type: "select",
+            options: ["None", "1+", "2+", "3+", "4+"],
+          },
           { id: "lungs", label: "Lung bases", type: "text" },
-          { id: "hr_rhythm", label: "Heart rate / rhythm", type: "text", placeholder: "78 bpm regular" },
+          {
+            id: "hr_rhythm",
+            label: "Heart rate / rhythm",
+            type: "text",
+            placeholder: "78 bpm regular",
+          },
         ],
       },
       {
@@ -275,7 +302,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "card_labs",
             name: "Cardiac labs",
             category: "lab",
-            items: ["Troponin I/T", "BNP / NT-proBNP", "Lipid profile", "HbA1c", "Electrolytes", "CBC"],
+            items: [
+              "Troponin I/T",
+              "BNP / NT-proBNP",
+              "Lipid profile",
+              "HbA1c",
+              "Electrolytes",
+              "CBC",
+            ],
           },
           {
             id: "card_img",
@@ -292,8 +326,20 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
         description: "Cath lab & device",
         procedures: [
           { id: "cag", name: "Coronary angiogram", durationMin: 60, requiresConsent: true },
-          { id: "pci", name: "PCI / stenting", durationMin: 90, requiresConsent: true, implantPossible: true },
-          { id: "ppm", name: "Pacemaker implant", durationMin: 120, requiresConsent: true, implantPossible: true },
+          {
+            id: "pci",
+            name: "PCI / stenting",
+            durationMin: 90,
+            requiresConsent: true,
+            implantPossible: true,
+          },
+          {
+            id: "ppm",
+            name: "Pacemaker implant",
+            durationMin: 120,
+            requiresConsent: true,
+            implantPossible: true,
+          },
           { id: "tee", name: "TEE", durationMin: 45, requiresConsent: true },
         ],
       },
@@ -363,7 +409,18 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "due",
             label: "Vaccines due today",
             type: "multiselect",
-            options: ["BCG", "OPV/IPV", "DPT/Pentavalent", "Hib", "Hep B", "MMR", "Varicella", "Typhoid", "Influenza", "HPV"],
+            options: [
+              "BCG",
+              "OPV/IPV",
+              "DPT/Pentavalent",
+              "Hib",
+              "Hep B",
+              "MMR",
+              "Varicella",
+              "Typhoid",
+              "Influenza",
+              "HPV",
+            ],
           },
           { id: "imm_notes", label: "Notes / reactions", type: "textarea" },
         ],
@@ -465,13 +522,38 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "region",
             label: "Region",
             type: "select",
-            options: ["Shoulder", "Elbow", "Wrist/Hand", "Hip", "Knee", "Ankle/Foot", "Cervical", "Lumbar", "Pelvis"],
+            options: [
+              "Shoulder",
+              "Elbow",
+              "Wrist/Hand",
+              "Hip",
+              "Knee",
+              "Ankle/Foot",
+              "Cervical",
+              "Lumbar",
+              "Pelvis",
+            ],
           },
           { id: "side", label: "Laterality", type: "laterality" },
           { id: "mechanism", label: "Mechanism of injury", type: "textarea" },
-          { id: "onset", label: "Onset", type: "select", options: ["Acute", "Subacute", "Chronic"] },
-          { id: "wt_bearing", label: "Weight bearing", type: "select", options: ["Full", "Partial", "Non", "N/A"] },
-          { id: "neurovasc", label: "Neurovascular status", type: "text", placeholder: "Intact distal N/V" },
+          {
+            id: "onset",
+            label: "Onset",
+            type: "select",
+            options: ["Acute", "Subacute", "Chronic"],
+          },
+          {
+            id: "wt_bearing",
+            label: "Weight bearing",
+            type: "select",
+            options: ["Full", "Partial", "Non", "N/A"],
+          },
+          {
+            id: "neurovasc",
+            label: "Neurovascular status",
+            type: "text",
+            placeholder: "Intact distal N/V",
+          },
         ],
       },
       {
@@ -499,7 +581,15 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "pattern",
             label: "Pattern",
             type: "select",
-            options: ["Transverse", "Oblique", "Spiral", "Comminuted", "Greenstick", "Pathologic", "Stress"],
+            options: [
+              "Transverse",
+              "Oblique",
+              "Spiral",
+              "Comminuted",
+              "Greenstick",
+              "Pathologic",
+              "Stress",
+            ],
           },
           {
             id: "displacement",
@@ -552,10 +642,34 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
         description: "Casting, arthroscopy, arthroplasty",
         procedures: [
           { id: "cast", name: "Cast / slab application", durationMin: 30, requiresConsent: true },
-          { id: "crif", name: "CRIF / ORIF", durationMin: 120, requiresConsent: true, implantPossible: true },
-          { id: "acl", name: "ACL reconstruction", durationMin: 150, requiresConsent: true, implantPossible: true },
-          { id: "tkr", name: "Total knee replacement", durationMin: 120, requiresConsent: true, implantPossible: true },
-          { id: "thr", name: "Total hip replacement", durationMin: 120, requiresConsent: true, implantPossible: true },
+          {
+            id: "crif",
+            name: "CRIF / ORIF",
+            durationMin: 120,
+            requiresConsent: true,
+            implantPossible: true,
+          },
+          {
+            id: "acl",
+            name: "ACL reconstruction",
+            durationMin: 150,
+            requiresConsent: true,
+            implantPossible: true,
+          },
+          {
+            id: "tkr",
+            name: "Total knee replacement",
+            durationMin: 120,
+            requiresConsent: true,
+            implantPossible: true,
+          },
+          {
+            id: "thr",
+            name: "Total hip replacement",
+            durationMin: 120,
+            requiresConsent: true,
+            implantPossible: true,
+          },
         ],
       },
     ],
@@ -572,7 +686,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Stroke, seizures, headache & neuromuscular disease",
     defaultFee: 1500,
     unitLabel: "Neuro OPD",
-    commonPresentations: ["Headache", "Seizure", "Stroke / TIA", "Vertigo", "Neuropathy", "Parkinson follow-up"],
+    commonPresentations: [
+      "Headache",
+      "Seizure",
+      "Stroke / TIA",
+      "Vertigo",
+      "Neuropathy",
+      "Parkinson follow-up",
+    ],
     modules: [
       {
         id: "neuro_exam",
@@ -635,7 +756,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Rashes, infections, acne, pigment & procedures",
     defaultFee: 1000,
     unitLabel: "Derm OPD",
-    commonPresentations: ["Acne", "Eczema", "Psoriasis", "Fungal infection", "Hair loss", "Pigmentation"],
+    commonPresentations: [
+      "Acne",
+      "Eczema",
+      "Psoriasis",
+      "Fungal infection",
+      "Hair loss",
+      "Pigmentation",
+    ],
     modules: [
       {
         id: "derm_exam",
@@ -675,7 +803,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Ear, nose, throat & head-neck",
     defaultFee: 900,
     unitLabel: "ENT OPD / OT",
-    commonPresentations: ["Ear pain", "Hearing loss", "Sinusitis", "Tonsillitis", "Vertigo", "Hoarseness"],
+    commonPresentations: [
+      "Ear pain",
+      "Hearing loss",
+      "Sinusitis",
+      "Tonsillitis",
+      "Vertigo",
+      "Hoarseness",
+    ],
     modules: [
       {
         id: "ent_exam",
@@ -757,7 +892,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "CKD, dialysis, electrolytes & transplant",
     defaultFee: 1400,
     unitLabel: "Nephro OPD / Dialysis",
-    commonPresentations: ["CKD follow-up", "Hypertension", "Edema", "Dialysis review", "UTI", "Electrolyte imbalance"],
+    commonPresentations: [
+      "CKD follow-up",
+      "Hypertension",
+      "Edema",
+      "Dialysis review",
+      "UTI",
+      "Electrolyte imbalance",
+    ],
     modules: [
       {
         id: "nephro_exam",
@@ -808,7 +950,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Asthma, COPD, ILD, sleep & infection",
     defaultFee: 1200,
     unitLabel: "Pulmo OPD",
-    commonPresentations: ["Asthma", "COPD", "Cough", "Breathlessness", "TB follow-up", "Sleep apnea"],
+    commonPresentations: [
+      "Asthma",
+      "COPD",
+      "Cough",
+      "Breathlessness",
+      "TB follow-up",
+      "Sleep apnea",
+    ],
     modules: [
       {
         id: "pulmo_exam",
@@ -860,7 +1009,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Solid tumors, chemo day-care & supportive care",
     defaultFee: 2000,
     unitLabel: "Oncology / Day-care",
-    commonPresentations: ["New diagnosis", "Chemo cycle", "Follow-up", "Pain / palliative", "Neutropenia"],
+    commonPresentations: [
+      "New diagnosis",
+      "Chemo cycle",
+      "Follow-up",
+      "Pain / palliative",
+      "Neutropenia",
+    ],
     modules: [
       {
         id: "onco_staging",
@@ -870,7 +1025,12 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
           { id: "primary", label: "Primary site", type: "text", required: true },
           { id: "histology", label: "Histology", type: "text" },
           { id: "tnm", label: "TNM / stage", type: "text" },
-          { id: "performance", label: "ECOG / PS", type: "select", options: ["0", "1", "2", "3", "4"] },
+          {
+            id: "performance",
+            label: "ECOG / PS",
+            type: "select",
+            options: ["0", "1", "2", "3", "4"],
+          },
           { id: "mets", label: "Metastases", type: "textarea" },
         ],
       },
@@ -900,7 +1060,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Antenatal, delivery, gynecology & fertility",
     defaultFee: 1100,
     unitLabel: "OB-GYN OPD / L&D",
-    commonPresentations: ["ANC visit", "Menstrual disorder", "PCOS", "Infertility", "Postnatal", "Fibroid"],
+    commonPresentations: [
+      "ANC visit",
+      "Menstrual disorder",
+      "PCOS",
+      "Infertility",
+      "Postnatal",
+      "Fibroid",
+    ],
     modules: [
       {
         id: "anc",
@@ -948,7 +1115,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Mood, anxiety, psychosis & substance use",
     defaultFee: 1200,
     unitLabel: "Psychiatry OPD",
-    commonPresentations: ["Depression", "Anxiety", "Insomnia", "Psychosis", "Substance use", "Follow-up"],
+    commonPresentations: [
+      "Depression",
+      "Anxiety",
+      "Insomnia",
+      "Psychosis",
+      "Substance use",
+      "Follow-up",
+    ],
     modules: [
       {
         id: "mse",
@@ -1001,7 +1175,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Triage, resuscitation & acute care",
     defaultFee: 0,
     unitLabel: "Emergency Department",
-    commonPresentations: ["Trauma", "Chest pain", "Stroke", "Breathing difficulty", "Abdominal pain", "Poisoning"],
+    commonPresentations: [
+      "Trauma",
+      "Chest pain",
+      "Stroke",
+      "Breathing difficulty",
+      "Abdominal pain",
+      "Poisoning",
+    ],
     modules: [
       {
         id: "triage",
@@ -1012,7 +1193,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "esi",
             label: "ESI / Triage level",
             type: "select",
-            options: ["1 — Resuscitation", "2 — Emergent", "3 — Urgent", "4 — Less urgent", "5 — Non-urgent"],
+            options: [
+              "1 — Resuscitation",
+              "2 — Emergent",
+              "3 — Urgent",
+              "4 — Less urgent",
+              "5 — Non-urgent",
+            ],
             required: true,
           },
           { id: "chief", label: "Chief complaint", type: "textarea", required: true },
@@ -1057,7 +1244,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Ventilation, hemodynamics & organ support",
     defaultFee: 0,
     unitLabel: "ICU / HDU",
-    commonPresentations: ["Respiratory failure", "Shock", "Sepsis", "Post-op ICU", "Multi-organ failure"],
+    commonPresentations: [
+      "Respiratory failure",
+      "Shock",
+      "Sepsis",
+      "Post-op ICU",
+      "Multi-organ failure",
+    ],
     modules: [
       {
         id: "vent",
@@ -1112,7 +1305,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Restorative, endo, perio & oral surgery",
     defaultFee: 700,
     unitLabel: "Dental Clinic",
-    commonPresentations: ["Toothache", "Caries", "Extraction", "Gum disease", "Root canal", "Implant consult"],
+    commonPresentations: [
+      "Toothache",
+      "Caries",
+      "Extraction",
+      "Gum disease",
+      "Root canal",
+      "Implant consult",
+    ],
     modules: [
       {
         id: "dental_chart",
@@ -1124,7 +1324,16 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             id: "finding",
             label: "Finding",
             type: "select",
-            options: ["Caries", "Pulpitis", "Abscess", "Periodontitis", "Fracture", "Missing", "Filled", "Crown"],
+            options: [
+              "Caries",
+              "Pulpitis",
+              "Abscess",
+              "Periodontitis",
+              "Fracture",
+              "Missing",
+              "Filled",
+              "Crown",
+            ],
           },
           { id: "peri", label: "Periodontal pocket", type: "text" },
           { id: "occlusion", label: "Occlusion notes", type: "textarea" },
@@ -1139,7 +1348,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
           { id: "ext", name: "Extraction", durationMin: 30, requiresConsent: true },
           { id: "rct", name: "Root canal treatment", durationMin: 60, requiresConsent: true },
           { id: "scale", name: "Scaling & polishing", durationMin: 40, requiresConsent: false },
-          { id: "impl", name: "Dental implant", durationMin: 90, requiresConsent: true, implantPossible: true },
+          {
+            id: "impl",
+            name: "Dental implant",
+            durationMin: 90,
+            requiresConsent: true,
+            implantPossible: true,
+          },
         ],
       },
     ],
@@ -1156,7 +1371,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Stones, prostate, UTI & uro-oncology",
     defaultFee: 1300,
     unitLabel: "Urology OPD / OT",
-    commonPresentations: ["Flank pain", "LUTS / BPH", "UTI", "Hematuria", "Stone follow-up", "Erectile dysfunction"],
+    commonPresentations: [
+      "Flank pain",
+      "LUTS / BPH",
+      "UTI",
+      "Hematuria",
+      "Stone follow-up",
+      "Erectile dysfunction",
+    ],
     modules: [
       {
         id: "uro_exam",
@@ -1195,7 +1417,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Diabetes, thyroid, hormones & bone metabolism",
     defaultFee: 1400,
     unitLabel: "Endocrine OPD",
-    commonPresentations: ["Diabetes", "Thyroid", "Obesity", "Osteoporosis", "PCOS endocrine", "Adrenal"],
+    commonPresentations: [
+      "Diabetes",
+      "Thyroid",
+      "Obesity",
+      "Osteoporosis",
+      "PCOS endocrine",
+      "Adrenal",
+    ],
     modules: [
       {
         id: "endo_dm",
@@ -1211,7 +1440,12 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             type: "select",
             options: ["None", "Mild", "Severe"],
           },
-          { id: "complications", label: "Complications screen", type: "multiselect", options: ["Retinopathy", "Nephropathy", "Neuropathy", "CAD", "PAD", "Foot ulcer"] },
+          {
+            id: "complications",
+            label: "Complications screen",
+            type: "multiselect",
+            options: ["Retinopathy", "Nephropathy", "Neuropathy", "CAD", "PAD", "Foot ulcer"],
+          },
           { id: "insulin", label: "Insulin / regimen", type: "textarea" },
         ],
       },
@@ -1267,7 +1501,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Adult medicine, multimorbidity & referrals",
     defaultFee: 600,
     unitLabel: "Medicine OPD",
-    commonPresentations: ["Fever", "Hypertension", "Diabetes", "Anemia", "Infection", "General checkup"],
+    commonPresentations: [
+      "Fever",
+      "Hypertension",
+      "Diabetes",
+      "Anemia",
+      "Infection",
+      "General checkup",
+    ],
     modules: [
       {
         id: "gm_exam",
@@ -1309,7 +1550,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Mobility, pain rehab & post-op recovery",
     defaultFee: 500,
     unitLabel: "Physio Gym",
-    commonPresentations: ["Back pain", "Post-fracture rehab", "Stroke rehab", "Sports rehab", "Post-TKR"],
+    commonPresentations: [
+      "Back pain",
+      "Post-fracture rehab",
+      "Stroke rehab",
+      "Sports rehab",
+      "Post-TKR",
+    ],
     modules: [
       {
         id: "pt_exam",
@@ -1412,7 +1659,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Newborn care, NICU & lactation support",
     defaultFee: 0,
     unitLabel: "NICU / Nursery",
-    commonPresentations: ["Well newborn", "Jaundice", "Prematurity", "Respiratory distress", "Sepsis screen"],
+    commonPresentations: [
+      "Well newborn",
+      "Jaundice",
+      "Prematurity",
+      "Respiratory distress",
+      "Sepsis screen",
+    ],
     modules: [
       {
         id: "newborn",
@@ -1423,7 +1676,12 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
           { id: "bw", label: "Birth weight", type: "number", unit: "g" },
           { id: "apgar", label: "APGAR 1 / 5", type: "text" },
           { id: "bilirubin", label: "Bilirubin", type: "number", unit: "mg/dL" },
-          { id: "feeding", label: "Feeding", type: "select", options: ["Breast", "Formula", "Mixed", "IV"] },
+          {
+            id: "feeding",
+            label: "Feeding",
+            type: "select",
+            options: ["Breast", "Formula", "Mixed", "IV"],
+          },
           { id: "screen", label: "Newborn screening", type: "textarea" },
         ],
       },
@@ -1441,7 +1699,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Burns, reconstruction, hand & aesthetics",
     defaultFee: 2000,
     unitLabel: "Plastic Surgery OPD / OT",
-    commonPresentations: ["Burn", "Wound / flap", "Hand injury", "Scar revision", "Aesthetic consult"],
+    commonPresentations: [
+      "Burn",
+      "Wound / flap",
+      "Hand injury",
+      "Scar revision",
+      "Aesthetic consult",
+    ],
     modules: [
       {
         id: "plastic_exam",
@@ -1477,7 +1741,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Brain, spine & peripheral nerve surgery",
     defaultFee: 2500,
     unitLabel: "Neurosurgery OPD / OT",
-    commonPresentations: ["Disc prolapse", "Head injury", "Brain tumor", "Hydrocephalus", "Spine trauma"],
+    commonPresentations: [
+      "Disc prolapse",
+      "Head injury",
+      "Brain tumor",
+      "Hydrocephalus",
+      "Spine trauma",
+    ],
     modules: [
       {
         id: "ns_exam",
@@ -1496,8 +1766,20 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
         title: "Neurosurgery procedures",
         procedures: [
           { id: "crani", name: "Craniotomy", durationMin: 240, requiresConsent: true },
-          { id: "discectomy", name: "Discectomy / fusion", durationMin: 180, requiresConsent: true, implantPossible: true },
-          { id: "vp", name: "VP shunt", durationMin: 90, requiresConsent: true, implantPossible: true },
+          {
+            id: "discectomy",
+            name: "Discectomy / fusion",
+            durationMin: 180,
+            requiresConsent: true,
+            implantPossible: true,
+          },
+          {
+            id: "vp",
+            name: "VP shunt",
+            durationMin: 90,
+            requiresConsent: true,
+            implantPossible: true,
+          },
         ],
       },
     ],
@@ -1533,7 +1815,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
         title: "Cardiac surgery",
         procedures: [
           { id: "cabg", name: "CABG", durationMin: 300, requiresConsent: true },
-          { id: "avr", name: "Valve replacement", durationMin: 300, requiresConsent: true, implantPossible: true },
+          {
+            id: "avr",
+            name: "Valve replacement",
+            durationMin: 300,
+            requiresConsent: true,
+            implantPossible: true,
+          },
           { id: "asd", name: "ASD / VSD repair", durationMin: 240, requiresConsent: true },
         ],
       },
@@ -1551,7 +1839,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Hepatitis, cirrhosis & liver transplant workup",
     defaultFee: 1500,
     unitLabel: "Hepatology Clinic",
-    commonPresentations: ["Cirrhosis", "Viral hepatitis", "NAFLD", "Ascites", "Transplant evaluation"],
+    commonPresentations: [
+      "Cirrhosis",
+      "Viral hepatitis",
+      "NAFLD",
+      "Ascites",
+      "Transplant evaluation",
+    ],
     modules: [
       {
         id: "hep_exam",
@@ -1571,8 +1865,18 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
             options: ["A", "B", "C"],
           },
           { id: "meld", label: "MELD", type: "number" },
-          { id: "ascites", label: "Ascites", type: "select", options: ["None", "Mild", "Moderate", "Tense"] },
-          { id: "he", label: "Hepatic encephalopathy", type: "select", options: ["None", "Grade 1–2", "Grade 3–4"] },
+          {
+            id: "ascites",
+            label: "Ascites",
+            type: "select",
+            options: ["None", "Mild", "Moderate", "Tense"],
+          },
+          {
+            id: "he",
+            label: "Hepatic encephalopathy",
+            type: "select",
+            options: ["None", "Grade 1–2", "Grade 3–4"],
+          },
         ],
       },
     ],
@@ -1589,7 +1893,13 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Anemia, clotting, leukemia & transfusion",
     defaultFee: 1500,
     unitLabel: "Hematology Clinic",
-    commonPresentations: ["Anemia", "Thrombocytopenia", "Leukemia / lymphoma", "Bleeding", "Thrombosis"],
+    commonPresentations: [
+      "Anemia",
+      "Thrombocytopenia",
+      "Leukemia / lymphoma",
+      "Bleeding",
+      "Thrombosis",
+    ],
     modules: [
       {
         id: "heme_exam",
@@ -1618,7 +1928,14 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
     tagline: "Infections, antibiotics stewardship & tropical disease",
     defaultFee: 1200,
     unitLabel: "ID Clinic / Isolation",
-    commonPresentations: ["Fever of unknown origin", "TB", "HIV", "Tropical fever", "Hospital infection", "Travel"],
+    commonPresentations: [
+      "Fever of unknown origin",
+      "TB",
+      "HIV",
+      "Tropical fever",
+      "Hospital infection",
+      "Travel",
+    ],
     modules: [
       {
         id: "id_exam",
@@ -1629,7 +1946,12 @@ export const SPECIALTY_CATALOG: Record<SpecialtyId, SpecialtyDefinition> = {
           { id: "source", label: "Likely source", type: "textarea" },
           { id: "cultures", label: "Cultures pending / results", type: "textarea" },
           { id: "abx", label: "Antibiotic plan", type: "textarea" },
-          { id: "isolation", label: "Isolation precautions", type: "select", options: ["None", "Contact", "Droplet", "Airborne"] },
+          {
+            id: "isolation",
+            label: "Isolation precautions",
+            type: "select",
+            options: ["None", "Contact", "Droplet", "Airborne"],
+          },
         ],
       },
     ],
@@ -1662,7 +1984,7 @@ export function resolveSpecialtyId(label: string | null | undefined): SpecialtyI
     medicine: "general_medicine",
     eye: "ophthalmology",
     ophtha: "ophthalmology",
-    "ophthalmology": "ophthalmology",
+    ophthalmology: "ophthalmology",
     heart: "cardiology",
     cardiac: "cardiology",
     cardio: "cardiology",
@@ -1686,7 +2008,7 @@ export function resolveSpecialtyId(label: string | null | undefined): SpecialtyI
     "intensive care": "icu",
     ent: "ent",
     "e.n.t": "ent",
-    "gi": "gastroenterology",
+    gi: "gastroenterology",
     gastro: "gastroenterology",
     pulmo: "pulmonology",
     respiratory: "pulmonology",

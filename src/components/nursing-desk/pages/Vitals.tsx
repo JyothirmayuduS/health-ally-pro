@@ -118,7 +118,8 @@ export default function NursingVitals() {
           </div>
         )}
         <div className="rounded-lg border border-sage/30 bg-sage-soft/40 px-4 py-3 text-[12px] text-ink-600">
-          Vitals are stored locally for this demo and appear on the nursing dashboard immediately after save.
+          Vitals are stored locally for this demo and appear on the nursing dashboard immediately
+          after save.
         </div>
       </div>
     </div>

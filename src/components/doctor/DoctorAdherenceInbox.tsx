@@ -5,10 +5,7 @@ import {
   buildAdherenceTriageForPanelPatient,
   type AdherenceRiskTier,
 } from "@/lib/shared/adherence-triage";
-import {
-  CLINICAL_EVENT_LOG_EVENT,
-  subscribeClinicalEvents,
-} from "@/lib/shared/clinical-event-log";
+import { CLINICAL_EVENT_LOG_EVENT, subscribeClinicalEvents } from "@/lib/shared/clinical-event-log";
 import { PATIENT_MEDS_EVENT } from "@/lib/patient-meds-store";
 import { EXERCISE_SESSION_EVENT } from "@/lib/exercise-session-store";
 
@@ -85,10 +82,7 @@ export function DoctorAdherenceInbox({ patientId, compact }: Props) {
     };
   }, []);
 
-  const triage = useMemo(
-    () => buildAdherenceTriageForPanelPatient(patientId),
-    [patientId, tick],
-  );
+  const triage = useMemo(() => buildAdherenceTriageForPanelPatient(patientId), [patientId, tick]);
 
   const styles = tierStyles(triage.tier);
 
@@ -108,32 +102,32 @@ export function DoctorAdherenceInbox({ patientId, compact }: Props) {
           )}
         >
           <div className="flex min-w-0 flex-1 items-start gap-3">
-          <span
-            className={cn(
-              "mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full",
-              styles.icon,
-            )}
-          >
-            {triage.tier === "stable" ? (
-              <Dumbbell className="h-4 w-4" strokeWidth={2} />
-            ) : (
-              <Pill className="h-4 w-4" strokeWidth={2} />
-            )}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="flex items-center gap-1.5 text-sm font-semibold text-[#1B3B2E]">
-              {triage.tier === "critical" ? (
-                <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-[#C45C4A]" />
-              ) : null}
-              {triage.label}
-            </p>
-            <p className="mt-0.5 text-xs text-[#5C635F]">{triage.detail}</p>
-            {triage.events48h.length > 0 ? (
-              <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-[#8A8F8C]">
-                {triage.events48h.length} event{triage.events48h.length === 1 ? "" : "s"} in 48h
+            <span
+              className={cn(
+                "mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full",
+                styles.icon,
+              )}
+            >
+              {triage.tier === "stable" ? (
+                <Dumbbell className="h-4 w-4" strokeWidth={2} />
+              ) : (
+                <Pill className="h-4 w-4" strokeWidth={2} />
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="flex items-center gap-1.5 text-sm font-semibold text-[#1B3B2E]">
+                {triage.tier === "critical" ? (
+                  <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-[#C45C4A]" />
+                ) : null}
+                {triage.label}
               </p>
-            ) : null}
-          </div>
+              <p className="mt-0.5 text-xs text-[#5C635F]">{triage.detail}</p>
+              {triage.events48h.length > 0 ? (
+                <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-[#8A8F8C]">
+                  {triage.events48h.length} event{triage.events48h.length === 1 ? "" : "s"} in 48h
+                </p>
+              ) : null}
+            </div>
           </div>
           <div className="flex justify-end sm:block">
             <Sparkline values={triage.sparkline} color={styles.spark} />
@@ -144,4 +138,7 @@ export function DoctorAdherenceInbox({ patientId, compact }: Props) {
   );
 }
 
-export { buildAdherenceTriageForPanelPatient, listPanelAdherenceAlerts } from "@/lib/shared/adherence-triage";
+export {
+  buildAdherenceTriageForPanelPatient,
+  listPanelAdherenceAlerts,
+} from "@/lib/shared/adherence-triage";

@@ -1,13 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ChevronRight,
-  FileText,
-  History,
-  Lock,
-  Plus,
-  Search,
-  Share2,
-} from "lucide-react";
+import { ChevronRight, FileText, History, Lock, Plus, Search, Share2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { Report } from "@/lib/mock-data";
@@ -37,10 +29,7 @@ export function ReportsHubPage() {
 
   const allReports = reports.length ? reports : mockReports;
 
-  const filtered = useMemo(
-    () => filterReports(allReports, query, type),
-    [allReports, query, type],
-  );
+  const filtered = useMemo(() => filterReports(allReports, query, type), [allReports, query, type]);
 
   const sharedCount = countSharedReports(allReports);
 
@@ -200,10 +189,7 @@ function ReportListCard({ report }: { report: Report }) {
         className="flex items-center gap-3.5 rounded-[20px] border border-[#EDEAE6] bg-white p-4 transition-colors hover:border-clay/25 sm:gap-4 sm:p-[18px]"
       >
         <span
-          className={cn(
-            "grid h-12 w-12 shrink-0 place-items-center rounded-2xl",
-            style.iconBg,
-          )}
+          className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-2xl", style.iconBg)}
         >
           <FileText className={cn("h-5 w-5", style.icon)} strokeWidth={1.75} />
         </span>

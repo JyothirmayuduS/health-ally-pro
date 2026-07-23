@@ -23,7 +23,8 @@ export const SEED_SHIFTS = [
     cashCollected: 4895,
     variance: 0,
     status: "closed",
-    handover: "Two pending unpaid invoices passed to afternoon — INV-90013 (Vijay S) and INV-90015 (Arjun M). Card terminal #2 was acting up around 11:00, restart fixed it.",
+    handover:
+      "Two pending unpaid invoices passed to afternoon — INV-90013 (Vijay S) and INV-90015 (Arjun M). Card terminal #2 was acting up around 11:00, restart fixed it.",
   },
   {
     id: "SHF-2002",
@@ -166,14 +167,12 @@ let claimCounter = 7007;
 export const nextClaimId = () => `CLM-${claimCounter++}`;
 
 export const CLAIM_STATUSES = [
-  { id: "pending",      label: "Pending",        chip: "chip-mustard" },
-  { id: "submitted",    label: "Submitted",      chip: "chip-teal" },
-  { id: "approved",     label: "Approved",       chip: "chip-money" },
-  { id: "partial",      label: "Partial",        chip: "chip-plum" },
-  { id: "rejected",     label: "Rejected",       chip: "chip-clay" },
-  { id: "not-required", label: "Not required",   chip: "chip-ink" },
+  { id: "pending", label: "Pending", chip: "chip-mustard" },
+  { id: "submitted", label: "Submitted", chip: "chip-teal" },
+  { id: "approved", label: "Approved", chip: "chip-money" },
+  { id: "partial", label: "Partial", chip: "chip-plum" },
+  { id: "rejected", label: "Rejected", chip: "chip-clay" },
+  { id: "not-required", label: "Not required", chip: "chip-ink" },
 ];
 
-export const STATUS_META = Object.fromEntries(
-  CLAIM_STATUSES.map((s) => [s.id, s]),
-);
+export const STATUS_META = Object.fromEntries(CLAIM_STATUSES.map((s) => [s.id, s]));

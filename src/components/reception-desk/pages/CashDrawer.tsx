@@ -50,8 +50,7 @@ interface OpenShiftData {
   openingFloat: number;
 }
 
-const fmt = (n: number | string | null | undefined) =>
-  `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | null | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 function timeStr(iso: string | null | undefined) {
   if (!iso) return "—";
@@ -113,16 +112,12 @@ function CloseShiftDialog({
             <div className="space-y-2">
               {DENOMS.map((d) => (
                 <div key={d} className="flex items-center gap-3">
-                  <div className="w-14 text-right font-mono text-[13px] text-ink-900">
-                    ₹{d}
-                  </div>
+                  <div className="w-14 text-right font-mono text-[13px] text-ink-900">₹{d}</div>
                   <div className="text-ink-400 text-[12px]">×</div>
                   <input
                     type="number"
                     value={denom[d]}
-                    onChange={(e) =>
-                      setDenom({ ...denom, [d]: Number(e.target.value || 0) })
-                    }
+                    onChange={(e) => setDenom({ ...denom, [d]: Number(e.target.value || 0) })}
                     className="h-8 w-20 px-2 text-right text-[13px] bg-white border border-ink-200 rounded-md focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage"
                     data-testid={`close-denom-${d}`}
                   />
@@ -134,9 +129,7 @@ function CloseShiftDialog({
             </div>
             <div className="mt-3 pt-3 border-t border-ink-200 flex justify-between text-[13px]">
               <span className="text-ink-600">Counted total</span>
-              <span className="font-mono font-semibold text-ink-900">
-                {fmt(counted)}
-              </span>
+              <span className="font-mono font-semibold text-ink-900">{fmt(counted)}</span>
             </div>
           </div>
 
@@ -167,11 +160,7 @@ function CloseShiftDialog({
               </div>
               <div
                 className={`font-mono text-[20px] font-semibold mt-1 ${
-                  variance === 0
-                    ? "text-money"
-                    : variance > 0
-                      ? "text-mustard"
-                      : "text-clay"
+                  variance === 0 ? "text-money" : variance > 0 ? "text-mustard" : "text-clay"
                 }`}
               >
                 {variance >= 0 ? "+" : ""}
@@ -207,9 +196,7 @@ function CloseShiftDialog({
           </button>
           <button
             data-testid="close-shift-confirm"
-            onClick={() =>
-              onConfirm({ closingDenom: denom, variance, handover: note })
-            }
+            onClick={() => onConfirm({ closingDenom: denom, variance, handover: note })}
             className="btn-mustard btn-lg flex-1"
           >
             <Lock className="w-4 h-4" />
@@ -248,9 +235,7 @@ function OpenShiftDialog({
             <div className="w-9 h-9 rounded-full bg-money-soft text-money grid place-items-center">
               <PlayCircle className="w-4 h-4" />
             </div>
-            <h3 className="text-[15px] font-heading font-semibold text-ink-900">
-              Open new shift
-            </h3>
+            <h3 className="text-[15px] font-heading font-semibold text-ink-900">Open new shift</h3>
           </div>
           <button onClick={onClose} className="btn-icon">
             <X className="w-4 h-4" />
@@ -308,9 +293,7 @@ function OpenShiftDialog({
           </button>
           <button
             data-testid="open-shift-confirm"
-            onClick={() =>
-              onConfirm({ staffId, label, openingFloat: Number(float) })
-            }
+            onClick={() => onConfirm({ staffId, label, openingFloat: Number(float) })}
             className="btn-money flex-1"
           >
             <PlayCircle className="w-4 h-4" />
@@ -346,8 +329,12 @@ export function DayEndReportModal({
       <div className="bg-white border border-ink-200 rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-xl">
         <div className="px-5 py-4 border-b border-ink-200 flex justify-between items-center shrink-0">
           <div>
-            <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">Shift Summary</div>
-            <h3 className="text-[16px] font-heading font-semibold text-ink-900 mt-0.5">{shift.label} Shift End Report</h3>
+            <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">
+              Shift Summary
+            </div>
+            <h3 className="text-[16px] font-heading font-semibold text-ink-900 mt-0.5">
+              {shift.label} Shift End Report
+            </h3>
           </div>
           <button onClick={onClose} className="btn-icon">
             <X className="w-4 h-4" />
@@ -357,18 +344,26 @@ export function DayEndReportModal({
         <div className="flex-grow overflow-y-auto p-5 space-y-4 text-[13px]">
           <div className="grid grid-cols-2 gap-4 p-3 bg-bone border border-ink-200 rounded-lg">
             <div>
-              <span className="text-[11px] uppercase tracking-wider text-ink-400 font-mono">Staff Lead</span>
+              <span className="text-[11px] uppercase tracking-wider text-ink-400 font-mono">
+                Staff Lead
+              </span>
               <div className="font-semibold text-ink-900">{shift.staffName}</div>
             </div>
             <div>
-              <span className="text-[11px] uppercase tracking-wider text-ink-400 font-mono">Shift Timeline</span>
-              <div className="text-ink-600 font-mono">{timeStr(shift.openedAt)} - {timeStr(shift.closedAt)}</div>
+              <span className="text-[11px] uppercase tracking-wider text-ink-400 font-mono">
+                Shift Timeline
+              </span>
+              <div className="text-ink-600 font-mono">
+                {timeStr(shift.openedAt)} - {timeStr(shift.closedAt)}
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="border border-ink-200 rounded-lg p-3 bg-bone/10">
-              <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Collections</div>
+              <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">
+                Collections
+              </div>
               <div className="space-y-1">
                 {Object.entries(collections).map(([m, amt]) => (
                   <div key={m} className="flex justify-between font-mono">
@@ -380,7 +375,9 @@ export function DayEndReportModal({
             </div>
 
             <div className="border border-ink-200 rounded-lg p-3 bg-bone/10">
-              <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Drawer Cash</div>
+              <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">
+                Drawer Cash
+              </div>
               <div className="space-y-1">
                 <div className="flex justify-between font-mono">
                   <span>Opening Float</span>
@@ -400,8 +397,13 @@ export function DayEndReportModal({
                 </div>
                 <div className="flex justify-between font-mono border-t border-ink-200 pt-1 mt-1 font-semibold">
                   <span>Variance</span>
-                  <span className={variance === 0 ? "text-money" : variance > 0 ? "text-mustard" : "text-clay"}>
-                    {variance >= 0 ? "+" : ""}{fmt(variance)}
+                  <span
+                    className={
+                      variance === 0 ? "text-money" : variance > 0 ? "text-mustard" : "text-clay"
+                    }
+                  >
+                    {variance >= 0 ? "+" : ""}
+                    {fmt(variance)}
                   </span>
                 </div>
               </div>
@@ -409,7 +411,9 @@ export function DayEndReportModal({
           </div>
 
           <div className="border border-ink-200 rounded-lg p-3">
-            <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Top 5 Services Billed</div>
+            <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">
+              Top 5 Services Billed
+            </div>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-ink-200 text-[10px] text-ink-400 font-mono uppercase">
@@ -421,14 +425,18 @@ export function DayEndReportModal({
               <tbody className="divide-y divide-ink-100">
                 {topServices.map((s, idx) => (
                   <tr key={s.name}>
-                    <td className="py-1.5 font-medium text-ink-900">{idx + 1}. {s.name}</td>
+                    <td className="py-1.5 font-medium text-ink-900">
+                      {idx + 1}. {s.name}
+                    </td>
                     <td className="py-1.5 text-right font-mono">{s.count}</td>
                     <td className="py-1.5 text-right font-mono text-ink-900">{fmt(s.revenue)}</td>
                   </tr>
                 ))}
                 {topServices.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="py-4 text-center text-ink-400 italic">No services billed in this shift.</td>
+                    <td colSpan={3} className="py-4 text-center text-ink-400 italic">
+                      No services billed in this shift.
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -436,7 +444,9 @@ export function DayEndReportModal({
           </div>
 
           <div className="border border-ink-200 rounded-lg p-3">
-            <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">Cancellations Reasons</div>
+            <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-2">
+              Cancellations Reasons
+            </div>
             <div className="space-y-1">
               {Object.entries(cancellations).map(([r, count]) => (
                 <div key={r} className="flex justify-between">
@@ -452,14 +462,18 @@ export function DayEndReportModal({
 
           {shift.handover && (
             <div className="p-3 border border-mustard/30 bg-mustard-soft/30 rounded-lg">
-              <span className="text-[11.5px] uppercase tracking-wider text-mustard font-mono font-medium block mb-1">Handover Note</span>
+              <span className="text-[11.5px] uppercase tracking-wider text-mustard font-mono font-medium block mb-1">
+                Handover Note
+              </span>
               <p className="text-ink-900 text-[12.5px] font-medium">{shift.handover}</p>
             </div>
           )}
         </div>
 
         <div className="px-5 py-3 border-t border-ink-200 flex justify-end gap-2 bg-bone shrink-0">
-          <button onClick={onClose} className="btn-outline h-9">Close</button>
+          <button onClick={onClose} className="btn-outline h-9">
+            Close
+          </button>
           <button onClick={onPrint} className="btn-primary h-9 flex items-center gap-1.5">
             <FileText className="w-4 h-4" /> Print / Export PDF
           </button>
@@ -481,7 +495,7 @@ export default function CashDrawer() {
         (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
         i.paidAt &&
         i.paidAt >= s.openedAt &&
-        (!s.closedAt || i.paidAt <= s.closedAt)
+        (!s.closedAt || i.paidAt <= s.closedAt),
     );
     const methodTotals: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
     shiftInvoices.forEach((i) => {
@@ -499,9 +513,7 @@ export default function CashDrawer() {
   const getRefundsForShift = (s: Shift): number => {
     return invoices.reduce((sum, i) => {
       const shiftRefunds = (i.refunds || []).filter(
-        (r) =>
-          r.processedAt >= s.openedAt &&
-          (!s.closedAt || r.processedAt <= s.closedAt)
+        (r) => r.processedAt >= s.openedAt && (!s.closedAt || r.processedAt <= s.closedAt),
       );
       return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
     }, 0);
@@ -513,7 +525,7 @@ export default function CashDrawer() {
         (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
         i.paidAt &&
         i.paidAt >= s.openedAt &&
-        (!s.closedAt || i.paidAt <= s.closedAt)
+        (!s.closedAt || i.paidAt <= s.closedAt),
     );
     const serviceMap: Record<string, ServiceSummary> = {};
     shiftInvoices.forEach((i) => {
@@ -532,7 +544,7 @@ export default function CashDrawer() {
 
   const getCancellationsForShift = (): Record<string, number> => {
     const cancelledToday = appointments.filter(
-      (a) => a.status === "cancelled" && a.date === TODAY_STR
+      (a) => a.status === "cancelled" && a.date === TODAY_STR,
     );
     const counts: Record<string, number> = {};
     cancelledToday.forEach((a) => {
@@ -578,7 +590,7 @@ export default function CashDrawer() {
 
       const cashRefunds = invoices.reduce((sum, i) => {
         const shiftRefunds = (i.refunds || []).filter(
-          (r) => r.method === "cash" && r.processedAt >= s.openedAt
+          (r) => r.method === "cash" && r.processedAt >= s.openedAt,
         );
         return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
       }, 0);
@@ -590,7 +602,9 @@ export default function CashDrawer() {
 
   // Today's collection totals by method (for KPI strip)
   const todayPaid = invoices.filter(
-    (i) => (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") && i.date === TODAY_STR,
+    (i) =>
+      (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
+      i.date === TODAY_STR,
   );
   const totalByMethod = todayPaid.reduce<Record<string, number>>(
     (acc, i) => {
@@ -615,7 +629,7 @@ export default function CashDrawer() {
           (r) =>
             r.method === "cash" &&
             r.processedAt >= s.openedAt &&
-            (!s.closedAt || r.processedAt <= s.closedAt)
+            (!s.closedAt || r.processedAt <= s.closedAt),
         );
         return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
       }, 0);
@@ -628,21 +642,33 @@ export default function CashDrawer() {
   const perStaff = staff.map((st) => {
     const ss = todayShifts.filter((sh) => sh.staffId === st.id);
     const cash = ss.reduce(
-      (sum, sh) =>
-        sum + (sh.status === "closed" ? sh.cashCollected : cashByOpenShift[sh.id] || 0),
+      (sum, sh) => sum + (sh.status === "closed" ? sh.cashCollected : cashByOpenShift[sh.id] || 0),
       0,
     );
     return { staff: st, cash, shifts: ss.length };
   });
 
-  const KPI = ({ testId, label, value, sub }: { testId?: string; label: string; value: string; sub?: string }) => (
-    <DeskKpi testId={testId} label={label} value={value} sub={sub} />
-  );
+  const KPI = ({
+    testId,
+    label,
+    value,
+    sub,
+  }: {
+    testId?: string;
+    label: string;
+    value: string;
+    sub?: string;
+  }) => <DeskKpi testId={testId} label={label} value={value} sub={sub} />;
 
   return (
     <div data-testid="cash-drawer-page" className="space-y-5">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <KPI testId="kpi-cash" label="Cash today" value={fmt(totalByMethod.cash)} sub="all shifts" />
+        <KPI
+          testId="kpi-cash"
+          label="Cash today"
+          value={fmt(totalByMethod.cash)}
+          sub="all shifts"
+        />
         <KPI testId="kpi-card" label="Card" value={fmt(totalByMethod.card)} />
         <KPI testId="kpi-upi" label="UPI" value={fmt(totalByMethod.upi)} />
         <KPI testId="kpi-gross" label="Desk gross" value={fmt(grossDesk)} sub="incl. insurance" />
@@ -773,9 +799,7 @@ export default function CashDrawer() {
                   {st.initials}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[13px] font-medium text-ink-900 truncate">
-                    {st.name}
-                  </div>
+                  <div className="text-[13px] font-medium text-ink-900 truncate">{st.name}</div>
                   <div className="text-[11px] text-ink-400 font-mono">
                     {n} shift{n === 1 ? "" : "s"}
                   </div>
@@ -820,15 +844,9 @@ export default function CashDrawer() {
                       <div className="text-[11px] text-ink-400 font-mono">{s.id}</div>
                     </td>
                     <td className="px-3 py-3 text-ink-900">{st?.name}</td>
-                    <td className="px-3 py-3 font-mono text-ink-600">
-                      {timeStr(s.openedAt)}
-                    </td>
-                    <td className="px-3 py-3 font-mono text-ink-600">
-                      {timeStr(s.closedAt)}
-                    </td>
-                    <td className="px-3 py-3 text-right font-mono">
-                      {fmt(s.openingFloat)}
-                    </td>
+                    <td className="px-3 py-3 font-mono text-ink-600">{timeStr(s.openedAt)}</td>
+                    <td className="px-3 py-3 font-mono text-ink-600">{timeStr(s.closedAt)}</td>
+                    <td className="px-3 py-3 text-right font-mono">{fmt(s.openingFloat)}</td>
                     <td className="px-3 py-3 text-right font-mono text-ink-900">
                       {fmt(s.cashCollected)}
                     </td>
@@ -856,9 +874,7 @@ export default function CashDrawer() {
                       </button>
                       {s.handover ? (
                         <button
-                          onClick={() =>
-                            toast(s.handover, { duration: 6000 })
-                          }
+                          onClick={() => toast(s.handover, { duration: 6000 })}
                           className="text-sage hover:text-sage-hover font-medium text-[12.5px] inline-flex items-center gap-1"
                         >
                           <FileText className="w-3.5 h-3.5" /> Handover

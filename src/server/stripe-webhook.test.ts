@@ -10,9 +10,7 @@ import {
 
 describe("stripe webhook HMAC (Stripe CLI / stripe-node compatible)", () => {
   it("parses Stripe-Signature header and ignores v0", () => {
-    const parsed = parseStripeSignatureHeader(
-      "t=123,v1=abc,v0=legacy,v1=def",
-    );
+    const parsed = parseStripeSignatureHeader("t=123,v1=abc,v0=legacy,v1=def");
     expect(parsed).toEqual({ timestamp: "123", signatures: ["abc", "def"] });
   });
 

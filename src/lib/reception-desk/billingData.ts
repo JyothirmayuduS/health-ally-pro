@@ -31,9 +31,7 @@ export const SEED_INVOICES = [
     patientId: "MRN-100231",
     doctorId: "DOC-001",
     date: TODAY_STR,
-    items: [
-      { label: "Consultation — Follow-up", qty: 1, unit: 400, amount: 400 },
-    ],
+    items: [{ label: "Consultation — Follow-up", qty: 1, unit: 400, amount: 400 }],
     discount: 0,
     method: "upi",
     status: "paid",
@@ -59,9 +57,7 @@ export const SEED_INVOICES = [
     patientId: "MRN-100233",
     doctorId: "DOC-002",
     date: TODAY_STR,
-    items: [
-      { label: "Consultation — Pediatrics", qty: 1, unit: 800, amount: 800 },
-    ],
+    items: [{ label: "Consultation — Pediatrics", qty: 1, unit: 800, amount: 800 }],
     discount: 0,
     method: "card",
     status: "paid",
@@ -73,9 +69,7 @@ export const SEED_INVOICES = [
     patientId: "MRN-100238",
     doctorId: "DOC-005",
     date: TODAY_STR,
-    items: [
-      { label: "Consultation — Cardiology (follow-up)", qty: 1, unit: 1200, amount: 1200 },
-    ],
+    items: [{ label: "Consultation — Cardiology (follow-up)", qty: 1, unit: 1200, amount: 1200 }],
     discount: 0,
     method: null,
     status: "unpaid",

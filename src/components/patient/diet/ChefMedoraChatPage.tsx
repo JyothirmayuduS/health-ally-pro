@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ChevronLeft,
-  Clock,
-  Plus,
-  Send,
-  Sparkles,
-  Trash2,
-} from "lucide-react";
+import { ChevronLeft, Clock, Plus, Send, Sparkles, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   appendChefChatMessage,
@@ -36,8 +29,7 @@ import { cn } from "@/lib/utils";
 const HIDE_SCROLLBAR =
   "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
-const shellClass =
-  "flex h-dvh w-full flex-col bg-[#F9F7F2] lg:min-h-dvh";
+const shellClass = "flex h-dvh w-full flex-col bg-[#F9F7F2] lg:min-h-dvh";
 
 export function ChefMedoraChatPage() {
   const [session, setSession] = useState<ChefChatSession>(() => getOrCreateActiveChefSession());
@@ -126,7 +118,12 @@ export function ChefMedoraChatPage() {
           </button>
         </header>
 
-        <ul className={cn("flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 pb-8", HIDE_SCROLLBAR)}>
+        <ul
+          className={cn(
+            "flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 pb-8",
+            HIDE_SCROLLBAR,
+          )}
+        >
           {sessions.map((s) => (
             <li key={s.id}>
               <div className="flex items-center gap-3 rounded-[20px] border border-[#EDEAE6] bg-white px-4 py-4">
@@ -387,12 +384,15 @@ function RecipePreviewCard({ mealId, mealName }: { mealId: string; mealName: str
           ) : null}
           {meal.youtubeVideos?.length ? (
             <p className="text-xs font-medium text-red-600">
-              {meal.youtubeVideos.length} YouTube tutorial{meal.youtubeVideos.length > 1 ? "s" : ""} attached
+              {meal.youtubeVideos.length} YouTube tutorial{meal.youtubeVideos.length > 1 ? "s" : ""}{" "}
+              attached
             </p>
           ) : null}
         </>
       ) : null}
-      <span className="text-sm font-semibold text-clay">View full procedure, nutrition & videos →</span>
+      <span className="text-sm font-semibold text-clay">
+        View full procedure, nutrition & videos →
+      </span>
     </Link>
   );
 }

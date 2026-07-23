@@ -183,10 +183,7 @@ export async function syncUnitStatusRemote(id: string, status: string) {
   return postJson({ action: "update_unit_status", unitStatus: { id, status } });
 }
 
-export async function syncOnboardingLead(
-  brand: HospitalBrand,
-  opts?: { turnstileToken?: string },
-) {
+export async function syncOnboardingLead(brand: HospitalBrand, opts?: { turnstileToken?: string }) {
   return postJson({
     action: "onboard",
     turnstileToken: opts?.turnstileToken,

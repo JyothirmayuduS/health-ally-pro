@@ -72,7 +72,9 @@ export function DoctorTopNav() {
               {apkDoctor.initials}
             </span>
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold leading-tight text-[#1B3B2E]">{apkDoctor.shortName}</p>
+              <p className="text-sm font-semibold leading-tight text-[#1B3B2E]">
+                {apkDoctor.shortName}
+              </p>
               <p className="text-[11px] font-medium text-[#8A8F8C]">{apkDoctor.specialty}</p>
             </div>
           </div>

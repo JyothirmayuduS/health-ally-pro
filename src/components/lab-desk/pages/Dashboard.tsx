@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  Activity, AlertTriangle, Beaker, ClipboardList, Microscope, Timer, ArrowRight,
+  Activity,
+  AlertTriangle,
+  Beaker,
+  ClipboardList,
+  Microscope,
+  Timer,
+  ArrowRight,
 } from "lucide-react";
 import { useLabStore, formatRelative, getPatient } from "@/lib/lab-desk/store";
 import { useLabAuth } from "@/lib/lab-desk/useLabAuth";
@@ -28,11 +34,15 @@ export default function Dashboard() {
       awaitingCollection: orders.filter((o) => o.status === "ordered").length,
       inProcessing: orders.filter((o) => o.status === "processing").length,
       pendingValidation: orders.filter((o) => o.status === "validation").length,
-      releasedToday: orders.filter((o) => o.released_at && new Date(o.released_at).toDateString() === today).length,
+      releasedToday: orders.filter(
+        (o) => o.released_at && new Date(o.released_at).toDateString() === today,
+      ).length,
     };
   }, [orders]);
 
-  const statOrders = orders.filter((o) => o.priority === "stat" && !["validated", "cancelled"].includes(o.status));
+  const statOrders = orders.filter(
+    (o) => o.priority === "stat" && !["validated", "cancelled"].includes(o.status),
+  );
 
   const tatWatch = orders
     .map((o) => {
@@ -48,7 +58,11 @@ export default function Dashboard() {
 
   const workloadBySection = SECTIONS.map((sec) => ({
     ...sec,
-    count: orders.filter((o) => findCatalog(o.test_code)?.section === sec.id && !["validated", "cancelled"].includes(o.status)).length,
+    count: orders.filter(
+      (o) =>
+        findCatalog(o.test_code)?.section === sec.id &&
+        !["validated", "cancelled"].includes(o.status),
+    ).length,
   })).filter((s) => s.count > 0);
 
   const recent = useMemo(() => {
@@ -58,7 +72,8 @@ export default function Dashboard() {
   }, [orders]);
 
   const oldestPending = useMemo(() => {
-    const pending = orders.filter((o) => !["validated", "cancelled"].includes(o.status))
+    const pending = orders
+      .filter((o) => !["validated", "cancelled"].includes(o.status))
       .sort((a, b) => new Date(a.ordered_at).getTime() - new Date(b.ordered_at).getTime());
     return pending[0];
   }, [orders]);
@@ -69,14 +84,22 @@ export default function Dashboard() {
         action={
           <div className="flex gap-2">
             {oldestPending && (
-              <Button asChild size="sm" variant="outline" className="border-ink-200" data-testid="oldest-pending-btn">
+              <Button
+                asChild
+                size="sm"
+                variant="outline"
+                className="border-ink-200"
+                data-testid="oldest-pending-btn"
+              >
                 <Link to="/lab/orders">
                   <Timer className="h-3.5 w-3.5 mr-1.5" /> Oldest pending: {oldestPending.id}
                 </Link>
               </Button>
             )}
             <Button asChild size="sm" className="btn-primary" data-testid="open-collection-btn">
-              <Link to="/lab/collection">Open collection <ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Link>
+              <Link to="/lab/collection">
+                Open collection <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+              </Link>
             </Button>
           </div>
         }
@@ -85,11 +108,41 @@ export default function Dashboard() {
       </SectionLabel>
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <KpiCard label="New orders" value={stats.newOrders} hint="Awaiting first action" accent="sage" testid="kpi-new-orders" />
-        <KpiCard label="To collect" value={stats.awaitingCollection} hint="Phleb queue" accent="sky" testid="kpi-awaiting" />
-        <KpiCard label="In processing" value={stats.inProcessing} hint="At the bench" accent="indigo" testid="kpi-processing" />
-        <KpiCard label="Pending validation" value={stats.pendingValidation} hint="Supervisor review" accent="amber" testid="kpi-pending" />
-        <KpiCard label="Released today" value={stats.releasedToday} hint="Reports out" accent="emerald" testid="kpi-released" />
+        <KpiCard
+          label="New orders"
+          value={stats.newOrders}
+          hint="Awaiting first action"
+          accent="sage"
+          testid="kpi-new-orders"
+        />
+        <KpiCard
+          label="To collect"
+          value={stats.awaitingCollection}
+          hint="Phleb queue"
+          accent="sky"
+          testid="kpi-awaiting"
+        />
+        <KpiCard
+          label="In processing"
+          value={stats.inProcessing}
+          hint="At the bench"
+          accent="indigo"
+          testid="kpi-processing"
+        />
+        <KpiCard
+          label="Pending validation"
+          value={stats.pendingValidation}
+          hint="Supervisor review"
+          accent="amber"
+          testid="kpi-pending"
+        />
+        <KpiCard
+          label="Released today"
+          value={stats.releasedToday}
+          hint="Reports out"
+          accent="emerald"
+          testid="kpi-released"
+        />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -100,7 +153,12 @@ export default function Dashboard() {
               <h3 className="font-display font-semibold text-ink-900">Priority alerts</h3>
               <span className="text-xs font-mono text-ink-400">{statOrders.length} STAT</span>
             </div>
-            <Link to="/lab/orders" className="text-xs font-mono uppercase tracking-wider text-[var(--sage-700)] hover:underline">See all →</Link>
+            <Link
+              to="/lab/orders"
+              className="text-xs font-mono uppercase tracking-wider text-[var(--sage-700)] hover:underline"
+            >
+              See all →
+            </Link>
           </div>
           {statOrders.length === 0 ? (
             <div className="text-sm text-ink-400 py-6 text-center">No STAT orders right now.</div>
@@ -109,11 +167,19 @@ export default function Dashboard() {
               {statOrders.map((o) => {
                 const p = getPatient(o, patients);
                 return (
-                  <Link to="/lab/orders" key={o.id} className="flex items-center gap-3 p-3 rounded-lg bg-red-50/50 border border-red-100 hover:bg-red-50 transition">
+                  <Link
+                    to="/lab/orders"
+                    key={o.id}
+                    className="flex items-center gap-3 p-3 rounded-lg bg-red-50/50 border border-red-100 hover:bg-red-50 transition"
+                  >
                     <PriorityPill priority="stat" />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-ink-900">{p?.name} <span className="font-mono text-xs text-ink-400">· {p?.mrn}</span></div>
-                      <div className="text-xs text-ink-600">{o.test_name} · ordered {formatRelative(o.ordered_at)}</div>
+                      <div className="text-sm font-medium text-ink-900">
+                        {p?.name} <span className="font-mono text-xs text-ink-400">· {p?.mrn}</span>
+                      </div>
+                      <div className="text-xs text-ink-600">
+                        {o.test_name} · ordered {formatRelative(o.ordered_at)}
+                      </div>
                     </div>
                     <StatusPill status={o.status} />
                   </Link>
@@ -132,22 +198,35 @@ export default function Dashboard() {
             <div className="text-sm text-ink-400 py-4">All orders within target.</div>
           ) : (
             <div className="space-y-3">
-              {(tatWatch as NonNullable<(typeof tatWatch)[0]>[]).map(({ order, elapsed, target, breached }) => {
-                const p = getPatient(order, patients);
-                return (
-                  <div key={order.id} className="text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium truncate">{order.test_code} · {p?.name}</span>
-                      <span className={breached ? "text-xs font-mono text-red-700" : "text-xs font-mono text-amber-700"}>
-                        {elapsed.toFixed(1)}h / {target}h
-                      </span>
+              {(tatWatch as NonNullable<(typeof tatWatch)[0]>[]).map(
+                ({ order, elapsed, target, breached }) => {
+                  const p = getPatient(order, patients);
+                  return (
+                    <div key={order.id} className="text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium truncate">
+                          {order.test_code} · {p?.name}
+                        </span>
+                        <span
+                          className={
+                            breached
+                              ? "text-xs font-mono text-red-700"
+                              : "text-xs font-mono text-amber-700"
+                          }
+                        >
+                          {elapsed.toFixed(1)}h / {target}h
+                        </span>
+                      </div>
+                      <div className="mt-1 h-1.5 bg-stone-100 rounded overflow-hidden">
+                        <div
+                          className={breached ? "h-full bg-red-500" : "h-full bg-amber-500"}
+                          style={{ width: `${Math.min(100, (elapsed / target) * 100)}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="mt-1 h-1.5 bg-stone-100 rounded overflow-hidden">
-                      <div className={breached ? "h-full bg-red-500" : "h-full bg-amber-500"} style={{ width: `${Math.min(100, (elapsed / target) * 100)}%` }} />
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                },
+              )}
             </div>
           )}
         </div>
@@ -172,7 +251,10 @@ export default function Dashboard() {
                       <span className="font-mono text-ink-400">{s.count}</span>
                     </div>
                     <div className="h-2 bg-stone-100 rounded overflow-hidden">
-                      <div className="h-full bg-[var(--sage-500)]" style={{ width: `${(s.count / max) * 100}%` }} />
+                      <div
+                        className="h-full bg-[var(--sage-500)]"
+                        style={{ width: `${(s.count / max) * 100}%` }}
+                      />
                     </div>
                   </div>
                 );
@@ -193,7 +275,11 @@ export default function Dashboard() {
               {staff.slice(0, 6).map((s) => (
                 <div key={s.id} className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sage-soft text-[11px] font-semibold text-sage">
-                    {s.name?.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                    {s.name
+                      ?.split(" ")
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-medium text-ink-900">{s.name}</div>
@@ -214,7 +300,9 @@ export default function Dashboard() {
             <h3 className="font-display font-semibold text-ink-900">Recent activity</h3>
           </div>
           {recent.length === 0 ? (
-            <div className="text-sm text-ink-400">Activity will appear as orders move through the workflow.</div>
+            <div className="text-sm text-ink-400">
+              Activity will appear as orders move through the workflow.
+            </div>
           ) : (
             <div className="space-y-3 text-sm">
               {recent.map((r, i) => (

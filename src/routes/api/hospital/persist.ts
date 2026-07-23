@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { jsonResponse, optionsResponse } from "@/server/ai/api-auth";
-import {
-  authorizeHospitalPersist,
-  authorizePublicOnboard,
-} from "@/server/hospital-persist-auth";
+import { authorizeHospitalPersist, authorizePublicOnboard } from "@/server/hospital-persist-auth";
 import { serverHasModule } from "@/server/license";
 import { writePhiAudit } from "@/server/phi-audit";
 import { productionBootHttpResponse } from "@/server/production-boot";
@@ -53,7 +50,12 @@ async function audit(
   auth: { hospitalId: string; userId: string | null; actorEmail: string | null },
   action: string,
   resource: string,
-  extra?: { entityType?: string; entityId?: string; metadata?: Record<string, unknown>; outcome?: "success" | "denied" | "error" },
+  extra?: {
+    entityType?: string;
+    entityId?: string;
+    metadata?: Record<string, unknown>;
+    outcome?: "success" | "denied" | "error";
+  },
 ) {
   await writePhiAudit({
     hospitalId: auth.hospitalId,
@@ -137,7 +139,8 @@ export const Route = createFileRoute("/api/hospital/persist")({
             return jsonResponse(result);
           }
           case "anatomy": {
-            if (!specialtyId) return jsonResponse({ error: "specialtyId required" }, { status: 400 });
+            if (!specialtyId)
+              return jsonResponse({ error: "specialtyId required" }, { status: 400 });
             const result = await listAnatomyMarkers(hospitalId, specialtyId);
             await audit(request, auth, "read", "anatomy_markers", {
               metadata: { specialtyId },
@@ -146,7 +149,18 @@ export const Route = createFileRoute("/api/hospital/persist")({
           }
           case "desk": {
             const desk = (url.searchParams.get("desk") ?? "") as DeskId;
-            if (!["reception", "lab", "pharmacy", "billing", "nursing", "admin", "doctor", "patient"].includes(desk)) {
+            if (
+              ![
+                "reception",
+                "lab",
+                "pharmacy",
+                "billing",
+                "nursing",
+                "admin",
+                "doctor",
+                "patient",
+              ].includes(desk)
+            ) {
               return jsonResponse({ error: "desk required" }, { status: 400 });
             }
             const result = await listDeskRecords(hospitalId, desk);
@@ -201,7 +215,9 @@ export const Route = createFileRoute("/api/hospital/persist")({
             return jsonResponse({ error: turnstile.error }, { status: 400 });
           }
 
-          const email = String(body.lead.admin_email ?? "").trim().toLowerCase();
+          const email = String(body.lead.admin_email ?? "")
+            .trim()
+            .toLowerCase();
           if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return jsonResponse({ error: "Valid admin_email required" }, { status: 400 });
           }
@@ -288,9 +304,10 @@ export const Route = createFileRoute("/api/hospital/persist")({
             });
             await audit(request, auth, "create", "specialty_chart_notes", {
               entityType: "specialty_chart_note",
-              entityId: result.data && typeof result.data === "object" && "id" in result.data
-                ? String((result.data as { id: string }).id)
-                : undefined,
+              entityId:
+                result.data && typeof result.data === "object" && "id" in result.data
+                  ? String((result.data as { id: string }).id)
+                  : undefined,
               metadata: { specialtyId: body.chart.specialty_id },
               outcome: result.ok ? "success" : "error",
             });
@@ -317,14 +334,18 @@ export const Route = createFileRoute("/api/hospital/persist")({
               await audit(request, auth, "update", "hospital_unit_records", { outcome: "denied" });
               return denied;
             }
-            if (!body.unitStatus) return jsonResponse({ error: "unitStatus required" }, { status: 400 });
+            if (!body.unitStatus)
+              return jsonResponse({ error: "unitStatus required" }, { status: 400 });
             {
               const units = await listUnitRecords(hospitalId);
               const owned = (units.data ?? []).some((u) => u.id === body.unitStatus!.id);
               if (!owned && auth.mode !== "api_key") {
                 return jsonResponse({ error: "Unit not found in hospital" }, { status: 404 });
               }
-              const result = await updateUnitRecordStatus(body.unitStatus.id, body.unitStatus.status);
+              const result = await updateUnitRecordStatus(
+                body.unitStatus.id,
+                body.unitStatus.status,
+              );
               await audit(request, auth, "update_status", "hospital_unit_records", {
                 entityId: body.unitStatus.id,
                 metadata: { status: body.unitStatus.status },
@@ -363,9 +384,16 @@ export const Route = createFileRoute("/api/hospital/persist")({
             const desk = body.desk;
             if (
               !desk ||
-              !["reception", "lab", "pharmacy", "billing", "nursing", "admin", "doctor", "patient"].includes(
-                desk,
-              )
+              ![
+                "reception",
+                "lab",
+                "pharmacy",
+                "billing",
+                "nursing",
+                "admin",
+                "doctor",
+                "patient",
+              ].includes(desk)
             ) {
               return jsonResponse({ error: "desk required" }, { status: 400 });
             }

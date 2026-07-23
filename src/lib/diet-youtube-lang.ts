@@ -74,10 +74,7 @@ export function videoMatchesLanguage(title: string, language: DietLanguage): boo
   const t = title.toLowerCase();
 
   if (language === "hi") {
-    return (
-      hasDevanagari(title) ||
-      /\bhindi\b|हिंदी|हिन्दी/i.test(t)
-    );
+    return hasDevanagari(title) || /\bhindi\b|हिंदी|हिन्दी/i.test(t);
   }
 
   if (language === "ta") {
@@ -89,12 +86,7 @@ export function videoMatchesLanguage(title: string, language: DietLanguage): boo
   }
 
   // English: exclude Indic-script dominant titles
-  return (
-    !hasDevanagari(title) &&
-    !hasTamil(title) &&
-    !hasTelugu(title) &&
-    !hasGujarati(title)
-  );
+  return !hasDevanagari(title) && !hasTamil(title) && !hasTelugu(title) && !hasGujarati(title);
 }
 
 export function buildFoodBasedYoutubeQueries(

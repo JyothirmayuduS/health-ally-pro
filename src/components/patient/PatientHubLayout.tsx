@@ -9,11 +9,7 @@ type Props = {
 };
 
 /** Shared wrapper for patient hub routes — mobile search/menu/notifications bar. */
-export function PatientHubLayout({
-  children,
-  className,
-  widthClass = "max-w-5xl",
-}: Props) {
+export function PatientHubLayout({ children, className, widthClass = "max-w-5xl" }: Props) {
   return (
     <div
       className={cn(

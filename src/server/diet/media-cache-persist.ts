@@ -36,11 +36,7 @@ export async function loadVideos<T>(
   return readVideosFromDb<T>(key, language);
 }
 
-export async function persistVideos<T>(
-  key: string,
-  language: string,
-  videos: T,
-): Promise<void> {
+export async function persistVideos<T>(key: string, language: string, videos: T): Promise<void> {
   await writeVideosToDb(key, language, videos, MEDIA_CACHE_TTL_MS);
 }
 

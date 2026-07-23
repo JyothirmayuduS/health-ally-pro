@@ -9,7 +9,12 @@ type Props = {
 };
 
 /** Searchable ICD-10 picker (Masters-backed). */
-export function IcdPicker({ value, onChange, placeholder = "Search ICD-10…", className = "" }: Props) {
+export function IcdPicker({
+  value,
+  onChange,
+  placeholder = "Search ICD-10…",
+  className = "",
+}: Props) {
   const [query, setQuery] = useState(value);
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<IcdDiagnosis[]>([]);

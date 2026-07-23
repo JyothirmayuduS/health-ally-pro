@@ -60,13 +60,62 @@ const DEFAULT_DEPARTMENTS: Department[] = [
 ];
 
 export const DEFAULT_STAFF: StaffMember[] = [
-  { id: "ST-01", name: "Maya Kapoor", role: "Receptionist", email: "reception@oakhaven.demo", department: "Front desk", active: true },
-  { id: "ST-02", name: "J. Mensah", role: "Lab technician", email: "lab@oakhaven.demo", department: "Laboratory", active: true },
-  { id: "ST-03", name: "Dr. Rajan", role: "Lab supervisor", email: "lab.supervisor@oakhaven.demo", department: "Laboratory", active: true },
-  { id: "ST-04", name: "Riley Chen", role: "Pharmacist", email: "pharmacy@oakhaven.demo", department: "Pharmacy", active: true },
-  { id: "ST-05", name: "Anita Rao", role: "Billing staff", email: "billing@oakhaven.demo", department: "Finance", active: true },
-  { id: "ST-06", name: "Sunita Pillai", role: "Nurse", email: "nursing@oakhaven.demo", department: "Ward", active: true },
-  { id: "ST-07", name: "Admin User", role: "Hospital admin", email: "admin@oakhaven.demo", department: "Administration", active: true },
+  {
+    id: "ST-01",
+    name: "Maya Kapoor",
+    role: "Receptionist",
+    email: "reception@oakhaven.demo",
+    department: "Front desk",
+    active: true,
+  },
+  {
+    id: "ST-02",
+    name: "J. Mensah",
+    role: "Lab technician",
+    email: "lab@oakhaven.demo",
+    department: "Laboratory",
+    active: true,
+  },
+  {
+    id: "ST-03",
+    name: "Dr. Rajan",
+    role: "Lab supervisor",
+    email: "lab.supervisor@oakhaven.demo",
+    department: "Laboratory",
+    active: true,
+  },
+  {
+    id: "ST-04",
+    name: "Riley Chen",
+    role: "Pharmacist",
+    email: "pharmacy@oakhaven.demo",
+    department: "Pharmacy",
+    active: true,
+  },
+  {
+    id: "ST-05",
+    name: "Anita Rao",
+    role: "Billing staff",
+    email: "billing@oakhaven.demo",
+    department: "Finance",
+    active: true,
+  },
+  {
+    id: "ST-06",
+    name: "Sunita Pillai",
+    role: "Nurse",
+    email: "nursing@oakhaven.demo",
+    department: "Ward",
+    active: true,
+  },
+  {
+    id: "ST-07",
+    name: "Admin User",
+    role: "Hospital admin",
+    email: "admin@oakhaven.demo",
+    department: "Administration",
+    active: true,
+  },
 ];
 
 import { deskForKey, loadPersistedJson, savePersistedJson } from "@/lib/shared/persisted-store";

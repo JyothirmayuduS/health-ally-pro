@@ -7,10 +7,7 @@ vi.mock("@/lib/supabase/admin", () => ({
 
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { authorizeHospitalPersist } from "@/server/hospital-persist-auth";
-import {
-  HOSPITAL_SCOPED_TABLES,
-  PERSIST_API_SCOPED_TABLES,
-} from "@/server/hospital-scoped-tables";
+import { HOSPITAL_SCOPED_TABLES, PERSIST_API_SCOPED_TABLES } from "@/server/hospital-scoped-tables";
 
 const OAK = "a0000001-0001-4001-8001-000000000001";
 const OTHER = "b0000001-0001-4001-8001-000000000002";
@@ -67,10 +64,7 @@ describe("cross-tenant isolation (P2.8)", () => {
       }),
     } as never);
 
-    const auth = await authorizeHospitalPersist(
-      req({ Authorization: "Bearer fake-jwt" }),
-      OTHER,
-    );
+    const auth = await authorizeHospitalPersist(req({ Authorization: "Bearer fake-jwt" }), OTHER);
     expect(auth.ok).toBe(false);
     if (auth.ok) return;
     expect(auth.status).toBe(403);
@@ -78,10 +72,7 @@ describe("cross-tenant isolation (P2.8)", () => {
   });
 
   it("locks demo mode to Oak Haven even if client asks for hospital B", async () => {
-    const auth = await authorizeHospitalPersist(
-      req({ "x-medora-persist-demo": "1" }),
-      OTHER,
-    );
+    const auth = await authorizeHospitalPersist(req({ "x-medora-persist-demo": "1" }), OTHER);
     expect(auth.ok).toBe(true);
     if (!auth.ok) return;
     expect(auth.hospitalId).toBe(OAK);

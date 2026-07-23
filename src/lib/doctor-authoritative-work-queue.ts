@@ -80,7 +80,9 @@ export function buildAuthoritativeWorkQueue(
     });
   }
 
-  const urgentPanel = PANEL_PATIENTS.filter((p) => p.status === "Urgent" || p.status === "Critical");
+  const urgentPanel = PANEL_PATIENTS.filter(
+    (p) => p.status === "Urgent" || p.status === "Critical",
+  );
   for (const p of urgentPanel.slice(0, 2)) {
     pushUnique(items, {
       id: `urgent-panel-${p.id}`,

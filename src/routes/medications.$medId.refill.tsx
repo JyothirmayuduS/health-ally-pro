@@ -87,9 +87,7 @@ function RefillRequestPage() {
             onClick={() => setMethod(opt.id)}
             className={cn(
               "mt-3 flex w-full items-center gap-4 rounded-3xl border p-5 text-left transition-colors",
-              method === opt.id
-                ? "border-clay border-2 bg-white"
-                : "border-[#EDEAE6] bg-white",
+              method === opt.id ? "border-clay border-2 bg-white" : "border-[#EDEAE6] bg-white",
             )}
           >
             <span

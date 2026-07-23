@@ -23,8 +23,6 @@ const age = (dob: string | undefined) => {
   return Math.floor(ms / (365.25 * 24 * 3600 * 1000));
 };
 
-
-
 export default function Patients() {
   const { patient: patientParam } = Route.useSearch();
   const { patients, appointments, doctors } = useStore();
@@ -100,9 +98,7 @@ export default function Patients() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <div className="text-[13px] font-medium text-ink-900 truncate">
-                        {p.name}
-                      </div>
+                      <div className="text-[13px] font-medium text-ink-900 truncate">{p.name}</div>
                       {(p.balance ?? 0) > 0 && (
                         <span className="text-[10px] font-mono uppercase tracking-wider bg-status-noshowBg text-status-noshowText border border-status-noshowBorder px-1.5 py-0.5 rounded-sm">
                           Due ₹{p.balance}
@@ -298,7 +294,9 @@ export default function Patients() {
                   <div className="text-[10.5px] uppercase tracking-wider text-ink-400 font-mono">
                     Emergency contact
                   </div>
-                  <div className="text-[13px] text-ink-900 mt-1">{selected.emergency?.name ?? "—"}</div>
+                  <div className="text-[13px] text-ink-900 mt-1">
+                    {selected.emergency?.name ?? "—"}
+                  </div>
                   <div className="text-[11px] text-ink-400 mt-0.5">
                     {selected.emergency?.relation} · {selected.emergency?.phone}
                   </div>

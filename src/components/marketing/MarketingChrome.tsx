@@ -22,7 +22,9 @@ export function MarketingHeader({ active }: Props) {
     <header className="relative z-10 border-b border-[#E4DFD8]/80 bg-[#F4F1EC]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link to="/" className="flex items-center gap-3">
-          <span className="font-serif text-2xl font-semibold tracking-tight text-[#1B3B2E]">Medora</span>
+          <span className="font-serif text-2xl font-semibold tracking-tight text-[#1B3B2E]">
+            Medora
+          </span>
           <span className="hidden rounded-full bg-[#1B3B2E] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white sm:inline">
             Hospital OS
           </span>

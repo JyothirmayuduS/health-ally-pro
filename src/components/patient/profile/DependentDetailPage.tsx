@@ -135,13 +135,7 @@ export function DependentDetailPage({ dependentId }: { dependentId: string }) {
     );
   }
 
-  return (
-    <DependentDetailContent
-      dependent={dependent}
-      record={record}
-      setRecord={setRecord}
-    />
-  );
+  return <DependentDetailContent dependent={dependent} record={record} setRecord={setRecord} />;
 }
 
 function DependentDetailContent({
@@ -170,9 +164,7 @@ function DependentDetailContent({
           <ChevronLeft className="h-5 w-5 text-ink sm:h-6 sm:w-6" strokeWidth={2.25} />
         </Link>
         <div className="min-w-0 flex-1 text-center lg:text-left">
-          <h1 className="truncate font-serif text-2xl text-ink sm:text-[28px]">
-            {dependent.name}
-          </h1>
+          <h1 className="truncate font-serif text-2xl text-ink sm:text-[28px]">{dependent.name}</h1>
           <p className="mt-0.5 text-sm text-ink-muted">
             {relationTag(dependent)} · {dependent.bloodGroup}
           </p>
@@ -239,7 +231,9 @@ function DependentDetailContent({
                     <button
                       type="button"
                       onClick={() => toggleMed(m.id, !m.taken)}
-                      aria-label={m.taken ? `Mark ${m.name} as not taken` : `Mark ${m.name} as taken`}
+                      aria-label={
+                        m.taken ? `Mark ${m.name} as not taken` : `Mark ${m.name} as taken`
+                      }
                       className={cn(
                         "grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 transition-colors",
                         m.taken

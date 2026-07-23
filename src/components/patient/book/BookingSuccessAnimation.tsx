@@ -14,20 +14,11 @@ export function BookingSuccessAnimation() {
         { cls: "booking-confetti booking-confetti--5", delay: "0.6s" },
         { cls: "booking-confetti booking-confetti--6", delay: "1.4s" },
       ].map(({ cls, delay }) => (
-        <span
-          key={cls}
-          className={cls}
-          style={{ animationDelay: delay }}
-          aria-hidden
-        />
+        <span key={cls} className={cls} style={{ animationDelay: delay }} aria-hidden />
       ))}
 
       <div className="booking-success-badge relative z-10 grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#E8F3EE] via-white to-[#F7E7DC] shadow-[0_12px_40px_-12px_rgba(27,59,46,0.35)] ring-1 ring-[#2D6B4F]/15">
-        <svg
-          viewBox="0 0 96 96"
-          className="h-[58%] w-[58%] text-[#2D6B4F]"
-          aria-hidden
-        >
+        <svg viewBox="0 0 96 96" className="h-[58%] w-[58%] text-[#2D6B4F]" aria-hidden>
           <circle
             cx="48"
             cy="48"

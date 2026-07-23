@@ -82,7 +82,10 @@ function PatientHistory() {
     return (
       <div className="py-16 text-center">
         <p className="text-[#8A8F8C]">Patient not found.</p>
-        <Link to="/doctor/patients" className="mt-3 inline-block text-sm font-semibold text-[#B8735D]">
+        <Link
+          to="/doctor/patients"
+          className="mt-3 inline-block text-sm font-semibold text-[#B8735D]"
+        >
           Back to patients
         </Link>
       </div>
@@ -106,7 +109,9 @@ function PatientHistory() {
           <ChevronLeft className="h-5 w-5 text-[#1B3B2E]" />
         </Link>
         <div>
-          <h1 className="font-serif text-[1.75rem] font-semibold text-[#1B3B2E]">Patient history</h1>
+          <h1 className="font-serif text-[1.75rem] font-semibold text-[#1B3B2E]">
+            Patient history
+          </h1>
           <p className="text-sm text-[#8A8F8C]">{patient.name}</p>
         </div>
       </header>
@@ -136,36 +141,37 @@ function PatientHistory() {
             className="rounded-[18px] border border-[#EDEAE6] bg-white px-3 py-4 text-center shadow-sm"
           >
             <p className="text-2xl font-bold text-[#1B3B2E]">{stat.value}</p>
-            <p className="mt-0.5 text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">{stat.label}</p>
+            <p className="mt-0.5 text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">
+              {stat.label}
+            </p>
           </div>
         ))}
       </div>
 
       <div className="flex gap-1 rounded-2xl bg-[#F5F2ED] p-1">
-        {(
-          [
-            { id: "all" as const, label: "All", count: totalCount },
-            ...panelTabs,
-          ] as const
-        ).map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => setTab(t.id)}
-            className={cn(
-              "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-sm font-medium",
-              tab === t.id ? "bg-white text-[#1B3B2E] shadow-sm" : "text-[#8A8F8C]",
-            )}
-          >
-            {t.label}
-            <span className="text-xs">{t.count}</span>
-          </button>
-        ))}
+        {([{ id: "all" as const, label: "All", count: totalCount }, ...panelTabs] as const).map(
+          (t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-sm font-medium",
+                tab === t.id ? "bg-white text-[#1B3B2E] shadow-sm" : "text-[#8A8F8C]",
+              )}
+            >
+              {t.label}
+              <span className="text-xs">{t.count}</span>
+            </button>
+          ),
+        )}
       </div>
 
       {showChart && (
         <section className="space-y-3">
-          <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">CURRENT CHART</p>
+          <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">
+            CURRENT CHART
+          </p>
           {filteredMeds.map((item) => (
             <button
               key={item.id}
@@ -193,7 +199,9 @@ function PatientHistory() {
                 </div>
                 <ChevronRight className="h-4 w-4 shrink-0 text-[#D4D0CB]" />
               </div>
-              <p className="mt-3 text-right text-xs font-semibold text-[#1B3B2E]">View full details ›</p>
+              <p className="mt-3 text-right text-xs font-semibold text-[#1B3B2E]">
+                View full details ›
+              </p>
             </button>
           ))}
         </section>
@@ -205,7 +213,9 @@ function PatientHistory() {
             {showVisits && filteredVisits.length > 0 && (
               <section className="space-y-3">
                 {tab === "all" && (
-                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">VISITS</p>
+                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">
+                    VISITS
+                  </p>
                 )}
                 {renderHistoryEntries(filteredVisits, (entry) =>
                   setSheetDetail({ type: "visit", id: entry.id }),
@@ -216,7 +226,9 @@ function PatientHistory() {
             {showRx && filteredRx.length > 0 && (
               <section className="space-y-3">
                 {tab === "all" && (
-                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">PRESCRIPTIONS</p>
+                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">
+                    PRESCRIPTIONS
+                  </p>
                 )}
                 {renderHistoryEntries(filteredRx, (entry) =>
                   setSheetDetail({ type: "medication", id: entry.medicationId }),
@@ -227,7 +239,9 @@ function PatientHistory() {
             {showDocuments && (
               <section className="space-y-3">
                 {tab === "all" && (
-                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">DOCUMENTS</p>
+                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">
+                    DOCUMENTS
+                  </p>
                 )}
                 <HistoryDocumentsPanel
                   patientId={patientId}
@@ -246,7 +260,9 @@ function PatientHistory() {
             {showVitals && filteredVitals.length > 0 && (
               <section className="space-y-3">
                 {tab === "all" && (
-                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">VITALS</p>
+                  <p className="text-[11px] font-semibold tracking-[0.12em] text-[#8A8F8C]">
+                    VITALS
+                  </p>
                 )}
                 {renderHistoryEntries(filteredVitals, (entry) =>
                   setSheetDetail({ type: "vital", id: entry.id }),

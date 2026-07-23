@@ -7,13 +7,21 @@ export type PhiFilterResult = {
 type PhiPattern = { label: string; regex: RegExp; replacement: string };
 
 const PHI_PATTERNS: PhiPattern[] = [
-  { label: "email", regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, replacement: "[EMAIL_REDACTED]" },
+  {
+    label: "email",
+    regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
+    replacement: "[EMAIL_REDACTED]",
+  },
   {
     label: "phone",
     regex: /(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{2,4}\)?[-.\s]?)?\d{3,4}[-.\s]?\d{4}\b/g,
     replacement: "[PHONE_REDACTED]",
   },
-  { label: "mrn", regex: /\b(?:MRN|P|UHID)[-\s]?[A-Z0-9]{3,12}\b/gi, replacement: "[MRN_REDACTED]" },
+  {
+    label: "mrn",
+    regex: /\b(?:MRN|P|UHID)[-\s]?[A-Z0-9]{3,12}\b/gi,
+    replacement: "[MRN_REDACTED]",
+  },
   { label: "ssn", regex: /\b\d{3}-\d{2}-\d{4}\b/g, replacement: "[SSN_REDACTED]" },
   { label: "aadhaar", regex: /\b\d{4}\s?\d{4}\s?\d{4}\b/g, replacement: "[ID_REDACTED]" },
   {
@@ -28,7 +36,8 @@ const PHI_PATTERNS: PhiPattern[] = [
   },
   {
     label: "address",
-    regex: /\b\d{1,5}\s+[A-Za-z0-9\s,.]{5,60}(?:Street|St|Road|Rd|Avenue|Ave|Lane|Ln|Drive|Dr|Nagar|Colony)\b/gi,
+    regex:
+      /\b\d{1,5}\s+[A-Za-z0-9\s,.]{5,60}(?:Street|St|Road|Rd|Avenue|Ave|Lane|Ln|Drive|Dr|Nagar|Colony)\b/gi,
     replacement: "[ADDRESS_REDACTED]",
   },
 ];

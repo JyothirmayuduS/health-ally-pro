@@ -1,9 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  jsonResponse,
-  optionsResponse,
-  verifyPatientWebAiRequest,
-} from "@/server/ai/api-auth";
+import { jsonResponse, optionsResponse, verifyPatientWebAiRequest } from "@/server/ai/api-auth";
 import type { DietAiSearchInput } from "@/lib/diet-ai-types";
 
 export const Route = createFileRoute("/api/ai/diet")({

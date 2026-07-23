@@ -3,7 +3,6 @@ import { ReceptionVitalsWorkspace } from "@/components/reception-desk/pages/Vita
 
 type ReceptionVitalsSearch = { patientId?: string };
 
-
 export const Route = createFileRoute("/reception/vitals")({
   validateSearch: (search: Record<string, unknown>): ReceptionVitalsSearch => ({
     patientId: typeof search.patientId === "string" ? search.patientId : undefined,

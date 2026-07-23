@@ -47,46 +47,94 @@ interface OperationalOT {
 
 const SEED_OPERATIONAL_OTS: OperationalOT[] = [
   {
-    id: "OT-1", name: "Theatre 1", status: "occupied",
-    tempCelsius: 19.5, humidityPct: 52, achRate: 24, positivePressurePascal: 18.2,
-    oxygenBar: 4.1, nitrousBar: 4.0, vacuumBar: -0.62,
+    id: "OT-1",
+    name: "Theatre 1",
+    status: "occupied",
+    tempCelsius: 19.5,
+    humidityPct: 52,
+    achRate: 24,
+    positivePressurePascal: 18.2,
+    oxygenBar: 4.1,
+    nitrousBar: 4.0,
+    vacuumBar: -0.62,
     activeCase: {
       procedure: "Knee Arthroscopy & ACL Reconstruction",
-      surgeon: "Dr. Rohan Bhatt", anaesthetist: "Dr. Sandeep Sen",
-      patientName: "Ravi Deshmukh", mrn: "MRN-100234",
-      durationMins: 90, elapsedMins: 45,
+      surgeon: "Dr. Rohan Bhatt",
+      anaesthetist: "Dr. Sandeep Sen",
+      patientName: "Ravi Deshmukh",
+      mrn: "MRN-100234",
+      durationMins: 90,
+      elapsedMins: 45,
     },
   },
   {
-    id: "OT-2", name: "Theatre 2", status: "available",
-    tempCelsius: 20.1, humidityPct: 48, achRate: 22, positivePressurePascal: 16.5,
-    oxygenBar: 4.2, nitrousBar: 4.1, vacuumBar: -0.65,
+    id: "OT-2",
+    name: "Theatre 2",
+    status: "available",
+    tempCelsius: 20.1,
+    humidityPct: 48,
+    achRate: 22,
+    positivePressurePascal: 16.5,
+    oxygenBar: 4.2,
+    nitrousBar: 4.1,
+    vacuumBar: -0.65,
   },
   {
-    id: "OT-3", name: "Theatre 3", status: "cleaning",
-    tempCelsius: 21.0, humidityPct: 55, achRate: 26, positivePressurePascal: 15.0,
-    oxygenBar: 4.0, nitrousBar: 3.9, vacuumBar: -0.58,
+    id: "OT-3",
+    name: "Theatre 3",
+    status: "cleaning",
+    tempCelsius: 21.0,
+    humidityPct: 55,
+    achRate: 26,
+    positivePressurePascal: 15.0,
+    oxygenBar: 4.0,
+    nitrousBar: 3.9,
+    vacuumBar: -0.58,
   },
   {
-    id: "OT-4", name: "Theatre 4", status: "occupied",
-    tempCelsius: 18.8, humidityPct: 50, achRate: 25, positivePressurePascal: 19.1,
-    oxygenBar: 4.3, nitrousBar: 4.2, vacuumBar: -0.68,
+    id: "OT-4",
+    name: "Theatre 4",
+    status: "occupied",
+    tempCelsius: 18.8,
+    humidityPct: 50,
+    achRate: 25,
+    positivePressurePascal: 19.1,
+    oxygenBar: 4.3,
+    nitrousBar: 4.2,
+    vacuumBar: -0.68,
     activeCase: {
       procedure: "Emergency Lower Segment C-Section",
-      surgeon: "Dr. Priya Nair", anaesthetist: "Dr. Ananya Ray",
-      patientName: "Sneha Rao", mrn: "MRN-100232",
-      durationMins: 60, elapsedMins: 10,
+      surgeon: "Dr. Priya Nair",
+      anaesthetist: "Dr. Ananya Ray",
+      patientName: "Sneha Rao",
+      mrn: "MRN-100232",
+      durationMins: 60,
+      elapsedMins: 10,
     },
   },
   {
-    id: "OT-5", name: "Theatre 5", status: "available",
-    tempCelsius: 19.8, humidityPct: 49, achRate: 23, positivePressurePascal: 17.0,
-    oxygenBar: 4.1, nitrousBar: 4.0, vacuumBar: -0.61,
+    id: "OT-5",
+    name: "Theatre 5",
+    status: "available",
+    tempCelsius: 19.8,
+    humidityPct: 49,
+    achRate: 23,
+    positivePressurePascal: 17.0,
+    oxygenBar: 4.1,
+    nitrousBar: 4.0,
+    vacuumBar: -0.61,
   },
   {
-    id: "OT-6", name: "Theatre 6", status: "maintenance",
-    tempCelsius: 22.5, humidityPct: 42, achRate: 12, positivePressurePascal: 5.4,
-    oxygenBar: 0.2, nitrousBar: 0.1, vacuumBar: -0.05,
+    id: "OT-6",
+    name: "Theatre 6",
+    status: "maintenance",
+    tempCelsius: 22.5,
+    humidityPct: 42,
+    achRate: 12,
+    positivePressurePascal: 5.4,
+    oxygenBar: 0.2,
+    nitrousBar: 0.1,
+    vacuumBar: -0.05,
   },
 ];
 
@@ -125,27 +173,60 @@ const STATUS_CONFIG = {
   },
 };
 
-function SensorPill({ icon: Icon, value, label, ok }: { icon: React.ComponentType<{ className?: string }>; value: string; label: string; ok: boolean }) {
+function SensorPill({
+  icon: Icon,
+  value,
+  label,
+  ok,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  value: string;
+  label: string;
+  ok: boolean;
+}) {
   return (
-    <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border ${ok ? "bg-white border-stone-200 text-ink-700" : "bg-red-50 border-red-200 text-red-700"}`}>
+    <div
+      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border ${ok ? "bg-white border-stone-200 text-ink-700" : "bg-red-50 border-red-200 text-red-700"}`}
+    >
       <Icon className={`h-3.5 w-3.5 shrink-0 ${ok ? "text-ink-400" : "text-red-500"}`} />
       <div>
-        <div className={`text-[12px] font-mono font-semibold leading-none ${ok ? "text-ink-800" : "text-red-700"}`}>{value}</div>
-        <div className="text-[9px] text-ink-400 uppercase tracking-wider leading-none mt-0.5">{label}</div>
+        <div
+          className={`text-[12px] font-mono font-semibold leading-none ${ok ? "text-ink-800" : "text-red-700"}`}
+        >
+          {value}
+        </div>
+        <div className="text-[9px] text-ink-400 uppercase tracking-wider leading-none mt-0.5">
+          {label}
+        </div>
       </div>
     </div>
   );
 }
 
-function GasReadingRow({ label, value, unit, safe }: { label: string; value: number; unit: string; safe: boolean }) {
+function GasReadingRow({
+  label,
+  value,
+  unit,
+  safe,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  safe: boolean;
+}) {
   return (
     <div className="flex items-center justify-between py-2 border-b border-stone-100 last:border-0">
       <span className="text-[12px] text-ink-500">{label}</span>
       <div className="flex items-center gap-2">
-        <span className={`text-[13px] font-mono font-semibold ${safe ? "text-teal" : "text-red-600"}`}>
-          {value > 0 ? "+" : ""}{value.toFixed(2)} {unit}
+        <span
+          className={`text-[13px] font-mono font-semibold ${safe ? "text-teal" : "text-red-600"}`}
+        >
+          {value > 0 ? "+" : ""}
+          {value.toFixed(2)} {unit}
         </span>
-        <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${safe ? "bg-teal/10 text-teal" : "bg-red-100 text-red-600"}`}>
+        <span
+          className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${safe ? "bg-teal/10 text-teal" : "bg-red-100 text-red-600"}`}
+        >
           {safe ? "OK" : "!"}
         </span>
       </div>
@@ -159,7 +240,9 @@ export default function OperationTheatrePage() {
     try {
       const raw = localStorage.getItem("medora-admin-ot-rooms-v2");
       return raw ? JSON.parse(raw) : SEED_OPERATIONAL_OTS;
-    } catch { return SEED_OPERATIONAL_OTS; }
+    } catch {
+      return SEED_OPERATIONAL_OTS;
+    }
   });
 
   const [schedulerRoomId, setSchedulerRoomId] = useState<string | null>(null);
@@ -181,7 +264,8 @@ export default function OperationTheatrePage() {
     const next = rooms.map((r) => {
       if (r.id !== roomId) return r;
       const updated: OperationalOT = {
-        ...r, status,
+        ...r,
+        status,
         tempCelsius: status === "maintenance" ? 22.5 : status === "cleaning" ? 21.0 : 19.8,
         achRate: status === "maintenance" ? 12 : 24,
         positivePressurePascal: status === "maintenance" ? 5.0 : 17.5,
@@ -213,9 +297,15 @@ export default function OperationTheatrePage() {
     const next = rooms.map((r) => {
       if (r.id !== schedulerRoomId) return r;
       return {
-        ...r, status: "occupied" as const,
-        tempCelsius: 19.2, humidityPct: 50, achRate: 25,
-        positivePressurePascal: 18.5, oxygenBar: 4.2, nitrousBar: 4.1, vacuumBar: -0.64,
+        ...r,
+        status: "occupied" as const,
+        tempCelsius: 19.2,
+        humidityPct: 50,
+        achRate: 25,
+        positivePressurePascal: 18.5,
+        oxygenBar: 4.2,
+        nitrousBar: 4.1,
+        vacuumBar: -0.64,
         activeCase: {
           procedure: formProcedure,
           surgeon: doc?.doctorName ?? "Unknown Doctor",
@@ -245,18 +335,45 @@ export default function OperationTheatrePage() {
 
   return (
     <div className="space-y-6" data-testid="admin-ot">
-
       {/* ── KPI Strip ─────────────────────────────────────────── */}
       <div className="grid gap-4 sm:grid-cols-4">
         {[
-          { label: "Live Utilization", value: `${liveUtil}%`, sub: `${occupiedCount}/${totalRooms} theatres active`, color: "text-plum", border: "border-l-plum" },
-          { label: "Available", value: String(availableCount), sub: "Ready for intake", color: "text-teal", border: "border-l-teal" },
-          { label: "Post-Op Clean", value: String(cleaningCount), sub: "Sanitisation queue", color: "text-mustard", border: "border-l-mustard" },
-          { label: "HVAC Service", value: String(maintenanceCount), sub: "Under maintenance", color: "text-stone-500", border: "border-l-stone-300" },
+          {
+            label: "Live Utilization",
+            value: `${liveUtil}%`,
+            sub: `${occupiedCount}/${totalRooms} theatres active`,
+            color: "text-plum",
+            border: "border-l-plum",
+          },
+          {
+            label: "Available",
+            value: String(availableCount),
+            sub: "Ready for intake",
+            color: "text-teal",
+            border: "border-l-teal",
+          },
+          {
+            label: "Post-Op Clean",
+            value: String(cleaningCount),
+            sub: "Sanitisation queue",
+            color: "text-mustard",
+            border: "border-l-mustard",
+          },
+          {
+            label: "HVAC Service",
+            value: String(maintenanceCount),
+            sub: "Under maintenance",
+            color: "text-stone-500",
+            border: "border-l-stone-300",
+          },
         ].map((k) => (
           <div key={k.label} className={`surface px-5 py-4 border-l-4 ${k.border} shadow-soft`}>
-            <p className="text-[10px] uppercase tracking-widest text-ink-400 font-mono">{k.label}</p>
-            <p className={`mt-1.5 text-3xl font-heading font-bold ${k.color} tabular-nums`}>{k.value}</p>
+            <p className="text-[10px] uppercase tracking-widest text-ink-400 font-mono">
+              {k.label}
+            </p>
+            <p className={`mt-1.5 text-3xl font-heading font-bold ${k.color} tabular-nums`}>
+              {k.value}
+            </p>
             <p className="text-[11px] text-ink-400 mt-0.5">{k.sub}</p>
           </div>
         ))}
@@ -264,10 +381,8 @@ export default function OperationTheatrePage() {
 
       {/* ── Main Layout ───────────────────────────────────────── */}
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-
         {/* Left sidebar */}
         <div className="space-y-5">
-
           {/* Utilization gauge */}
           <div className="surface p-5 flex flex-col items-center shadow-soft">
             <p className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono w-full pb-3 border-b border-stone-100 mb-4 text-center">
@@ -276,16 +391,26 @@ export default function OperationTheatrePage() {
             <div className="relative h-40 w-40 flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={[{ v: liveUtil }, { v: 100 - liveUtil }]} dataKey="v"
-                    innerRadius={56} outerRadius={72} startAngle={90} endAngle={-270}>
+                  <Pie
+                    data={[{ v: liveUtil }, { v: 100 - liveUtil }]}
+                    dataKey="v"
+                    innerRadius={56}
+                    outerRadius={72}
+                    startAngle={90}
+                    endAngle={-270}
+                  >
                     <Cell fill="#6B3FA0" />
                     <Cell fill="#E6E1DA" />
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute flex flex-col items-center">
-                <span className="text-[30px] font-heading font-bold text-plum leading-none">{liveUtil}%</span>
-                <span className="text-[9px] uppercase tracking-wider text-ink-400 font-mono mt-1">Live</span>
+                <span className="text-[30px] font-heading font-bold text-plum leading-none">
+                  {liveUtil}%
+                </span>
+                <span className="text-[9px] uppercase tracking-wider text-ink-400 font-mono mt-1">
+                  Live
+                </span>
               </div>
             </div>
             <p className="text-[11px] text-ink-400 mt-3 text-center leading-relaxed">
@@ -318,7 +443,10 @@ export default function OperationTheatrePage() {
             const StatusIcon = cfg.icon;
             const hasCase = room.status === "occupied" && room.activeCase;
             const progress = hasCase
-              ? Math.min(100, Math.round(((room.activeCase!.elapsedMins) / (room.activeCase!.durationMins)) * 100))
+              ? Math.min(
+                  100,
+                  Math.round((room.activeCase!.elapsedMins / room.activeCase!.durationMins) * 100),
+                )
               : 0;
 
             return (
@@ -327,15 +455,21 @@ export default function OperationTheatrePage() {
                 className={`surface border-l-4 ${cfg.accent} shadow-soft overflow-hidden flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift`}
               >
                 {/* Card header */}
-                <div className={`${cfg.headerBg} px-4 py-3 flex items-center justify-between border-b border-stone-100`}>
+                <div
+                  className={`${cfg.headerBg} px-4 py-3 flex items-center justify-between border-b border-stone-100`}
+                >
                   <div className="flex items-center gap-2.5">
                     <div className={`h-2 w-2 rounded-full ${cfg.dot} shrink-0`} />
                     <div>
-                      <p className="font-heading font-semibold text-[14px] text-ink-950 leading-tight">{room.name}</p>
+                      <p className="font-heading font-semibold text-[14px] text-ink-950 leading-tight">
+                        {room.name}
+                      </p>
                       <p className="text-[10px] text-ink-400 font-mono">{room.id}</p>
                     </div>
                   </div>
-                  <span className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold border ${cfg.badge}`}>
+                  <span
+                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold border ${cfg.badge}`}
+                  >
                     <StatusIcon className="h-3 w-3" />
                     {cfg.label}
                   </span>
@@ -343,9 +477,24 @@ export default function OperationTheatrePage() {
 
                 {/* Environment sensors strip */}
                 <div className="px-4 py-2.5 bg-stone-50/60 border-b border-stone-100 flex items-center gap-2 flex-wrap">
-                  <SensorPill icon={Thermometer} value={`${room.tempCelsius.toFixed(1)}°C`} label="Temp" ok={isTempOk(room.tempCelsius)} />
-                  <SensorPill icon={Droplets} value={`${room.humidityPct}%`} label="RH" ok={isHumOk(room.humidityPct)} />
-                  <SensorPill icon={Gauge} value={`${room.achRate} ACH`} label="Ventilation" ok={isACHOk(room.achRate)} />
+                  <SensorPill
+                    icon={Thermometer}
+                    value={`${room.tempCelsius.toFixed(1)}°C`}
+                    label="Temp"
+                    ok={isTempOk(room.tempCelsius)}
+                  />
+                  <SensorPill
+                    icon={Droplets}
+                    value={`${room.humidityPct}%`}
+                    label="RH"
+                    ok={isHumOk(room.humidityPct)}
+                  />
+                  <SensorPill
+                    icon={Gauge}
+                    value={`${room.achRate} ACH`}
+                    label="Ventilation"
+                    ok={isACHOk(room.achRate)}
+                  />
                 </div>
 
                 {/* Body */}
@@ -354,8 +503,12 @@ export default function OperationTheatrePage() {
                     <>
                       {/* Procedure name */}
                       <div>
-                        <p className="text-[9.5px] uppercase tracking-widest text-ink-400 font-mono mb-1">Active Procedure</p>
-                        <p className="font-semibold text-ink-950 text-[13.5px] leading-snug">{room.activeCase!.procedure}</p>
+                        <p className="text-[9.5px] uppercase tracking-widest text-ink-400 font-mono mb-1">
+                          Active Procedure
+                        </p>
+                        <p className="font-semibold text-ink-950 text-[13.5px] leading-snug">
+                          {room.activeCase!.procedure}
+                        </p>
                       </div>
 
                       {/* Staff grid */}
@@ -365,8 +518,12 @@ export default function OperationTheatrePage() {
                             <User className="h-3.5 w-3.5" />
                           </div>
                           <div>
-                            <p className="text-[9px] uppercase text-ink-400 font-mono tracking-wider">Surgeon</p>
-                            <p className="text-[12px] font-semibold text-ink-900 leading-snug">{room.activeCase!.surgeon}</p>
+                            <p className="text-[9px] uppercase text-ink-400 font-mono tracking-wider">
+                              Surgeon
+                            </p>
+                            <p className="text-[12px] font-semibold text-ink-900 leading-snug">
+                              {room.activeCase!.surgeon}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-start gap-2">
@@ -374,8 +531,12 @@ export default function OperationTheatrePage() {
                             <Stethoscope className="h-3.5 w-3.5" />
                           </div>
                           <div>
-                            <p className="text-[9px] uppercase text-ink-400 font-mono tracking-wider">Anaesthetist</p>
-                            <p className="text-[12px] font-semibold text-ink-900 leading-snug">{room.activeCase!.anaesthetist}</p>
+                            <p className="text-[9px] uppercase text-ink-400 font-mono tracking-wider">
+                              Anaesthetist
+                            </p>
+                            <p className="text-[12px] font-semibold text-ink-900 leading-snug">
+                              {room.activeCase!.anaesthetist}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -386,8 +547,12 @@ export default function OperationTheatrePage() {
                           <User className="h-3 w-3" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[12.5px] font-semibold text-ink-900 truncate">{room.activeCase!.patientName}</p>
-                          <p className="text-[10px] text-ink-400 font-mono">{room.activeCase!.mrn}</p>
+                          <p className="text-[12.5px] font-semibold text-ink-900 truncate">
+                            {room.activeCase!.patientName}
+                          </p>
+                          <p className="text-[10px] text-ink-400 font-mono">
+                            {room.activeCase!.mrn}
+                          </p>
                         </div>
                       </div>
 
@@ -398,7 +563,11 @@ export default function OperationTheatrePage() {
                             <Timer className="h-3 w-3" />
                             {room.activeCase!.elapsedMins}m elapsed
                           </span>
-                          <span>{progress}% · {room.activeCase!.durationMins - room.activeCase!.elapsedMins}m remaining</span>
+                          <span>
+                            {progress}% ·{" "}
+                            {room.activeCase!.durationMins - room.activeCase!.elapsedMins}m
+                            remaining
+                          </span>
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-stone-100 overflow-hidden">
                           <div
@@ -410,7 +579,9 @@ export default function OperationTheatrePage() {
                     </>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-4 text-center gap-2">
-                      <div className={`h-10 w-10 rounded-full grid place-items-center ${cfg.badge} border`}>
+                      <div
+                        className={`h-10 w-10 rounded-full grid place-items-center ${cfg.badge} border`}
+                      >
                         <StatusIcon className="h-5 w-5" />
                       </div>
                       <p className="text-[12px] text-ink-500 font-medium">{cfg.label}</p>
@@ -433,9 +604,11 @@ export default function OperationTheatrePage() {
                         onClick={() => setRoomStatus(room.id, s)}
                         className={`text-[10px] px-2 py-1 rounded border transition font-medium ${
                           room.status === s
-                            ? s === "available" ? "bg-teal/10 border-teal/30 text-teal"
-                            : s === "cleaning" ? "bg-mustard/10 border-mustard/30 text-mustard"
-                            : "bg-stone-100 border-stone-300 text-stone-600"
+                            ? s === "available"
+                              ? "bg-teal/10 border-teal/30 text-teal"
+                              : s === "cleaning"
+                                ? "bg-mustard/10 border-mustard/30 text-mustard"
+                                : "bg-stone-100 border-stone-300 text-stone-600"
                             : "bg-white border-stone-200 text-ink-500 hover:bg-stone-50"
                         }`}
                       >
@@ -481,20 +654,34 @@ export default function OperationTheatrePage() {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-heading font-semibold text-ink-950 text-[15px]">Schedule Surgical Case</h3>
-                <p className="text-[11.5px] text-ink-400 font-mono mt-0.5">{schedulerRoomId} · {new Date().toLocaleDateString("en-IN", { weekday: "short", day: "2-digit", month: "short" })}</p>
+                <h3 className="font-heading font-semibold text-ink-950 text-[15px]">
+                  Schedule Surgical Case
+                </h3>
+                <p className="text-[11.5px] text-ink-400 font-mono mt-0.5">
+                  {schedulerRoomId} ·{" "}
+                  {new Date().toLocaleDateString("en-IN", {
+                    weekday: "short",
+                    day: "2-digit",
+                    month: "short",
+                  })}
+                </p>
               </div>
-              <button type="button" onClick={() => setSchedulerRoomId(null)} className="text-ink-400 hover:text-ink-700 transition p-1">
+              <button
+                type="button"
+                onClick={() => setSchedulerRoomId(null)}
+                className="text-ink-400 hover:text-ink-700 transition p-1"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Form body */}
             <div className="p-6 overflow-y-auto space-y-5">
-
               {/* Procedure */}
               <div className="space-y-1.5">
-                <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">Procedure Name</label>
+                <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">
+                  Procedure Name
+                </label>
                 <input
                   type="text"
                   required
@@ -508,7 +695,9 @@ export default function OperationTheatrePage() {
               {/* Patient row */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">Patient Name</label>
+                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">
+                    Patient Name
+                  </label>
                   <input
                     type="text"
                     required
@@ -519,7 +708,9 @@ export default function OperationTheatrePage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">MRN</label>
+                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">
+                    MRN
+                  </label>
                   <input
                     type="text"
                     required
@@ -533,7 +724,9 @@ export default function OperationTheatrePage() {
               {/* Surgeon + Anaesthetist */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">Lead Surgeon</label>
+                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">
+                    Lead Surgeon
+                  </label>
                   <select
                     value={formSurgeonId}
                     onChange={(e) => setFormSurgeonId(e.target.value)}
@@ -547,7 +740,9 @@ export default function OperationTheatrePage() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">Anaesthetist</label>
+                  <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">
+                    Anaesthetist
+                  </label>
                   <input
                     type="text"
                     required
@@ -560,9 +755,18 @@ export default function OperationTheatrePage() {
 
               {/* Duration selector – visual chips */}
               <div className="space-y-2">
-                <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">Estimated Duration</label>
+                <label className="block text-[11px] uppercase font-bold tracking-wider text-ink-500">
+                  Estimated Duration
+                </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {[["30", "30 min"], ["60", "1 hour"], ["90", "1.5 hours"], ["120", "2 hours"], ["180", "3 hours"], ["240", "4 hours"]].map(([val, lbl]) => (
+                  {[
+                    ["30", "30 min"],
+                    ["60", "1 hour"],
+                    ["90", "1.5 hours"],
+                    ["120", "2 hours"],
+                    ["180", "3 hours"],
+                    ["240", "4 hours"],
+                  ].map(([val, lbl]) => (
                     <button
                       key={val}
                       type="button"

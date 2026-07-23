@@ -12,17 +12,14 @@ export function PatientUploadIntakeCard({
 }) {
   return (
     <section
-      className={cn(
-        "rounded-2xl border border-[#F5E6B8] bg-[#FFFBF0] p-4",
-        compact && "p-3.5",
-      )}
+      className={cn("rounded-2xl border border-[#F5E6B8] bg-[#FFFBF0] p-4", compact && "p-3.5")}
     >
       <p className="text-[10px] font-bold tracking-[0.12em] text-[#8A8F8C]">
         PATIENT UPLOAD — SIGN-OFF REQUIRED
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[#1B3B2E]">
-        Review the source document and accept into the legal chart record before viewing
-        clinical details, impressions, or signing off.
+        Review the source document and accept into the legal chart record before viewing clinical
+        details, impressions, or signing off.
       </p>
       <div className={cn("mt-4 flex flex-col gap-2", !compact && "sm:flex-row")}>
         <button
@@ -51,8 +48,8 @@ export function PatientUploadDeclinedCard() {
     <section className="rounded-2xl border border-[#FCE8E6] bg-[#FEF6F5] p-4">
       <p className="text-[10px] font-bold tracking-[0.12em] text-[#C45C4A]">DECLINED</p>
       <p className="mt-2 text-sm leading-relaxed text-[#1B3B2E]">
-        This patient upload was declined and was not filed in the chart. The patient can be
-        notified to resubmit or share via another channel.
+        This patient upload was declined and was not filed in the chart. The patient can be notified
+        to resubmit or share via another channel.
       </p>
     </section>
   );

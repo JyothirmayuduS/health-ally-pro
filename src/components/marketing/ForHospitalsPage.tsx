@@ -114,8 +114,9 @@ export default function ForHospitalsPage() {
               <Building2 className="h-8 w-8 text-[#B8735D]" strokeWidth={1.5} />
               <h3 className="mt-4 font-serif text-xl font-semibold">Admin assigns specialty</h3>
               <p className="mt-2 text-sm text-[#5C6B63]">
-                Add a cardiologist — they see heart desk + cardiac 3D anatomy. Add an ophthalmologist —
-                they see eye charting + orbit focus. Same hospital, specialty-true workspaces.
+                Add a cardiologist — they see heart desk + cardiac 3D anatomy. Add an
+                ophthalmologist — they see eye charting + orbit focus. Same hospital, specialty-true
+                workspaces.
               </p>
               <div className="mt-6 flex items-start gap-3 rounded-2xl bg-[#F7F5F2] p-4 text-sm">
                 <Shield className="mt-0.5 h-4 w-4 shrink-0 text-[#1B3B2E]" />
@@ -133,7 +134,10 @@ export default function ForHospitalsPage() {
             <div>
               <h2 className="font-serif text-2xl font-semibold">Ready to license Medora?</h2>
               <p className="mt-2 text-sm text-[#B8C5BE]">
-                <a href={salesMailto("Medora hospital license")} className="underline-offset-2 hover:underline">
+                <a
+                  href={salesMailto("Medora hospital license")}
+                  className="underline-offset-2 hover:underline"
+                >
                   {SALES_CONTACT}
                 </a>{" "}
                 · Include campus size and specialty mix

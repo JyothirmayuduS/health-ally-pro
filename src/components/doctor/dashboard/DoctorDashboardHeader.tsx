@@ -18,8 +18,7 @@ export function DoctorDashboardHeader({
   showSearch = true,
 }: Props) {
   const apptLabel = appointmentCount === 1 ? "appointment" : "appointments";
-  const line =
-    subtitle ?? `You have ${appointmentCount} ${apptLabel} today`;
+  const line = subtitle ?? `You have ${appointmentCount} ${apptLabel} today`;
 
   return (
     <header className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">

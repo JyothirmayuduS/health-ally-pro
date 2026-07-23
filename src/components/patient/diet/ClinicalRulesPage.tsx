@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  AlertCircle,
-  CheckCircle2,
-  ChevronLeft,
-  Clock,
-  Info,
-  ShieldCheck,
-} from "lucide-react";
+import { AlertCircle, CheckCircle2, ChevronLeft, Clock, Info, ShieldCheck } from "lucide-react";
 import { ABSORPTION_GUARD_PLAN, getDietMeal } from "@/lib/diet-mock-data";
 
 type ClinicalRulesPageProps = {
@@ -86,8 +79,8 @@ export function ClinicalRulesPage({ mealId }: ClinicalRulesPageProps) {
             </p>
           </div>
           <p className="text-[15px] leading-relaxed text-ink-muted">
-            Levothyroxine requires a high-acid, low-interference environment for peak
-            absorption. Wait at least {gap} after taking your medication before consuming
+            Levothyroxine requires a high-acid, low-interference environment for peak absorption.
+            Wait at least {gap} after taking your medication before consuming
             {isPlanLevel ? " meals in your clinical diet plan." : " this meal."}
           </p>
         </div>
@@ -119,9 +112,7 @@ export function ClinicalRulesPage({ mealId }: ClinicalRulesPageProps) {
           Optimization Strategy
         </SectionLabel>
         <div className="rounded-[24px] border border-[#EDEAE6] bg-white p-5 shadow-[0_4px_14px_rgba(0,0,0,0.04)]">
-          <p className="font-serif text-[18px] leading-snug text-ink">
-            Maximizing Bioavailability
-          </p>
+          <p className="font-serif text-[18px] leading-snug text-ink">Maximizing Bioavailability</p>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
             {isPlanLevel
               ? ABSORPTION_GUARD_PLAN.optimization
@@ -145,9 +136,7 @@ function SectionLabel({
   return (
     <div className="mb-4 flex items-center gap-2.5">
       <Icon className={`h-[18px] w-[18px] ${iconClassName}`} strokeWidth={1.75} />
-      <h3 className="text-[13px] font-bold uppercase tracking-[0.1em] text-ink">
-        {children}
-      </h3>
+      <h3 className="text-[13px] font-bold uppercase tracking-[0.1em] text-ink">{children}</h3>
     </div>
   );
 }

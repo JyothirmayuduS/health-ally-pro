@@ -140,8 +140,15 @@ export function recordLedgerPayment(
   const inv = invoices.find((i) => i.id === invoiceId);
   if (!inv) return invoices;
   const paid = Math.min(inv.total, Math.round((inv.amountPaid + amount) * 100) / 100);
-  const status: LedgerInvoice["status"] = paid >= inv.total ? "paid" : paid > 0 ? "partial" : "unpaid";
-  const updated: LedgerInvoice = { ...inv, amountPaid: paid, status, method, paidAt: status === "paid" ? new Date().toISOString() : inv.paidAt };
+  const status: LedgerInvoice["status"] =
+    paid >= inv.total ? "paid" : paid > 0 ? "partial" : "unpaid";
+  const updated: LedgerInvoice = {
+    ...inv,
+    amountPaid: paid,
+    status,
+    method,
+    paidAt: status === "paid" ? new Date().toISOString() : inv.paidAt,
+  };
   upsertLedgerInvoice(updated);
   const payments = loadLedgerPayments();
   payments.unshift({

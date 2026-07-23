@@ -13,7 +13,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Medora — Hospital OS" },
       {
         property: "og:description",
-        content: "Specialty-true clinical workspaces ready to license for multi-specialty hospitals.",
+        content:
+          "Specialty-true clinical workspaces ready to license for multi-specialty hospitals.",
       },
     ],
   }),

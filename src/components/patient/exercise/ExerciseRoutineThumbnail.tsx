@@ -26,11 +26,7 @@ export function ExerciseRoutineThumbnail({
 
   return (
     <div
-      className={cn(
-        "relative shrink-0 overflow-hidden bg-[#EDEAE6]",
-        SIZE_CLASS[size],
-        className,
-      )}
+      className={cn("relative shrink-0 overflow-hidden bg-[#EDEAE6]", SIZE_CLASS[size], className)}
     >
       <img
         src={src}

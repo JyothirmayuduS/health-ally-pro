@@ -45,8 +45,7 @@ export function DependentPersonaAvatar({
 
   const r = 18;
   const circumference = 2 * Math.PI * r;
-  const offset =
-    circumference - (Math.min(100, Math.max(0, dep.adherence)) / 100) * circumference;
+  const offset = circumference - (Math.min(100, Math.max(0, dep.adherence)) / 100) * circumference;
 
   return (
     <div
@@ -54,11 +53,7 @@ export function DependentPersonaAvatar({
       style={{ width: ringSize, height: ringSize }}
       aria-label={`${dep.adherence}% care plan adherence`}
     >
-      <svg
-        className="absolute inset-0 h-full w-full -rotate-90"
-        viewBox="0 0 44 44"
-        aria-hidden
-      >
+      <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 44 44" aria-hidden>
         <circle cx="22" cy="22" r={r} fill="none" strokeWidth="3" stroke={track} />
         <circle
           cx="22"

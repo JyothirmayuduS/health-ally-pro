@@ -15,7 +15,9 @@ function templateMeal(input: DietAiSearchInput): DietMeal {
   const calories = Math.round((minCal + maxCal) / 2);
   const isIndian = input.cuisine === "indian";
   const isVegan =
-    input.cuisine === "vegan" || input.cuisine === "lactose-free" || input.query.toLowerCase().includes("vegan");
+    input.cuisine === "vegan" ||
+    input.cuisine === "lactose-free" ||
+    input.query.toLowerCase().includes("vegan");
   const lactoseFree = input.cuisine === "lactose-free" || isVegan || isIndian;
 
   const takesThyroid =

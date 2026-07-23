@@ -131,9 +131,7 @@ export async function fetchPatientProfile() {
     email: profile?.email ?? userData.user.email ?? portal.email,
     memberSince: patient?.member_since ?? portal.memberSince,
     age: patient?.date_of_birth
-      ? Math.floor(
-          (Date.now() - new Date(patient.date_of_birth).getTime()) / (365.25 * 86400000),
-        )
+      ? Math.floor((Date.now() - new Date(patient.date_of_birth).getTime()) / (365.25 * 86400000))
       : portal.age,
     bloodGroup: patient?.blood_group ?? portal.bloodGroup,
   };

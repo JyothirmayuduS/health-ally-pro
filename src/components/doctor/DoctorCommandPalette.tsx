@@ -113,7 +113,10 @@ export function DoctorCommandPalette() {
               onSelect={() => {
                 setOpen(false);
                 setSearch("");
-                navigate({ to: "/doctor/prescriptions", search: { patientId: PANEL_PATIENTS[0]?.id } });
+                navigate({
+                  to: "/doctor/prescriptions",
+                  search: { patientId: PANEL_PATIENTS[0]?.id },
+                });
               }}
             >
               <span className="font-medium text-[#1B3B2E]">{d.generic_name}</span>

@@ -147,9 +147,7 @@ export function getAllTierRecoveryPicks(
     limitPerTier?: number;
   },
 ): Record<DietBudget, RecoveryPick[]> {
-  const pool = options?.lactoseFreeOnly
-    ? meals.filter((m) => m.lactoseFree)
-    : meals;
+  const pool = options?.lactoseFreeOnly ? meals.filter((m) => m.lactoseFree) : meals;
   const limit = options?.limitPerTier ?? 3;
 
   return {

@@ -104,12 +104,8 @@ async function searchYoutubeOnce(
         videoId: item.id,
         title: item.snippet?.title ?? searchQuery,
         channel: item.snippet?.channelTitle ?? "YouTube",
-        viewCount: item.statistics?.viewCount
-          ? formatCount(item.statistics.viewCount)
-          : undefined,
-        likeCount: item.statistics?.likeCount
-          ? formatCount(item.statistics.likeCount)
-          : undefined,
+        viewCount: item.statistics?.viewCount ? formatCount(item.statistics.viewCount) : undefined,
+        likeCount: item.statistics?.likeCount ? formatCount(item.statistics.likeCount) : undefined,
         language,
         thumbnailUrl: item.snippet?.thumbnails?.medium?.url,
         _audioLang: item.snippet?.defaultAudioLanguage ?? item.snippet?.defaultLanguage,
@@ -119,7 +115,10 @@ async function searchYoutubeOnce(
 
 type ScoredVideo = DietYoutubeVideo & { _audioLang?: string };
 
-function scoreVideoForLanguage(video: ScoredVideo, language: DietAiSearchInput["language"]): number {
+function scoreVideoForLanguage(
+  video: ScoredVideo,
+  language: DietAiSearchInput["language"],
+): number {
   let score = 0;
   const title = video.title ?? "";
 

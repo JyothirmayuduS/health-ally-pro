@@ -82,7 +82,8 @@ export function PrescriptionMedicationCard({
   };
 
   const durationLabel =
-    DURATION_OPTIONS.find((d) => d.days === line.durationDays)?.label ?? `${line.durationDays} days`;
+    DURATION_OPTIONS.find((d) => d.days === line.durationDays)?.label ??
+    `${line.durationDays} days`;
 
   return (
     <article
@@ -98,7 +99,9 @@ export function PrescriptionMedicationCard({
           </p>
           <h3 className="mt-0.5 break-words font-serif text-[17px] font-semibold leading-snug text-[#1B3B2E] sm:text-lg">
             {drug.generic_name}{" "}
-            <span className="font-sans text-[15px] font-medium text-[#6B726E]">{drug.strength}</span>
+            <span className="font-sans text-[15px] font-medium text-[#6B726E]">
+              {drug.strength}
+            </span>
           </h3>
 
           {collapsed ? (
@@ -135,16 +138,30 @@ export function PrescriptionMedicationCard({
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
-          <IconBtn onClick={onShowMonograph} label="Drug information" className="text-[#B8735D] hover:bg-[#FDF8F5]">
+          <IconBtn
+            onClick={onShowMonograph}
+            label="Drug information"
+            className="text-[#B8735D] hover:bg-[#FDF8F5]"
+          >
             <Info className="h-4 w-4" />
           </IconBtn>
 
           <div className="flex flex-col rounded-lg border border-[#EDEAE6] bg-[#FAF9F7]">
-            <IconBtn onClick={onMoveUp} label="Move up" disabled={!canMoveUp} className="h-7 w-8 rounded-b-none">
+            <IconBtn
+              onClick={onMoveUp}
+              label="Move up"
+              disabled={!canMoveUp}
+              className="h-7 w-8 rounded-b-none"
+            >
               <ChevronUp className="h-3.5 w-3.5" />
             </IconBtn>
             <div className="mx-1 border-t border-[#EDEAE6]" />
-            <IconBtn onClick={onMoveDown} label="Move down" disabled={!canMoveDown} className="h-7 w-8 rounded-t-none">
+            <IconBtn
+              onClick={onMoveDown}
+              label="Move down"
+              disabled={!canMoveDown}
+              className="h-7 w-8 rounded-t-none"
+            >
               <ChevronDown className="h-3.5 w-3.5" />
             </IconBtn>
           </div>
@@ -154,7 +171,9 @@ export function PrescriptionMedicationCard({
             label={collapsed ? "Expand medication" : "Collapse medication"}
             className="text-[#1B3B2E]"
           >
-            <ChevronDown className={cn("h-4 w-4 transition-transform", collapsed && "-rotate-90")} />
+            <ChevronDown
+              className={cn("h-4 w-4 transition-transform", collapsed && "-rotate-90")}
+            />
           </IconBtn>
 
           <div className="mx-0.5 hidden h-6 w-px bg-[#EDEAE6] sm:block" />
@@ -170,7 +189,12 @@ export function PrescriptionMedicationCard({
 
       {!collapsed && (
         <div className="space-y-4 px-3 py-4 sm:px-4">
-          <ChipGroup label="Route" options={ROUTES} value={line.route} onChange={(v) => patch({ route: v as string })} />
+          <ChipGroup
+            label="Route"
+            options={ROUTES}
+            value={line.route}
+            onChange={(v) => patch({ route: v as string })}
+          />
           <ChipGroup
             label="Frequency"
             options={FREQUENCIES.map((f) => ({ id: f.id, label: f.label }))}
@@ -230,7 +254,9 @@ export function PrescriptionMedicationCard({
           <label className="flex min-h-[44px] cursor-pointer items-center justify-between gap-3 rounded-xl border border-[#EDEAE6] bg-[#FAF9F7] px-3 py-2.5">
             <span className="text-xs text-[#5C635F]">
               <span className="font-semibold text-[#1B3B2E]">Allow generic substitution</span>
-              <span className="mt-0.5 block text-[10px] text-[#8A8F8C]">Pharmacy may dispense a generic equivalent</span>
+              <span className="mt-0.5 block text-[10px] text-[#8A8F8C]">
+                Pharmacy may dispense a generic equivalent
+              </span>
             </span>
             <input
               type="checkbox"

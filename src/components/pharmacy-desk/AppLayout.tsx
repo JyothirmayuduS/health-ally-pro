@@ -22,30 +22,23 @@ const titleFromPath = (pathname: string) => {
     return { eyebrow: "Pharmacy", title: "Control desk" };
   if (pathname.startsWith("/pharmacy/prescriptions"))
     return { eyebrow: "Queue", title: "Prescriptions inbox" };
-  if (pathname.startsWith("/pharmacy/billing"))
-    return { eyebrow: "Counter", title: "Billing" };
-  if (pathname.startsWith("/pharmacy/dispense"))
-    return { eyebrow: "Counter", title: "Dispense" };
-  if (pathname.startsWith("/pharmacy/refills"))
-    return { eyebrow: "Ongoing", title: "Refills" };
+  if (pathname.startsWith("/pharmacy/billing")) return { eyebrow: "Counter", title: "Billing" };
+  if (pathname.startsWith("/pharmacy/dispense")) return { eyebrow: "Counter", title: "Dispense" };
+  if (pathname.startsWith("/pharmacy/refills")) return { eyebrow: "Ongoing", title: "Refills" };
   if (pathname.startsWith("/pharmacy/search"))
     return { eyebrow: "Lookup", title: "Medicine search" };
-  if (pathname.startsWith("/pharmacy/inventory"))
-    return { eyebrow: "Stock", title: "Inventory" };
+  if (pathname.startsWith("/pharmacy/inventory")) return { eyebrow: "Stock", title: "Inventory" };
   if (pathname.startsWith("/pharmacy/formulary"))
     return { eyebrow: "Catalog", title: "Formulary & pricing" };
-  if (pathname.startsWith("/pharmacy/map"))
-    return { eyebrow: "Storage", title: "Shelf map" };
+  if (pathname.startsWith("/pharmacy/map")) return { eyebrow: "Storage", title: "Shelf map" };
   if (pathname.startsWith("/pharmacy/controlled"))
     return { eyebrow: "Compliance", title: "Controlled register" };
   if (pathname.startsWith("/pharmacy/operations"))
     return { eyebrow: "Insights", title: "Operations center" };
   if (pathname.startsWith("/pharmacy/purchase-orders"))
     return { eyebrow: "Stock", title: "Purchase orders" };
-  if (pathname.startsWith("/pharmacy/ward"))
-    return { eyebrow: "IPD", title: "Ward deliveries" };
-  if (pathname.startsWith("/pharmacy/walk-in"))
-    return { eyebrow: "Counter", title: "Walk-in OTC" };
+  if (pathname.startsWith("/pharmacy/ward")) return { eyebrow: "IPD", title: "Ward deliveries" };
+  if (pathname.startsWith("/pharmacy/walk-in")) return { eyebrow: "Counter", title: "Walk-in OTC" };
   if (pathname.startsWith("/pharmacy/cycle-count"))
     return { eyebrow: "Stock", title: "Cycle count" };
   if (pathname.startsWith("/pharmacy/reports"))
@@ -96,9 +89,7 @@ export default function AppLayout() {
                 <span className="text-ink-400">·</span>
                 <span>{date}</span>
               </div>
-              {email && (
-                <span className="hidden text-[11px] text-ink-400 lg:inline">{email}</span>
-              )}
+              {email && <span className="hidden text-[11px] text-ink-400 lg:inline">{email}</span>}
               <div className="relative">
                 <button
                   type="button"
@@ -119,25 +110,42 @@ export default function AppLayout() {
                     <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-lg border border-ink-200 bg-white shadow-lg">
                       <div className="flex items-center justify-between border-b border-ink-200 px-4 py-3">
                         <span className="font-heading text-[14px] font-semibold">Alerts</span>
-                        <button type="button" onClick={() => setNotifOpen(false)} className="rounded p-1 hover:bg-stone-100">
+                        <button
+                          type="button"
+                          onClick={() => setNotifOpen(false)}
+                          className="rounded p-1 hover:bg-stone-100"
+                        >
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
                       <div className="max-h-72 overflow-y-auto">
                         {activeAlerts.length === 0 ? (
-                          <p className="px-4 py-6 text-center text-[13px] text-ink-400">All clear.</p>
+                          <p className="px-4 py-6 text-center text-[13px] text-ink-400">
+                            All clear.
+                          </p>
                         ) : (
                           activeAlerts.map((a) => (
-                            <div key={a.id} className="border-b border-ink-100 px-4 py-3 text-[12px]">
+                            <div
+                              key={a.id}
+                              className="border-b border-ink-100 px-4 py-3 text-[12px]"
+                            >
                               <div className="font-medium text-ink-900">{a.title}</div>
                               <p className="mt-0.5 text-ink-500">{a.body}</p>
                               <div className="mt-2 flex gap-2">
                                 {a.action_to && (
-                                  <Link to={a.action_to} onClick={() => setNotifOpen(false)} className="text-[11px] font-medium text-mustard hover:underline">
+                                  <Link
+                                    to={a.action_to}
+                                    onClick={() => setNotifOpen(false)}
+                                    className="text-[11px] font-medium text-mustard hover:underline"
+                                  >
                                     {a.action_label}
                                   </Link>
                                 )}
-                                <button type="button" onClick={() => dismissAlert(a.id)} className="text-[11px] text-ink-400 hover:text-ink-600">
+                                <button
+                                  type="button"
+                                  onClick={() => dismissAlert(a.id)}
+                                  className="text-[11px] text-ink-400 hover:text-ink-600"
+                                >
                                   Dismiss
                                 </button>
                               </div>
@@ -145,7 +153,11 @@ export default function AppLayout() {
                           ))
                         )}
                       </div>
-                      <Link to="/pharmacy/operations" onClick={() => setNotifOpen(false)} className="block border-t border-ink-200 px-4 py-2.5 text-center text-[12px] font-medium text-mustard hover:bg-stone-50">
+                      <Link
+                        to="/pharmacy/operations"
+                        onClick={() => setNotifOpen(false)}
+                        className="block border-t border-ink-200 px-4 py-2.5 text-center text-[12px] font-medium text-mustard hover:bg-stone-50"
+                      >
                         Open operations center
                       </Link>
                     </div>

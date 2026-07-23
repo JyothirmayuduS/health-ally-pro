@@ -80,8 +80,7 @@ export const BILLING_DESK: DeskPortalConfig = {
       return { eyebrow: "Collections", title: "Payment log" };
     if (pathname.startsWith("/billing/encounters"))
       return { eyebrow: "Visits", title: "Encounter linkage" };
-    if (pathname.startsWith("/billing/leave"))
-      return { eyebrow: "HR", title: "My leaves" };
+    if (pathname.startsWith("/billing/leave")) return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Billing", title: "Back office" };
   },
 };
@@ -119,14 +118,12 @@ export const NURSING_DESK: DeskPortalConfig = {
   titleFromPath: (pathname) => {
     if (pathname === "/nursing" || pathname === "/nursing/")
       return { eyebrow: "Ward", title: "Nursing station" };
-    if (pathname.startsWith("/nursing/beds"))
-      return { eyebrow: "IPD", title: "Bed management" };
+    if (pathname.startsWith("/nursing/beds")) return { eyebrow: "IPD", title: "Bed management" };
     if (pathname.startsWith("/nursing/patients"))
       return { eyebrow: "Census", title: "Patient list" };
     if (pathname.startsWith("/nursing/vitals"))
       return { eyebrow: "Clinical", title: "Record vitals" };
-    if (pathname.startsWith("/nursing/leave"))
-      return { eyebrow: "HR", title: "My leaves" };
+    if (pathname.startsWith("/nursing/leave")) return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Nursing", title: "Station" };
   },
 };
@@ -151,7 +148,13 @@ export const ADMIN_DESK: DeskPortalConfig = {
     {
       title: "Overview",
       items: [
-        { to: "/admin", label: "Command center", icon: LayoutDashboard, exact: true, dot: "bg-plum" },
+        {
+          to: "/admin",
+          label: "Command center",
+          icon: LayoutDashboard,
+          exact: true,
+          dot: "bg-plum",
+        },
         { to: "/admin/analytics", label: "Analytics", icon: BarChart3, dot: "bg-teal" },
         { to: "/admin/revenue", label: "Revenue", icon: DollarSign, dot: "bg-money" },
         { to: "/admin/occupancy", label: "Occupancy & load", icon: LayoutGrid, dot: "bg-clay" },
@@ -186,7 +189,13 @@ export const ADMIN_DESK: DeskPortalConfig = {
           moduleId: "specialty_desk",
         },
         { to: "/admin/doctor-roster", label: "Doctor roster", icon: CalendarRange, dot: "bg-teal" },
-        { to: "/admin/ot", label: "Operation theatre", icon: Activity, dot: "bg-plum", moduleId: "ot" },
+        {
+          to: "/admin/ot",
+          label: "Operation theatre",
+          icon: Activity,
+          dot: "bg-plum",
+          moduleId: "ot",
+        },
         {
           to: "/admin/hospital-units",
           label: "Hospital units",
@@ -196,9 +205,19 @@ export const ADMIN_DESK: DeskPortalConfig = {
         },
         { to: "/admin/services", label: "Services & fees", icon: Briefcase, dot: "bg-money" },
         { to: "/admin/lab-catalog", label: "Lab catalog", icon: FlaskConical, dot: "bg-sage" },
-        { to: "/admin/pharmacy-formulary", label: "Pharmacy formulary", icon: Pill, dot: "bg-mustard" },
+        {
+          to: "/admin/pharmacy-formulary",
+          label: "Pharmacy formulary",
+          icon: Pill,
+          dot: "bg-mustard",
+        },
         { to: "/admin/masters", label: "Hospital masters", icon: BookOpen, dot: "bg-plum" },
-        { to: "/admin/registers", label: "Statutory registers", icon: FileBarChart, dot: "bg-money" },
+        {
+          to: "/admin/registers",
+          label: "Statutory registers",
+          icon: FileBarChart,
+          dot: "bg-money",
+        },
       ],
     },
     {
@@ -222,10 +241,8 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "Organization", title: "Branches" };
     if (pathname.startsWith("/admin/departments"))
       return { eyebrow: "Organization", title: "Departments" };
-    if (pathname.startsWith("/admin/staff"))
-      return { eyebrow: "People", title: "Staff directory" };
-    if (pathname.startsWith("/admin/doctors"))
-      return { eyebrow: "Clinical", title: "Doctors" };
+    if (pathname.startsWith("/admin/staff")) return { eyebrow: "People", title: "Staff directory" };
+    if (pathname.startsWith("/admin/doctors")) return { eyebrow: "Clinical", title: "Doctors" };
     if (pathname.startsWith("/admin/services"))
       return { eyebrow: "Pricing", title: "Service fees" };
     if (pathname.startsWith("/admin/lab-catalog"))
@@ -236,8 +253,7 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "System", title: "Hospital settings" };
     if (pathname.startsWith("/admin/audit"))
       return { eyebrow: "Compliance", title: "PHI access audit" };
-    if (pathname.startsWith("/admin/analytics"))
-      return { eyebrow: "Insights", title: "Analytics" };
+    if (pathname.startsWith("/admin/analytics")) return { eyebrow: "Insights", title: "Analytics" };
     if (pathname.startsWith("/admin/revenue"))
       return { eyebrow: "Finance", title: "Revenue cycle" };
     if (pathname.startsWith("/admin/access-control"))
@@ -338,8 +354,7 @@ export const DOCTOR_DESK: DeskPortalConfig = {
       return { eyebrow: "Pharmacy", title: "E-prescriptions" };
     if (pathname.startsWith("/doctor/results"))
       return { eyebrow: "Diagnostics", title: "Lab results" };
-    if (pathname.startsWith("/doctor/leave"))
-      return { eyebrow: "HR", title: "My leaves" };
+    if (pathname.startsWith("/doctor/leave")) return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Doctor", title: "Clinic" };
   },
 };

@@ -81,7 +81,9 @@ function seedDoctors(): HospitalDoctorRecord[] {
   const merged = [...fromFees];
   for (const ex of extras) {
     // Prefer linking existing fee doctor by specialty when present
-    const existing = merged.find((d) => d.specialtyId === ex.specialtyId && !d.authUserId?.startsWith("demo-doctor-"));
+    const existing = merged.find(
+      (d) => d.specialtyId === ex.specialtyId && !d.authUserId?.startsWith("demo-doctor-"),
+    );
     if (existing && ex.authUserId) {
       existing.authUserId = ex.authUserId;
       existing.email = ex.email;
@@ -172,7 +174,8 @@ export function saveHospitalDoctors(doctors: HospitalDoctorRecord[]) {
 
 /** Pull from Supabase when available; merge into local cache */
 export async function hydrateHospitalDoctorsFromRemote(): Promise<HospitalDoctorRecord[]> {
-  const { fetchDoctorsFromRemote, syncDoctorsToRemote } = await import("@/lib/specialties/remote-sync");
+  const { fetchDoctorsFromRemote, syncDoctorsToRemote } =
+    await import("@/lib/specialties/remote-sync");
   const remote = await fetchDoctorsFromRemote();
   if (remote && remote.length > 0) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
@@ -264,7 +267,10 @@ export function findDoctorByEmail(email: string): HospitalDoctorRecord | null {
   return loadHospitalDoctors().find((d) => d.email === e && d.active) ?? null;
 }
 
-export function getDoctorSpecialtyId(authUserId?: string | null, email?: string | null): SpecialtyId {
+export function getDoctorSpecialtyId(
+  authUserId?: string | null,
+  email?: string | null,
+): SpecialtyId {
   if (authUserId) {
     const byAuth = findDoctorByAuthUserId(authUserId);
     if (byAuth) return byAuth.specialtyId;

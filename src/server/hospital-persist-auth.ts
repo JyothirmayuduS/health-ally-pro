@@ -118,19 +118,16 @@ export async function authorizeHospitalPersist(
       .eq("profile_id", data.user.id)
       .eq("is_active", true);
 
-    const staffMemberships = (memberships ?? []).filter((m) =>
-      STAFF_ROLES.has(String(m.role)),
-    );
+    const staffMemberships = (memberships ?? []).filter((m) => STAFF_ROLES.has(String(m.role)));
     if (staffMemberships.length === 0) {
       return { ok: false, status: 403, error: "Staff membership required" };
     }
 
-    const hospitalIds = new Set(
-      staffMemberships.map((m) => String(m.hospital_id)).filter(Boolean),
-    );
-    const hospitalId = requestedHospitalId && hospitalIds.has(requestedHospitalId)
-      ? requestedHospitalId
-      : String(staffMemberships[0].hospital_id);
+    const hospitalIds = new Set(staffMemberships.map((m) => String(m.hospital_id)).filter(Boolean));
+    const hospitalId =
+      requestedHospitalId && hospitalIds.has(requestedHospitalId)
+        ? requestedHospitalId
+        : String(staffMemberships[0].hospital_id);
 
     if (requestedHospitalId && !hospitalIds.has(requestedHospitalId)) {
       return { ok: false, status: 403, error: "Hospital out of scope" };

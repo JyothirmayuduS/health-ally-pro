@@ -47,18 +47,19 @@ export default function Register() {
   });
   const [duplicate, setDuplicate] = useState<SharedPatient | null>(null);
 
-  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const v = e.target.value;
-    setForm((f) => ({ ...f, [k]: v }));
-    if (k === "phone" || k === "name" || k === "dob") {
-      const dupe = findDuplicate(
-        k === "phone" ? v : form.phone,
-        k === "name" ? v : form.name,
-        k === "dob" ? v : form.dob,
-      );
-      setDuplicate(dupe || null);
-    }
-  };
+  const set =
+    (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const v = e.target.value;
+      setForm((f) => ({ ...f, [k]: v }));
+      if (k === "phone" || k === "name" || k === "dob") {
+        const dupe = findDuplicate(
+          k === "phone" ? v : form.phone,
+          k === "name" ? v : form.name,
+          k === "dob" ? v : form.dob,
+        );
+        setDuplicate(dupe || null);
+      }
+    };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -304,21 +305,17 @@ export default function Register() {
               </div>
             </div>
           </section>
-        ) : (
-          form.phone || form.name ? (
-            <section className="border border-status-doneBorder bg-status-doneBg/40 rounded-sm p-4 flex items-start gap-2.5">
-              <Check className="w-4 h-4 mt-0.5 text-status-doneText" />
-              <div>
-                <div className="text-[12.5px] font-medium text-status-doneText">
-                  No duplicates found
-                </div>
-                <div className="text-[11px] text-ink-400 mt-1">
-                  We checked phone, name and DOB.
-                </div>
+        ) : form.phone || form.name ? (
+          <section className="border border-status-doneBorder bg-status-doneBg/40 rounded-sm p-4 flex items-start gap-2.5">
+            <Check className="w-4 h-4 mt-0.5 text-status-doneText" />
+            <div>
+              <div className="text-[12.5px] font-medium text-status-doneText">
+                No duplicates found
               </div>
-            </section>
-          ) : null
-        )}
+              <div className="text-[11px] text-ink-400 mt-1">We checked phone, name and DOB.</div>
+            </div>
+          </section>
+        ) : null}
 
         <div className="surface p-5 sticky top-24">
           <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">
@@ -327,11 +324,7 @@ export default function Register() {
           <div className="text-[13px] text-ink-600 mt-2 leading-relaxed">
             MRN will be auto-generated on submit. Patient will be searchable immediately.
           </div>
-          <button
-            type="submit"
-            data-testid="reg-submit"
-            className="mt-4 w-full btn-primary btn-lg"
-          >
+          <button type="submit" data-testid="reg-submit" className="mt-4 w-full btn-primary btn-lg">
             <UserPlus className="w-4 h-4" />
             Register patient
           </button>

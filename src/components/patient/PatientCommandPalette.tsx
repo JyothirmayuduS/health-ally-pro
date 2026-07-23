@@ -118,11 +118,7 @@ export function PatientCommandPalette() {
         {!search.trim() && (
           <CommandGroup heading="Quick links">
             {QUICK_LINKS.map((link) => (
-              <CommandItem
-                key={link.to}
-                value={link.label}
-                onSelect={() => go(link.to)}
-              >
+              <CommandItem key={link.to} value={link.label} onSelect={() => go(link.to)}>
                 {link.label}
               </CommandItem>
             ))}
@@ -146,7 +142,9 @@ export function PatientCommandPalette() {
                       <Icon className="mr-2 h-4 w-4 shrink-0 text-ink-muted" strokeWidth={1.75} />
                       <span className="min-w-0">
                         <span className="block truncate font-medium">{hit.title}</span>
-                        <span className="block truncate text-xs text-ink-muted">{hit.subtitle}</span>
+                        <span className="block truncate text-xs text-ink-muted">
+                          {hit.subtitle}
+                        </span>
                       </span>
                     </CommandItem>
                   ))}

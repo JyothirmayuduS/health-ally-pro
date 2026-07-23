@@ -63,9 +63,10 @@ export const Route = createFileRoute("/api/hospital/audit-dlq")({
         if (error) return jsonResponse({ error: error.message }, { status: 500 });
         // Exclude acknowledged/test_artifact stored only in payload until status column exists
         const open = (data ?? []).filter((row) => {
-          const status = (row as { status?: string; payload?: { resolution?: { status?: string } } })
-            .status ||
-            (row as { payload?: { resolution?: { status?: string } } }).payload?.resolution?.status ||
+          const status =
+            (row as { status?: string; payload?: { resolution?: { status?: string } } }).status ||
+            (row as { payload?: { resolution?: { status?: string } } }).payload?.resolution
+              ?.status ||
             "open";
           return status === "open";
         });

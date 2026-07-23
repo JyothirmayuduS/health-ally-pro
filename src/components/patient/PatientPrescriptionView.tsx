@@ -39,9 +39,12 @@ export function PatientPrescriptionView({ record, backTo = "/prescriptions", cla
           </Link>
           <div className="min-w-0">
             <p className="label-eyebrow">E-prescription</p>
-            <h1 className="mt-1 font-serif text-2xl tracking-tight sm:text-3xl">{record.rx_number}</h1>
+            <h1 className="mt-1 font-serif text-2xl tracking-tight sm:text-3xl">
+              {record.rx_number}
+            </h1>
             <p className="mt-1 text-sm text-ink-muted">
-              {record.doctor_name} · {formatSentAt(record.sent_at)} · {record.draft.lines.length} medication
+              {record.doctor_name} · {formatSentAt(record.sent_at)} · {record.draft.lines.length}{" "}
+              medication
               {record.draft.lines.length === 1 ? "" : "s"}
             </p>
           </div>
@@ -57,7 +60,11 @@ export function PatientPrescriptionView({ record, backTo = "/prescriptions", cla
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-border bg-[#E8E6E1]/40 p-2 sm:p-4 print:border-0 print:bg-white print:p-0">
-        <PrescriptionPreviewDocument patient={patient} draft={record.draft} rxId={record.rx_number} />
+        <PrescriptionPreviewDocument
+          patient={patient}
+          draft={record.draft}
+          rxId={record.rx_number}
+        />
       </div>
 
       <p className="text-center text-xs text-ink-muted print:hidden">

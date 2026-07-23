@@ -12,9 +12,7 @@ export const Route = createFileRoute("/care/visits/$visitId")({
     return {
       meta: [
         {
-          title: visit
-            ? `${visit.reason} — Medora`
-            : "Visit details — Medora",
+          title: visit ? `${visit.reason} — Medora` : "Visit details — Medora",
         },
       ],
     };

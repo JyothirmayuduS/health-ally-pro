@@ -50,7 +50,9 @@ export default function PharmacyPayDialog({ open, onOpenChange, invoice, onPay }
         </DialogHeader>
 
         <div>
-          <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-ink-400">Payment method</div>
+          <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-ink-400">
+            Payment method
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {PAYMENT_METHODS.map((m) => {
               const Icon = METHOD_ICON[m.id];
@@ -110,7 +112,11 @@ export default function PharmacyPayDialog({ open, onOpenChange, invoice, onPay }
               Partial 50%
             </Button>
           )}
-          <Button className="btn-primary" onClick={() => onPay(method, due)} data-testid="confirm-payment">
+          <Button
+            className="btn-primary"
+            onClick={() => onPay(method, due)}
+            data-testid="confirm-payment"
+          >
             Collect {fmtInr(due)}
           </Button>
         </DialogFooter>

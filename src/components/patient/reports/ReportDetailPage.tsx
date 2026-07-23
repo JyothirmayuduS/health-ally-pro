@@ -50,15 +50,15 @@ export function ReportDetailPage({ reportId }: { reportId: string }) {
     return () => window.removeEventListener(PATIENT_REPORTS_EVENT, onUpdate);
   }, [refresh]);
 
-  const existingDoctorIds = useMemo(
-    () => grants.map((g) => g.doctorId),
-    [grants],
-  );
+  const existingDoctorIds = useMemo(() => grants.map((g) => g.doctorId), [grants]);
 
-  const handleGrant = useCallback((doctorIds: string[], expiresDays: number) => {
-    addShareGrants(reportId, doctorIds, expiresDays);
-    setProgressOpen(true);
-  }, [reportId]);
+  const handleGrant = useCallback(
+    (doctorIds: string[], expiresDays: number) => {
+      addShareGrants(reportId, doctorIds, expiresDays);
+      setProgressOpen(true);
+    },
+    [reportId],
+  );
 
   const [labResults, setLabResults] = useState<LabResultRow[]>(() =>
     getLabResultsForReport(reportId),
@@ -172,9 +172,7 @@ export function ReportDetailPage({ reportId }: { reportId: string }) {
                       : "bg-[#E8F3EE] text-[#2D6B4F]",
                   )}
                 >
-                  {grant.status === "pending" ? (
-                    <Clock4 className="h-3 w-3" />
-                  ) : null}
+                  {grant.status === "pending" ? <Clock4 className="h-3 w-3" /> : null}
                   {grant.status === "pending" ? "Pending" : "Active"}
                 </span>
               </div>
@@ -231,9 +229,7 @@ export function ReportDetailPage({ reportId }: { reportId: string }) {
               >
                 <span className="text-sm text-ink-muted">{row.name}</span>
                 <div className="flex items-center gap-2.5 sm:gap-3">
-                  <span className="text-sm font-semibold tabular-nums text-ink">
-                    {row.value}
-                  </span>
+                  <span className="text-sm font-semibold tabular-nums text-ink">{row.value}</span>
                   <span
                     className={cn(
                       "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
@@ -275,9 +271,7 @@ export function ReportDetailPage({ reportId }: { reportId: string }) {
                     {grant.initials}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-ink">
-                      {grant.doctorName}
-                    </p>
+                    <p className="truncate text-sm font-semibold text-ink">{grant.doctorName}</p>
                     <p className="text-xs text-ink-muted">{grant.specialty}</p>
                   </div>
                   <button

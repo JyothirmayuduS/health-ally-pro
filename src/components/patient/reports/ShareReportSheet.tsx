@@ -46,16 +46,12 @@ export function ShareReportSheet({
     return SHAREABLE_DOCTORS.filter((d) => {
       if (existingDoctorIds.includes(d.id)) return false;
       if (!q) return true;
-      return (
-        d.name.toLowerCase().includes(q) || d.specialty.toLowerCase().includes(q)
-      );
+      return d.name.toLowerCase().includes(q) || d.specialty.toLowerCase().includes(q);
     });
   }, [query, existingDoctorIds]);
 
   const toggle = (id: string) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const handleGrant = useCallback(() => {
@@ -144,9 +140,7 @@ export function ShareReportSheet({
                   <span
                     className={cn(
                       "grid h-6 w-6 shrink-0 place-items-center rounded-full border-2",
-                      active
-                        ? "border-ink bg-ink text-white"
-                        : "border-[#C8C4BE] bg-white",
+                      active ? "border-ink bg-ink text-white" : "border-[#C8C4BE] bg-white",
                     )}
                   >
                     {active ? <Check className="h-3.5 w-3.5" strokeWidth={2.5} /> : null}
@@ -169,9 +163,7 @@ export function ShareReportSheet({
                 <Calendar className="h-4 w-4 text-ink-muted" strokeWidth={1.75} />
                 Access expires in
               </div>
-              <p className="mt-0.5 text-xs text-ink-muted">
-                Revoke anytime from this screen
-              </p>
+              <p className="mt-0.5 text-xs text-ink-muted">Revoke anytime from this screen</p>
             </div>
             <div className="flex items-center gap-2">
               <button

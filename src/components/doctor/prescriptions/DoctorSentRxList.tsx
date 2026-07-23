@@ -25,7 +25,8 @@ function formatSentAt(iso: string): string {
 }
 
 function statusBadge(status: DoctorSentRxRecord["status"]) {
-  if (status === "cancelled") return { label: "Cancelled", className: "bg-[#FDF5F4] text-[#8B3A32]" };
+  if (status === "cancelled")
+    return { label: "Cancelled", className: "bg-[#FDF5F4] text-[#8B3A32]" };
   if (status === "amended") return { label: "Amended", className: "bg-[#F4F0EB] text-[#7C5C3A]" };
   return { label: "Sent", className: "bg-[#E8F4F1] text-[#2C7873]" };
 }
@@ -33,8 +34,12 @@ function statusBadge(status: DoctorSentRxRecord["status"]) {
 function targetIcons(target: DoctorSentRxRecord["target"]) {
   return (
     <span className="flex items-center gap-1 text-[#8A8F8C]">
-      {(target === "pharmacy" || target === "both") && <Building2 className="h-3.5 w-3.5" aria-hidden />}
-      {(target === "patient" || target === "both") && <Smartphone className="h-3.5 w-3.5" aria-hidden />}
+      {(target === "pharmacy" || target === "both") && (
+        <Building2 className="h-3.5 w-3.5" aria-hidden />
+      )}
+      {(target === "patient" || target === "both") && (
+        <Smartphone className="h-3.5 w-3.5" aria-hidden />
+      )}
     </span>
   );
 }
@@ -53,7 +58,9 @@ export function DoctorSentRxList({ patientFilter }: Props) {
   return (
     <div className="mx-auto w-full min-w-0 max-w-3xl lg:max-w-4xl">
       <header className="mb-4">
-        <h1 className="font-serif text-xl font-semibold text-[#1B3B2E] sm:text-2xl">Sent prescriptions</h1>
+        <h1 className="font-serif text-xl font-semibold text-[#1B3B2E] sm:text-2xl">
+          Sent prescriptions
+        </h1>
         <p className="mt-1 text-sm text-[#8A8F8C]">
           Local ledger — view, reprint, cancel, or amend without backend sync.
         </p>
@@ -64,9 +71,7 @@ export function DoctorSentRxList({ patientFilter }: Props) {
           <span className="text-xs text-[#8A8F8C]">Filtered:</span>
           <button
             type="button"
-            onClick={() =>
-              void navigate({ to: "/doctor/prescriptions", search: { view: "sent" } })
-            }
+            onClick={() => void navigate({ to: "/doctor/prescriptions", search: { view: "sent" } })}
             className="inline-flex items-center gap-1 rounded-full border border-[#EDEAE6] bg-white px-3 py-1 text-xs font-medium text-[#1B3B2E]"
           >
             {PANEL_PATIENTS.find((p) => p.id === patientFilter)?.name ?? patientFilter}
@@ -79,7 +84,9 @@ export function DoctorSentRxList({ patientFilter }: Props) {
         <div className="rounded-2xl border border-dashed border-[#EDEAE6] bg-white px-6 py-12 text-center">
           <FileText className="mx-auto h-10 w-10 text-[#C5C9C6]" />
           <p className="mt-3 font-medium text-[#1B3B2E]">No sent prescriptions yet</p>
-          <p className="mt-1 text-sm text-[#8A8F8C]">Complete a prescription and tap Send to see it here.</p>
+          <p className="mt-1 text-sm text-[#8A8F8C]">
+            Complete a prescription and tap Send to see it here.
+          </p>
           <Link
             to="/doctor/prescriptions"
             search={{ view: "write" }}
@@ -107,14 +114,23 @@ export function DoctorSentRxList({ patientFilter }: Props) {
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-sm font-bold text-[#1B3B2E]">{rx.rx_number}</span>
-                      <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase", badge.className)}>
+                      <span className="font-mono text-sm font-bold text-[#1B3B2E]">
+                        {rx.rx_number}
+                      </span>
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
+                          badge.className,
+                        )}
+                      >
                         {badge.label}
                       </span>
                       {targetIcons(rx.target)}
                     </div>
                     <p className="mt-1 text-sm font-semibold text-[#1B3B2E]">{rx.patientName}</p>
-                    <p className="mt-0.5 text-xs text-[#8A8F8C]">{rx.draft.diagnosis || "No diagnosis"}</p>
+                    <p className="mt-0.5 text-xs text-[#8A8F8C]">
+                      {rx.draft.diagnosis || "No diagnosis"}
+                    </p>
                     <p className="mt-1 line-clamp-1 text-xs text-[#5C635F]">
                       {meds.length > 0 ? meds.join(" · ") : "No medications"}
                     </p>

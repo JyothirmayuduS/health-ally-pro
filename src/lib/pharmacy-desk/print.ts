@@ -1,4 +1,5 @@
-const fmt = (n: number) => `₹${Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const fmt = (n: number) =>
+  `₹${Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const HOSPITAL = {
   name: "Oak Haven Medical",
@@ -52,7 +53,7 @@ export function printPharmacistShiftReport(report: any) {
         <td class="right mono">${r.closingBalance}</td>
         <td class="right mono" style="color: ${r.variance !== 0 ? "#b85c38" : "inherit"}">${r.variance}</td>
       </tr>
-    `
+    `,
     )
     .join("");
 
@@ -118,13 +119,17 @@ export function printPharmacistShiftReport(report: any) {
       <tr><td>Wastage Disposed Value</td><td class="right mono" style="color: #b85c38">${fmt(report.wastageValue)}</td></tr>
     </table>
 
-    ${report.notes ? `
+    ${
+      report.notes
+        ? `
       <hr/>
       <div class="xs">Handover Remarks</div>
       <div style="font-size: 11px; padding: 6px; background: #fcfcfb; border: 1px solid #e5e5e0; border-radius: 4px; margin-top: 4px; line-height: 1.4;">
         ${report.notes}
       </div>
-    ` : ""}
+    `
+        : ""
+    }
 
     <div class="stamp">
       <div class="xs">Authorized Signatures</div>

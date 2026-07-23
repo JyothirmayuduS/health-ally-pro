@@ -120,8 +120,8 @@ export function IdentityProfileSheet({ open, onClose }: Props) {
         </div>
 
         <p className="mt-8 text-center text-xs leading-relaxed text-ink-muted">
-          Medora uses end-to-end encryption. Changing your identity profile requires
-          re-verification by your care team.
+          Medora uses end-to-end encryption. Changing your identity profile requires re-verification
+          by your care team.
         </p>
       </div>
     </div>,

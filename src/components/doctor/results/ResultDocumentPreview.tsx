@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { FileText, Maximize2, X } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { ResultDocument } from "@/lib/doctor-results-imaging";
 import { cn } from "@/lib/utils";
 

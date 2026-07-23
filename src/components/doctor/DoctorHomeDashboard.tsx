@@ -32,14 +32,18 @@ function panelHealthItems() {
     {
       id: "htn",
       label: "Hypertensive — not seen 60+ days",
-      count: PANEL_PATIENTS.filter((p) => p.condition === "Hypertension" && p.categories.includes("follow-up")).length,
+      count: PANEL_PATIENTS.filter(
+        (p) => p.condition === "Hypertension" && p.categories.includes("follow-up"),
+      ).length,
       dot: "#E9A820",
       filter: { view: "panel" as const, category: "follow-up" as const },
     },
     {
       id: "labs",
       label: "Pending investigation results",
-      count: PANEL_PATIENTS.filter((p) => p.pills.some((x) => x.includes("Lab") || x.includes("Result"))).length,
+      count: PANEL_PATIENTS.filter((p) =>
+        p.pills.some((x) => x.includes("Lab") || x.includes("Result")),
+      ).length,
       dot: "#B8735D",
       filter: { view: "panel" as const, category: "all" as const },
     },
@@ -178,7 +182,10 @@ export function DoctorHomeDashboard() {
                       search={item.filter}
                       className="flex items-center gap-3 py-3 hover:opacity-80"
                     >
-                      <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: item.dot }} />
+                      <span
+                        className="h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: item.dot }}
+                      />
                       <span className="min-w-0 flex-1 text-sm text-[#1B3B2E]">{item.label}</span>
                       <span className="text-sm font-semibold text-[#1B3B2E]">{item.count}</span>
                     </Link>
@@ -198,7 +205,8 @@ export function DoctorHomeDashboard() {
             <AlertTriangle className="h-5 w-5 text-[#C45C4A]" strokeWidth={1.75} />
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-[#1B3B2E]">
-                {overview.urgentWaitingCount} urgent patient{overview.urgentWaitingCount > 1 ? "s" : ""} in queue
+                {overview.urgentWaitingCount} urgent patient
+                {overview.urgentWaitingCount > 1 ? "s" : ""} in queue
               </p>
               <p className="text-sm text-[#8A8F8C]">Open live queue to call next</p>
             </div>
@@ -208,7 +216,9 @@ export function DoctorHomeDashboard() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">TODAY&apos;S TIMELINE</h2>
+            <h2 className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">
+              TODAY&apos;S TIMELINE
+            </h2>
             <Link to="/doctor/schedule" className="text-[11px] font-semibold text-[#B8735D]">
               Full schedule
             </Link>

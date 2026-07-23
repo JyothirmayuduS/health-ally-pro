@@ -65,7 +65,9 @@ export function DoctorMobileChromeProvider({ children }: { children: React.React
   );
 
   return (
-    <DoctorMobileChromeContext.Provider value={value}>{children}</DoctorMobileChromeContext.Provider>
+    <DoctorMobileChromeContext.Provider value={value}>
+      {children}
+    </DoctorMobileChromeContext.Provider>
   );
 }
 

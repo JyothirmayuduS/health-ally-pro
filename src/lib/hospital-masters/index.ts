@@ -89,7 +89,11 @@ const DESK = "admin" as const;
 export const SEED_ICD: IcdDiagnosis[] = [
   { code: "J45.9", description: "Asthma, unspecified", category: "Respiratory" },
   { code: "J06.9", description: "Acute upper respiratory infection", category: "Respiratory" },
-  { code: "E11.9", description: "Type 2 diabetes mellitus without complications", category: "Endocrine" },
+  {
+    code: "E11.9",
+    description: "Type 2 diabetes mellitus without complications",
+    category: "Endocrine",
+  },
   { code: "I10", description: "Essential (primary) hypertension", category: "Cardiovascular" },
   { code: "K21.0", description: "Gastro-oesophageal reflux with oesophagitis", category: "GI" },
   { code: "M54.5", description: "Low back pain", category: "Musculoskeletal" },
@@ -112,42 +116,166 @@ export const SEED_INVESTIGATIONS: InvestigationMaster[] = [
 ];
 
 export const SEED_REFERRING: ReferringDoctor[] = [
-  { id: "REF-01", name: "Dr. Kavita Menon", specialty: "General Medicine", clinic: "City Clinic, Andheri", phone: "+91 98200 11223", commissionPct: 10, active: true },
-  { id: "REF-02", name: "Dr. Suresh Patil", specialty: "Pediatrics", clinic: "Kids Care, Bandra", phone: "+91 98190 44556", commissionPct: 8, active: true },
-  { id: "REF-03", name: "Dr. Anil Deshmukh", specialty: "Orthopedics", clinic: "Bone & Joint Centre", phone: "+91 98765 77889", commissionPct: 12, active: true },
+  {
+    id: "REF-01",
+    name: "Dr. Kavita Menon",
+    specialty: "General Medicine",
+    clinic: "City Clinic, Andheri",
+    phone: "+91 98200 11223",
+    commissionPct: 10,
+    active: true,
+  },
+  {
+    id: "REF-02",
+    name: "Dr. Suresh Patil",
+    specialty: "Pediatrics",
+    clinic: "Kids Care, Bandra",
+    phone: "+91 98190 44556",
+    commissionPct: 8,
+    active: true,
+  },
+  {
+    id: "REF-03",
+    name: "Dr. Anil Deshmukh",
+    specialty: "Orthopedics",
+    clinic: "Bone & Joint Centre",
+    phone: "+91 98765 77889",
+    commissionPct: 12,
+    active: true,
+  },
 ];
 
 export const SEED_VACCINES: VaccineScheduleEntry[] = [
   { id: "V-BCG", vaccine: "BCG", ageLabel: "At birth", ageMonths: 0, dose: "0.05 ml", route: "ID" },
-  { id: "V-OPV0", vaccine: "OPV-0", ageLabel: "At birth", ageMonths: 0, dose: "2 drops", route: "Oral" },
-  { id: "V-DPT1", vaccine: "Pentavalent-1", ageLabel: "6 weeks", ageMonths: 1.5, dose: "0.5 ml", route: "IM" },
-  { id: "V-MMR1", vaccine: "MMR-1", ageLabel: "9 months", ageMonths: 9, dose: "0.5 ml", route: "SC" },
-  { id: "V-DPT-B", vaccine: "DPT booster", ageLabel: "16-24 months", ageMonths: 18, dose: "0.5 ml", route: "IM" },
+  {
+    id: "V-OPV0",
+    vaccine: "OPV-0",
+    ageLabel: "At birth",
+    ageMonths: 0,
+    dose: "2 drops",
+    route: "Oral",
+  },
+  {
+    id: "V-DPT1",
+    vaccine: "Pentavalent-1",
+    ageLabel: "6 weeks",
+    ageMonths: 1.5,
+    dose: "0.5 ml",
+    route: "IM",
+  },
+  {
+    id: "V-MMR1",
+    vaccine: "MMR-1",
+    ageLabel: "9 months",
+    ageMonths: 9,
+    dose: "0.5 ml",
+    route: "SC",
+  },
+  {
+    id: "V-DPT-B",
+    vaccine: "DPT booster",
+    ageLabel: "16-24 months",
+    ageMonths: 18,
+    dose: "0.5 ml",
+    route: "IM",
+  },
   { id: "V-TD", vaccine: "Td", ageLabel: "10 years", ageMonths: 120, dose: "0.5 ml", route: "IM" },
 ];
 
 export const SEED_ADVISE: AdviseTemplate[] = [
-  { id: "A-01", label: "Fever care", body: "Plenty of fluids, tepid sponging if T>101°F, paracetamol as prescribed. Return if breathless or persistent fever >3 days.", locale: "en" },
-  { id: "A-02", label: "Asthma action", body: "Use inhaler with spacer. Avoid triggers. Seek ER if peak flow <50% personal best.", locale: "en" },
-  { id: "A-03", label: "बुखार — सामान्य सलाह", body: "खूब पानी पिएं। तेज बुखार पर ठंडा पानी से sponging करें। 3 दिन से अधिक बुखार पर वापस आएं।", locale: "hi" },
+  {
+    id: "A-01",
+    label: "Fever care",
+    body: "Plenty of fluids, tepid sponging if T>101°F, paracetamol as prescribed. Return if breathless or persistent fever >3 days.",
+    locale: "en",
+  },
+  {
+    id: "A-02",
+    label: "Asthma action",
+    body: "Use inhaler with spacer. Avoid triggers. Seek ER if peak flow <50% personal best.",
+    locale: "en",
+  },
+  {
+    id: "A-03",
+    label: "बुखार — सामान्य सलाह",
+    body: "खूब पानी पिएं। तेज बुखार पर ठंडा पानी से sponging करें। 3 दिन से अधिक बुखार पर वापस आएं।",
+    locale: "hi",
+  },
 ];
 
 export const SEED_ADDRESS_BOOK: AddressBookEntry[] = [
-  { id: "AB-01", name: "Dr. Rajan", role: "Lab supervisor", phone: "+91 22 4000 1201", organization: "Oak Haven Lab", tags: ["internal"] },
-  { id: "AB-02", name: "City Diagnostics", role: "Reference lab", phone: "+91 22 2654 8800", tags: ["external", "lab"] },
-  { id: "AB-03", name: "Star Insurance TPA", role: "TPA desk", phone: "1800-123-4567", tags: ["insurance"] },
+  {
+    id: "AB-01",
+    name: "Dr. Rajan",
+    role: "Lab supervisor",
+    phone: "+91 22 4000 1201",
+    organization: "Oak Haven Lab",
+    tags: ["internal"],
+  },
+  {
+    id: "AB-02",
+    name: "City Diagnostics",
+    role: "Reference lab",
+    phone: "+91 22 2654 8800",
+    tags: ["external", "lab"],
+  },
+  {
+    id: "AB-03",
+    name: "Star Insurance TPA",
+    role: "TPA desk",
+    phone: "1800-123-4567",
+    tags: ["insurance"],
+  },
 ];
 
 export const SEED_REMINDERS: PatientReminder[] = [
-  { id: "R-01", patientName: "Sneha Rao", mrn: "MRN-100231", phone: "+91 98765 43210", type: "follow-up", dueDate: new Date().toISOString().slice(0, 10), note: "Asthma review — peak flow log", done: false },
-  { id: "R-02", patientName: "Arjun Kapoor", mrn: "MRN-100234", phone: "+91 98123 45678", type: "vaccine", dueDate: new Date(Date.now() + 86400000 * 7).toISOString().slice(0, 10), note: "MMR-2 due", done: false },
+  {
+    id: "R-01",
+    patientName: "Sneha Rao",
+    mrn: "MRN-100231",
+    phone: "+91 98765 43210",
+    type: "follow-up",
+    dueDate: new Date().toISOString().slice(0, 10),
+    note: "Asthma review — peak flow log",
+    done: false,
+  },
+  {
+    id: "R-02",
+    patientName: "Arjun Kapoor",
+    mrn: "MRN-100234",
+    phone: "+91 98123 45678",
+    type: "vaccine",
+    dueDate: new Date(Date.now() + 86400000 * 7).toISOString().slice(0, 10),
+    note: "MMR-2 due",
+    done: false,
+  },
 ];
 
 export const SEED_COMMS: CommunicationTemplate[] = [
-  { id: "SMS-01", channel: "sms", name: "Appointment reminder", body: "Reminder: {{patient}} has appointment at Oak Haven on {{date}} at {{time}}. Reply STOP to opt out." },
-  { id: "SMS-02", channel: "sms", name: "Lab result ready", body: "Your lab report is ready at Oak Haven. View in patient app or collect from reception." },
-  { id: "WA-01", channel: "whatsapp", name: "Prescription share", body: "Dr {{doctor}} has sent your prescription. Download: {{link}}" },
-  { id: "EM-01", channel: "email", name: "Discharge summary", body: "Dear {{patient}}, please find attached your discharge summary from Oak Haven Medical." },
+  {
+    id: "SMS-01",
+    channel: "sms",
+    name: "Appointment reminder",
+    body: "Reminder: {{patient}} has appointment at Oak Haven on {{date}} at {{time}}. Reply STOP to opt out.",
+  },
+  {
+    id: "SMS-02",
+    channel: "sms",
+    name: "Lab result ready",
+    body: "Your lab report is ready at Oak Haven. View in patient app or collect from reception.",
+  },
+  {
+    id: "WA-01",
+    channel: "whatsapp",
+    name: "Prescription share",
+    body: "Dr {{doctor}} has sent your prescription. Download: {{link}}",
+  },
+  {
+    id: "EM-01",
+    channel: "email",
+    name: "Discharge summary",
+    body: "Dear {{patient}}, please find attached your discharge summary from Oak Haven Medical.",
+  },
 ];
 
 function load<T>(key: string, seed: T[]): T[] {
@@ -159,29 +287,61 @@ function save<T>(key: string, data: T[]) {
   savePersistedJson(key, deskForKey(key, DESK), data);
 }
 
-export function loadIcdMaster() { return load(KEYS.icd, SEED_ICD); }
-export function saveIcdMaster(rows: IcdDiagnosis[]) { save(KEYS.icd, rows); }
+export function loadIcdMaster() {
+  return load(KEYS.icd, SEED_ICD);
+}
+export function saveIcdMaster(rows: IcdDiagnosis[]) {
+  save(KEYS.icd, rows);
+}
 
-export function loadInvestigationMaster() { return load(KEYS.investigations, SEED_INVESTIGATIONS); }
-export function saveInvestigationMaster(rows: InvestigationMaster[]) { save(KEYS.investigations, rows); }
+export function loadInvestigationMaster() {
+  return load(KEYS.investigations, SEED_INVESTIGATIONS);
+}
+export function saveInvestigationMaster(rows: InvestigationMaster[]) {
+  save(KEYS.investigations, rows);
+}
 
-export function loadReferringDoctors() { return load(KEYS.referring, SEED_REFERRING); }
-export function saveReferringDoctors(rows: ReferringDoctor[]) { save(KEYS.referring, rows); }
+export function loadReferringDoctors() {
+  return load(KEYS.referring, SEED_REFERRING);
+}
+export function saveReferringDoctors(rows: ReferringDoctor[]) {
+  save(KEYS.referring, rows);
+}
 
-export function loadVaccineSchedule() { return load(KEYS.vaccines, SEED_VACCINES); }
-export function saveVaccineSchedule(rows: VaccineScheduleEntry[]) { save(KEYS.vaccines, rows); }
+export function loadVaccineSchedule() {
+  return load(KEYS.vaccines, SEED_VACCINES);
+}
+export function saveVaccineSchedule(rows: VaccineScheduleEntry[]) {
+  save(KEYS.vaccines, rows);
+}
 
-export function loadAdviseTemplates() { return load(KEYS.advise, SEED_ADVISE); }
-export function saveAdviseTemplates(rows: AdviseTemplate[]) { save(KEYS.advise, rows); }
+export function loadAdviseTemplates() {
+  return load(KEYS.advise, SEED_ADVISE);
+}
+export function saveAdviseTemplates(rows: AdviseTemplate[]) {
+  save(KEYS.advise, rows);
+}
 
-export function loadAddressBook() { return load(KEYS.addressBook, SEED_ADDRESS_BOOK); }
-export function saveAddressBook(rows: AddressBookEntry[]) { save(KEYS.addressBook, rows); }
+export function loadAddressBook() {
+  return load(KEYS.addressBook, SEED_ADDRESS_BOOK);
+}
+export function saveAddressBook(rows: AddressBookEntry[]) {
+  save(KEYS.addressBook, rows);
+}
 
-export function loadPatientReminders() { return load(KEYS.reminders, SEED_REMINDERS); }
-export function savePatientReminders(rows: PatientReminder[]) { save(KEYS.reminders, rows); }
+export function loadPatientReminders() {
+  return load(KEYS.reminders, SEED_REMINDERS);
+}
+export function savePatientReminders(rows: PatientReminder[]) {
+  save(KEYS.reminders, rows);
+}
 
-export function loadCommsTemplates() { return load(KEYS.comms, SEED_COMMS); }
-export function saveCommsTemplates(rows: CommunicationTemplate[]) { save(KEYS.comms, rows); }
+export function loadCommsTemplates() {
+  return load(KEYS.comms, SEED_COMMS);
+}
+export function saveCommsTemplates(rows: CommunicationTemplate[]) {
+  save(KEYS.comms, rows);
+}
 
 export function searchIcd(query: string, limit = 20): IcdDiagnosis[] {
   const q = query.trim().toLowerCase();

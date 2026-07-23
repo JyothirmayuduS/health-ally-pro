@@ -38,9 +38,7 @@ export default function StatusPage() {
         </p>
         <div className="mt-8 rounded-2xl border border-[#E8E4DE] bg-white p-6">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-sm font-semibold capitalize">
-              {data?.status ?? "Checking…"}
-            </span>
+            <span className="text-sm font-semibold capitalize">{data?.status ?? "Checking…"}</span>
             <span
               className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                 data?.ok ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-800"

@@ -7,10 +7,7 @@ export const Route = createFileRoute("/profile/privacy")({
   head: () => ({ meta: [{ title: "Privacy — Medora" }] }),
   component: function ProfilePrivacyPage() {
     return (
-      <ProfileSubpageLayout
-        title="Privacy"
-        subtitle="How Medora protects your records."
-      >
+      <ProfileSubpageLayout title="Privacy" subtitle="How Medora protects your records.">
         <div className="space-y-4 rounded-[24px] border border-[#EDEAE6] bg-white p-5 text-sm leading-relaxed text-ink-muted">
           <div className="flex gap-3 text-ink">
             <Shield className="h-5 w-5 shrink-0 text-clay" />

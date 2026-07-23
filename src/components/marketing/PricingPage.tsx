@@ -10,7 +10,12 @@ const PLANS = [
     price: "₹49,000",
     period: "/ month",
     blurb: "Single campus OPD + EMR + lab + pharmacy",
-    features: ["Up to 25 staff seats", "General + 5 specialties", "Patient portal", "Email support"],
+    features: [
+      "Up to 25 staff seats",
+      "General + 5 specialties",
+      "Patient portal",
+      "Email support",
+    ],
     cta: "Talk to sales",
     highlight: false,
   },

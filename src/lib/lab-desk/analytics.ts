@@ -30,8 +30,7 @@ export function computeAnalytics(orders: LabOrder[]): LabAnalytics {
     by_day[day] = (by_day[day] || 0) + 1;
 
     if (o.released_at && o.ordered_at) {
-      tatSum +=
-        (new Date(o.released_at).getTime() - new Date(o.ordered_at).getTime()) / 3_600_000;
+      tatSum += (new Date(o.released_at).getTime() - new Date(o.ordered_at).getTime()) / 3_600_000;
       tatCount += 1;
     }
 
@@ -50,9 +49,7 @@ export function computeAnalytics(orders: LabOrder[]): LabAnalytics {
     }
   }
 
-  const pending = orders.filter(
-    (o) => !["validated", "cancelled"].includes(o.status),
-  ).length;
+  const pending = orders.filter((o) => !["validated", "cancelled"].includes(o.status)).length;
 
   return {
     totals: {

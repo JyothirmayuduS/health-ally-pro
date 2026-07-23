@@ -123,7 +123,12 @@ export function getPatientPrescription(rxId: string): PatientRxRecord | undefine
   return seedIfEmpty().find((r) => r.id === rxId || r.rx_number === rxId);
 }
 
-export function pushPatientPrescription(input: Omit<PatientRxRecord, "id" | "status"> & { id?: string; status?: PatientRxRecord["status"] }) {
+export function pushPatientPrescription(
+  input: Omit<PatientRxRecord, "id" | "status"> & {
+    id?: string;
+    status?: PatientRxRecord["status"];
+  },
+) {
   const record: PatientRxRecord = {
     ...input,
     id: input.id ?? `rx-patient-${Date.now()}`,
@@ -135,8 +140,9 @@ export function pushPatientPrescription(input: Omit<PatientRxRecord, "id" | "sta
   writeAll(items);
 
   if (typeof window !== "undefined") {
-    void import("@/lib/shared/patient-rx-sync").then(({ publishPatientRxSync, rxRecordToSyncEnvelope }) =>
-      publishPatientRxSync(rxRecordToSyncEnvelope(record)),
+    void import("@/lib/shared/patient-rx-sync").then(
+      ({ publishPatientRxSync, rxRecordToSyncEnvelope }) =>
+        publishPatientRxSync(rxRecordToSyncEnvelope(record)),
     );
   }
 
@@ -178,7 +184,9 @@ function envelopeToDraft(envelope: PatientRxSyncEnvelope): PrescriptionDraft {
   };
 }
 
-export function upsertPatientPrescriptionFromSync(envelope: PatientRxSyncEnvelope): PatientRxRecord {
+export function upsertPatientPrescriptionFromSync(
+  envelope: PatientRxSyncEnvelope,
+): PatientRxRecord {
   const items = seedIfEmpty();
   const existingIdx = items.findIndex((r) => r.rx_number === envelope.rx_number);
   const record: PatientRxRecord = {
@@ -217,7 +225,10 @@ export function panelPatientToSnapshot(p: PanelPatient): PatientRxSnapshot {
   };
 }
 
-export function snapshotToPanelPatient(snapshot: PatientRxSnapshot, ids: { patientId: string; panelPatientId?: string }): PanelPatient {
+export function snapshotToPanelPatient(
+  snapshot: PatientRxSnapshot,
+  ids: { patientId: string; panelPatientId?: string },
+): PanelPatient {
   return {
     id: ids.panelPatientId ?? ids.patientId,
     name: snapshot.name,
@@ -244,7 +255,10 @@ export function snapshotToPanelPatient(snapshot: PatientRxSnapshot, ids: { patie
   };
 }
 
-export function cancelPatientPrescription(rxNumber: string, reason?: string): PatientRxRecord | undefined {
+export function cancelPatientPrescription(
+  rxNumber: string,
+  reason?: string,
+): PatientRxRecord | undefined {
   const items = seedIfEmpty();
   const idx = items.findIndex((r) => r.rx_number === rxNumber && r.status === "active");
   if (idx < 0) return undefined;

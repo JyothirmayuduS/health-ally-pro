@@ -150,17 +150,10 @@ export function formatReportDateLong(date: string) {
   });
 }
 
-export function filterReports(
-  reports: Report[],
-  query: string,
-  type: ReportFilter,
-): Report[] {
+export function filterReports(reports: Report[], query: string, type: ReportFilter): Report[] {
   const q = query.trim().toLowerCase();
   return reports.filter((r) => {
-    const matchQ =
-      !q ||
-      r.title.toLowerCase().includes(q) ||
-      r.doctor.toLowerCase().includes(q);
+    const matchQ = !q || r.title.toLowerCase().includes(q) || r.doctor.toLowerCase().includes(q);
     const matchT = type === "All" || r.type === type;
     return matchQ && matchT;
   });
@@ -168,7 +161,12 @@ export function filterReports(
 
 export function sharedDoctorNames(report: Report, doctors: ShareableDoctor[]): string {
   const names = report.shared
-    .map((id) => doctors.find((d) => d.id === id)?.name.split(" ").pop())
+    .map((id) =>
+      doctors
+        .find((d) => d.id === id)
+        ?.name.split(" ")
+        .pop(),
+    )
     .filter(Boolean);
   return names.join(", ");
 }

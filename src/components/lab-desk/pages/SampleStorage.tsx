@@ -37,14 +37,7 @@ import { cn } from "@/lib/utils";
 import type { Aliquot } from "@/lib/lab-desk/store";
 
 export default function SampleStorage() {
-  const {
-    orders,
-    patients,
-    aliquots,
-    storeSample,
-    disposeSample,
-    createAliquots,
-  } = useLabStore();
+  const { orders, patients, aliquots, storeSample, disposeSample, createAliquots } = useLabStore();
 
   const [activeTab, setActiveTab] = useState<"storage" | "aliquots">("storage");
 
@@ -97,7 +90,8 @@ export default function SampleStorage() {
   return (
     <div className="space-y-6" data-testid="storage-page">
       <div className="border-l-4 border-sky-500 bg-sky-50/40 px-4 py-3 text-[13px] text-ink-700">
-        <strong className="text-sky-600">Bio-Repository Operations</strong> — Log specimen storage coordinates, track retention dates, and perform tube aliquoting.
+        <strong className="text-sky-600">Bio-Repository Operations</strong> — Log specimen storage
+        coordinates, track retention dates, and perform tube aliquoting.
       </div>
 
       <SectionLabel
@@ -147,7 +141,9 @@ export default function SampleStorage() {
             onClick={() => setActiveTab(t.value as any)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
-              activeTab === t.value ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-700",
+              activeTab === t.value
+                ? "bg-white text-ink-900 shadow-sm"
+                : "text-ink-500 hover:text-ink-700",
             )}
           >
             {t.label}
@@ -173,7 +169,11 @@ export default function SampleStorage() {
               {storedOrders.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-8">
-                    <EmptyState icon={Database} title="No samples stored" hint="Move collected tubes to Freezer Storage." />
+                    <EmptyState
+                      icon={Database}
+                      title="No samples stored"
+                      hint="Move collected tubes to Freezer Storage."
+                    />
                   </td>
                 </tr>
               ) : (
@@ -197,7 +197,7 @@ export default function SampleStorage() {
                       key={o.id}
                       className={cn(
                         "border-b border-stone-100 text-[13px] hover:bg-stone-50/70 transition-colors cursor-pointer",
-                        storage.status === "disposed" && "bg-stone-50/50"
+                        storage.status === "disposed" && "bg-stone-50/50",
                       )}
                       onClick={() => {
                         setSelectedOrderDetails(o);
@@ -210,7 +210,9 @@ export default function SampleStorage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="font-medium">{o.test_code}</div>
-                        <div className="text-[10px] text-ink-400">{o.specimen?.sample_type || "EDTA Tube"}</div>
+                        <div className="text-[10px] text-ink-400">
+                          {o.specimen?.sample_type || "EDTA Tube"}
+                        </div>
                       </td>
                       <td className="px-4 py-3 font-mono">
                         {storage.status === "disposed" ? (
@@ -228,20 +230,31 @@ export default function SampleStorage() {
                         ) : (
                           <div>
                             {new Date(storage.retentionExpiry).toLocaleDateString()}{" "}
-                            {new Date(storage.retentionExpiry).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                            {hoursLeft < 0 && <span className="text-[10px] block font-semibold">(Retention Expired)</span>}
+                            {new Date(storage.retentionExpiry).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                            {hoursLeft < 0 && (
+                              <span className="text-[10px] block font-semibold">
+                                (Retention Expired)
+                              </span>
+                            )}
                           </div>
                         )}
                       </td>
                       <td className="px-4 py-3">
                         <div className="text-ink-700">{storage.storedBy}</div>
-                        <div className="text-[10px] text-ink-400">{new Date(storage.storedAt).toLocaleDateString()}</div>
+                        <div className="text-[10px] text-ink-400">
+                          {new Date(storage.storedAt).toLocaleDateString()}
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span
                           className={cn(
                             "px-2 py-0.5 rounded text-[10px] font-bold uppercase",
-                            storage.status === "stored" ? "bg-sky-100 text-sky-800" : "bg-stone-200 text-stone-700"
+                            storage.status === "stored"
+                              ? "bg-sky-100 text-sky-800"
+                              : "bg-stone-200 text-stone-700",
                           )}
                         >
                           {storage.status}
@@ -306,7 +319,11 @@ export default function SampleStorage() {
               {aliquots.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-8">
-                    <EmptyState icon={Layers} title="No aliquots split" hint="Create aliquots from sample tubes." />
+                    <EmptyState
+                      icon={Layers}
+                      title="No aliquots split"
+                      hint="Create aliquots from sample tubes."
+                    />
                   </td>
                 </tr>
               ) : (
@@ -319,7 +336,10 @@ export default function SampleStorage() {
                     <td className="px-4 py-3 text-ink-700">{a.destination}</td>
                     <td className="px-4 py-3 font-mono text-ink-500">
                       {new Date(a.createdAt).toLocaleDateString()}{" "}
-                      {new Date(a.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(a.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <span className="bg-teal-soft text-teal px-2 py-0.5 rounded text-[10px] font-bold uppercase">
@@ -367,22 +387,44 @@ export default function SampleStorage() {
               <div className="grid grid-cols-3 gap-2">
                 <div>
                   <Label>Rack</Label>
-                  <Input value={editRack} onChange={(e) => setEditRack(e.target.value)} className="mt-1 border-ink-200 bg-white" placeholder="A" required />
+                  <Input
+                    value={editRack}
+                    onChange={(e) => setEditRack(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    placeholder="A"
+                    required
+                  />
                 </div>
                 <div>
                   <Label>Box</Label>
-                  <Input value={editBox} onChange={(e) => setEditBox(e.target.value)} className="mt-1 border-ink-200 bg-white" placeholder="1" required />
+                  <Input
+                    value={editBox}
+                    onChange={(e) => setEditBox(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    placeholder="1"
+                    required
+                  />
                 </div>
                 <div>
                   <Label>Position</Label>
-                  <Input value={editPosition} onChange={(e) => setEditPosition(e.target.value)} className="mt-1 border-ink-200 bg-white" placeholder="01" required />
+                  <Input
+                    value={editPosition}
+                    onChange={(e) => setEditPosition(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    placeholder="01"
+                    required
+                  />
                 </div>
               </div>
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setEditModalOpen(false)}>Cancel</Button>
-              <Button type="submit" className="btn-primary">Save Location</Button>
+              <Button type="button" variant="ghost" onClick={() => setEditModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="btn-primary">
+                Save Location
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -394,7 +436,9 @@ export default function SampleStorage() {
           <form onSubmit={handleCreateAliquots} className="space-y-4">
             <DialogHeader>
               <DialogTitle>Create Sample Aliquots</DialogTitle>
-              <DialogDescription>Split the primary collected specimen into children tubes.</DialogDescription>
+              <DialogDescription>
+                Split the primary collected specimen into children tubes.
+              </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-3">
@@ -419,11 +463,27 @@ export default function SampleStorage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Number of Aliquots</Label>
-                  <Input type="number" min="1" max="10" value={aliquotCount} onChange={(e) => setAliquotCount(e.target.value)} className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={aliquotCount}
+                    onChange={(e) => setAliquotCount(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
                 <div>
                   <Label>Volume per Aliquot (mL)</Label>
-                  <Input type="number" step="0.1" min="0.1" value={aliquotVolume} onChange={(e) => setAliquotVolume(e.target.value)} className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    type="number"
+                    step="0.1"
+                    min="0.1"
+                    value={aliquotVolume}
+                    onChange={(e) => setAliquotVolume(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
               </div>
 
@@ -459,8 +519,12 @@ export default function SampleStorage() {
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setAliquotModalOpen(false)}>Cancel</Button>
-              <Button type="submit" className="btn-primary">Create Aliquots</Button>
+              <Button type="button" variant="ghost" onClick={() => setAliquotModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="btn-primary">
+                Create Aliquots
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -482,22 +546,35 @@ export default function SampleStorage() {
             <div className="space-y-4 my-2 text-sm text-ink-700">
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Accession Number</span>
-                  <span className="font-mono font-semibold text-ink-900">{selectedOrderDetails.accession}</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Accession Number
+                  </span>
+                  <span className="font-mono font-semibold text-ink-900">
+                    {selectedOrderDetails.accession}
+                  </span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Test Parameter</span>
-                  <span className="font-semibold text-ink-900">{selectedOrderDetails.test_name} ({selectedOrderDetails.test_code.toUpperCase()})</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Test Parameter
+                  </span>
+                  <span className="font-semibold text-ink-900">
+                    {selectedOrderDetails.test_name} ({selectedOrderDetails.test_code.toUpperCase()}
+                    )
+                  </span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Specimen Type</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Specimen Type
+                  </span>
                   <span>{selectedOrderDetails.specimen?.sample_type || "EDTA Blood Tube"}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Patient Name</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Patient Name
+                  </span>
                   <span>{getPatient(selectedOrderDetails, patients)?.name || "N/A"}</span>
                 </div>
               </div>
@@ -505,24 +582,36 @@ export default function SampleStorage() {
               {selectedOrderDetails.sampleStorage && (
                 <div className="grid grid-cols-2 gap-4 border-b pb-3">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-ink-400 block">Freezer Coordinates</span>
+                    <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                      Freezer Coordinates
+                    </span>
                     <span className="font-mono">
-                      Rack {selectedOrderDetails.sampleStorage.rack}, Box {selectedOrderDetails.sampleStorage.box}, Position {selectedOrderDetails.sampleStorage.position}
+                      Rack {selectedOrderDetails.sampleStorage.rack}, Box{" "}
+                      {selectedOrderDetails.sampleStorage.box}, Position{" "}
+                      {selectedOrderDetails.sampleStorage.position}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-ink-400 block">Retention Expiry</span>
+                    <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                      Retention Expiry
+                    </span>
                     <span className="font-mono text-amber-700">
-                      {new Date(selectedOrderDetails.sampleStorage.retentionExpiry).toLocaleDateString()}
+                      {new Date(
+                        selectedOrderDetails.sampleStorage.retentionExpiry,
+                      ).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
               )}
 
               <div className="p-3 bg-sky-50/50 rounded-lg border border-sky-100 space-y-1">
-                <span className="text-[10px] uppercase font-bold text-sky-700 block">Freezer Environment Status</span>
+                <span className="text-[10px] uppercase font-bold text-sky-700 block">
+                  Freezer Environment Status
+                </span>
                 <div className="flex items-center justify-between text-xs text-ink-800">
-                  <span className="flex items-center gap-1"><Snowflake className="h-3.5 w-3.5 text-sky-500" /> Temperature:</span>
+                  <span className="flex items-center gap-1">
+                    <Snowflake className="h-3.5 w-3.5 text-sky-500" /> Temperature:
+                  </span>
                   <span className="font-mono font-semibold">-81.3 °C (Optimal)</span>
                 </div>
                 <div className="flex items-center justify-between text-xs text-ink-800">
@@ -531,27 +620,42 @@ export default function SampleStorage() {
                 </div>
               </div>
 
-              {selectedOrderDetails.chainOfCustody && selectedOrderDetails.chainOfCustody.length > 0 && (
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block mb-2">Chain of Custody History</span>
-                  <div className="space-y-3 pl-3 border-l-2 border-sage-soft">
-                    {selectedOrderDetails.chainOfCustody.map((step, idx) => (
-                      <div key={idx} className="relative text-xs">
-                        <div className="absolute -left-[17px] top-1.5 h-2.5 w-2.5 rounded-full border bg-white border-sage" />
-                        <div className="font-semibold capitalize text-ink-900">{step.step.replace(/_/g, " ")}</div>
-                        <div className="text-ink-500">{step.location} · {step.performedBy}</div>
-                        <div className="text-[10px] text-ink-400">{new Date(step.performedAt).toLocaleString()}</div>
-                        {step.notes && <div className="text-[11px] text-ink-600 bg-stone-50 p-1.5 rounded mt-1">{step.notes}</div>}
-                      </div>
-                    ))}
+              {selectedOrderDetails.chainOfCustody &&
+                selectedOrderDetails.chainOfCustody.length > 0 && (
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-ink-400 block mb-2">
+                      Chain of Custody History
+                    </span>
+                    <div className="space-y-3 pl-3 border-l-2 border-sage-soft">
+                      {selectedOrderDetails.chainOfCustody.map((step, idx) => (
+                        <div key={idx} className="relative text-xs">
+                          <div className="absolute -left-[17px] top-1.5 h-2.5 w-2.5 rounded-full border bg-white border-sage" />
+                          <div className="font-semibold capitalize text-ink-900">
+                            {step.step.replace(/_/g, " ")}
+                          </div>
+                          <div className="text-ink-500">
+                            {step.location} · {step.performedBy}
+                          </div>
+                          <div className="text-[10px] text-ink-400">
+                            {new Date(step.performedAt).toLocaleString()}
+                          </div>
+                          {step.notes && (
+                            <div className="text-[11px] text-ink-600 bg-stone-50 p-1.5 rounded mt-1">
+                              {step.notes}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           )}
 
           <DialogFooter>
-            <Button onClick={() => setDetailModalOpen(false)} className="btn-primary">Close</Button>
+            <Button onClick={() => setDetailModalOpen(false)} className="btn-primary">
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

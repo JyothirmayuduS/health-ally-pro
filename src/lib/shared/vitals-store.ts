@@ -82,9 +82,7 @@ export function listVitalsForPatient(patientId: string): VitalsReading[] {
   return readAll()
     .filter(
       (v) =>
-        v.patientId === canonical ||
-        v.panelPatientId === patientId ||
-        v.patientId === patientId,
+        v.patientId === canonical || v.panelPatientId === patientId || v.patientId === patientId,
     )
     .sort((a, b) => new Date(b.recordedAt).getTime() - new Date(a.recordedAt).getTime());
 }

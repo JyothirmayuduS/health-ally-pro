@@ -52,10 +52,7 @@ export function DeskQuickAction({
       className="group surface flex items-center gap-3 px-4 py-3 transition-colors hover:border-sage hover:bg-sage-soft/40"
     >
       <div
-        className={cn(
-          "grid h-9 w-9 place-items-center rounded-sm transition-colors",
-          accentClass,
-        )}
+        className={cn("grid h-9 w-9 place-items-center rounded-sm transition-colors", accentClass)}
       >
         <Icon className="h-4 w-4" strokeWidth={2} />
       </div>
@@ -83,9 +80,7 @@ export function DeskPanel({
       <div className="flex items-center justify-between border-b border-ink-200 px-5 py-4">
         <div>
           <h2 className="font-heading text-[15px] font-semibold text-ink-900">{title}</h2>
-          {subtitle ? (
-            <div className="mt-0.5 text-[12px] text-ink-400">{subtitle}</div>
-          ) : null}
+          {subtitle ? <div className="mt-0.5 text-[12px] text-ink-400">{subtitle}</div> : null}
         </div>
         {action}
       </div>
@@ -101,11 +96,7 @@ export function DeskTable({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <table className={cn("w-full text-[13px]", className)}>
-      {children}
-    </table>
-  );
+  return <table className={cn("w-full text-[13px]", className)}>{children}</table>;
 }
 
 export function DeskThead({ children }: { children: React.ReactNode }) {
@@ -126,13 +117,7 @@ export function DeskTh({
   className?: string;
 }) {
   return (
-    <th
-      className={cn(
-        "px-4 py-3",
-        align === "right" ? "text-right" : "text-left",
-        className,
-      )}
-    >
+    <th className={cn("px-4 py-3", align === "right" ? "text-right" : "text-left", className)}>
       {children}
     </th>
   );

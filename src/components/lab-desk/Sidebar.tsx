@@ -1,20 +1,12 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Menu, FlaskConical, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLabStore } from "@/lib/lab-desk/store";
 import { useLabAuth } from "@/lib/lab-desk/useLabAuth";
 import { HOSPITAL } from "@/lib/lab-desk/mockData";
-import {
-  technicianOwnsOrder,
-  useTechnicianContext,
-} from "@/lib/lab-desk/technician";
+import { technicianOwnsOrder, useTechnicianContext } from "@/lib/lab-desk/technician";
 import {
   labNavForRole,
   labRoleLabel,
@@ -117,7 +109,8 @@ function NavContent({ onClick }: { onClick?: () => void }) {
       bench: statBench.length || benchActive.length,
       submissions: submissions.length,
       collection: myOrders.filter((o) => o.status === "ordered").length,
-      processing: myOrders.filter((o) => o.status === "collected" || o.status === "processing").length,
+      processing: myOrders.filter((o) => o.status === "collected" || o.status === "processing")
+        .length,
     };
   }, [orders, isSupervisor, techCtx]);
 

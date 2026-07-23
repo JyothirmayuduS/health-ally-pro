@@ -22,12 +22,7 @@ export function AppointmentListPanel({
   subtitle = "Stay updated on your last healthcare visit.",
 }: Props) {
   return (
-    <SectionCard
-      variant="lime"
-      title={title}
-      subtitle={subtitle}
-      className="min-h-[420px]"
-    >
+    <SectionCard variant="lime" title={title} subtitle={subtitle} className="min-h-[420px]">
       <ul className="flex flex-col gap-3">
         {items.map((item) => (
           <li key={item.id}>

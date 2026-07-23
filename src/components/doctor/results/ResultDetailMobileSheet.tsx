@@ -220,7 +220,8 @@ export function ResultDetailMobileSheet({
       <div
         className={cn(
           "fixed inset-x-0 bottom-0 z-[70] flex flex-col overflow-hidden rounded-t-[24px] bg-white shadow-[0_-8px_40px_rgba(27,59,46,0.18)]",
-          !isDragging && "transition-[height,transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          !isDragging &&
+            "transition-[height,transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
         )}
         style={{
           height: sheetHeight,
@@ -304,15 +305,15 @@ export function ResultDetailMobileSheet({
         </div>
 
         {!isPatientUploadGated(doc) && doc.patientUploadIntake !== "declined" && (
-        <ResultStickyActionBar
-          doc={doc}
-          isSigned={isSigned}
-          onSignOff={onSignOff}
-          onPrev={onPrev}
-          onNext={onNext}
-          remainingReview={remainingReview}
-          variant="sheet"
-        />
+          <ResultStickyActionBar
+            doc={doc}
+            isSigned={isSigned}
+            onSignOff={onSignOff}
+            onPrev={onPrev}
+            onNext={onNext}
+            remainingReview={remainingReview}
+            variant="sheet"
+          />
         )}
       </div>
     </>

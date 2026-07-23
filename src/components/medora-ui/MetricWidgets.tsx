@@ -93,16 +93,12 @@ export function WaterWidget() {
       }
       value={
         <>
-          89%{" "}
-          <span className="text-base font-medium text-[#94A3B8]">1.78/2 Litres</span>
+          89% <span className="text-base font-medium text-[#94A3B8]">1.78/2 Litres</span>
         </>
       }
     >
       <div className="h-3 w-full overflow-hidden rounded-full bg-[#E8ECED]">
-        <div
-          className="h-full rounded-full bg-[#D4F064]"
-          style={{ width: "89%" }}
-        />
+        <div className="h-full rounded-full bg-[#D4F064]" style={{ width: "89%" }} />
       </div>
     </WidgetShell>
   );

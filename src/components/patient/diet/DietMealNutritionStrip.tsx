@@ -1,10 +1,5 @@
 import type { DietMeal } from "@/lib/diet-mock-data";
-import {
-  formatMacroSummary,
-  getMealNutrition,
-  pctDaily,
-  DAILY_VALUES,
-} from "@/lib/diet-nutrition";
+import { formatMacroSummary, getMealNutrition, pctDaily, DAILY_VALUES } from "@/lib/diet-nutrition";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -61,15 +56,12 @@ export function DietMealNutritionStrip({
     return (
       <div className={cn("space-y-1.5", className)}>
         {showServing ? (
-          <p className="text-[11px] font-medium text-ink-muted">
-            Per serving · {n.servingSize}
-          </p>
+          <p className="text-[11px] font-medium text-ink-muted">Per serving · {n.servingSize}</p>
         ) : null}
         <p className="text-sm font-semibold tabular-nums text-ink">
           {n.calories} kcal
           <span className="ml-2 text-xs font-normal text-ink-muted">
-            {formatMacroSummary(n)} · Fiber {n.fiberG}g
-            {fiberPct ? ` (${fiberPct}% DV)` : ""}
+            {formatMacroSummary(n)} · Fiber {n.fiberG}g{fiberPct ? ` (${fiberPct}% DV)` : ""}
           </span>
         </p>
       </div>

@@ -1,4 +1,11 @@
-import { Link, createRootRoute, HeadContent, Outlet, Scripts, useLocation } from "@tanstack/react-router";
+import {
+  Link,
+  createRootRoute,
+  HeadContent,
+  Outlet,
+  Scripts,
+  useLocation,
+} from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { DeskHydrator } from "@/components/DeskHydrator";
 
@@ -132,7 +139,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-
 function RootComponent() {
   const { pathname } = useLocation();
   const [showWatermark, setShowWatermark] = useState(false);
@@ -200,4 +206,3 @@ function RootComponent() {
     </>
   );
 }
-

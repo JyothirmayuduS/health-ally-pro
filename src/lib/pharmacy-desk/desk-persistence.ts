@@ -25,7 +25,12 @@ import {
   type WalkInItem,
   type WardReturn,
 } from "./mockData";
-import { SEED_PURCHASE_ORDERS, SEED_GRNS, type PurchaseOrder, type GRN } from "./purchaseOrdersData";
+import {
+  SEED_PURCHASE_ORDERS,
+  SEED_GRNS,
+  type PurchaseOrder,
+  type GRN,
+} from "./purchaseOrdersData";
 import { getPatient } from "./utils";
 
 export const PHARMACY_DESK_STATE_KEY = "medora-pharmacy-desk-state-v1";
@@ -130,7 +135,8 @@ const SEED_SHIFT_REPORTS: ShiftReport[] = [
     signedAt: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
     pharmacistName: "Riley Chen",
     supervisorName: "Dr. Elena Vasquez",
-    notes: "Everything ran smoothly during the morning shift. Controlled counts reconciled perfectly.",
+    notes:
+      "Everything ran smoothly during the morning shift. Controlled counts reconciled perfectly.",
     rxCount: 14,
     priorityBreakdown: { stat: 2, urgent: 4, routine: 8 },
     lineItemsCount: 22,

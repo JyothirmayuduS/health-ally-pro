@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  Calendar,
-  Clock,
-  Copy,
-  DoorOpen,
-  Minus,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Calendar, Clock, Copy, DoorOpen, Minus, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -170,10 +162,7 @@ export function DoctorScheduleSlotsScreen() {
     <DoctorProfileSubpage
       title="Booking slots"
       subtitle={`${activeCount} active slots · ${schedule.room}`}
-      breadcrumbs={[
-        { label: "Profile", to: "/doctor/settings" },
-        { label: "Booking slots" },
-      ]}
+      breadcrumbs={[{ label: "Profile", to: "/doctor/settings" }, { label: "Booking slots" }]}
       action={
         <button
           type="button"
@@ -258,7 +247,9 @@ export function DoctorScheduleSlotsScreen() {
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
-              <p className="mt-1 text-xs text-[#8A8F8C]">Used when you duplicate or add a new slot</p>
+              <p className="mt-1 text-xs text-[#8A8F8C]">
+                Used when you duplicate or add a new slot
+              </p>
             </div>
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -373,7 +364,9 @@ export function DoctorScheduleSlotsScreen() {
                     >
                       <Minus className="h-3.5 w-3.5" />
                     </button>
-                    <span className="flex-1 text-center font-bold tabular-nums">{slot.capacity}</span>
+                    <span className="flex-1 text-center font-bold tabular-nums">
+                      {slot.capacity}
+                    </span>
                     <button
                       type="button"
                       onClick={() => updateSlot(slot.id, { capacity: slot.capacity + 1 })}
@@ -433,9 +426,7 @@ export function DoctorScheduleSlotsScreen() {
                 </button>
                 <button
                   type="button"
-                  onClick={() =>
-                    patch({ slots: schedule.slots.filter((s) => s.id !== slot.id) })
-                  }
+                  onClick={() => patch({ slots: schedule.slots.filter((s) => s.id !== slot.id) })}
                   className="grid h-9 w-9 place-items-center rounded-xl bg-[#FCE8E6] text-[#C45C4A]"
                   aria-label="Delete slot"
                 >

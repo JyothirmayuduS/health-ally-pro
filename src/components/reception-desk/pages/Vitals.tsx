@@ -34,7 +34,9 @@ export function ReceptionVitalsWorkspace({ searchPatientId }: Props) {
                   .slice(0, 2)}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-heading text-[15px] font-semibold text-ink-900">{patient.name}</p>
+                <p className="font-heading text-[15px] font-semibold text-ink-900">
+                  {patient.name}
+                </p>
                 <p className="mt-0.5 text-[13px] text-ink-500">
                   {patient.bloodGroup ? `${patient.bloodGroup} · ` : ""}
                   {calcAge(patient.dob)}y {patient.gender} · {patient.id}

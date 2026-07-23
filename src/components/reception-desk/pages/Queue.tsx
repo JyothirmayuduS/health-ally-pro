@@ -24,13 +24,8 @@ const nowMins = () => {
 };
 
 export default function Queue() {
-  const {
-    appointments,
-    patients,
-    doctors,
-    updateAppointmentStatus,
-    transferAppointment,
-  } = useStore();
+  const { appointments, patients, doctors, updateAppointmentStatus, transferAppointment } =
+    useStore();
   const [transferFor, setTransferFor] = useState<Appointment | null>(null);
 
   const queuesByDoctor = useMemo(() => {
@@ -77,8 +72,12 @@ export default function Queue() {
     <div data-testid="queue-page" className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 border border-ink-200 rounded-sm">
         <div>
-          <h1 className="text-[16px] font-heading font-semibold text-ink-900">Clinic Queue Management</h1>
-          <p className="text-[12px] text-ink-400">Call, skip, or transfer checked-in patients to active doctors.</p>
+          <h1 className="text-[16px] font-heading font-semibold text-ink-900">
+            Clinic Queue Management
+          </h1>
+          <p className="text-[12px] text-ink-400">
+            Call, skip, or transfer checked-in patients to active doctors.
+          </p>
         </div>
         <button
           onClick={() => window.open("/reception/token-board", "_blank")}
@@ -90,24 +89,16 @@ export default function Queue() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {queuesByDoctor.map(({ doctor, current, waiting }) => {
-          const currentPatient = current
-            ? patients.find((p) => p.id === current.patientId)
-            : null;
+          const currentPatient = current ? patients.find((p) => p.id === current.patientId) : null;
           return (
-            <section
-              key={doctor.id}
-              data-testid={`queue-card-${doctor.id}`}
-              className="surface"
-            >
+            <section key={doctor.id} data-testid={`queue-card-${doctor.id}`} className="surface">
               {/* Header */}
               <div className="px-5 py-3 border-b border-ink-200 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-sm bg-sage-soft text-sage grid place-items-center">
                   <Stethoscope className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[14px] font-medium text-ink-900 truncate">
-                    {doctor.name}
-                  </div>
+                  <div className="text-[14px] font-medium text-ink-900 truncate">{doctor.name}</div>
                   <div className="text-[11px] text-ink-400 font-mono">
                     {doctor.specialty} · Room {doctor.room} · {doctor.shift}
                   </div>

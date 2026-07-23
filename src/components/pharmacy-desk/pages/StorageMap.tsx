@@ -2,8 +2,16 @@ import { useMemo, useState } from "react";
 import { usePharmacyStore, availableQty, isLowStock } from "@/lib/pharmacy-desk/store";
 import { cn } from "@/lib/utils";
 import {
-  AlertTriangle, Package, ShieldCheck, ShoppingBag,
-  Snowflake, X, Search, Clock, Thermometer, Lock,
+  AlertTriangle,
+  Package,
+  ShieldCheck,
+  ShoppingBag,
+  Snowflake,
+  X,
+  Search,
+  Clock,
+  Thermometer,
+  Lock,
   Info,
 } from "lucide-react";
 import { type Drug, type StockBatch } from "@/lib/pharmacy-desk/mockData";
@@ -76,15 +84,12 @@ export default function StorageMap() {
   const drugsEnriched = useMemo<DrugEnriched[]>(
     () =>
       drugs.map((d) => {
-        const db = batches.filter(
-          (b) => b.drug_id === d.id && b.status === "active",
-        );
+        const db = batches.filter((b) => b.drug_id === d.id && b.status === "active");
         const avail = availableQty(db);
         const low = isLowStock(d, db);
         const now = Date.now();
         const nearExpiry = db.some((b) => {
-          const diff =
-            (new Date(b.expiry).getTime() - now) / 86_400_000;
+          const diff = (new Date(b.expiry).getTime() - now) / 86_400_000;
           return diff > 0 && diff < 60;
         });
         return { ...d, availQty: avail, isLow: low, nearExpiry, batches: db };
@@ -94,8 +99,7 @@ export default function StorageMap() {
 
   // Group filtered drugs: zone → aisle → rack → [drugs]
   const zoneMap = useMemo(() => {
-    const m: Record<string, Record<string, Record<string, DrugEnriched[]>>> =
-      {};
+    const m: Record<string, Record<string, Record<string, DrugEnriched[]>>> = {};
     for (const d of drugsEnriched) {
       let pass = true;
       if (filterZone !== "all" && d.location.zone !== filterZone) pass = false;
@@ -133,197 +137,229 @@ export default function StorageMap() {
     <div className="flex items-start gap-5" data-testid="storage-map">
       {/* ── Main scrollable content column ─────────────────────────────── */}
       <div className="flex-1 min-w-0 space-y-5">
-
-      {/* ── KPI bar ──────────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard label="Total SKUs"  value={stats.total}  accent="border-l-sage"     sub="Across all zones" />
-        <KpiCard label="Low Stock"   value={stats.low}    accent={stats.low > 0 ? "border-l-clay" : "border-l-stone-200"}
-          sub="Below reorder level" active={filterAlert === "low"}
-          onClick={() => setFilterAlert((f) => (f === "low" ? "all" : "low"))} />
-        <KpiCard label="Near Expiry" value={stats.expiry} accent={stats.expiry > 0 ? "border-l-mustard" : "border-l-stone-200"}
-          sub="Within 60 days"      active={filterAlert === "expiry"}
-          onClick={() => setFilterAlert((f) => (f === "expiry" ? "all" : "expiry"))} />
-        <KpiCard label="Cold Chain"  value={stats.cold}  accent="border-l-sky-400"   sub="2–8 °C or frozen" />
-      </div>
-
-      {/* ── Search + filter toolbar ───────────────────────────────────────── */}
-      <div className="surface px-4 py-3 flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-400" />
-          <input
-            value={searchQ}
-            onChange={(e) => setSearchQ(e.target.value)}
-            placeholder="Search drug name, brand, SKU, location code…"
-            className="w-full h-8 pl-8 pr-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sage"
+        {/* ── KPI bar ──────────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <KpiCard
+            label="Total SKUs"
+            value={stats.total}
+            accent="border-l-sage"
+            sub="Across all zones"
+          />
+          <KpiCard
+            label="Low Stock"
+            value={stats.low}
+            accent={stats.low > 0 ? "border-l-clay" : "border-l-stone-200"}
+            sub="Below reorder level"
+            active={filterAlert === "low"}
+            onClick={() => setFilterAlert((f) => (f === "low" ? "all" : "low"))}
+          />
+          <KpiCard
+            label="Near Expiry"
+            value={stats.expiry}
+            accent={stats.expiry > 0 ? "border-l-mustard" : "border-l-stone-200"}
+            sub="Within 60 days"
+            active={filterAlert === "expiry"}
+            onClick={() => setFilterAlert((f) => (f === "expiry" ? "all" : "expiry"))}
+          />
+          <KpiCard
+            label="Cold Chain"
+            value={stats.cold}
+            accent="border-l-sky-400"
+            sub="2–8 °C or frozen"
           />
         </div>
 
-        {/* Zone filter chips */}
-        <div className="flex items-center gap-1.5">
-          {([
-            { id: "all", label: "All zones" },
-            { id: "main", label: "Main Rx" },
-            { id: "cold", label: "Cold" },
-            { id: "controlled", label: "Controlled" },
-            { id: "otc", label: "OTC" },
-          ] as const).map((z) => (
+        {/* ── Search + filter toolbar ───────────────────────────────────────── */}
+        <div className="surface px-4 py-3 flex flex-wrap items-center gap-3">
+          <div className="relative flex-1 min-w-[220px]">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-400" />
+            <input
+              value={searchQ}
+              onChange={(e) => setSearchQ(e.target.value)}
+              placeholder="Search drug name, brand, SKU, location code…"
+              className="w-full h-8 pl-8 pr-3 border border-ink-200 rounded-md bg-white text-[12.5px] focus:outline-none focus:border-sage"
+            />
+          </div>
+
+          {/* Zone filter chips */}
+          <div className="flex items-center gap-1.5">
+            {(
+              [
+                { id: "all", label: "All zones" },
+                { id: "main", label: "Main Rx" },
+                { id: "cold", label: "Cold" },
+                { id: "controlled", label: "Controlled" },
+                { id: "otc", label: "OTC" },
+              ] as const
+            ).map((z) => (
+              <button
+                key={z.id}
+                type="button"
+                onClick={() => setFilterZone(z.id)}
+                className={cn(
+                  "px-2.5 py-1 rounded text-[11px] font-medium border transition",
+                  filterZone === z.id
+                    ? "bg-sage text-white border-sage"
+                    : "border-ink-200 text-ink-600 hover:bg-stone-50",
+                )}
+              >
+                {z.label}
+              </button>
+            ))}
+          </div>
+
+          {hasFilter && (
             <button
-              key={z.id}
               type="button"
-              onClick={() => setFilterZone(z.id)}
-              className={cn(
-                "px-2.5 py-1 rounded text-[11px] font-medium border transition",
-                filterZone === z.id
-                  ? "bg-sage text-white border-sage"
-                  : "border-ink-200 text-ink-600 hover:bg-stone-50",
-              )}
+              onClick={() => {
+                setSearchQ("");
+                setFilterAlert("all");
+                setFilterZone("all");
+              }}
+              className="flex items-center gap-1 text-[11px] text-clay hover:underline"
             >
-              {z.label}
+              <X className="h-3 w-3" /> Clear filters
             </button>
+          )}
+        </div>
+
+        {/* ── Legend strip ─────────────────────────────────────────────────── */}
+        <div className="flex flex-wrap items-center gap-5 px-1 text-[11.5px] text-ink-500">
+          <span className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400">
+            Legend
+          </span>
+          {[
+            { dot: "bg-sage", label: "In stock" },
+            { dot: "bg-mustard", label: "Low stock" },
+            { dot: "bg-clay", label: "Empty / critical" },
+            { dot: "bg-orange-400", label: "Near expiry" },
+            { dot: "bg-sky-400", label: "Cold chain" },
+            { dot: "bg-plum", label: "Controlled" },
+          ].map((l) => (
+            <span key={l.label} className="flex items-center gap-1.5">
+              <span className={cn("inline-block h-2.5 w-2.5 rounded-full", l.dot)} />
+              {l.label}
+            </span>
           ))}
         </div>
 
-        {hasFilter && (
-          <button
-            type="button"
-            onClick={() => {
-              setSearchQ("");
-              setFilterAlert("all");
-              setFilterZone("all");
-            }}
-            className="flex items-center gap-1 text-[11px] text-clay hover:underline"
-          >
-            <X className="h-3 w-3" /> Clear filters
-          </button>
-        )}
-      </div>
+        {/* ── Zone panels ──────────────────────────────────────────────────── */}
+        <div className="space-y-6">
+          {ZONE_ORDER.map((zone) => {
+            if (filterZone !== "all" && filterZone !== zone) return null;
+            const cfg = ZONE_CFG[zone];
+            const ZoneIcon = cfg.icon;
+            const aisleMap = zoneMap[zone] ?? {};
+            const zoneDrugs = drugsEnriched.filter((d) => d.location.zone === zone);
+            const zoneLow = zoneDrugs.filter((d) => d.isLow).length;
+            const zoneExpiry = zoneDrugs.filter((d) => d.nearExpiry).length;
 
-      {/* ── Legend strip ─────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center gap-5 px-1 text-[11.5px] text-ink-500">
-        <span className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400">Legend</span>
-        {[
-          { dot: "bg-sage",    label: "In stock" },
-          { dot: "bg-mustard", label: "Low stock" },
-          { dot: "bg-clay",    label: "Empty / critical" },
-          { dot: "bg-orange-400", label: "Near expiry" },
-          { dot: "bg-sky-400", label: "Cold chain" },
-          { dot: "bg-plum",    label: "Controlled" },
-        ].map((l) => (
-          <span key={l.label} className="flex items-center gap-1.5">
-            <span className={cn("inline-block h-2.5 w-2.5 rounded-full", l.dot)} />
-            {l.label}
-          </span>
-        ))}
-      </div>
-
-      {/* ── Zone panels ──────────────────────────────────────────────────── */}
-      <div className="space-y-6">
-        {ZONE_ORDER.map((zone) => {
-          if (filterZone !== "all" && filterZone !== zone) return null;
-          const cfg = ZONE_CFG[zone];
-          const ZoneIcon = cfg.icon;
-          const aisleMap = zoneMap[zone] ?? {};
-          const zoneDrugs = drugsEnriched.filter((d) => d.location.zone === zone);
-          const zoneLow = zoneDrugs.filter((d) => d.isLow).length;
-          const zoneExpiry = zoneDrugs.filter((d) => d.nearExpiry).length;
-
-          return (
-            <div key={zone} className={cn("rounded-xl border-2 p-5 space-y-4", cfg.outerCls)}>
-
-              {/* Zone header */}
-              <div className={cn("rounded-lg border p-3 flex items-center justify-between", cfg.headerCls)}>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-white/60 border border-white/80 shadow-sm">
-                    <ZoneIcon className={cn("h-5 w-5", cfg.textCls)} />
+            return (
+              <div key={zone} className={cn("rounded-xl border-2 p-5 space-y-4", cfg.outerCls)}>
+                {/* Zone header */}
+                <div
+                  className={cn(
+                    "rounded-lg border p-3 flex items-center justify-between",
+                    cfg.headerCls,
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-white/60 border border-white/80 shadow-sm">
+                      <ZoneIcon className={cn("h-5 w-5", cfg.textCls)} />
+                    </div>
+                    <div>
+                      <h3 className={cn("font-heading text-[16px] font-bold", cfg.textCls)}>
+                        {cfg.label}
+                      </h3>
+                      <p className="text-[11.5px] text-ink-500 mt-0.5">{cfg.sub}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className={cn("font-heading text-[16px] font-bold", cfg.textCls)}>
-                      {cfg.label}
-                    </h3>
-                    <p className="text-[11.5px] text-ink-500 mt-0.5">{cfg.sub}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right text-[11px] text-ink-500">
-                    <div className="font-mono font-bold text-ink-800 text-[13px]">{zoneDrugs.length}</div>
-                    <div>SKUs stored</div>
-                  </div>
-                  {zoneLow > 0 && (
-                    <div className="flex items-center gap-1 bg-mustard-soft border border-mustard/40 rounded px-2 py-1">
-                      <AlertTriangle className="h-3 w-3 text-mustard" />
-                      <span className="text-[10px] font-bold text-mustard">{zoneLow} low</span>
-                    </div>
-                  )}
-                  {zoneExpiry > 0 && (
-                    <div className="flex items-center gap-1 bg-orange-50 border border-orange-300 rounded px-2 py-1">
-                      <Clock className="h-3 w-3 text-orange-500" />
-                      <span className="text-[10px] font-bold text-orange-600">{zoneExpiry} expiring</span>
-                    </div>
-                  )}
-                  {zone === "cold" && (
-                    <div className="flex items-center gap-1.5 bg-sky-100 border border-sky-300 rounded-md px-2.5 py-1.5">
-                      <Thermometer className="h-3.5 w-3.5 text-sky-600" />
-                      <span className="text-[11px] font-bold text-sky-700">2–8 °C</span>
-                    </div>
-                  )}
-                  {zone === "controlled" && (
-                    <div className="flex items-center gap-1.5 bg-plum-soft border border-plum/30 rounded-md px-2.5 py-1.5">
-                      <Lock className="h-3.5 w-3.5 text-plum" />
-                      <span className="text-[11px] font-bold text-plum">SECURED</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Aisles */}
-              {Object.keys(aisleMap).length === 0 ? (
-                <div className="text-center text-[13px] text-ink-400 py-8 bg-white/40 rounded-lg border border-dashed border-ink-200">
-                  No drugs match the current filter in this zone
-                </div>
-              ) : (
-                Object.entries(aisleMap).map(([aisleId, rackMap]) => (
-                  <div key={aisleId}>
-                    {/* Aisle divider label */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="font-mono text-[9.5px] uppercase tracking-widest font-bold text-ink-400 shrink-0">
-                        {zone === "main"
-                          ? aisleId === "A"
-                            ? "Aisle A — Cardiovascular / Antibiotics"
-                            : aisleId === "B"
-                            ? "Aisle B — Metabolic / Liquids"
-                            : `Aisle ${aisleId}`
-                          : zone === "cold"
-                          ? "Refrigeration Units"
-                          : zone === "controlled"
-                          ? "Vault Cabinets"
-                          : "OTC Shelving"}
+                  <div className="flex items-center gap-3">
+                    <div className="text-right text-[11px] text-ink-500">
+                      <div className="font-mono font-bold text-ink-800 text-[13px]">
+                        {zoneDrugs.length}
                       </div>
-                      <div className="flex-1 h-px bg-ink-200/60" />
+                      <div>SKUs stored</div>
                     </div>
-
-                    {/* Rack units for this aisle */}
-                    <div className="flex flex-wrap gap-5">
-                      {Object.entries(rackMap).map(([rackId, rackDrugs]) => (
-                        <RackUnit
-                          key={rackId}
-                          rackId={rackId}
-                          drugs={rackDrugs}
-                          zone={zone}
-                          cfg={cfg}
-                          selected={selected}
-                          onSelect={setSelected}
-                          onAddClick={() => setAddingToRack({ rackId, zone })}
-                        />
-                      ))}
-                    </div>
+                    {zoneLow > 0 && (
+                      <div className="flex items-center gap-1 bg-mustard-soft border border-mustard/40 rounded px-2 py-1">
+                        <AlertTriangle className="h-3 w-3 text-mustard" />
+                        <span className="text-[10px] font-bold text-mustard">{zoneLow} low</span>
+                      </div>
+                    )}
+                    {zoneExpiry > 0 && (
+                      <div className="flex items-center gap-1 bg-orange-50 border border-orange-300 rounded px-2 py-1">
+                        <Clock className="h-3 w-3 text-orange-500" />
+                        <span className="text-[10px] font-bold text-orange-600">
+                          {zoneExpiry} expiring
+                        </span>
+                      </div>
+                    )}
+                    {zone === "cold" && (
+                      <div className="flex items-center gap-1.5 bg-sky-100 border border-sky-300 rounded-md px-2.5 py-1.5">
+                        <Thermometer className="h-3.5 w-3.5 text-sky-600" />
+                        <span className="text-[11px] font-bold text-sky-700">2–8 °C</span>
+                      </div>
+                    )}
+                    {zone === "controlled" && (
+                      <div className="flex items-center gap-1.5 bg-plum-soft border border-plum/30 rounded-md px-2.5 py-1.5">
+                        <Lock className="h-3.5 w-3.5 text-plum" />
+                        <span className="text-[11px] font-bold text-plum">SECURED</span>
+                      </div>
+                    )}
                   </div>
-                ))
-              )}
-            </div>
-          );
-        })}
+                </div>
+
+                {/* Aisles */}
+                {Object.keys(aisleMap).length === 0 ? (
+                  <div className="text-center text-[13px] text-ink-400 py-8 bg-white/40 rounded-lg border border-dashed border-ink-200">
+                    No drugs match the current filter in this zone
+                  </div>
+                ) : (
+                  Object.entries(aisleMap).map(([aisleId, rackMap]) => (
+                    <div key={aisleId}>
+                      {/* Aisle divider label */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="font-mono text-[9.5px] uppercase tracking-widest font-bold text-ink-400 shrink-0">
+                          {zone === "main"
+                            ? aisleId === "A"
+                              ? "Aisle A — Cardiovascular / Antibiotics"
+                              : aisleId === "B"
+                                ? "Aisle B — Metabolic / Liquids"
+                                : `Aisle ${aisleId}`
+                            : zone === "cold"
+                              ? "Refrigeration Units"
+                              : zone === "controlled"
+                                ? "Vault Cabinets"
+                                : "OTC Shelving"}
+                        </div>
+                        <div className="flex-1 h-px bg-ink-200/60" />
+                      </div>
+
+                      {/* Rack units for this aisle */}
+                      <div className="flex flex-wrap gap-5">
+                        {Object.entries(rackMap).map(([rackId, rackDrugs]) => (
+                          <RackUnit
+                            key={rackId}
+                            rackId={rackId}
+                            drugs={rackDrugs}
+                            zone={zone}
+                            cfg={cfg}
+                            selected={selected}
+                            onSelect={setSelected}
+                            onAddClick={() => setAddingToRack({ rackId, zone })}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
-      </div>{/* end main content column */}
+      {/* end main content column */}
 
       {/* ── Drug detail panel — inline sticky right column ──────────────── */}
       {selected && (
@@ -346,10 +382,19 @@ export default function StorageMap() {
 
 // ── KPI Card ──────────────────────────────────────────────────────────────────
 function KpiCard({
-  label, value, accent, sub, onClick, active,
+  label,
+  value,
+  accent,
+  sub,
+  onClick,
+  active,
 }: {
-  label: string; value: number; accent: string; sub: string;
-  onClick?: () => void; active?: boolean;
+  label: string;
+  value: number;
+  accent: string;
+  sub: string;
+  onClick?: () => void;
+  active?: boolean;
 }) {
   return (
     <div
@@ -370,12 +415,18 @@ function KpiCard({
 
 // ── Rack Unit — frontal elevation view of a pharmacy shelving unit ─────────────
 function RackUnit({
-  rackId, drugs, zone, cfg, selected, onSelect, onAddClick,
+  rackId,
+  drugs,
+  zone,
+  cfg,
+  selected,
+  onSelect,
+  onAddClick,
 }: {
   rackId: string;
   drugs: DrugEnriched[];
   zone: ZoneKey;
-  cfg: typeof ZONE_CFG[ZoneKey];
+  cfg: (typeof ZONE_CFG)[ZoneKey];
   selected: DrugEnriched | null;
   onSelect: (d: DrugEnriched) => void;
   onAddClick?: () => void;
@@ -395,11 +446,7 @@ function RackUnit({
   const hasExpiry = drugs.some((d) => d.nearExpiry);
   const hasCritical = drugs.some((d) => d.availQty === 0);
 
-  const statusDot = hasCritical
-    ? "bg-clay"
-    : hasLow
-    ? "bg-mustard animate-pulse"
-    : "bg-sage";
+  const statusDot = hasCritical ? "bg-clay" : hasLow ? "bg-mustard animate-pulse" : "bg-sage";
 
   const isCold = zone === "cold";
   const isControlled = zone === "controlled";
@@ -460,15 +507,14 @@ function RackUnit({
               trays.map(([trayId, trayDrugs], idx) => (
                 <div key={trayId} className={cn(idx > 0 && "border-t-2", cfg.railCls)}>
                   {/* Shelf rail + tray label */}
-                  <div className={cn(
-                    "flex items-center gap-2 px-2 py-0.5 border-b",
-                    cfg.railCls,
-                  )}>
+                  <div className={cn("flex items-center gap-2 px-2 py-0.5 border-b", cfg.railCls)}>
                     <span className="font-mono text-[8.5px] font-bold text-ink-400 uppercase shrink-0">
                       {trayId}
                     </span>
                     <div className="flex-1 h-px bg-ink-200/50" />
-                    <span className="text-[8px] text-ink-300 shrink-0">{trayDrugs.length} slot{trayDrugs.length !== 1 ? "s" : ""}</span>
+                    <span className="text-[8px] text-ink-300 shrink-0">
+                      {trayDrugs.length} slot{trayDrugs.length !== 1 ? "s" : ""}
+                    </span>
                   </div>
 
                   {/* Drug bins on this shelf */}
@@ -501,7 +547,8 @@ function RackUnit({
           {hasCritical && (
             <span className="flex items-center gap-1 text-[10px] text-clay font-semibold">
               <AlertTriangle className="h-3 w-3" />
-              {drugs.filter((d) => d.availQty === 0).length} empty slot{drugs.filter((d) => d.availQty === 0).length !== 1 ? "s" : ""}
+              {drugs.filter((d) => d.availQty === 0).length} empty slot
+              {drugs.filter((d) => d.availQty === 0).length !== 1 ? "s" : ""}
             </span>
           )}
           {hasLow && (
@@ -524,7 +571,10 @@ function RackUnit({
 
 // ── Drug Bin — single bin slot in a shelf ─────────────────────────────────────
 function DrugBin({
-  drug, zone, isSelected, onSelect,
+  drug,
+  zone,
+  isSelected,
+  onSelect,
 }: {
   drug: DrugEnriched;
   zone: ZoneKey;
@@ -542,27 +592,27 @@ function DrugBin({
   const binCls = isEmpty
     ? "bg-clay-soft/30 border-clay/50 hover:border-clay"
     : isLow
-    ? "bg-mustard-soft/30 border-mustard/40 hover:border-mustard"
-    : isExpiry
-    ? "bg-orange-50 border-orange-200 hover:border-orange-400"
-    : zone === "cold"
-    ? "bg-sky-50/60 border-sky-200 hover:border-sky-400"
-    : zone === "controlled"
-    ? "bg-plum-soft/30 border-plum/30 hover:border-plum"
-    : "bg-white border-ink-200 hover:border-sage";
+      ? "bg-mustard-soft/30 border-mustard/40 hover:border-mustard"
+      : isExpiry
+        ? "bg-orange-50 border-orange-200 hover:border-orange-400"
+        : zone === "cold"
+          ? "bg-sky-50/60 border-sky-200 hover:border-sky-400"
+          : zone === "controlled"
+            ? "bg-plum-soft/30 border-plum/30 hover:border-plum"
+            : "bg-white border-ink-200 hover:border-sage";
 
   // Fill bar colour
   const fillHex = isEmpty
     ? "#EF4444"
     : isLow
-    ? "#FBBF24"
-    : isExpiry
-    ? "#F97316"
-    : zone === "cold"
-    ? "#38BDF8"
-    : zone === "controlled"
-    ? "#A78BFA"
-    : "#4ADE80";
+      ? "#FBBF24"
+      : isExpiry
+        ? "#F97316"
+        : zone === "cold"
+          ? "#38BDF8"
+          : zone === "controlled"
+            ? "#A78BFA"
+            : "#4ADE80";
 
   const qtyColor = isEmpty ? "text-clay" : isLow ? "text-mustard" : "text-ink-700";
 
@@ -619,9 +669,7 @@ function DrugBin({
 
       {/* Quantity + status indicators row */}
       <div className="flex items-center justify-between mt-0.5">
-        <span className={cn("font-mono text-[11px] font-bold", qtyColor)}>
-          {drug.availQty}u
-        </span>
+        <span className={cn("font-mono text-[11px] font-bold", qtyColor)}>{drug.availQty}u</span>
         <div className="flex items-center gap-1">
           {isEmpty && <AlertTriangle className="h-3 w-3 text-clay" />}
           {!isEmpty && isLow && <AlertTriangle className="h-3 w-3 text-mustard" />}
@@ -630,9 +678,7 @@ function DrugBin({
               {daysLeft}d
             </span>
           )}
-          {!isEmpty && !isLow && !isExpiry && (
-            <div className="h-2 w-2 rounded-full bg-sage" />
-          )}
+          {!isEmpty && !isLow && !isExpiry && <div className="h-2 w-2 rounded-full bg-sage" />}
           {drug.lasa_pair && (
             <span className="text-[7px] font-bold text-mustard bg-mustard-soft border border-mustard/30 rounded px-0.5">
               LASA
@@ -659,7 +705,7 @@ function AddMedicineModal({
   const [tray, setTray] = useState("T01");
   const [slot, setSlot] = useState("1");
   const [temp, setTemp] = useState<import("@/lib/pharmacy-desk/mockData").StorageTemp>(
-    zone === "cold" ? "2–8 °C" : "Room"
+    zone === "cold" ? "2–8 °C" : "Room",
   );
 
   // Search state
@@ -675,9 +721,11 @@ function AddMedicineModal({
   const filteredDrugs = useMemo(() => {
     const q = searchDrugQ.trim().toLowerCase();
     if (!q) return [];
-    return drugs.filter(d =>
-      [d.generic_name, ...d.brand_names, d.sku, d.id].join(" ").toLowerCase().includes(q)
-    ).slice(0, 5);
+    return drugs
+      .filter((d) =>
+        [d.generic_name, ...d.brand_names, d.sku, d.id].join(" ").toLowerCase().includes(q),
+      )
+      .slice(0, 5);
   }, [drugs, searchDrugQ]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -692,36 +740,44 @@ function AddMedicineModal({
       tray,
       slot,
       temp,
-      initialBatch: addInitialStock && lot && expiry && qty
-        ? { lot, expiry, qty: parseInt(qty, 10), supplier }
-        : undefined
+      initialBatch:
+        addInitialStock && lot && expiry && qty
+          ? { lot, expiry, qty: parseInt(qty, 10), supplier }
+          : undefined,
     });
     onClose();
   };
 
-  const selectedDrug = drugs.find(d => d.id === selectedDrugId);
+  const selectedDrug = drugs.find((d) => d.id === selectedDrugId);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
       <div className="bg-white border border-ink-200 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
-
         {/* Header */}
         <div className="px-5 py-4 border-b border-ink-200 bg-bone flex items-center justify-between">
           <div>
-            <h3 className="font-heading text-[16px] font-bold text-ink-900">Add Medicine to Rack {rackId}</h3>
-            <p className="text-[11px] text-ink-500 mt-0.5">Assign medication slot and set optional initial stock</p>
+            <h3 className="font-heading text-[16px] font-bold text-ink-900">
+              Add Medicine to Rack {rackId}
+            </h3>
+            <p className="text-[11px] text-ink-500 mt-0.5">
+              Assign medication slot and set optional initial stock
+            </p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-ink-100 transition-colors">
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full hover:bg-ink-100 transition-colors"
+          >
             <X className="h-4 w-4 text-ink-500" />
           </button>
         </div>
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
-
           {/* Step 1: Select drug */}
           <div className="space-y-2">
-            <label className="block text-[12px] font-bold text-ink-700">Search Formulary Medication</label>
+            <label className="block text-[12px] font-bold text-ink-700">
+              Search Formulary Medication
+            </label>
             {!selectedDrugId ? (
               <div className="space-y-2">
                 <div className="relative">
@@ -748,7 +804,9 @@ function AddMedicineModal({
                       >
                         <div>
                           <div className="font-semibold text-ink-900">{d.generic_name}</div>
-                          <div className="text-[10px] text-ink-400">{d.strength} · {d.form}</div>
+                          <div className="text-[10px] text-ink-400">
+                            {d.strength} · {d.form}
+                          </div>
                         </div>
                         <span className="font-mono text-[9px] bg-stone-100 text-stone-600 border rounded px-1.5 py-0.5">
                           {d.location.location_code}
@@ -758,14 +816,20 @@ function AddMedicineModal({
                   </div>
                 )}
                 {searchDrugQ && filteredDrugs.length === 0 && (
-                  <div className="text-[12px] text-ink-400 italic text-center py-2">No matching medications found.</div>
+                  <div className="text-[12px] text-ink-400 italic text-center py-2">
+                    No matching medications found.
+                  </div>
                 )}
               </div>
             ) : (
               <div className="p-3 bg-sage-soft/10 border border-sage/30 rounded-lg flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-[13px] text-ink-950">{selectedDrug?.generic_name}</div>
-                  <div className="text-[11px] text-ink-500">{selectedDrug?.strength} · {selectedDrug?.form}</div>
+                  <div className="font-bold text-[13px] text-ink-950">
+                    {selectedDrug?.generic_name}
+                  </div>
+                  <div className="text-[11px] text-ink-500">
+                    {selectedDrug?.strength} · {selectedDrug?.form}
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -787,13 +851,17 @@ function AddMedicineModal({
                 onChange={(e) => setTray(e.target.value)}
                 className="w-full h-9 border border-ink-200 rounded-md bg-white px-2 text-[12.5px] focus:outline-none focus:border-sage"
               >
-                {["T01", "T02", "T03", "T04", "T05", "T06", "T07", "T08"].map(t => (
-                  <option key={t} value={t}>{t}</option>
+                {["T01", "T02", "T03", "T04", "T05", "T06", "T07", "T08"].map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-[12px] font-bold text-ink-700 mb-1">Slot Code (e.g. S1-S10)</label>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">
+                Slot Code (e.g. S1-S10)
+              </label>
               <input
                 value={slot}
                 onChange={(e) => setSlot(e.target.value)}
@@ -813,7 +881,9 @@ function AddMedicineModal({
               />
             </div>
             <div>
-              <label className="block text-[12px] font-bold text-ink-700 mb-1">Temperature Setting</label>
+              <label className="block text-[12px] font-bold text-ink-700 mb-1">
+                Temperature Setting
+              </label>
               <select
                 value={temp}
                 onChange={(e) => setTemp(e.target.value as any)}
@@ -835,13 +905,17 @@ function AddMedicineModal({
                 onChange={(e) => setAddInitialStock(e.target.checked)}
                 className="rounded border-ink-300 text-sage focus:ring-sage"
               />
-              <span className="text-[12.5px] font-bold text-ink-800">Add initial batch stock count?</span>
+              <span className="text-[12.5px] font-bold text-ink-800">
+                Add initial batch stock count?
+              </span>
             </label>
 
             {addInitialStock && (
               <div className="mt-3 p-3 bg-bone border border-ink-200 rounded-lg grid grid-cols-2 gap-3 animate-in fade-in duration-150">
                 <div>
-                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Lot / Batch Number</label>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">
+                    Lot / Batch Number
+                  </label>
                   <input
                     value={lot}
                     onChange={(e) => setLot(e.target.value)}
@@ -851,7 +925,9 @@ function AddMedicineModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Expiry Date</label>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">
+                    Expiry Date
+                  </label>
                   <input
                     type="date"
                     value={expiry}
@@ -861,7 +937,9 @@ function AddMedicineModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Quantity Received</label>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">
+                    Quantity Received
+                  </label>
                   <input
                     type="number"
                     value={qty}
@@ -873,7 +951,9 @@ function AddMedicineModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-ink-600 mb-1">Supplier / Vendor</label>
+                  <label className="block text-[11px] font-bold text-ink-600 mb-1">
+                    Supplier / Vendor
+                  </label>
                   <input
                     value={supplier}
                     onChange={(e) => setSupplier(e.target.value)}
@@ -901,13 +981,12 @@ function AddMedicineModal({
                 "h-9 px-4 rounded-md text-[13px] font-bold text-white transition",
                 selectedDrugId
                   ? "bg-sage hover:bg-sage-dark"
-                  : "bg-ink-200 text-ink-400 cursor-not-allowed"
+                  : "bg-ink-200 text-ink-400 cursor-not-allowed",
               )}
             >
               Confirm Assignment
             </button>
           </div>
-
         </form>
       </div>
     </div>
@@ -915,22 +994,18 @@ function AddMedicineModal({
 }
 
 // ── Drug Detail Panel ─────────────────────────────────────────────────────────
-function DrugDetailPanel({
-  drug, onClose,
-}: {
-  drug: DrugEnriched;
-  onClose: () => void;
-}) {
+function DrugDetailPanel({ drug, onClose }: { drug: DrugEnriched; onClose: () => void }) {
   const isEmpty = drug.availQty === 0;
   const maxQty = Math.max(drug.reorder_level * 3, 1);
   const pct = Math.min(100, (drug.availQty / maxQty) * 100);
 
-  const zoneBadge = {
-    main:       "bg-sage-soft border-sage/40 text-sage",
-    otc:        "bg-mustard-soft border-mustard/40 text-mustard",
-    cold:       "bg-sky-100 border-sky-300 text-sky-700",
-    controlled: "bg-plum-soft border-plum/40 text-plum",
-  }[drug.location.zone] ?? "bg-stone-100 border-stone-300 text-stone-700";
+  const zoneBadge =
+    {
+      main: "bg-sage-soft border-sage/40 text-sage",
+      otc: "bg-mustard-soft border-mustard/40 text-mustard",
+      cold: "bg-sky-100 border-sky-300 text-sky-700",
+      controlled: "bg-plum-soft border-plum/40 text-plum",
+    }[drug.location.zone] ?? "bg-stone-100 border-stone-300 text-stone-700";
 
   return (
     <div className="rounded-xl border border-ink-200 bg-white shadow-xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-200 max-h-[calc(100vh-88px)]">
@@ -939,7 +1014,12 @@ function DrugDetailPanel({
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <span className={cn("px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border", zoneBadge)}>
+              <span
+                className={cn(
+                  "px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border",
+                  zoneBadge,
+                )}
+              >
                 {drug.location.zone}
               </span>
               {drug.high_alert && (
@@ -953,37 +1033,51 @@ function DrugDetailPanel({
                 </span>
               )}
             </div>
-            <h3 className="font-heading text-[19px] font-bold text-ink-900 leading-tight truncate">{drug.generic_name}</h3>
-            <p className="text-[13px] text-ink-500 mt-0.5">{drug.strength} · {drug.form} · {drug.route}</p>
+            <h3 className="font-heading text-[19px] font-bold text-ink-900 leading-tight truncate">
+              {drug.generic_name}
+            </h3>
+            <p className="text-[13px] text-ink-500 mt-0.5">
+              {drug.strength} · {drug.form} · {drug.route}
+            </p>
             {drug.brand_names.length > 0 && (
-              <p className="text-[11px] text-ink-400 mt-0.5 truncate">Brands: {drug.brand_names.join(", ")}</p>
+              <p className="text-[11px] text-ink-400 mt-0.5 truncate">
+                Brands: {drug.brand_names.join(", ")}
+              </p>
             )}
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-ink-100 transition-colors ml-2 shrink-0">
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full hover:bg-ink-100 transition-colors ml-2 shrink-0"
+          >
             <X className="h-4 w-4 text-ink-500" />
           </button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
-
         {/* Location */}
         <section>
           <h4 className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400 mb-2.5 flex items-center gap-1.5">
-            <span className="h-px flex-1 bg-ink-100" />Storage Location<span className="h-px flex-1 bg-ink-100" />
+            <span className="h-px flex-1 bg-ink-100" />
+            Storage Location
+            <span className="h-px flex-1 bg-ink-100" />
           </h4>
           <div className="grid grid-cols-3 gap-2 text-center">
             {[
-              { label: "Aisle",  value: drug.location.aisle },
-              { label: "Rack",   value: drug.location.rack  },
-              { label: "Tray",   value: drug.location.tray  },
-              { label: "Slot",   value: `S${drug.location.slot}` },
-              { label: "Zone",   value: drug.location.zone.toUpperCase() },
-              { label: "Temp",   value: drug.location.temp },
+              { label: "Aisle", value: drug.location.aisle },
+              { label: "Rack", value: drug.location.rack },
+              { label: "Tray", value: drug.location.tray },
+              { label: "Slot", value: `S${drug.location.slot}` },
+              { label: "Zone", value: drug.location.zone.toUpperCase() },
+              { label: "Temp", value: drug.location.temp },
             ].map((item) => (
               <div key={item.label} className="bg-bone border border-ink-200 rounded-lg p-2">
-                <div className="text-[8.5px] font-mono uppercase text-ink-400 mb-0.5">{item.label}</div>
-                <div className="font-mono text-[11.5px] font-bold text-ink-900 truncate">{item.value}</div>
+                <div className="text-[8.5px] font-mono uppercase text-ink-400 mb-0.5">
+                  {item.label}
+                </div>
+                <div className="font-mono text-[11.5px] font-bold text-ink-900 truncate">
+                  {item.value}
+                </div>
               </div>
             ))}
           </div>
@@ -994,10 +1088,14 @@ function DrugDetailPanel({
             </code>
           </div>
           {drug.location.temp !== "Room" && (
-            <div className={cn(
-              "mt-2 flex items-center gap-2 p-2.5 rounded-md border text-[12px] font-medium",
-              drug.location.temp.includes("2") ? "bg-sky-50 border-sky-200 text-sky-700" : "bg-sky-100 border-sky-300 text-sky-800",
-            )}>
+            <div
+              className={cn(
+                "mt-2 flex items-center gap-2 p-2.5 rounded-md border text-[12px] font-medium",
+                drug.location.temp.includes("2")
+                  ? "bg-sky-50 border-sky-200 text-sky-700"
+                  : "bg-sky-100 border-sky-300 text-sky-800",
+              )}
+            >
               <Thermometer className="h-4 w-4 shrink-0" />
               Temperature-controlled: <strong>{drug.location.temp}</strong>
             </div>
@@ -1007,15 +1105,19 @@ function DrugDetailPanel({
         {/* Stock status */}
         <section>
           <h4 className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400 mb-2.5 flex items-center gap-1.5">
-            <span className="h-px flex-1 bg-ink-100" />Inventory<span className="h-px flex-1 bg-ink-100" />
+            <span className="h-px flex-1 bg-ink-100" />
+            Inventory
+            <span className="h-px flex-1 bg-ink-100" />
           </h4>
           <div className="bg-bone border border-ink-200 rounded-lg p-4 space-y-3">
             <div className="flex items-end justify-between">
               <span className="text-[12px] font-medium text-ink-700">Available units</span>
-              <span className={cn(
-                "font-mono text-[22px] font-bold leading-none",
-                isEmpty ? "text-clay" : drug.isLow ? "text-mustard" : "text-sage",
-              )}>
+              <span
+                className={cn(
+                  "font-mono text-[22px] font-bold leading-none",
+                  isEmpty ? "text-clay" : drug.isLow ? "text-mustard" : "text-sage",
+                )}
+              >
                 {drug.availQty}
               </span>
             </div>
@@ -1048,14 +1150,13 @@ function DrugDetailPanel({
         {drug.batches.length > 0 && (
           <section>
             <h4 className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400 mb-2.5 flex items-center gap-1.5">
-              <span className="h-px flex-1 bg-ink-100" />Active Batches — FEFO<span className="h-px flex-1 bg-ink-100" />
+              <span className="h-px flex-1 bg-ink-100" />
+              Active Batches — FEFO
+              <span className="h-px flex-1 bg-ink-100" />
             </h4>
             <div className="space-y-2">
               {drug.batches
-                .sort(
-                  (a, b) =>
-                    new Date(a.expiry).getTime() - new Date(b.expiry).getTime(),
-                )
+                .sort((a, b) => new Date(a.expiry).getTime() - new Date(b.expiry).getTime())
                 .map((batch, idx) => {
                   const daysLeft = Math.floor(
                     (new Date(batch.expiry).getTime() - Date.now()) / 86_400_000,
@@ -1076,11 +1177,21 @@ function DrugDetailPanel({
                       <div>
                         <div className="font-mono font-bold text-ink-900">{batch.lot}</div>
                         <div className="text-ink-500 text-[11px] mt-0.5">
-                          Exp: {new Date(batch.expiry).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                          Exp:{" "}
+                          {new Date(batch.expiry).toLocaleDateString("en-IN", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })}
                           {expired ? (
                             <span className="ml-2 font-bold text-clay">EXPIRED</span>
                           ) : (
-                            <span className={cn("ml-2", soon ? "font-semibold text-orange-500" : "text-ink-400")}>
+                            <span
+                              className={cn(
+                                "ml-2",
+                                soon ? "font-semibold text-orange-500" : "text-ink-400",
+                              )}
+                            >
                               {daysLeft}d left
                             </span>
                           )}
@@ -1103,7 +1214,9 @@ function DrugDetailPanel({
         {(drug.high_alert || drug.lasa_pair || drug.counseling || drug.controlled_schedule) && (
           <section>
             <h4 className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400 mb-2.5 flex items-center gap-1.5">
-              <span className="h-px flex-1 bg-ink-100" />Clinical Notes<span className="h-px flex-1 bg-ink-100" />
+              <span className="h-px flex-1 bg-ink-100" />
+              Clinical Notes
+              <span className="h-px flex-1 bg-ink-100" />
             </h4>
             <div className="space-y-2 text-[12.5px]">
               {drug.high_alert && (
@@ -1121,7 +1234,8 @@ function DrugDetailPanel({
               {drug.controlled_schedule && (
                 <div className="p-3 bg-plum-soft/30 border border-plum/30 rounded-md text-plum font-semibold flex items-start gap-2">
                   <Lock className="h-4 w-4 mt-0.5 shrink-0" />
-                  {drug.controlled_schedule} — requires dual authorisation and narcotic register entry.
+                  {drug.controlled_schedule} — requires dual authorisation and narcotic register
+                  entry.
                 </div>
               )}
               {drug.counseling && (
@@ -1137,16 +1251,26 @@ function DrugDetailPanel({
         {/* Pricing */}
         <section>
           <h4 className="font-mono text-[9.5px] uppercase tracking-wider font-bold text-ink-400 mb-2.5 flex items-center gap-1.5">
-            <span className="h-px flex-1 bg-ink-100" />Pricing<span className="h-px flex-1 bg-ink-100" />
+            <span className="h-px flex-1 bg-ink-100" />
+            Pricing
+            <span className="h-px flex-1 bg-ink-100" />
           </h4>
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-bone border border-ink-200 rounded-lg p-3">
-              <div className="text-[9.5px] font-mono uppercase text-ink-400 font-bold mb-1">Sell Price / unit</div>
-              <div className="font-mono font-bold text-[15px] text-ink-900">₹{(drug.unit_price * 90).toFixed(2)}</div>
+              <div className="text-[9.5px] font-mono uppercase text-ink-400 font-bold mb-1">
+                Sell Price / unit
+              </div>
+              <div className="font-mono font-bold text-[15px] text-ink-900">
+                ₹{(drug.unit_price * 90).toFixed(2)}
+              </div>
             </div>
             <div className="bg-bone border border-ink-200 rounded-lg p-3">
-              <div className="text-[9.5px] font-mono uppercase text-ink-400 font-bold mb-1">Reorder Level</div>
-              <div className="font-mono font-bold text-[15px] text-ink-900">{drug.reorder_level} u</div>
+              <div className="text-[9.5px] font-mono uppercase text-ink-400 font-bold mb-1">
+                Reorder Level
+              </div>
+              <div className="font-mono font-bold text-[15px] text-ink-900">
+                {drug.reorder_level} u
+              </div>
             </div>
           </div>
         </section>

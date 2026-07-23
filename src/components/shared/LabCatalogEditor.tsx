@@ -28,7 +28,12 @@ type Props = {
   mode?: "admin" | "lab";
 };
 
-export default function LabCatalogEditor({ catalog, onUpdatePrice, onAddTest, mode = "lab" }: Props) {
+export default function LabCatalogEditor({
+  catalog,
+  onUpdatePrice,
+  onAddTest,
+  mode = "lab",
+}: Props) {
   const [q, setQ] = useState("");
   const [section, setSection] = useState("all");
   const [editCode, setEditCode] = useState<string | null>(null);
@@ -172,7 +177,12 @@ export default function LabCatalogEditor({ catalog, onUpdatePrice, onAddTest, mo
                   ₹{t.price.toLocaleString("en-IN")}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <Button size="sm" variant="outline" className="border-ink-200" onClick={() => openEdit(t.code)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-ink-200"
+                    onClick={() => openEdit(t.code)}
+                  >
                     <Pencil className="mr-1 h-3.5 w-3.5" /> Edit price
                   </Button>
                 </td>
@@ -197,8 +207,12 @@ export default function LabCatalogEditor({ catalog, onUpdatePrice, onAddTest, mo
             />
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setEditCode(null)}>Cancel</Button>
-            <Button className="btn-primary" onClick={savePrice}>Save</Button>
+            <Button variant="ghost" onClick={() => setEditCode(null)}>
+              Cancel
+            </Button>
+            <Button className="btn-primary" onClick={savePrice}>
+              Save
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -231,10 +245,14 @@ export default function LabCatalogEditor({ catalog, onUpdatePrice, onAddTest, mo
                 value={newTest.section}
                 onValueChange={(v) => setNewTest((p) => ({ ...p, section: v }))}
               >
-                <SelectTrigger className="mt-1 border-ink-200"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="mt-1 border-ink-200">
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   {SECTIONS.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -250,8 +268,12 @@ export default function LabCatalogEditor({ catalog, onUpdatePrice, onAddTest, mo
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setAddOpen(false)}>Cancel</Button>
-            <Button className="btn-primary" onClick={submitNew}>Add test</Button>
+            <Button variant="ghost" onClick={() => setAddOpen(false)}>
+              Cancel
+            </Button>
+            <Button className="btn-primary" onClick={submitNew}>
+              Add test
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -10,11 +10,7 @@ type UpsertRow = {
   [key: string]: unknown;
 };
 
-async function listPayloadTable(
-  auth: PhiReadAuth,
-  table: string,
-  orderCol = "updated_at",
-) {
+async function listPayloadTable(auth: PhiReadAuth, table: string, orderCol = "updated_at") {
   const admin = getSupabaseAdmin();
   if (!admin) return { error: "admin_unavailable", data: [] as unknown[] };
   const { data, error } = await admin

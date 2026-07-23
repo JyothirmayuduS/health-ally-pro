@@ -18,13 +18,8 @@ import { UserPlus } from "lucide-react";
 
 export default function BillingEncounters() {
   const { encounter: encounterParam } = Route.useSearch();
-  const {
-    encounters,
-    invoices,
-    openPatientEncounter,
-    closePatientEncounter,
-    linkEncounter,
-  } = useBillingStore();
+  const { encounters, invoices, openPatientEncounter, closePatientEncounter, linkEncounter } =
+    useBillingStore();
   const [patientId, setPatientId] = useState(SHARED_PATIENTS[0]?.id ?? "");
   const [complaint, setComplaint] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
@@ -134,11 +129,15 @@ export default function BillingEncounters() {
               </div>
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-lg border border-ink-200 bg-stone-50 py-3">
-                  <div className="font-heading text-xl font-semibold">{active.invoiceIds.length}</div>
+                  <div className="font-heading text-xl font-semibold">
+                    {active.invoiceIds.length}
+                  </div>
                   <div className="text-[10px] uppercase text-ink-400">Invoices</div>
                 </div>
                 <div className="rounded-lg border border-ink-200 bg-stone-50 py-3">
-                  <div className="font-heading text-xl font-semibold">{active.labOrderIds.length}</div>
+                  <div className="font-heading text-xl font-semibold">
+                    {active.labOrderIds.length}
+                  </div>
                   <div className="text-[10px] uppercase text-ink-400">Lab</div>
                 </div>
                 <div className="rounded-lg border border-ink-200 bg-stone-50 py-3">

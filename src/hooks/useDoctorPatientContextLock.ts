@@ -34,9 +34,7 @@ export function useDoctorPatientContextLock(explicitPatientId?: string) {
   }, [location.href, location.search, location.searchStr]);
 
   const lockedPatientId = explicitPatientId ?? routePatientId;
-  const lockedPatient = lockedPatientId
-    ? resolveDoctorPatient(lockedPatientId)
-    : null;
+  const lockedPatient = lockedPatientId ? resolveDoctorPatient(lockedPatientId) : null;
 
   return {
     lockedPatientId,

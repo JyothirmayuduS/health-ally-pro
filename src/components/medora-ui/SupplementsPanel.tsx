@@ -28,12 +28,7 @@ export function SupplementsPanel({
   subtitle = "Don't forget to take your daily vitamin supplement today!",
 }: Props) {
   return (
-    <SectionCard
-      variant="white"
-      title={title}
-      subtitle={subtitle}
-      className="min-h-[520px]"
-    >
+    <SectionCard variant="white" title={title} subtitle={subtitle} className="min-h-[520px]">
       <div className="grid flex-1 grid-cols-2 gap-3 sm:grid-cols-3">
         {items.map((item, i) => (
           <div

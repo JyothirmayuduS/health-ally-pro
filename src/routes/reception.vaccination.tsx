@@ -6,7 +6,14 @@ import {
   savePatientReminders,
   type PatientReminder,
 } from "@/lib/hospital-masters";
-import { DeskPanel, DeskTable, DeskThead, DeskTh, DeskTd, DeskTr } from "@/components/desk-shell/ui";
+import {
+  DeskPanel,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskTd,
+  DeskTr,
+} from "@/components/desk-shell/ui";
 import { Syringe, Check } from "lucide-react";
 import { toast } from "sonner";
 
@@ -34,10 +41,10 @@ function VaccinationDeskPage() {
         <DeskTable>
           <DeskThead>
             <DeskTh>Vaccine</DeskTh>
-              <DeskTh>Age</DeskTh>
-              <DeskTh>Dose</DeskTh>
-              <DeskTh>Route</DeskTh>
-            </DeskThead>
+            <DeskTh>Age</DeskTh>
+            <DeskTh>Dose</DeskTh>
+            <DeskTh>Route</DeskTh>
+          </DeskThead>
           <tbody>
             {schedule.map((v) => (
               <DeskTr key={v.id}>
@@ -55,11 +62,11 @@ function VaccinationDeskPage() {
         <DeskTable>
           <DeskThead>
             <DeskTh>Patient</DeskTh>
-              <DeskTh>MRN</DeskTh>
-              <DeskTh>Due</DeskTh>
-              <DeskTh>Note</DeskTh>
-              <DeskTh />
-            </DeskThead>
+            <DeskTh>MRN</DeskTh>
+            <DeskTh>Due</DeskTh>
+            <DeskTh>Note</DeskTh>
+            <DeskTh />
+          </DeskThead>
           <tbody>
             {reminders.map((r) => (
               <DeskTr key={r.id}>

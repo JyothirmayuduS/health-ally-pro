@@ -39,7 +39,8 @@ import {
 
 const fmt = (n: number | string | null | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 // recharts Tooltip `formatter` may hand back an array (stacked series); flatten to the first value.
-const fmtTooltip = (v: number | string | Array<number | string>) => fmt(Array.isArray(v) ? v[0] : v);
+const fmtTooltip = (v: number | string | Array<number | string>) =>
+  fmt(Array.isArray(v) ? v[0] : v);
 const RANGES = ["Today", "Week", "Month"];
 const TABS = [
   { id: "overview", label: "Overview", icon: Activity, dot: "bg-sage" },
@@ -58,9 +59,14 @@ interface Accent {
 
 const ACCENTS: Record<string, Accent> = {
   footfall: { borderL: "border-l-sage", text: "text-sage", soft: "bg-sage-soft", color: "#2C5E4E" },
-  noshow:   { borderL: "border-l-clay", text: "text-clay", soft: "bg-clay-soft", color: "#B85C38" },
-  wait:     { borderL: "border-l-mustard", text: "text-mustard", soft: "bg-mustard-soft", color: "#A87826" },
-  rev:      { borderL: "border-l-money", text: "text-money", soft: "bg-money-soft", color: "#15803D" },
+  noshow: { borderL: "border-l-clay", text: "text-clay", soft: "bg-clay-soft", color: "#B85C38" },
+  wait: {
+    borderL: "border-l-mustard",
+    text: "text-mustard",
+    soft: "bg-mustard-soft",
+    color: "#A87826",
+  },
+  rev: { borderL: "border-l-money", text: "text-money", soft: "bg-money-soft", color: "#15803D" },
 };
 
 // recharts@2.15's generated RadialBar prop types omit `minAngle`/`clockWise`
@@ -96,10 +102,7 @@ interface KpiCardProps {
 
 function KpiCard({ label, value, delta, accent, icon: Icon, testId }: KpiCardProps) {
   return (
-    <div
-      data-testid={testId}
-      className={`surface p-4 border-l-4 ${accent.borderL}`}
-    >
+    <div data-testid={testId} className={`surface p-4 border-l-4 ${accent.borderL}`}>
       <div className="flex items-start justify-between">
         <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">
           {label}
@@ -112,11 +115,7 @@ function KpiCard({ label, value, delta, accent, icon: Icon, testId }: KpiCardPro
         <div className="text-[28px] font-heading font-semibold text-ink-900 tabular-nums leading-none">
           {value}
         </div>
-        {delta && (
-          <span className={`text-[11px] font-mono ${accent.text}`}>
-            {delta}
-          </span>
-        )}
+        {delta && <span className={`text-[11px] font-mono ${accent.text}`}>{delta}</span>}
       </div>
     </div>
   );
@@ -146,9 +145,7 @@ function SectionHeader({ dot, title, eyebrow, right }: SectionHeaderProps) {
           <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">
             {eyebrow}
           </div>
-          <h2 className="text-[15px] font-heading font-semibold text-ink-900 mt-0.5">
-            {title}
-          </h2>
+          <h2 className="text-[15px] font-heading font-semibold text-ink-900 mt-0.5">{title}</h2>
         </div>
       </div>
       {right}
@@ -172,9 +169,7 @@ export default function Reports() {
   const noShow = today.filter((a) => a.status === "no-show").length;
   const noShowRate = footfall === 0 ? 0 : Math.round((noShow / footfall) * 100);
   const avgWait =
-    today.filter((a) =>
-      ["checked-in", "in-progress", "completed"].includes(a.status),
-    ).length === 0
+    today.filter((a) => ["checked-in", "in-progress", "completed"].includes(a.status)).length === 0
       ? 0
       : 14 + (footfall % 4);
   const revenue = invoices
@@ -197,16 +192,13 @@ export default function Reports() {
 
   // Revenue trend (synth cumulative revenue across the hours)
   const revTrend = useMemo(() => {
-    const paid = invoices.filter(
-      (i) => i.status === "paid" && i.date === TODAY_STR && i.paidAt,
-    );
+    const paid = invoices.filter((i) => i.status === "paid" && i.date === TODAY_STR && i.paidAt);
     const buckets: Record<number, number> = {};
     for (let h = 8; h < 20; h++) buckets[h] = 0;
     paid.forEach((i) => {
       if (!i.paidAt) return;
       const h = Number(i.paidAt.slice(11, 13));
-      if (buckets[h] !== undefined)
-        buckets[h] += computeTotals(i.items, i.discount).total;
+      if (buckets[h] !== undefined) buckets[h] += computeTotals(i.items, i.discount).total;
     });
     let acc = 0;
     return Object.entries(buckets).map(([h, v]) => {
@@ -277,7 +269,12 @@ export default function Reports() {
       const t = computeTotals(i.items, i.discount).total;
       if (i.method && map[i.method] !== undefined) map[i.method] += t;
     });
-    const colors: Record<string, string> = { cash: "#A87826", card: "#2C7873", upi: "#7A4A6B", insurance: "#2C5E4E" };
+    const colors: Record<string, string> = {
+      cash: "#A87826",
+      card: "#2C7873",
+      upi: "#7A4A6B",
+      insurance: "#2C5E4E",
+    };
     return Object.entries(map).map(([k, v]) => ({
       method: k.toUpperCase(),
       value: v,
@@ -312,12 +309,17 @@ export default function Reports() {
     return Object.values(STATUS_META).map((meta) => {
       const count = claims.filter((c) => c.status === meta.id).length;
       const color =
-        meta.id === "approved" ? "#15803D"
-        : meta.id === "partial" ? "#7A4A6B"
-        : meta.id === "submitted" ? "#2C7873"
-        : meta.id === "rejected" ? "#B85C38"
-        : meta.id === "pending" ? "#A87826"
-        : "#8A8A86";
+        meta.id === "approved"
+          ? "#15803D"
+          : meta.id === "partial"
+            ? "#7A4A6B"
+            : meta.id === "submitted"
+              ? "#2C7873"
+              : meta.id === "rejected"
+                ? "#B85C38"
+                : meta.id === "pending"
+                  ? "#A87826"
+                  : "#8A8A86";
       return { name: meta.label, value: count, color };
     });
   }, [claims]);
@@ -334,9 +336,7 @@ export default function Reports() {
   }, [claims]);
 
   const approvalRate = (() => {
-    const decided = claims.filter((c) =>
-      ["approved", "partial", "rejected"].includes(c.status),
-    );
+    const decided = claims.filter((c) => ["approved", "partial", "rejected"].includes(c.status));
     if (!decided.length) return 0;
     const ok = decided.filter((c) => c.status !== "rejected").length;
     return Math.round((ok / decided.length) * 100);
@@ -353,8 +353,8 @@ export default function Reports() {
       ["Revenue desk (₹)", revenue],
       ["Open shifts", shifts.filter((s) => s.status === "open").length],
       ["Closed shifts", shifts.filter((s) => s.status === "closed").length],
-      ["Claims open", claims.filter((c) => ["pending","submitted"].includes(c.status)).length],
-      ["Claims approved", claims.filter((c) => ["approved","partial"].includes(c.status)).length],
+      ["Claims open", claims.filter((c) => ["pending", "submitted"].includes(c.status)).length],
+      ["Claims approved", claims.filter((c) => ["approved", "partial"].includes(c.status)).length],
       ["Approval rate %", approvalRate],
     ];
     const csv = rows.map((r) => r.join(",")).join("\n");
@@ -397,7 +397,7 @@ export default function Reports() {
         (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
         i.paidAt &&
         i.paidAt >= s.openedAt &&
-        (!s.closedAt || i.paidAt <= s.closedAt)
+        (!s.closedAt || i.paidAt <= s.closedAt),
     );
     const methodTotals: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
     shiftInvoices.forEach((i) => {
@@ -416,9 +416,7 @@ export default function Reports() {
     const s = currentReportShift;
     return invoices.reduce((sum, i) => {
       const shiftRefunds = (i.refunds || []).filter(
-        (r) =>
-          r.processedAt >= s.openedAt &&
-          (!s.closedAt || r.processedAt <= s.closedAt)
+        (r) => r.processedAt >= s.openedAt && (!s.closedAt || r.processedAt <= s.closedAt),
       );
       return sum + shiftRefunds.reduce((sSum, r) => sSum + r.amount, 0);
     }, 0);
@@ -432,7 +430,7 @@ export default function Reports() {
         (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
         i.paidAt &&
         i.paidAt >= s.openedAt &&
-        (!s.closedAt || i.paidAt <= s.closedAt)
+        (!s.closedAt || i.paidAt <= s.closedAt),
     );
     const serviceMap: Record<string, ServiceSummary> = {};
     shiftInvoices.forEach((i) => {
@@ -452,7 +450,7 @@ export default function Reports() {
   const reportCancellations = useMemo<Record<string, number>>(() => {
     if (!currentReportShift) return {};
     const cancelled = appointments.filter(
-      (a) => a.status === "cancelled" && a.date === selectedDate
+      (a) => a.status === "cancelled" && a.date === selectedDate,
     );
     const counts: Record<string, number> = {};
     cancelled.forEach((a) => {
@@ -486,9 +484,7 @@ export default function Reports() {
               data-testid={`reports-range-${r.toLowerCase()}`}
               onClick={() => setRange(r)}
               className={`h-8 px-3 text-[12px] rounded-full font-medium ${
-                range === r
-                  ? "bg-plum text-white"
-                  : "text-ink-600 hover:text-ink-900 hover:bg-bone"
+                range === r ? "bg-plum text-white" : "text-ink-600 hover:text-ink-900 hover:bg-bone"
               }`}
             >
               {r}
@@ -499,11 +495,7 @@ export default function Reports() {
           Reception desk · {TODAY_STR}
         </div>
         <div className="ml-auto">
-          <button
-            data-testid="reports-export"
-            onClick={exportCsv}
-            className="btn-outline btn-sm"
-          >
+          <button data-testid="reports-export" onClick={exportCsv} className="btn-outline btn-sm">
             <Download className="w-3.5 h-3.5" />
             Export CSV
           </button>
@@ -521,9 +513,7 @@ export default function Reports() {
               data-testid={`reports-tab-${t.id}`}
               onClick={() => setTab(t.id)}
               className={`relative h-10 px-3 sm:px-4 inline-flex items-center gap-2 text-[13px] font-medium transition-colors whitespace-nowrap ${
-                active
-                  ? "text-ink-900"
-                  : "text-ink-400 hover:text-ink-900"
+                active ? "text-ink-900" : "text-ink-400 hover:text-ink-900"
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${t.dot}`} />
@@ -541,10 +531,38 @@ export default function Reports() {
       {tab === "overview" && (
         <div className="space-y-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <KpiCard testId="kpi-footfall" label="Footfall" value={footfall} delta="+12% vs avg" accent={ACCENTS.footfall} icon={Users} />
-            <KpiCard testId="kpi-noshow" label="No-shows" value={`${noShow} · ${noShowRate}%`} delta={noShowRate > 10 ? "above target" : "on target"} accent={ACCENTS.noshow} icon={AlertCircle} />
-            <KpiCard testId="kpi-wait" label="Avg wait" value={`${avgWait} min`} delta="target ≤ 15m" accent={ACCENTS.wait} icon={Clock} />
-            <KpiCard testId="kpi-revenue" label="Revenue desk" value={fmt(revenue)} delta="paid today" accent={ACCENTS.rev} icon={IndianRupee} />
+            <KpiCard
+              testId="kpi-footfall"
+              label="Footfall"
+              value={footfall}
+              delta="+12% vs avg"
+              accent={ACCENTS.footfall}
+              icon={Users}
+            />
+            <KpiCard
+              testId="kpi-noshow"
+              label="No-shows"
+              value={`${noShow} · ${noShowRate}%`}
+              delta={noShowRate > 10 ? "above target" : "on target"}
+              accent={ACCENTS.noshow}
+              icon={AlertCircle}
+            />
+            <KpiCard
+              testId="kpi-wait"
+              label="Avg wait"
+              value={`${avgWait} min`}
+              delta="target ≤ 15m"
+              accent={ACCENTS.wait}
+              icon={Clock}
+            />
+            <KpiCard
+              testId="kpi-revenue"
+              label="Revenue desk"
+              value={fmt(revenue)}
+              delta="paid today"
+              accent={ACCENTS.rev}
+              icon={IndianRupee}
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -556,7 +574,8 @@ export default function Reports() {
                 right={
                   <div className="text-[12px] text-ink-400 inline-flex items-center gap-1.5">
                     <TrendingUp className="w-3.5 h-3.5 text-sage" />
-                    Peak {hourly.reduce((p, c) => (c.arrivals > p.arrivals ? c : p), hourly[0])?.hour}
+                    Peak{" "}
+                    {hourly.reduce((p, c) => (c.arrivals > p.arrivals ? c : p), hourly[0])?.hour}
                   </div>
                 }
               />
@@ -570,10 +589,26 @@ export default function Reports() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
-                    <XAxis dataKey="hour" tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
+                    <XAxis
+                      dataKey="hour"
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={{ stroke: "#E5E5E0" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      allowDecimals={false}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <Tooltip cursor={{ fill: "#F9F9F6" }} contentStyle={tooltipStyle} />
-                    <Area type="monotone" dataKey="arrivals" stroke="#2C5E4E" strokeWidth={2} fill="url(#g-sage)" />
+                    <Area
+                      type="monotone"
+                      dataKey="arrivals"
+                      stroke="#2C5E4E"
+                      strokeWidth={2}
+                      fill="url(#g-sage)"
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -585,7 +620,15 @@ export default function Reports() {
                 <div className="h-full min-h-[180px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={statusMix} innerRadius="50%" outerRadius="92%" paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
+                      <Pie
+                        data={statusMix}
+                        innerRadius="50%"
+                        outerRadius="92%"
+                        paddingAngle={2}
+                        dataKey="value"
+                        stroke="#fff"
+                        strokeWidth={2}
+                      >
                         {statusMix.map((d) => (
                           <Cell key={d.key} fill={d.color} />
                         ))}
@@ -612,8 +655,18 @@ export default function Reports() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={waitDist} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
-                    <XAxis dataKey="range" tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
+                    <XAxis
+                      dataKey="range"
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={{ stroke: "#E5E5E0" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      allowDecimals={false}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <Tooltip cursor={{ fill: "#F9F9F6" }} contentStyle={tooltipStyle} />
                     <Bar dataKey="count" fill="#A87826" radius={[6, 6, 0, 0]} />
                   </BarChart>
@@ -627,7 +680,15 @@ export default function Reports() {
                 <div className="h-full min-h-[160px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={registrationMix} innerRadius="45%" outerRadius="92%" paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
+                      <Pie
+                        data={registrationMix}
+                        innerRadius="45%"
+                        outerRadius="92%"
+                        paddingAngle={2}
+                        dataKey="value"
+                        stroke="#fff"
+                        strokeWidth={2}
+                      >
                         {registrationMix.map((d) => (
                           <Cell key={d.name} fill={d.color} />
                         ))}
@@ -655,10 +716,45 @@ export default function Reports() {
       {tab === "revenue" && (
         <div className="space-y-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <KpiCard testId="kpi-revenue" label="Revenue desk" value={fmt(revenue)} accent={ACCENTS.rev} icon={IndianRupee} />
-            <KpiCard testId="kpi-avg-bill" label="Avg invoice" value={fmt(invoices.length ? Math.round(invoices.reduce((s,i)=>s+computeTotals(i.items,i.discount).total,0)/invoices.length) : 0)} accent={ACCENTS.footfall} icon={IndianRupee} />
-            <KpiCard testId="kpi-paid" label="Paid invoices" value={invoices.filter(i=>i.status==='paid'&&i.date===TODAY_STR).length} accent={ACCENTS.rev} icon={Activity} />
-            <KpiCard testId="kpi-outstanding" label="Outstanding" value={fmt(invoices.filter(i=>i.status==='unpaid'&&i.date===TODAY_STR).reduce((s,i)=>s+computeTotals(i.items,i.discount).total,0))} accent={ACCENTS.noshow} icon={AlertCircle} />
+            <KpiCard
+              testId="kpi-revenue"
+              label="Revenue desk"
+              value={fmt(revenue)}
+              accent={ACCENTS.rev}
+              icon={IndianRupee}
+            />
+            <KpiCard
+              testId="kpi-avg-bill"
+              label="Avg invoice"
+              value={fmt(
+                invoices.length
+                  ? Math.round(
+                      invoices.reduce((s, i) => s + computeTotals(i.items, i.discount).total, 0) /
+                        invoices.length,
+                    )
+                  : 0,
+              )}
+              accent={ACCENTS.footfall}
+              icon={IndianRupee}
+            />
+            <KpiCard
+              testId="kpi-paid"
+              label="Paid invoices"
+              value={invoices.filter((i) => i.status === "paid" && i.date === TODAY_STR).length}
+              accent={ACCENTS.rev}
+              icon={Activity}
+            />
+            <KpiCard
+              testId="kpi-outstanding"
+              label="Outstanding"
+              value={fmt(
+                invoices
+                  .filter((i) => i.status === "unpaid" && i.date === TODAY_STR)
+                  .reduce((s, i) => s + computeTotals(i.items, i.discount).total, 0),
+              )}
+              accent={ACCENTS.noshow}
+              icon={AlertCircle}
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -674,10 +770,31 @@ export default function Reports() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
-                    <XAxis dataKey="hour" tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
-                    <YAxis tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={60} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
-                    <Area type="monotone" dataKey="cumulative" stroke="#15803D" strokeWidth={2} fill="url(#g-money)" />
+                    <XAxis
+                      dataKey="hour"
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={{ stroke: "#E5E5E0" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tickFormatter={(v) => (v ? `₹${v}` : "0")}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={60}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#F9F9F6" }}
+                      formatter={(v) => fmtTooltip(v)}
+                      contentStyle={tooltipStyle}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="cumulative"
+                      stroke="#15803D"
+                      strokeWidth={2}
+                      fill="url(#g-money)"
+                    />
                     <Bar dataKey="revenue" fill="#A87826" radius={[4, 4, 0, 0]} barSize={14} />
                   </ComposedChart>
                 </ResponsiveContainer>
@@ -688,11 +805,32 @@ export default function Reports() {
               <SectionHeader dot="bg-mustard" eyebrow="Payment mix" title="By method" />
               <div className="p-4 h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={revByMethod} layout="vertical" margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
+                  <BarChart
+                    data={revByMethod}
+                    layout="vertical"
+                    margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
+                  >
                     <CartesianGrid stroke="#E5E5E0" horizontal={false} />
-                    <XAxis type="number" tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
-                    <YAxis type="category" dataKey="method" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={80} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
+                    <XAxis
+                      type="number"
+                      tickFormatter={(v) => (v ? `₹${v}` : "0")}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="method"
+                      tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={80}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#F9F9F6" }}
+                      formatter={(v) => fmtTooltip(v)}
+                      contentStyle={tooltipStyle}
+                    />
                     <Bar dataKey="value" radius={[0, 8, 8, 0]}>
                       {revByMethod.map((d, i) => (
                         <Cell key={i} fill={d.fill} />
@@ -709,9 +847,24 @@ export default function Reports() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={revByDoctor} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
-                    <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
-                    <YAxis tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={60} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }}
+                      axisLine={{ stroke: "#E5E5E0" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tickFormatter={(v) => (v ? `₹${v}` : "0")}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={60}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#F9F9F6" }}
+                      formatter={(v) => fmtTooltip(v)}
+                      contentStyle={tooltipStyle}
+                    />
                     <Bar dataKey="revenue" fill="#2C5E4E" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -725,10 +878,34 @@ export default function Reports() {
       {tab === "operations" && (
         <div className="space-y-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <KpiCard testId="kpi-footfall" label="Footfall" value={footfall} accent={ACCENTS.footfall} icon={Users} />
-            <KpiCard testId="kpi-noshow" label="No-shows" value={`${noShow} · ${noShowRate}%`} accent={ACCENTS.noshow} icon={AlertCircle} />
-            <KpiCard testId="kpi-wait" label="Avg wait" value={`${avgWait} min`} accent={ACCENTS.wait} icon={Clock} />
-            <KpiCard testId="kpi-shifts" label="Active shifts" value={shifts.filter(s=>s.status==='open').length} accent={ACCENTS.rev} icon={Activity} />
+            <KpiCard
+              testId="kpi-footfall"
+              label="Footfall"
+              value={footfall}
+              accent={ACCENTS.footfall}
+              icon={Users}
+            />
+            <KpiCard
+              testId="kpi-noshow"
+              label="No-shows"
+              value={`${noShow} · ${noShowRate}%`}
+              accent={ACCENTS.noshow}
+              icon={AlertCircle}
+            />
+            <KpiCard
+              testId="kpi-wait"
+              label="Avg wait"
+              value={`${avgWait} min`}
+              accent={ACCENTS.wait}
+              icon={Clock}
+            />
+            <KpiCard
+              testId="kpi-shifts"
+              label="Active shifts"
+              value={shifts.filter((s) => s.status === "open").length}
+              accent={ACCENTS.rev}
+              icon={Activity}
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -736,7 +913,11 @@ export default function Reports() {
               <SectionHeader dot="bg-clay" eyebrow="No-shows" title="By doctor — today" />
               <ul className="divide-y divide-ink-200">
                 {noShowByDoctor.map((d) => (
-                  <li key={d.name} data-testid={`noshow-row-${d.name}`} className="px-5 py-3 flex items-center gap-3">
+                  <li
+                    key={d.name}
+                    data-testid={`noshow-row-${d.name}`}
+                    className="px-5 py-3 flex items-center gap-3"
+                  >
                     <div className="w-8 h-8 rounded-full bg-clay-soft text-clay grid place-items-center">
                       <Stethoscope className="w-3.5 h-3.5" />
                     </div>
@@ -745,10 +926,17 @@ export default function Reports() {
                       <div className="text-[11px] text-ink-400 font-mono">{d.total} appts</div>
                     </div>
                     <div className="flex-1 max-w-[180px] h-2 bg-bone rounded-full overflow-hidden border border-ink-200">
-                      <div className="h-full bg-clay" style={{ width: `${Math.min(100, d.rate)}%` }} />
+                      <div
+                        className="h-full bg-clay"
+                        style={{ width: `${Math.min(100, d.rate)}%` }}
+                      />
                     </div>
-                    <div className="w-16 text-right font-mono text-[13px] text-ink-900">{d.rate}%</div>
-                    <div className="w-20 text-right text-[11px] text-ink-400 font-mono">{d.noShow}/{d.total}</div>
+                    <div className="w-16 text-right font-mono text-[13px] text-ink-900">
+                      {d.rate}%
+                    </div>
+                    <div className="w-20 text-right text-[11px] text-ink-400 font-mono">
+                      {d.noShow}/{d.total}
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -758,10 +946,29 @@ export default function Reports() {
               <SectionHeader dot="bg-sage" eyebrow="Capacity" title="Doctor utilization" />
               <div className="p-4 h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart innerRadius="20%" outerRadius="100%" data={docUtilization} startAngle={90} endAngle={-270}>
+                  <RadialBarChart
+                    innerRadius="20%"
+                    outerRadius="100%"
+                    data={docUtilization}
+                    startAngle={90}
+                    endAngle={-270}
+                  >
                     <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                    <SafeRadialBar minAngle={6} background clockWise dataKey="utilization" cornerRadius={6} fill="#2C5E4E" />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(v, _n, p) => [`${v}% (${p.payload.booked} appts)`, p.payload.name]} />
+                    <SafeRadialBar
+                      minAngle={6}
+                      background
+                      clockWise
+                      dataKey="utilization"
+                      cornerRadius={6}
+                      fill="#2C5E4E"
+                    />
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      formatter={(v, _n, p) => [
+                        `${v}% (${p.payload.booked} appts)`,
+                        p.payload.name,
+                      ]}
+                    />
                   </RadialBarChart>
                 </ResponsiveContainer>
               </div>
@@ -782,8 +989,18 @@ export default function Reports() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={waitDist} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
-                    <XAxis dataKey="range" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
+                    <XAxis
+                      dataKey="range"
+                      tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }}
+                      axisLine={{ stroke: "#E5E5E0" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      allowDecimals={false}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <Tooltip cursor={{ fill: "#F9F9F6" }} contentStyle={tooltipStyle} />
                     <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                       {waitDist.map((d, i) => (
@@ -802,10 +1019,42 @@ export default function Reports() {
       {tab === "insurance" && (
         <div className="space-y-5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <KpiCard testId="kpi-claims-total" label="Total claims" value={claims.length} accent={ACCENTS.footfall} icon={ShieldCheck} />
-            <KpiCard testId="kpi-claims-approval" label="Approval rate" value={`${approvalRate}%`} accent={ACCENTS.rev} icon={Activity} />
-            <KpiCard testId="kpi-claims-due" label="Pending value" value={fmt(claims.filter(c=>['pending','submitted'].includes(c.status)).reduce((s,c)=>s+c.requestedAmount,0))} accent={ACCENTS.wait} icon={IndianRupee} />
-            <KpiCard testId="kpi-claims-rejected-amt" label="Rejected value" value={fmt(claims.filter(c=>c.status==='rejected').reduce((s,c)=>s+c.requestedAmount,0))} accent={ACCENTS.noshow} icon={AlertCircle} />
+            <KpiCard
+              testId="kpi-claims-total"
+              label="Total claims"
+              value={claims.length}
+              accent={ACCENTS.footfall}
+              icon={ShieldCheck}
+            />
+            <KpiCard
+              testId="kpi-claims-approval"
+              label="Approval rate"
+              value={`${approvalRate}%`}
+              accent={ACCENTS.rev}
+              icon={Activity}
+            />
+            <KpiCard
+              testId="kpi-claims-due"
+              label="Pending value"
+              value={fmt(
+                claims
+                  .filter((c) => ["pending", "submitted"].includes(c.status))
+                  .reduce((s, c) => s + c.requestedAmount, 0),
+              )}
+              accent={ACCENTS.wait}
+              icon={IndianRupee}
+            />
+            <KpiCard
+              testId="kpi-claims-rejected-amt"
+              label="Rejected value"
+              value={fmt(
+                claims
+                  .filter((c) => c.status === "rejected")
+                  .reduce((s, c) => s + c.requestedAmount, 0),
+              )}
+              accent={ACCENTS.noshow}
+              icon={AlertCircle}
+            />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -815,8 +1064,18 @@ export default function Reports() {
                 <div className="h-full min-h-[200px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={claimsByStatus} innerRadius="48%" outerRadius="92%" paddingAngle={2} dataKey="value" stroke="#fff" strokeWidth={2}>
-                        {claimsByStatus.map((d) => (<Cell key={d.name} fill={d.color} />))}
+                      <Pie
+                        data={claimsByStatus}
+                        innerRadius="48%"
+                        outerRadius="92%"
+                        paddingAngle={2}
+                        dataKey="value"
+                        stroke="#fff"
+                        strokeWidth={2}
+                      >
+                        {claimsByStatus.map((d) => (
+                          <Cell key={d.name} fill={d.color} />
+                        ))}
                       </Pie>
                       <Tooltip contentStyle={tooltipStyle} />
                     </PieChart>
@@ -838,11 +1097,32 @@ export default function Reports() {
               <SectionHeader dot="bg-plum" eyebrow="By provider" title="Claim value" />
               <div className="p-4 h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={claimsByProvider} layout="vertical" margin={{ top: 8, right: 8, bottom: 0, left: 12 }}>
+                  <BarChart
+                    data={claimsByProvider}
+                    layout="vertical"
+                    margin={{ top: 8, right: 8, bottom: 0, left: 12 }}
+                  >
                     <CartesianGrid stroke="#E5E5E0" horizontal={false} />
-                    <XAxis type="number" tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
-                    <YAxis type="category" dataKey="provider" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Sans" }} axisLine={false} tickLine={false} width={110} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
+                    <XAxis
+                      type="number"
+                      tickFormatter={(v) => (v ? `₹${v}` : "0")}
+                      tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="provider"
+                      tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Sans" }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={110}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#F9F9F6" }}
+                      formatter={(v) => fmtTooltip(v)}
+                      contentStyle={tooltipStyle}
+                    />
                     <Bar dataKey="amount" fill="#2C7873" radius={[0, 8, 8, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -862,18 +1142,26 @@ export default function Reports() {
                     const ok = decided.filter((c) => c.status !== "rejected").length;
                     const rate = decided.length ? Math.round((ok / decided.length) * 100) : 0;
                     return (
-                      <li key={p} data-testid={`provider-row-${p}`} className="px-5 py-3 flex items-center gap-3">
+                      <li
+                        key={p}
+                        data-testid={`provider-row-${p}`}
+                        className="px-5 py-3 flex items-center gap-3"
+                      >
                         <div className="w-8 h-8 rounded-full bg-teal-soft text-teal grid place-items-center">
                           <ShieldCheck className="w-3.5 h-3.5" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="text-[13px] font-medium text-ink-900 truncate">{p}</div>
-                          <div className="text-[11px] text-ink-400 font-mono">{list.length} claim{list.length===1?'':'s'}</div>
+                          <div className="text-[11px] text-ink-400 font-mono">
+                            {list.length} claim{list.length === 1 ? "" : "s"}
+                          </div>
                         </div>
                         <div className="flex-1 max-w-[260px] h-2 bg-bone rounded-full overflow-hidden border border-ink-200">
                           <div className="h-full bg-money" style={{ width: `${rate}%` }} />
                         </div>
-                        <div className="w-16 text-right font-mono text-[13px] text-ink-900">{rate}%</div>
+                        <div className="w-16 text-right font-mono text-[13px] text-ink-900">
+                          {rate}%
+                        </div>
                       </li>
                     );
                   });
@@ -888,10 +1176,14 @@ export default function Reports() {
       {tab === "shifts" && (
         <div className="space-y-5">
           <div className="surface p-5">
-            <h2 className="text-[15px] font-heading font-semibold text-ink-900 mb-4">Shift Handover & End Reports</h2>
+            <h2 className="text-[15px] font-heading font-semibold text-ink-900 mb-4">
+              Shift Handover & End Reports
+            </h2>
             <div className="flex flex-col sm:flex-row gap-4 items-end mb-6">
               <div>
-                <label className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">Select Date</label>
+                <label className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">
+                  Select Date
+                </label>
                 <input
                   type="date"
                   value={selectedDate}
@@ -904,7 +1196,9 @@ export default function Reports() {
                 />
               </div>
               <div className="flex-grow w-full">
-                <label className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">Select Shift</label>
+                <label className="text-[11px] uppercase tracking-wider text-ink-400 font-mono block mb-1.5">
+                  Select Shift
+                </label>
                 <select
                   value={selectedShiftId}
                   onChange={(e) => setSelectedShiftId(e.target.value)}
@@ -917,7 +1211,8 @@ export default function Reports() {
                       const st = staff.find((x) => x.id === s.staffId);
                       return (
                         <option key={s.id} value={s.id}>
-                          {s.label} Shift ({s.id}) · {st?.name || "Medical Officer"} · {s.status === "open" ? "Active" : "Closed"}
+                          {s.label} Shift ({s.id}) · {st?.name || "Medical Officer"} ·{" "}
+                          {s.status === "open" ? "Active" : "Closed"}
                         </option>
                       );
                     })}
@@ -929,7 +1224,9 @@ export default function Reports() {
               <div className="border border-ink-200 rounded-lg p-5 space-y-4 bg-white">
                 <div className="flex justify-between items-start border-b border-ink-200 pb-3">
                   <div>
-                    <span className={`chip-${currentReportShift.status === "open" ? "mustard" : "ink"} capitalize`}>
+                    <span
+                      className={`chip-${currentReportShift.status === "open" ? "mustard" : "ink"} capitalize`}
+                    >
                       {currentReportShift.status}
                     </span>
                     <h3 className="text-[16px] font-heading font-semibold text-ink-900 mt-1">
@@ -952,36 +1249,58 @@ export default function Reports() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Financials card */}
                   <div className="border border-ink-200 rounded-lg p-4 bg-bone/20">
-                    <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">Reconciliation & Drawer</div>
+                    <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">
+                      Reconciliation & Drawer
+                    </div>
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-ink-600">Opening Float</span>
-                        <span className="font-mono text-ink-900">{fmt(currentReportShift.openingFloat ?? 0)}</span>
+                        <span className="font-mono text-ink-900">
+                          {fmt(currentReportShift.openingFloat ?? 0)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-ink-600">Cash Collected</span>
-                        <span className="font-mono text-ink-900">{fmt(currentReportShift.cashCollected || 0)}</span>
+                        <span className="font-mono text-ink-900">
+                          {fmt(currentReportShift.cashCollected || 0)}
+                        </span>
                       </div>
                       {currentReportShift.status === "closed" && (
                         <>
                           <div className="flex justify-between">
                             <span className="text-ink-600">Expected Total</span>
                             <span className="font-mono text-ink-900">
-                              {fmt((currentReportShift.openingFloat ?? 0) + (currentReportShift.cashCollected || 0))}
+                              {fmt(
+                                (currentReportShift.openingFloat ?? 0) +
+                                  (currentReportShift.cashCollected || 0),
+                              )}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-ink-600">Actual Counted</span>
-                            <span className="font-mono text-ink-900">{fmt(currentReportShift.actualCash || 0)}</span>
+                            <span className="font-mono text-ink-900">
+                              {fmt(currentReportShift.actualCash || 0)}
+                            </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-ink-600">Total Refunds</span>
-                            <span className="font-mono text-status-noshowText">{fmt(reportRefunds || 0)}</span>
+                            <span className="font-mono text-status-noshowText">
+                              {fmt(reportRefunds || 0)}
+                            </span>
                           </div>
                           <div className="flex justify-between border-t border-ink-200 pt-2 font-semibold">
                             <span className="text-ink-900">Variance</span>
-                            <span className={(currentReportShift.variance ?? 0) === 0 ? "text-money" : (currentReportShift.variance ?? 0) > 0 ? "text-mustard" : "text-clay"}>
-                              {(currentReportShift.variance ?? 0) >= 0 ? "+" : ""}{fmt(currentReportShift.variance || 0)}
+                            <span
+                              className={
+                                (currentReportShift.variance ?? 0) === 0
+                                  ? "text-money"
+                                  : (currentReportShift.variance ?? 0) > 0
+                                    ? "text-mustard"
+                                    : "text-clay"
+                              }
+                            >
+                              {(currentReportShift.variance ?? 0) >= 0 ? "+" : ""}
+                              {fmt(currentReportShift.variance || 0)}
                             </span>
                           </div>
                         </>
@@ -991,7 +1310,9 @@ export default function Reports() {
 
                   {/* Collections by method */}
                   <div className="border border-ink-200 rounded-lg p-4 bg-bone/20">
-                    <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">Collections by Method</div>
+                    <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">
+                      Collections by Method
+                    </div>
                     <div className="space-y-2">
                       {Object.entries(reportCollections).map(([m, amt]) => (
                         <div key={m} className="flex justify-between font-mono">
@@ -1005,7 +1326,9 @@ export default function Reports() {
 
                 {/* Top 5 Services */}
                 <div className="border border-ink-200 rounded-lg p-4">
-                  <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">Top Billed Services</div>
+                  <div className="text-[11px] uppercase tracking-wider text-ink-400 font-mono mb-3">
+                    Top Billed Services
+                  </div>
                   <table className="w-full text-left">
                     <thead>
                       <tr className="border-b border-ink-200 text-[10px] text-ink-400 font-mono uppercase">
@@ -1017,14 +1340,20 @@ export default function Reports() {
                     <tbody className="divide-y divide-ink-100">
                       {reportServices.map((s, idx) => (
                         <tr key={s.name}>
-                          <td className="py-2 font-medium text-ink-900">{idx + 1}. {s.name}</td>
+                          <td className="py-2 font-medium text-ink-900">
+                            {idx + 1}. {s.name}
+                          </td>
                           <td className="py-2 text-right font-mono">{s.count}</td>
-                          <td className="py-2 text-right font-mono text-ink-900">{fmt(s.revenue)}</td>
+                          <td className="py-2 text-right font-mono text-ink-900">
+                            {fmt(s.revenue)}
+                          </td>
                         </tr>
                       ))}
                       {reportServices.length === 0 && (
                         <tr>
-                          <td colSpan={3} className="py-4 text-center text-ink-400 italic">No transactions recorded in this shift.</td>
+                          <td colSpan={3} className="py-4 text-center text-ink-400 italic">
+                            No transactions recorded in this shift.
+                          </td>
                         </tr>
                       )}
                     </tbody>
@@ -1034,8 +1363,12 @@ export default function Reports() {
                 {/* Handover note */}
                 {currentReportShift.handover && (
                   <div className="p-4 border border-mustard/30 bg-mustard-soft/40 rounded-lg">
-                    <span className="text-[11px] uppercase tracking-wider text-mustard font-mono font-medium block mb-1">Handover Note</span>
-                    <p className="text-[13px] text-ink-900 font-medium">{currentReportShift.handover}</p>
+                    <span className="text-[11px] uppercase tracking-wider text-mustard font-mono font-medium block mb-1">
+                      Handover Note
+                    </span>
+                    <p className="text-[13px] text-ink-900 font-medium">
+                      {currentReportShift.handover}
+                    </p>
                   </div>
                 )}
               </div>

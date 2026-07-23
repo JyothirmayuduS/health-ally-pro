@@ -5,7 +5,14 @@ import { loadPatientReminders } from "@/lib/hospital-masters";
 import { listDoctorSentRx } from "@/lib/doctor-prescription-store";
 import { loadReceptionAdmissions } from "@/lib/reception-desk/store";
 import { getSharedPatient } from "@/lib/shared/patients";
-import { DeskPanel, DeskTable, DeskThead, DeskTh, DeskTd, DeskTr } from "@/components/desk-shell/ui";
+import {
+  DeskPanel,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskTd,
+  DeskTr,
+} from "@/components/desk-shell/ui";
 
 export const Route = createFileRoute("/admin/registers")({
   component: StatutoryRegistersPage,
@@ -37,7 +44,8 @@ function StatutoryRegistersPage() {
   return (
     <div className="space-y-4" data-testid="admin-registers">
       <p className="text-[13px] text-ink-600">
-        Statutory & operational registers (AXON Reports menu). Data from live desk stores — export via browser print.
+        Statutory & operational registers (AXON Reports menu). Data from live desk stores — export
+        via browser print.
       </p>
       <div className="flex flex-wrap gap-2">
         {REGISTER_TABS.map((t) => (
@@ -56,12 +64,12 @@ function StatutoryRegistersPage() {
         <DeskPanel title="OPD register">
           <DeskTable>
             <DeskThead>
-            <DeskTh>Date</DeskTh>
-                <DeskTh>Patient</DeskTh>
-                <DeskTh>MRN</DeskTh>
-                <DeskTh>Complaint</DeskTh>
-                <DeskTh>Status</DeskTh>
-              </DeskThead>
+              <DeskTh>Date</DeskTh>
+              <DeskTh>Patient</DeskTh>
+              <DeskTh>MRN</DeskTh>
+              <DeskTh>Complaint</DeskTh>
+              <DeskTh>Status</DeskTh>
+            </DeskThead>
             <tbody>
               {opdRows.map((e) => (
                 <DeskTr key={e.id}>
@@ -81,11 +89,11 @@ function StatutoryRegistersPage() {
         <DeskPanel title="Indoor patients register">
           <DeskTable>
             <DeskThead>
-            <DeskTh>Patient</DeskTh>
-                <DeskTh>Bed</DeskTh>
-                <DeskTh>Ward</DeskTh>
-                <DeskTh>Status</DeskTh>
-              </DeskThead>
+              <DeskTh>Patient</DeskTh>
+              <DeskTh>Bed</DeskTh>
+              <DeskTh>Ward</DeskTh>
+              <DeskTh>Status</DeskTh>
+            </DeskThead>
             <tbody>
               {admissions
                 .filter((a) => a.status !== "discharged")
@@ -106,11 +114,11 @@ function StatutoryRegistersPage() {
         <DeskPanel title="Vaccine reminders register">
           <DeskTable>
             <DeskThead>
-            <DeskTh>Patient</DeskTh>
-                <DeskTh>MRN</DeskTh>
-                <DeskTh>Due</DeskTh>
-                <DeskTh>Note</DeskTh>
-              </DeskThead>
+              <DeskTh>Patient</DeskTh>
+              <DeskTh>MRN</DeskTh>
+              <DeskTh>Due</DeskTh>
+              <DeskTh>Note</DeskTh>
+            </DeskThead>
             <tbody>
               {reminders
                 .filter((r) => r.type === "vaccine" && !r.done)
@@ -131,11 +139,11 @@ function StatutoryRegistersPage() {
         <DeskPanel title="Prescriptions register">
           <DeskTable>
             <DeskThead>
-            <DeskTh>Rx #</DeskTh>
-                <DeskTh>Patient</DeskTh>
-                <DeskTh>Sent</DeskTh>
-                <DeskTh>Status</DeskTh>
-              </DeskThead>
+              <DeskTh>Rx #</DeskTh>
+              <DeskTh>Patient</DeskTh>
+              <DeskTh>Sent</DeskTh>
+              <DeskTh>Status</DeskTh>
+            </DeskThead>
             <tbody>
               {rx.slice(0, 40).map((r) => (
                 <DeskTr key={r.id}>
@@ -154,11 +162,11 @@ function StatutoryRegistersPage() {
         <DeskPanel title="Next visit & reminders">
           <DeskTable>
             <DeskThead>
-            <DeskTh>Patient</DeskTh>
-                <DeskTh>Type</DeskTh>
-                <DeskTh>Due</DeskTh>
-                <DeskTh>Phone</DeskTh>
-              </DeskThead>
+              <DeskTh>Patient</DeskTh>
+              <DeskTh>Type</DeskTh>
+              <DeskTh>Due</DeskTh>
+              <DeskTh>Phone</DeskTh>
+            </DeskThead>
             <tbody>
               {reminders
                 .filter((r) => !r.done)

@@ -104,12 +104,7 @@ export async function verifyStripeWebhookSignature(
   if (age > toleranceSec) return { ok: false, error: "Signature timestamp outside tolerance" };
 
   for (const keyBytes of stripeWebhookSecretKeyCandidates(secret)) {
-    const expected = await computeStripeSignatureHex(
-      parsed.timestamp,
-      rawBody,
-      secret,
-      keyBytes,
-    );
+    const expected = await computeStripeSignatureHex(parsed.timestamp, rawBody, secret, keyBytes);
     if (parsed.signatures.some((sig) => timingSafeEqualHex(sig, expected))) {
       return { ok: true };
     }

@@ -3,7 +3,6 @@ import { DoctorLabsWorkspace } from "@/components/doctor/clinical/DoctorLabsWork
 
 type DoctorOrdersSearch = { patientId?: string };
 
-
 export const Route = createFileRoute("/doctor/orders")({
   validateSearch: (search: Record<string, unknown>): DoctorOrdersSearch => ({
     patientId: typeof search.patientId === "string" ? search.patientId : undefined,

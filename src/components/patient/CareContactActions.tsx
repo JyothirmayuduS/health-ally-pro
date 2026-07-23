@@ -1,11 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MessageCircle, Phone, Video } from "lucide-react";
 import { toast } from "sonner";
-import {
-  clinicPhoneHref,
-  doctorMessageHref,
-  videoVisitNotice,
-} from "@/lib/patient-care-actions";
+import { clinicPhoneHref, doctorMessageHref, videoVisitNotice } from "@/lib/patient-care-actions";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -14,11 +10,7 @@ type Props = {
   className?: string;
 };
 
-export function CareContactActions({
-  doctorName,
-  variant = "row",
-  className,
-}: Props) {
+export function CareContactActions({ doctorName, variant = "row", className }: Props) {
   const messageLink = doctorMessageHref(doctorName);
 
   const onVideo = () => {

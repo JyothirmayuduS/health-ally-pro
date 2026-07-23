@@ -39,18 +39,11 @@ import {
   nextLabOrderId,
   type DoctorLabPayload,
 } from "./order-bridge";
-import {
-  pushReceptionInvoice,
-  nextBridgeInvoiceId,
-} from "@/lib/shared/billing-bridge";
+import { pushReceptionInvoice, nextBridgeInvoiceId } from "@/lib/shared/billing-bridge";
 import { publishLabResult } from "@/lib/shared/lab-results";
 import { mirrorToLedger } from "@/lib/billing-desk/store";
 import { linkToEncounter, findOpenEncounterForPatient } from "@/lib/shared/encounters";
-import {
-  invoiceFromOrder,
-  type LabInvoice,
-  type LabPaymentMethod,
-} from "./billing";
+import { invoiceFromOrder, type LabInvoice, type LabPaymentMethod } from "./billing";
 import {
   hydrateLabDeskSnapshot,
   loadLabDeskSnapshot,
@@ -86,7 +79,12 @@ type StoreValue = {
   rejectCollect: (id: string, reason: string) => void;
   startProcessing: (id: string) => void;
   saveResults: (id: string, results: Record<string, string>, complete: boolean) => void;
-  validate: (id: string, comment?: string, actor?: string, criticalNotifData?: { notifiedPerson: string; method: string; notes?: string }) => void;
+  validate: (
+    id: string,
+    comment?: string,
+    actor?: string,
+    criticalNotifData?: { notifiedPerson: string; method: string; notes?: string },
+  ) => void;
   rejectValid: (id: string, reason: string) => void;
   cancel: (id: string, reason: string) => void;
   addWalkIn: (input: {
@@ -114,10 +112,19 @@ type StoreValue = {
   logQCRun: (run: Omit<QCRun, "id" | "date" | "status" | "rulesTriggered">) => void;
   logQCCorrectiveAction: (runId: string, action: string) => void;
   acceptSampleAtLab: (orderId: string, condition: string, reason?: string) => void;
-  storeSample: (orderId: string, rack: string, box: string, position: string, retentionDays: number) => void;
+  storeSample: (
+    orderId: string,
+    rack: string,
+    box: string,
+    position: string,
+    retentionDays: number,
+  ) => void;
   disposeSample: (orderId: string) => void;
   addReagentLot: (reagent: Omit<Reagent, "id">) => void;
-  createAliquots: (orderId: string, list: Omit<Aliquot, "id" | "parentAccession" | "createdAt" | "status">[]) => void;
+  createAliquots: (
+    orderId: string,
+    list: Omit<Aliquot, "id" | "parentAccession" | "createdAt" | "status">[],
+  ) => void;
   saveShiftReport: (report: LabShiftReport) => void;
 };
 
@@ -134,7 +141,11 @@ function enrichOrder(o: LabOrder): LabOrder {
   };
 }
 
-function attachBilling(order: LabOrder, patientName: string, mrn: string): { order: LabOrder; invoice: LabInvoice } {
+function attachBilling(
+  order: LabOrder,
+  patientName: string,
+  mrn: string,
+): { order: LabOrder; invoice: LabInvoice } {
   const cat = findCatalogItem(order.test_code);
   const price = cat?.price ?? 0;
   const inv = invoiceFromOrder({ ...order, price }, patientName, mrn, price);
@@ -186,12 +197,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [qcLocks, setQcLocks] = useState<string[]>(() => initial.qcLocks);
   const [reagents, setReagents] = useState<Reagent[]>(() => initial.reagents);
   const [aliquots, setAliquots] = useState<Aliquot[]>(() => initial.aliquots);
-  const [labShiftReports, setLabShiftReports] = useState<LabShiftReport[]>(() => initial.labShiftReports);
-
-  const findCatalog = useCallback(
-    (code: string) => findCatalogItem(code, catalog),
-    [catalog],
+  const [labShiftReports, setLabShiftReports] = useState<LabShiftReport[]>(
+    () => initial.labShiftReports,
   );
+
+  const findCatalog = useCallback((code: string) => findCatalogItem(code, catalog), [catalog]);
 
   const ingestPayload = useCallback(
     (payload: DoctorLabPayload) => {
@@ -272,7 +282,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             patientName: invoice.patient_name,
             mrn: invoice.mrn,
             date: order.ordered_at.slice(0, 10),
-            items: [{ label: `Lab — ${order.test_name}`, qty: 1, unit: invoice.amount, amount: invoice.amount }],
+            items: [
+              {
+                label: `Lab — ${order.test_name}`,
+                qty: 1,
+                unit: invoice.amount,
+                amount: invoice.amount,
+              },
+            ],
             subtotal: invoice.amount,
             tax: 0,
             total: invoice.amount,
@@ -373,15 +390,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           if (o.id !== id) return o;
           const cat = findCatalogItem(o.test_code, catalog);
           const specimen = buildSpecimenMeta(o, cat);
-          const finalCondition = (condition as LabOrder["specimen"] extends undefined ? never : NonNullable<LabOrder["specimen"]>["condition"]) ?? "Adequate";
+          const finalCondition =
+            (condition as LabOrder["specimen"] extends undefined
+              ? never
+              : NonNullable<LabOrder["specimen"]>["condition"]) ?? "Adequate";
           const coc = [
             {
-              step: 'collected' as const,
+              step: "collected" as const,
               performedBy: ACTOR_TECH,
               performedAt: now,
               notes: note || "Blood sample drawn successfully.",
-              location: "Phlebotomy Bay"
-            }
+              location: "Phlebotomy Bay",
+            },
           ];
           return {
             ...o,
@@ -391,7 +411,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             bench_tech_email: DEMO_TECH_EMAIL,
             specimen: { ...specimen, condition: finalCondition as any },
             chainOfCustody: coc,
-            history: pushHistory(o, ACTOR_TECH, `Sample collected — Condition: ${finalCondition}`, note),
+            history: pushHistory(
+              o,
+              ACTOR_TECH,
+              `Sample collected — Condition: ${finalCondition}`,
+              note,
+            ),
           };
         }),
       );
@@ -478,7 +503,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             return { ...r, testsRemaining: Math.max(0, r.testsRemaining - 1) };
           }
           return r;
-        })
+        }),
       );
 
       const cat = findCatalog(testCode);
@@ -502,7 +527,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
               performedBy: ACTOR_TECH,
               performedAt: new Date().toISOString(),
               location: "Bench 3 — Hematology",
-              notes: "Assigned for bench verification"
+              notes: "Assigned for bench verification",
             });
           }
 
@@ -527,111 +552,115 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [findCatalog],
   );
 
-  const validate = useCallback((
-    id: string,
-    comment?: string,
-    actor = ACTOR_SUP,
-    criticalNotifData?: { notifiedPerson: string; method: string; notes?: string }
-  ) => {
-    let orderToValidate: LabOrder | undefined;
-    setOrders((list) => {
-      orderToValidate = list.find((o) => o.id === id);
-      return list;
-    });
+  const validate = useCallback(
+    (
+      id: string,
+      comment?: string,
+      actor = ACTOR_SUP,
+      criticalNotifData?: { notifiedPerson: string; method: string; notes?: string },
+    ) => {
+      let orderToValidate: LabOrder | undefined;
+      setOrders((list) => {
+        orderToValidate = list.find((o) => o.id === id);
+        return list;
+      });
 
-    if (!orderToValidate) {
-      toast.error("Order not found");
-      return;
-    }
-
-    let isLocked = false;
-    setQcLocks((locks) => {
-      if (locks.includes(orderToValidate!.test_code.toLowerCase())) {
-        isLocked = true;
+      if (!orderToValidate) {
+        toast.error("Order not found");
+        return;
       }
-      return locks;
-    });
 
-    if (isLocked) {
-      toast.error(`QC Lock in place for ${orderToValidate.test_code}. Cannot release results.`);
-      return;
-    }
+      let isLocked = false;
+      setQcLocks((locks) => {
+        if (locks.includes(orderToValidate!.test_code.toLowerCase())) {
+          isLocked = true;
+        }
+        return locks;
+      });
 
-    const now = new Date().toISOString();
-    const cat = findCatalog(orderToValidate.test_code);
-    const criticalAlerts = checkCriticalValues(orderToValidate.results, cat?.parameters);
-    const validatedOrder = orderToValidate;
+      if (isLocked) {
+        toast.error(`QC Lock in place for ${orderToValidate.test_code}. Cannot release results.`);
+        return;
+      }
 
-    setOrders((list) => {
-      const next = list.map((o) =>
-        o.id === id
-          ? {
-              ...o,
-              status: "validated" as const,
-              validated_at: now,
-              released_at: now,
-              validated_by: actor,
-              history: pushHistory(o, actor, "Validated & released", comment || "Released"),
-            }
-          : o,
-      );
-      if (validatedOrder) {
-        const pat = patients.find((p) => p.id === validatedOrder.patient_id);
-        publishLabResult({
-          orderId: validatedOrder.id,
-          patientId: validatedOrder.patient_id,
-          testName: validatedOrder.test_name,
-          testCode: validatedOrder.test_code,
-          results: validatedOrder.results,
-          abnormal: Object.values(validatedOrder.results ?? {}).some((v) =>
-            String(v).toLowerCase().includes("high") || String(v).toLowerCase().includes("low"),
-          ),
-          doctorName: validatedOrder.doctor_name,
-          doctorId: validatedOrder.doctor_id,
-          patientName: pat?.name,
+      const now = new Date().toISOString();
+      const cat = findCatalog(orderToValidate.test_code);
+      const criticalAlerts = checkCriticalValues(orderToValidate.results, cat?.parameters);
+      const validatedOrder = orderToValidate;
+
+      setOrders((list) => {
+        const next = list.map((o) =>
+          o.id === id
+            ? {
+                ...o,
+                status: "validated" as const,
+                validated_at: now,
+                released_at: now,
+                validated_by: actor,
+                history: pushHistory(o, actor, "Validated & released", comment || "Released"),
+              }
+            : o,
+        );
+        if (validatedOrder) {
+          const pat = patients.find((p) => p.id === validatedOrder.patient_id);
+          publishLabResult({
+            orderId: validatedOrder.id,
+            patientId: validatedOrder.patient_id,
+            testName: validatedOrder.test_name,
+            testCode: validatedOrder.test_code,
+            results: validatedOrder.results,
+            abnormal: Object.values(validatedOrder.results ?? {}).some(
+              (v) =>
+                String(v).toLowerCase().includes("high") || String(v).toLowerCase().includes("low"),
+            ),
+            doctorName: validatedOrder.doctor_name,
+            doctorId: validatedOrder.doctor_id,
+            patientName: pat?.name,
+          });
+        }
+        return next;
+      });
+
+      if (criticalAlerts.length > 0) {
+        const newNotif: CriticalValueNotification = {
+          id: `CRIT-NOTIF-${Date.now()}`,
+          orderId: id,
+          patientId: orderToValidate.patient_id,
+          doctorId: orderToValidate.doctor_id,
+          parameters: criticalAlerts,
+          notifiedBy: actor,
+          notifiedPerson: criticalNotifData?.notifiedPerson || "Standard Routing",
+          method: criticalNotifData?.method || "System Automated Paging",
+          notes: criticalNotifData?.notes || "",
+          notifiedAt: now,
+          acknowledgedAt: null,
+          status: "pending_ack",
+        };
+
+        setCriticalNotifications((prev) => [newNotif, ...prev]);
+
+        pushPatientNotification({
+          title: "Critical Lab Results Released",
+          body: `Critical values identified in your ${orderToValidate.test_name} report. Your physician has been notified.`,
+          at: "Just now",
+          type: "report",
+          to: `/patient/reports/${orderToValidate.id}`,
+        });
+      } else {
+        // Normal (non-critical) result — still notify patient and referring doctor
+        pushPatientNotification({
+          title: "Lab Results Ready",
+          body: `Your ${orderToValidate.test_name} results have been validated and released by the laboratory. Ordered by ${orderToValidate.doctor_name || "your doctor"}.`,
+          at: "Just now",
+          type: "report",
+          to: `/patient/reports/${orderToValidate.id}`,
         });
       }
-      return next;
-    });
 
-    if (criticalAlerts.length > 0) {
-      const newNotif: CriticalValueNotification = {
-        id: `CRIT-NOTIF-${Date.now()}`,
-        orderId: id,
-        patientId: orderToValidate.patient_id,
-        doctorId: orderToValidate.doctor_id,
-        parameters: criticalAlerts,
-        notifiedBy: actor,
-        notifiedPerson: criticalNotifData?.notifiedPerson || "Standard Routing",
-        method: criticalNotifData?.method || "System Automated Paging",
-        notes: criticalNotifData?.notes || "",
-        notifiedAt: now,
-        acknowledgedAt: null,
-        status: "pending_ack"
-      };
-
-      setCriticalNotifications((prev) => [newNotif, ...prev]);
-
-      pushPatientNotification({
-        title: "Critical Lab Results Released",
-        body: `Critical values identified in your ${orderToValidate.test_name} report. Your physician has been notified.`,
-        at: "Just now",
-        type: "report",
-        to: `/patient/reports/${orderToValidate.id}`,
-      });
-    } else {
-      // Normal (non-critical) result — still notify patient and referring doctor
-      pushPatientNotification({
-        title: "Lab Results Ready",
-        body: `Your ${orderToValidate.test_name} results have been validated and released by the laboratory. Ordered by ${orderToValidate.doctor_name || "your doctor"}.`,
-        at: "Just now",
-        type: "report",
-        to: `/patient/reports/${orderToValidate.id}`,
-      });
-    }
-
-    toast.success(`${id} validated & released`);
-  }, [patients, findCatalog]);
+      toast.success(`${id} validated & released`);
+    },
+    [patients, findCatalog],
+  );
 
   const rejectValid = useCallback((id: string, reason: string) => {
     setOrders((list) =>
@@ -679,8 +708,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
               notifiedPerson: n.notifiedPerson, // preserve
               notes: (n.notes ? n.notes + " | " : "") + `Confirmed by ${acknowledgedBy}`,
             }
-          : n
-      )
+          : n,
+      ),
     );
     toast.success(`Critical alert acknowledged by ${acknowledgedBy}`);
   }, []);
@@ -693,10 +722,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ? {
               ...o,
               sampleConditionOverride: { overriddenBy: actor, overriddenAt: now, reason },
-              history: pushHistory(o, actor, `Supervisor override: non-adequate sample approved for processing`, reason),
+              history: pushHistory(
+                o,
+                actor,
+                `Supervisor override: non-adequate sample approved for processing`,
+                reason,
+              ),
             }
-          : o
-      )
+          : o,
+      ),
     );
     toast.success(`Sample condition override recorded by ${actor}`);
   }, []);
@@ -742,11 +776,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           return { ...r, correctiveAction: action, status: "pass" };
         }
         return r;
-      })
+      }),
     );
     if (affectedAnalyte) {
       setQcLocks((locks) => locks.filter((l) => l !== affectedAnalyte.toLowerCase()));
-      toast.success(`Corrective action recorded. QC lock lifted for ${affectedAnalyte.toUpperCase()}.`);
+      toast.success(
+        `Corrective action recorded. QC lock lifted for ${affectedAnalyte.toUpperCase()}.`,
+      );
     }
   }, []);
 
@@ -761,7 +797,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           performedBy: ACTOR_TECH,
           performedAt: now,
           location: "Lab Reception Counter",
-          notes: `Condition: ${condition}. ${reason || ""}`
+          notes: `Condition: ${condition}. ${reason || ""}`,
         });
 
         const nextSpecimen = o.specimen
@@ -772,45 +808,48 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ...o,
           chainOfCustody: coc,
           specimen: nextSpecimen,
-          history: pushHistory(o, ACTOR_TECH, `Sample Accepted - ${condition}`, reason)
+          history: pushHistory(o, ACTOR_TECH, `Sample Accepted - ${condition}`, reason),
         };
-      })
+      }),
     );
     toast.success(`Sample condition recorded: ${condition}`);
   }, []);
 
-  const storeSample = useCallback((orderId: string, rack: string, box: string, position: string, retentionDays: number) => {
-    const now = new Date().toISOString();
-    const expiry = new Date(Date.now() + retentionDays * 24 * 3600 * 1000).toISOString();
-    setOrders((list) =>
-      list.map((o) => {
-        if (o.id !== orderId) return o;
-        const coc = o.chainOfCustody ? [...o.chainOfCustody] : [];
-        coc.push({
-          step: "stored" as const,
-          performedBy: ACTOR_TECH,
-          performedAt: now,
-          location: `Freezer A — Rack ${rack}, Box ${box}, Pos ${position}`,
-          notes: `Stored for ${retentionDays} days retention.`
-        });
-        return {
-          ...o,
-          chainOfCustody: coc,
-          sampleStorage: {
-            rack,
-            box,
-            position,
-            retentionExpiry: expiry,
-            storedBy: ACTOR_TECH,
-            storedAt: now,
-            status: "stored" as const
-          },
-          history: pushHistory(o, ACTOR_TECH, "Sample put in storage")
-        };
-      })
-    );
-    toast.success(`Sample stored successfully in Freezer A`);
-  }, []);
+  const storeSample = useCallback(
+    (orderId: string, rack: string, box: string, position: string, retentionDays: number) => {
+      const now = new Date().toISOString();
+      const expiry = new Date(Date.now() + retentionDays * 24 * 3600 * 1000).toISOString();
+      setOrders((list) =>
+        list.map((o) => {
+          if (o.id !== orderId) return o;
+          const coc = o.chainOfCustody ? [...o.chainOfCustody] : [];
+          coc.push({
+            step: "stored" as const,
+            performedBy: ACTOR_TECH,
+            performedAt: now,
+            location: `Freezer A — Rack ${rack}, Box ${box}, Pos ${position}`,
+            notes: `Stored for ${retentionDays} days retention.`,
+          });
+          return {
+            ...o,
+            chainOfCustody: coc,
+            sampleStorage: {
+              rack,
+              box,
+              position,
+              retentionExpiry: expiry,
+              storedBy: ACTOR_TECH,
+              storedAt: now,
+              status: "stored" as const,
+            },
+            history: pushHistory(o, ACTOR_TECH, "Sample put in storage"),
+          };
+        }),
+      );
+      toast.success(`Sample stored successfully in Freezer A`);
+    },
+    [],
+  );
 
   const disposeSample = useCallback((orderId: string) => {
     const now = new Date().toISOString();
@@ -823,15 +862,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           performedBy: ACTOR_TECH,
           performedAt: now,
           location: "Biohazard Disposal",
-          notes: "Sample retention period completed. Safely incinerated/disposed."
+          notes: "Sample retention period completed. Safely incinerated/disposed.",
         });
         return {
           ...o,
           chainOfCustody: coc,
-          sampleStorage: o.sampleStorage ? { ...o.sampleStorage, status: "disposed" as const } : undefined,
-          history: pushHistory(o, ACTOR_TECH, "Sample disposed")
+          sampleStorage: o.sampleStorage
+            ? { ...o.sampleStorage, status: "disposed" as const }
+            : undefined,
+          history: pushHistory(o, ACTOR_TECH, "Sample disposed"),
         };
-      })
+      }),
     );
     toast.success(`Sample disposed and logged`);
   }, []);
@@ -839,26 +880,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const addReagentLot = useCallback((reagent: Omit<Reagent, "id">) => {
     const newReg: Reagent = {
       ...reagent,
-      id: `REG-${Date.now()}`
+      id: `REG-${Date.now()}`,
     };
     setReagents((prev) => [newReg, ...prev]);
     toast.success(`Registered reagent lot ${reagent.lotNumber}`);
   }, []);
 
-  const createAliquots = useCallback((orderId: string, list: Omit<Aliquot, "id" | "parentAccession" | "createdAt" | "status">[]) => {
-    const order = orders.find((o) => o.id === orderId);
-    if (!order) return;
-    const parentAcc = order.accession;
-    const newAliquots = list.map((a, i) => ({
-      ...a,
-      id: `${parentAcc}-${String.fromCharCode(65 + i)}`,
-      parentAccession: parentAcc,
-      createdAt: new Date().toISOString(),
-      status: "active" as const
-    }));
-    setAliquots((prev) => [...newAliquots, ...prev]);
-    toast.success(`Created ${list.length} aliquots for ${parentAcc}`);
-  }, [orders]);
+  const createAliquots = useCallback(
+    (orderId: string, list: Omit<Aliquot, "id" | "parentAccession" | "createdAt" | "status">[]) => {
+      const order = orders.find((o) => o.id === orderId);
+      if (!order) return;
+      const parentAcc = order.accession;
+      const newAliquots = list.map((a, i) => ({
+        ...a,
+        id: `${parentAcc}-${String.fromCharCode(65 + i)}`,
+        parentAccession: parentAcc,
+        createdAt: new Date().toISOString(),
+        status: "active" as const,
+      }));
+      setAliquots((prev) => [...newAliquots, ...prev]);
+      toast.success(`Created ${list.length} aliquots for ${parentAcc}`);
+    },
+    [orders],
+  );
 
   const saveShiftReport = useCallback((report: LabShiftReport) => {
     setLabShiftReports((prev) => [report, ...prev]);
@@ -936,7 +980,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         patientName: patient.name,
         mrn: patient.mrn,
         date: now.slice(0, 10),
-        items: [{ label: `Lab — ${invoice.test_name}`, qty: 1, unit: invoice.amount, amount: invoice.amount }],
+        items: [
+          {
+            label: `Lab — ${invoice.test_name}`,
+            qty: 1,
+            unit: invoice.amount,
+            amount: invoice.amount,
+          },
+        ],
         subtotal: invoice.amount,
         tax: 0,
         total: invoice.amount,
@@ -1001,7 +1052,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         patientId: order.patient_id,
         patientName: labPatient.name,
         labOrderId: order.id,
-        items: [{ label: `Lab — ${order.test_name}`, qty: 1, unit: invoice.amount, amount: invoice.amount }],
+        items: [
+          {
+            label: `Lab — ${order.test_name}`,
+            qty: 1,
+            unit: invoice.amount,
+            amount: invoice.amount,
+          },
+        ],
         note: `Lab order ${order.id}`,
         createdAt: now,
       });
@@ -1015,9 +1073,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setInvoices((list) => {
       const inv = list.find((i) => i.id === invoiceId);
       const next = list.map((i) =>
-        i.id === invoiceId
-          ? { ...i, status: "paid" as const, method, paid_at: now }
-          : i,
+        i.id === invoiceId ? { ...i, status: "paid" as const, method, paid_at: now } : i,
       );
       if (inv) {
         mirrorToLedger({
@@ -1027,7 +1083,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           patientName: inv.patient_name,
           mrn: inv.mrn,
           date: inv.created_at.slice(0, 10),
-          items: [{ label: `Lab — ${inv.test_name}`, qty: 1, unit: inv.amount, amount: inv.amount }],
+          items: [
+            { label: `Lab — ${inv.test_name}`, qty: 1, unit: inv.amount, amount: inv.amount },
+          ],
           subtotal: inv.amount,
           tax: 0,
           total: inv.amount,
@@ -1041,47 +1099,54 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       return next;
     });
     setOrders((list) =>
-      list.map((o) =>
-        o.lab_invoice_id === invoiceId ? { ...o, payment_status: "paid" } : o,
-      ),
+      list.map((o) => (o.lab_invoice_id === invoiceId ? { ...o, payment_status: "paid" } : o)),
     );
     toast.success("Lab payment collected");
   }, []);
 
-  const flagInvoiceForReception = useCallback((invoiceId: string) => {
-    const inv = invoices.find((i) => i.id === invoiceId);
-    if (!inv) return;
-    setInvoices((list) =>
-      list.map((i) => (i.id === invoiceId ? { ...i, status: "reception" } : i)),
-    );
-    setOrders((list) =>
-      list.map((o) =>
-        o.lab_invoice_id === invoiceId ? { ...o, payment_status: "reception" } : o,
-      ),
-    );
-    pushReceptionInvoice({
-      id: nextBridgeInvoiceId(),
-      patientId: inv.patient_id,
-      patientName: inv.patient_name,
-      labOrderId: inv.order_id,
-      items: [{ label: `Lab — ${inv.test_name}`, qty: 1, unit: inv.amount, amount: inv.amount }],
-      note: `Collect at reception · ${inv.order_id}`,
-      createdAt: new Date().toISOString(),
-    });
-    toast.success("Flagged for reception collection");
-  }, [invoices]);
+  const flagInvoiceForReception = useCallback(
+    (invoiceId: string) => {
+      const inv = invoices.find((i) => i.id === invoiceId);
+      if (!inv) return;
+      setInvoices((list) =>
+        list.map((i) => (i.id === invoiceId ? { ...i, status: "reception" } : i)),
+      );
+      setOrders((list) =>
+        list.map((o) =>
+          o.lab_invoice_id === invoiceId ? { ...o, payment_status: "reception" } : o,
+        ),
+      );
+      pushReceptionInvoice({
+        id: nextBridgeInvoiceId(),
+        patientId: inv.patient_id,
+        patientName: inv.patient_name,
+        labOrderId: inv.order_id,
+        items: [{ label: `Lab — ${inv.test_name}`, qty: 1, unit: inv.amount, amount: inv.amount }],
+        note: `Collect at reception · ${inv.order_id}`,
+        createdAt: new Date().toISOString(),
+      });
+      toast.success("Flagged for reception collection");
+    },
+    [invoices],
+  );
 
-  const updateCatalogPrice = useCallback((code: string, price: number) => {
-    const next = patchCatalogItem(code, { price }, catalog);
-    setCatalog(next);
-    toast.success(`Updated ${code} price`);
-  }, [catalog]);
+  const updateCatalogPrice = useCallback(
+    (code: string, price: number) => {
+      const next = patchCatalogItem(code, { price }, catalog);
+      setCatalog(next);
+      toast.success(`Updated ${code} price`);
+    },
+    [catalog],
+  );
 
-  const addCatalogTest = useCallback((item: LabCatalogItem) => {
-    const next = addCatalogItem(item, catalog);
-    setCatalog(next);
-    toast.success(`Added ${item.code} to catalog`);
-  }, [catalog]);
+  const addCatalogTest = useCallback(
+    (item: LabCatalogItem) => {
+      const next = addCatalogItem(item, catalog);
+      setCatalog(next);
+      toast.success(`Added ${item.code} to catalog`);
+    },
+    [catalog],
+  );
 
   const value = useMemo(
     () => ({

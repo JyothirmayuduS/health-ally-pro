@@ -52,11 +52,11 @@ export default function AdminOccupancyLoad() {
   }, [receptionStore]);
 
   const labLoad = useMemo(() => {
-    return encounters.filter(e => e.status === "open").length + 2;
+    return encounters.filter((e) => e.status === "open").length + 2;
   }, [encounters]);
 
   const pharmacyLoad = useMemo(() => {
-    return Math.max(3, queue.filter(q => q.status === "completed").length - 1);
+    return Math.max(3, queue.filter((q) => q.status === "completed").length - 1);
   }, [queue]);
 
   const handleRefresh = () => {
@@ -87,8 +87,12 @@ export default function AdminOccupancyLoad() {
         {/* OPD */}
         <div className="surface p-5 space-y-4 border-t-4 border-t-teal relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-soft">
           <div className="flex items-center justify-between text-ink-400">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">Outpatient (OPD)</span>
-            <div className="p-1.5 bg-teal-soft text-teal rounded"><Users className="h-4.5 w-4.5" /></div>
+            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">
+              Outpatient (OPD)
+            </span>
+            <div className="p-1.5 bg-teal-soft text-teal rounded">
+              <Users className="h-4.5 w-4.5" />
+            </div>
           </div>
           <div>
             <div className="text-3xl font-heading font-bold text-teal tabular-nums">
@@ -105,8 +109,12 @@ export default function AdminOccupancyLoad() {
         {/* IPD */}
         <div className="surface p-5 space-y-4 border-t-4 border-t-plum relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-soft">
           <div className="flex items-center justify-between text-ink-400">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">Inpatient (IPD)</span>
-            <div className="p-1.5 bg-plum-soft text-plum rounded"><BedDouble className="h-4.5 w-4.5" /></div>
+            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">
+              Inpatient (IPD)
+            </span>
+            <div className="p-1.5 bg-plum-soft text-plum rounded">
+              <BedDouble className="h-4.5 w-4.5" />
+            </div>
           </div>
           <div>
             <div className="text-3xl font-heading font-bold text-plum tabular-nums">
@@ -118,7 +126,10 @@ export default function AdminOccupancyLoad() {
           </div>
           <div className="pt-3 border-t border-stone-100/60">
             <div className="h-2 w-full rounded-full bg-stone-100 overflow-hidden border border-stone-200/40">
-              <div className="h-full rounded-full bg-plum transition-all duration-500" style={{ width: `${ipdStats.pct}%` }} />
+              <div
+                className="h-full rounded-full bg-plum transition-all duration-500"
+                style={{ width: `${ipdStats.pct}%` }}
+              />
             </div>
           </div>
         </div>
@@ -126,8 +137,12 @@ export default function AdminOccupancyLoad() {
         {/* Laboratory */}
         <div className="surface p-5 space-y-4 border-t-4 border-t-mustard relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-soft">
           <div className="flex items-center justify-between text-ink-400">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">Laboratory</span>
-            <div className="p-1.5 bg-mustard-soft text-mustard rounded"><FlaskConical className="h-4.5 w-4.5" /></div>
+            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">
+              Laboratory
+            </span>
+            <div className="p-1.5 bg-mustard-soft text-mustard rounded">
+              <FlaskConical className="h-4.5 w-4.5" />
+            </div>
           </div>
           <div>
             <div className="text-3xl font-heading font-bold text-mustard tabular-nums">
@@ -144,8 +159,12 @@ export default function AdminOccupancyLoad() {
         {/* Pharmacy */}
         <div className="surface p-5 space-y-4 border-t-4 border-t-clay relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-soft">
           <div className="flex items-center justify-between text-ink-400">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">Pharmacy</span>
-            <div className="p-1.5 bg-clay-soft text-clay rounded"><Pill className="h-4.5 w-4.5" /></div>
+            <span className="text-[10px] uppercase font-mono tracking-wider font-semibold">
+              Pharmacy
+            </span>
+            <div className="p-1.5 bg-clay-soft text-clay rounded">
+              <Pill className="h-4.5 w-4.5" />
+            </div>
           </div>
           <div>
             <div className="text-3xl font-heading font-bold text-clay tabular-nums">
@@ -166,7 +185,9 @@ export default function AdminOccupancyLoad() {
           <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
             Hourly Load Distribution (Peak / Average)
           </span>
-          <span className="text-[11px] text-ink-400 font-mono bg-stone-100 border rounded-sm px-2 py-0.5">Operating Hours: 08:00 – 20:00</span>
+          <span className="text-[11px] text-ink-400 font-mono bg-stone-100 border rounded-sm px-2 py-0.5">
+            Operating Hours: 08:00 – 20:00
+          </span>
         </div>
         <div className="px-5 py-5 h-72">
           <ResponsiveContainer width="100%" height="100%">

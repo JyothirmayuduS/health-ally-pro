@@ -15,7 +15,12 @@ export function simplifyMealSearchName(mealName: string, ingredients: string[] =
 
   return ingredients
     .slice(0, 2)
-    .map((i) => i.replace(NOISE_WORDS, "").replace(/\band\b/gi, " ").trim())
+    .map((i) =>
+      i
+        .replace(NOISE_WORDS, "")
+        .replace(/\band\b/gi, " ")
+        .trim(),
+    )
     .filter(Boolean)
     .join(" ");
 }

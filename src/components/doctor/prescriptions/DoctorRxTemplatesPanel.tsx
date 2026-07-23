@@ -64,8 +64,12 @@ export function DoctorRxTemplatesPanel({ onApplyTemplate, currentDraft }: Props)
   return (
     <div className="mx-auto w-full min-w-0 max-w-3xl lg:max-w-4xl">
       <header className="mb-4">
-        <h1 className="font-serif text-xl font-semibold text-[#1B3B2E] sm:text-2xl">Rx templates</h1>
-        <p className="mt-1 text-sm text-[#8A8F8C]">Built-in packs plus your saved combinations (local only).</p>
+        <h1 className="font-serif text-xl font-semibold text-[#1B3B2E] sm:text-2xl">
+          Rx templates
+        </h1>
+        <p className="mt-1 text-sm text-[#8A8F8C]">
+          Built-in packs plus your saved combinations (local only).
+        </p>
       </header>
 
       {currentDraft ? (
@@ -91,7 +95,9 @@ export function DoctorRxTemplatesPanel({ onApplyTemplate, currentDraft }: Props)
       ) : null}
 
       <section className="mb-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">Built-in</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">
+          Built-in
+        </p>
         <div className="grid gap-2 sm:grid-cols-2">
           {RX_TEMPLATES.map((t) => (
             <button
@@ -117,7 +123,9 @@ export function DoctorRxTemplatesPanel({ onApplyTemplate, currentDraft }: Props)
       </section>
 
       <section>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">Your templates</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">
+          Your templates
+        </p>
         {custom.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-[#EDEAE6] bg-white px-4 py-8 text-center text-sm text-[#8A8F8C]">
             No custom templates yet. Save from the Write tab or after sending a prescription.
@@ -172,5 +180,7 @@ export function DoctorRxTemplatesPanel({ onApplyTemplate, currentDraft }: Props)
 export function applyTemplateToDraftLines(
   lines: { drug_id: string; frequency: RxFrequency; durationDays: number }[],
 ) {
-  return lines.map((l) => createLineFromDrug(l.drug_id, { frequency: l.frequency, durationDays: l.durationDays }));
+  return lines.map((l) =>
+    createLineFromDrug(l.drug_id, { frequency: l.frequency, durationDays: l.durationDays }),
+  );
 }

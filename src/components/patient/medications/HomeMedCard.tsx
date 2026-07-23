@@ -6,11 +6,7 @@ import { cn } from "@/lib/utils";
 
 function InstructionChip({ label }: { label: string }) {
   const lower = label.toLowerCase();
-  const Icon = lower.includes("food")
-    ? UtensilsCrossed
-    : lower.includes("bed")
-      ? Moon
-      : Pill;
+  const Icon = lower.includes("food") ? UtensilsCrossed : lower.includes("bed") ? Moon : Pill;
   return (
     <span className="inline-flex items-center gap-1 rounded-lg bg-[#B8735D]/10 px-2 py-1 text-[10px] font-medium text-[#B8735D]">
       <Icon className="h-3 w-3" strokeWidth={2} />
@@ -59,7 +55,9 @@ export function HomeMedCard({ med, onToggle, className }: Props) {
           <span
             className={cn(
               "grid h-6 w-6 place-items-center rounded-full border-[1.5px]",
-              med.taken ? "border-[#B8735D] bg-[#B8735D] text-[10px] font-bold text-white" : "border-[#E5E1DC]",
+              med.taken
+                ? "border-[#B8735D] bg-[#B8735D] text-[10px] font-bold text-white"
+                : "border-[#E5E1DC]",
             )}
           >
             {med.taken ? "✓" : null}

@@ -50,7 +50,10 @@ export default function ImplementPage() {
           >
             Email kickoff
           </a>
-          <Link to="/security" className="rounded-full px-5 py-2.5 text-sm font-semibold text-[#5C6B63]">
+          <Link
+            to="/security"
+            className="rounded-full px-5 py-2.5 text-sm font-semibold text-[#5C6B63]"
+          >
             Security overview
           </Link>
         </div>

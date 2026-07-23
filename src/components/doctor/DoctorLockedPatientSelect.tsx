@@ -26,10 +26,9 @@ export function DoctorLockedPatientSelect({
   className,
   autoLockFromRoute = true,
 }: Props) {
-  const routeLock = useDoctorPatientContextLock(
-    autoLockFromRoute ? lockedPatientId : undefined,
-  );
-  const effectiveLockId = lockedPatientId ?? (autoLockFromRoute ? routeLock.lockedPatientId : undefined);
+  const routeLock = useDoctorPatientContextLock(autoLockFromRoute ? lockedPatientId : undefined);
+  const effectiveLockId =
+    lockedPatientId ?? (autoLockFromRoute ? routeLock.lockedPatientId : undefined);
   const locked = Boolean(effectiveLockId);
   const selected = options.find((p) => p.id === value);
 

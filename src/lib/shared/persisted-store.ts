@@ -29,12 +29,7 @@ export function loadPersistedJson<T>(key: string, fallback: T): T {
   }
 }
 
-export function savePersistedJson<T>(
-  key: string,
-  desk: PersistDesk,
-  value: T,
-  recordKey = key,
-) {
+export function savePersistedJson<T>(key: string, desk: PersistDesk, value: T, recordKey = key) {
   try {
     if (typeof window !== "undefined") {
       localStorage.setItem(key, JSON.stringify(value));
@@ -136,7 +131,7 @@ export const STORE_DESK: Record<string, PersistDesk> = {
   "medora-doctor-rx-templates-v1": "doctor",
   "medora-doctor-rx-drafts-v1": "doctor",
   "medora-patient-notifications-v1": "patient",
-  "medora_patient_prescriptions_v1": "patient",
+  medora_patient_prescriptions_v1: "patient",
 };
 
 export function deskForKey(key: string, fallback: PersistDesk = "reception"): PersistDesk {

@@ -15,11 +15,7 @@ import {
 import { doctorPatients } from "@/lib/doctor-mock-data";
 import { loadLabCatalog } from "@/lib/shared/lab-catalog";
 import { getSharedPatient, resolvePatientId, calcAge } from "@/lib/shared/patients";
-import {
-  pushLabOrder,
-  nextLabOrderId,
-  type DoctorLabLine,
-} from "@/lib/lab-desk/order-bridge";
+import { pushLabOrder, nextLabOrderId, type DoctorLabLine } from "@/lib/lab-desk/order-bridge";
 import type { LabPriority } from "@/lib/lab-desk/mockData";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +43,7 @@ export function DoctorLabsWorkspace({ searchPatientId }: Props) {
   const catalog = useMemo(() => loadLabCatalog(), []);
   const clinicalPatients = listClinicalPatients();
   const [patientId, setPatientId] = useState(
-    searchPatientId ? toEncounterPatientId(searchPatientId) : doctorPatients[0]?.id ?? "",
+    searchPatientId ? toEncounterPatientId(searchPatientId) : (doctorPatients[0]?.id ?? ""),
   );
   const [priority, setPriority] = useState<LabPriority>("routine");
   const [selectedTests, setSelectedTests] = useState<string[]>(["CBC"]);
@@ -237,11 +233,18 @@ export function DoctorLabsWorkspace({ searchPatientId }: Props) {
                           )}
                         >
                           <span className="font-bold">{t.code}</span>
-                          <span className={cn("ml-1.5", selected ? "text-white/80" : "text-[#8A8F8C]")}>
+                          <span
+                            className={cn("ml-1.5", selected ? "text-white/80" : "text-[#8A8F8C]")}
+                          >
                             {t.name}
                           </span>
                           {t.fasting ? (
-                            <span className={cn("mt-0.5 block text-[10px]", selected ? "text-[#F5E6B8]" : "text-[#B8735D]")}>
+                            <span
+                              className={cn(
+                                "mt-0.5 block text-[10px]",
+                                selected ? "text-[#F5E6B8]" : "text-[#B8735D]",
+                              )}
+                            >
                               Fasting
                             </span>
                           ) : null}
@@ -256,7 +259,9 @@ export function DoctorLabsWorkspace({ searchPatientId }: Props) {
 
           <section className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 sm:p-5">
             <label className="block">
-              <span className="text-xs font-semibold uppercase text-[#8A8F8C]">Clinical indication</span>
+              <span className="text-xs font-semibold uppercase text-[#8A8F8C]">
+                Clinical indication
+              </span>
               <textarea
                 className="mt-2 min-h-[88px] w-full rounded-2xl border border-[#E8E4DF] px-4 py-3 text-sm outline-none focus:border-[#B8735D]/40 focus:ring-2 focus:ring-[#B8735D]/15"
                 placeholder="Why are you ordering these tests? (e.g. diabetes follow-up, rule out infection)"
@@ -275,7 +280,9 @@ export function DoctorLabsWorkspace({ searchPatientId }: Props) {
                     onClick={() => setPriority(p)}
                     className={cn(
                       "min-h-[44px] flex-1 rounded-xl border px-4 py-2 text-sm font-semibold capitalize sm:flex-none",
-                      priority === p ? PRIORITY_STYLE[p] : "border-[#E8E4DF] bg-[#FAFAF8] text-[#8A8F8C]",
+                      priority === p
+                        ? PRIORITY_STYLE[p]
+                        : "border-[#E8E4DF] bg-[#FAFAF8] text-[#8A8F8C]",
                       priority === p && p === "stat" && "ring-2 ring-[#C45C4A]/30",
                     )}
                   >

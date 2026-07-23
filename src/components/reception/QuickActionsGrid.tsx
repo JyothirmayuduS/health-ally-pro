@@ -1,13 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import {
-  UserPlus,
-  UserCheck,
-  ListOrdered,
-  CalendarPlus,
-  Users,
-  Monitor,
-} from "lucide-react";
+import { UserPlus, UserCheck, ListOrdered, CalendarPlus, Users, Monitor } from "lucide-react";
 
 const actions = [
   { id: "01", label: "Register", to: "/reception/register", variant: "jar" as const },

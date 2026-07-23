@@ -84,7 +84,7 @@ function FieldInput({
 
   if (field.type === "select" || field.type === "laterality") {
     const options =
-      field.type === "laterality" ? ["Left", "Right", "Bilateral"] : field.options ?? [];
+      field.type === "laterality" ? ["Left", "Right", "Bilateral"] : (field.options ?? []);
     return (
       <select
         className={base}
@@ -111,14 +111,10 @@ function FieldInput({
             <button
               key={o}
               type="button"
-              onClick={() =>
-                onChange(on ? selected.filter((x) => x !== o) : [...selected, o])
-              }
+              onClick={() => onChange(on ? selected.filter((x) => x !== o) : [...selected, o])}
               className={cn(
                 "rounded-full px-3 py-1 text-xs font-medium transition",
-                on
-                  ? "bg-[#1B3B2E] text-white"
-                  : "bg-[#F5F2ED] text-[#5C6B63] hover:bg-[#EDEAE6]",
+                on ? "bg-[#1B3B2E] text-white" : "bg-[#F5F2ED] text-[#5C6B63] hover:bg-[#EDEAE6]",
               )}
             >
               {o}
@@ -144,7 +140,13 @@ function FieldInput({
   }
 
   const inputType =
-    field.type === "number" ? "number" : field.type === "date" ? "date" : field.type === "time" ? "time" : "text";
+    field.type === "number"
+      ? "number"
+      : field.type === "date"
+        ? "date"
+        : field.type === "time"
+          ? "time"
+          : "text";
 
   return (
     <div className="relative">
@@ -154,7 +156,13 @@ function FieldInput({
         placeholder={field.placeholder}
         value={value == null ? "" : String(value)}
         onChange={(e) =>
-          onChange(field.type === "number" ? (e.target.value === "" ? "" : Number(e.target.value)) : e.target.value)
+          onChange(
+            field.type === "number"
+              ? e.target.value === ""
+                ? ""
+                : Number(e.target.value)
+              : e.target.value,
+          )
         }
       />
       {field.unit ? (
@@ -265,7 +273,11 @@ function ModuleForm({
               {field.label}
               {field.required ? <span className="text-[#B8735D]"> *</span> : null}
               <div className="mt-1.5">
-                <FieldInput field={field} value={values[field.id]} onChange={(v) => set(field.id, v)} />
+                <FieldInput
+                  field={field}
+                  value={values[field.id]}
+                  onChange={(v) => set(field.id, v)}
+                />
               </div>
             </label>
           ))}
@@ -412,12 +424,18 @@ export function SpecialtyWorkstation({
               </h1>
               <p className="mt-1 max-w-xl text-sm text-[#5C6B63]">{specialty.tagline}</p>
               <p className="mt-2 text-xs text-[#8A8F8C]">
-                {doctor?.name ?? "Doctor"} · {doctor?.room ?? specialty.unitLabel} · assigned by admin
+                {doctor?.name ?? "Doctor"} · {doctor?.room ?? specialty.unitLabel} · assigned by
+                admin
               </p>
             </div>
           </div>
-          <div className="rounded-2xl px-4 py-3 text-sm" style={{ background: specialty.accentSoft }}>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8A8F8C]">Unit</p>
+          <div
+            className="rounded-2xl px-4 py-3 text-sm"
+            style={{ background: specialty.accentSoft }}
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8A8F8C]">
+              Unit
+            </p>
             <p className="font-semibold" style={{ color: specialty.accent }}>
               {specialty.unitLabel}
             </p>
@@ -471,98 +489,96 @@ export function SpecialtyWorkstation({
       {deskTab === "anatomy" ? (
         <SpecialtyAnatomyPanel specialty={specialty} />
       ) : (
-      <>
-      <div className="rounded-[24px] border border-[#E8E4DE] bg-white p-4 sm:p-5">
-        <label className="block text-xs font-semibold text-[#5C6B63]">
-          Active patient for this specialty note
-          <input
-            value={patientName}
-            onChange={(e) => setPatientName(e.target.value)}
-            placeholder="Patient name"
-            className="mt-1.5 w-full rounded-xl border border-[#E8E4DE] bg-[#FAF8F5] px-3 py-2.5 text-sm outline-none focus:border-[#B8735D]/50 focus:ring-2 focus:ring-[#B8735D]/15 sm:max-w-md"
-          />
-        </label>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-        <nav className="h-fit rounded-[24px] border border-[#E8E4DE] bg-white p-3">
-          <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
-            Clinical modules
-          </p>
-          <ul className="space-y-1">
-            {specialty.modules.map((m) => {
-              const active = m.id === module?.id;
-              return (
-                <li key={m.id}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveModuleId(m.id)}
-                    className={cn(
-                      "w-full rounded-2xl px-3 py-2.5 text-left text-sm transition",
-                      active
-                        ? "font-semibold text-white"
-                        : "text-[#5C6B63] hover:bg-[#F7F5F2]",
-                    )}
-                    style={active ? { background: specialty.accent } : undefined}
-                  >
-                    {m.title}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <section className="rounded-[24px] border border-[#E8E4DE] bg-white p-5 sm:p-6">
-          {module ? (
-            <>
-              <div className="mb-5 flex items-start gap-3">
-                <div
-                  className="mt-0.5 grid h-10 w-10 place-items-center rounded-xl"
-                  style={{ background: specialty.accentSoft, color: specialty.accent }}
-                >
-                  <ClipboardList className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-[#1B3B2E]">{module.title}</h2>
-                  <p className="text-sm text-[#8A8F8C]">{module.description}</p>
-                </div>
-              </div>
-              <ModuleForm
-                module={module}
-                specialty={specialty}
-                doctor={doctor}
-                patientName={patientName}
-                onSaved={() => setTick((t) => t + 1)}
+        <>
+          <div className="rounded-[24px] border border-[#E8E4DE] bg-white p-4 sm:p-5">
+            <label className="block text-xs font-semibold text-[#5C6B63]">
+              Active patient for this specialty note
+              <input
+                value={patientName}
+                onChange={(e) => setPatientName(e.target.value)}
+                placeholder="Patient name"
+                className="mt-1.5 w-full rounded-xl border border-[#E8E4DE] bg-[#FAF8F5] px-3 py-2.5 text-sm outline-none focus:border-[#B8735D]/50 focus:ring-2 focus:ring-[#B8735D]/15 sm:max-w-md"
               />
-            </>
-          ) : (
-            <p className="text-sm text-[#8A8F8C]">No modules configured for this specialty.</p>
-          )}
-        </section>
-      </div>
+            </label>
+          </div>
 
-      {recent.length > 0 ? (
-        <section className="rounded-[24px] border border-[#E8E4DE] bg-white p-5">
-          <h3 className="mb-3 text-sm font-semibold text-[#1B3B2E]">Recent specialty notes</h3>
-          <ul className="divide-y divide-[#F0EDE8]">
-            {recent.map((n) => (
-              <li key={n.id} className="flex items-center justify-between gap-3 py-3 text-sm">
-                <div>
-                  <p className="font-medium text-[#1B3B2E]">{n.patientName}</p>
-                  <p className="text-xs text-[#8A8F8C]">
-                    {specialty.modules.find((m) => m.id === n.moduleId)?.title ?? n.moduleId}
-                  </p>
-                </div>
-                <time className="shrink-0 text-xs text-[#8A8F8C]">
-                  {new Date(n.createdAt).toLocaleString()}
-                </time>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-      </>
+          <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+            <nav className="h-fit rounded-[24px] border border-[#E8E4DE] bg-white p-3">
+              <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
+                Clinical modules
+              </p>
+              <ul className="space-y-1">
+                {specialty.modules.map((m) => {
+                  const active = m.id === module?.id;
+                  return (
+                    <li key={m.id}>
+                      <button
+                        type="button"
+                        onClick={() => setActiveModuleId(m.id)}
+                        className={cn(
+                          "w-full rounded-2xl px-3 py-2.5 text-left text-sm transition",
+                          active ? "font-semibold text-white" : "text-[#5C6B63] hover:bg-[#F7F5F2]",
+                        )}
+                        style={active ? { background: specialty.accent } : undefined}
+                      >
+                        {m.title}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            <section className="rounded-[24px] border border-[#E8E4DE] bg-white p-5 sm:p-6">
+              {module ? (
+                <>
+                  <div className="mb-5 flex items-start gap-3">
+                    <div
+                      className="mt-0.5 grid h-10 w-10 place-items-center rounded-xl"
+                      style={{ background: specialty.accentSoft, color: specialty.accent }}
+                    >
+                      <ClipboardList className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-[#1B3B2E]">{module.title}</h2>
+                      <p className="text-sm text-[#8A8F8C]">{module.description}</p>
+                    </div>
+                  </div>
+                  <ModuleForm
+                    module={module}
+                    specialty={specialty}
+                    doctor={doctor}
+                    patientName={patientName}
+                    onSaved={() => setTick((t) => t + 1)}
+                  />
+                </>
+              ) : (
+                <p className="text-sm text-[#8A8F8C]">No modules configured for this specialty.</p>
+              )}
+            </section>
+          </div>
+
+          {recent.length > 0 ? (
+            <section className="rounded-[24px] border border-[#E8E4DE] bg-white p-5">
+              <h3 className="mb-3 text-sm font-semibold text-[#1B3B2E]">Recent specialty notes</h3>
+              <ul className="divide-y divide-[#F0EDE8]">
+                {recent.map((n) => (
+                  <li key={n.id} className="flex items-center justify-between gap-3 py-3 text-sm">
+                    <div>
+                      <p className="font-medium text-[#1B3B2E]">{n.patientName}</p>
+                      <p className="text-xs text-[#8A8F8C]">
+                        {specialty.modules.find((m) => m.id === n.moduleId)?.title ?? n.moduleId}
+                      </p>
+                    </div>
+                    <time className="shrink-0 text-xs text-[#8A8F8C]">
+                      {new Date(n.createdAt).toLocaleString()}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+        </>
       )}
     </div>
   );

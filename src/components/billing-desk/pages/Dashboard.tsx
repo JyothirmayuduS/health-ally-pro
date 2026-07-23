@@ -12,9 +12,22 @@ import {
 } from "recharts";
 import { Receipt, CreditCard, Layers, ArrowRight } from "lucide-react";
 import { useBillingStore, fmtLedger } from "@/lib/billing-desk/store";
-import { FINANCE_KPIS, PAYMENT_METHODS, REVENUE_VS_EXPENSES, fmtInr } from "@/lib/hospital-erp-data";
+import {
+  FINANCE_KPIS,
+  PAYMENT_METHODS,
+  REVENUE_VS_EXPENSES,
+  fmtInr,
+} from "@/lib/hospital-erp-data";
 import { MedoraAiChatBar } from "@/components/ai/MedoraAiChatBar";
-import { DeskKpi, DeskPanel, DeskQuickAction, DeskTable, DeskThead, DeskTh, DeskEmpty } from "@/components/desk-shell/ui";
+import {
+  DeskKpi,
+  DeskPanel,
+  DeskQuickAction,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskEmpty,
+} from "@/components/desk-shell/ui";
 
 const tooltipStyle = {
   background: "#fff",
@@ -69,7 +82,12 @@ export default function BillingDashboard() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-1">
-          <DeskQuickAction to="/billing/invoices" icon={Receipt} label="Review invoices" testId="qa-invoices" />
+          <DeskQuickAction
+            to="/billing/invoices"
+            icon={Receipt}
+            label="Review invoices"
+            testId="qa-invoices"
+          />
           <DeskQuickAction
             to="/billing/payments"
             icon={CreditCard}
@@ -90,7 +108,9 @@ export default function BillingDashboard() {
           <div className="grid gap-3 p-5 sm:grid-cols-3">
             {bySource.map((src) => (
               <div key={src} className="rounded-lg border border-ink-200 bg-stone-50 px-4 py-4">
-                <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">{src}</div>
+                <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">
+                  {src}
+                </div>
                 <div className="mt-2 font-heading text-xl font-semibold tabular-nums">
                   {fmtLedger(sourceTotals[src])}
                 </div>
@@ -108,10 +128,27 @@ export default function BillingDashboard() {
               <AreaChart data={REVENUE_VS_EXPENSES}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`} />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`}
+                />
                 <Tooltip formatter={(v: number) => fmtInr(v)} contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="revenue" stroke="#2C7873" fill="#2C787320" strokeWidth={2} name="Revenue" />
-                <Area type="monotone" dataKey="expenses" stroke="#B85C38" fill="#B85C3820" strokeWidth={2} name="Expenses" />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#2C7873"
+                  fill="#2C787320"
+                  strokeWidth={2}
+                  name="Revenue"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="expenses"
+                  stroke="#B85C38"
+                  fill="#B85C3820"
+                  strokeWidth={2}
+                  name="Expenses"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -123,7 +160,10 @@ export default function BillingDashboard() {
               <BarChart data={PAYMENT_METHODS}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" />
                 <XAxis dataKey="method" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+                />
                 <Tooltip formatter={(v: number) => fmtInr(v)} contentStyle={tooltipStyle} />
                 <Bar dataKey="amount" fill="#2C7873" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -135,7 +175,10 @@ export default function BillingDashboard() {
       <DeskPanel
         title="Unpaid invoices"
         action={
-          <Link to="/billing/invoices" className="text-[12px] font-medium text-teal hover:underline">
+          <Link
+            to="/billing/invoices"
+            className="text-[12px] font-medium text-teal hover:underline"
+          >
             View all <ArrowRight className="ml-0.5 inline h-3 w-3" />
           </Link>
         }

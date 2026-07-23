@@ -1,12 +1,13 @@
 import type { DietLanguage } from "@/lib/diet-ai-types";
 import { LANG_SEARCH } from "@/lib/diet-youtube-lang";
 
-const EXERCISE_I18N: Record<DietLanguage, { beginner: string; explained: string; short: string }> = {
-  en: { beginner: "beginner", explained: "explained easy", short: "short" },
-  hi: { beginner: "शुरुआती", explained: "आसान समझाएं", short: "छोटा" },
-  ta: { beginner: "தொடக்கநிலை", explained: "விளக்கம்", short: "குறுகிய" },
-  te: { beginner: "ప్రారంభకులు", explained: "వివరణ", short: "చిన్న" },
-};
+const EXERCISE_I18N: Record<DietLanguage, { beginner: string; explained: string; short: string }> =
+  {
+    en: { beginner: "beginner", explained: "explained easy", short: "short" },
+    hi: { beginner: "शुरुआती", explained: "आसान समझाएं", short: "छोटा" },
+    ta: { beginner: "தொடக்கநிலை", explained: "விளக்கம்", short: "குறுகிய" },
+    te: { beginner: "ప్రారంభకులు", explained: "వివరణ", short: "చిన్న" },
+  };
 
 export function buildExerciseYoutubeQueries(
   routineName: string,
@@ -23,5 +24,8 @@ export function buildExerciseYoutubeQueries(
     keywords[1] ? `${keywords[1]} ${i18n.explained}` : `${routineName} gentle exercise tutorial`,
   ];
 
-  return [...new Set(queries.map((q) => q.replace(/\s+/g, " ").trim()).filter(Boolean))].slice(0, 4);
+  return [...new Set(queries.map((q) => q.replace(/\s+/g, " ").trim()).filter(Boolean))].slice(
+    0,
+    4,
+  );
 }

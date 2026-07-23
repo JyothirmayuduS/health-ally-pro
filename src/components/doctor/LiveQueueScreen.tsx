@@ -91,9 +91,7 @@ function NowServingCard({
   const calledLabel = formatCalledAt(serving.calledAt ?? serving.servingStartedAt);
   const waitBeforeCall = formatWaitLive(
     { ...serving, status: "waiting", checkInAt: serving.checkInAt },
-    serving.servingStartedAt
-      ? new Date(serving.servingStartedAt).getTime()
-      : nowMs,
+    serving.servingStartedAt ? new Date(serving.servingStartedAt).getTime() : nowMs,
   );
 
   if (variant === "desk") {
@@ -135,7 +133,9 @@ function NowServingCard({
                 {String(serving.token).padStart(2, "0")}
               </p>
               <p className="mt-1 text-[10px] font-semibold tracking-wider text-white/45">TOKEN</p>
-              <p className="text-sm font-semibold text-white/80">{formatDisplayToken(serving.token)}</p>
+              <p className="text-sm font-semibold text-white/80">
+                {formatDisplayToken(serving.token)}
+              </p>
               {serving.slot && (
                 <p className="mt-0.5 text-[11px] text-white/50">Slot {serving.slot}</p>
               )}
@@ -166,7 +166,8 @@ function NowServingCard({
                     )}
                   </div>
                   <p className="mt-0.5 text-sm text-white/60">
-                    {patient.condition} · {patient.gender === "M" ? "Male" : "Female"} · {patient.age}y
+                    {patient.condition} · {patient.gender === "M" ? "Male" : "Female"} ·{" "}
+                    {patient.age}y
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-white/85">{serving.reason}</p>
                 </div>
@@ -283,9 +284,7 @@ function NowServingCard({
             <p className="truncate text-sm font-semibold text-white/90 sm:text-base">
               {formatDisplayToken(serving.token)}
             </p>
-            {serving.slot && (
-              <p className="text-[11px] text-white/50">Slot {serving.slot}</p>
-            )}
+            {serving.slot && <p className="text-[11px] text-white/50">Slot {serving.slot}</p>}
           </div>
         </div>
 
@@ -318,7 +317,9 @@ function NowServingCard({
               <p className="mt-1 text-xs text-white/65 sm:text-sm">
                 {patient.condition} · {patient.gender === "M" ? "Male" : "Female"} · {patient.age}y
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-white/80 sm:mt-2.5">{serving.reason}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/80 sm:mt-2.5">
+                {serving.reason}
+              </p>
             </div>
           </div>
 
@@ -408,29 +409,29 @@ function BookingRequestsPanel({
   if (requests.length === 0) return null;
 
   return (
-    <section className={cn("min-w-0", variant === "sidebar" && !hideHeader && "flex h-full flex-col")}>
+    <section
+      className={cn("min-w-0", variant === "sidebar" && !hideHeader && "flex h-full flex-col")}
+    >
       {!hideHeader && (
-      <div
-        className={cn(
-          variant === "sidebar" && "shrink-0 border-b border-[#EDEAE6] pb-3",
-        )}
-      >
-        <div className="flex items-center gap-2">
-          <Briefcase className="h-4 w-4 shrink-0 text-[#B8735D]" strokeWidth={1.75} />
-          <h2 className="text-sm font-semibold text-[#1B3B2E]">Booking requests</h2>
-          <span className="grid h-5 min-w-[20px] place-items-center rounded-full bg-[#E9A820] px-1.5 text-[10px] font-bold text-white">
-            {requests.length}
-          </span>
+        <div className={cn(variant === "sidebar" && "shrink-0 border-b border-[#EDEAE6] pb-3")}>
+          <div className="flex items-center gap-2">
+            <Briefcase className="h-4 w-4 shrink-0 text-[#B8735D]" strokeWidth={1.75} />
+            <h2 className="text-sm font-semibold text-[#1B3B2E]">Booking requests</h2>
+            <span className="grid h-5 min-w-[20px] place-items-center rounded-full bg-[#E9A820] px-1.5 text-[10px] font-bold text-white">
+              {requests.length}
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-[#8A8F8C]">
+            Approve to assign a queue token and notify the patient app.
+          </p>
         </div>
-        <p className="mt-1 text-xs text-[#8A8F8C]">
-          Approve to assign a queue token and notify the patient app.
-        </p>
-      </div>
       )}
       <div
         className={cn(
           "space-y-2.5",
-          variant === "sidebar" && !hideHeader && "min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:thin] [scrollbar-color:#D4CFC8_transparent]",
+          variant === "sidebar" &&
+            !hideHeader &&
+            "min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:thin] [scrollbar-color:#D4CFC8_transparent]",
           hideHeader && "space-y-2",
         )}
       >
@@ -524,9 +525,7 @@ export function LiveQueueScreen() {
   const now = new Date(nowMs);
 
   const serving = entries.find((e) => e.status === "serving");
-  const waiting = entries
-    .filter((e) => e.status === "waiting")
-    .sort((a, b) => a.token - b.token);
+  const waiting = entries.filter((e) => e.status === "waiting").sort((a, b) => a.token - b.token);
   const completed = entries
     .filter((e) => e.status === "completed")
     .sort((a, b) => a.token - b.token);
@@ -755,9 +754,7 @@ export function LiveQueueScreen() {
           onClick={() => setShowCompleted((v) => !v)}
           className="flex items-center justify-between border-b border-[#EDEAE6] px-4 py-3 text-left hover:bg-[#FAFAF8]"
         >
-          <p className="text-xs font-bold tracking-[0.12em] text-[#8A8F8C]">
-            COMPLETED TODAY
-          </p>
+          <p className="text-xs font-bold tracking-[0.12em] text-[#8A8F8C]">COMPLETED TODAY</p>
           <span className="flex items-center gap-2">
             <span className="rounded-full bg-[#F0DDD6] px-2 py-0.5 text-[10px] font-bold text-[#B8735D]">
               {completed.length}
@@ -773,7 +770,10 @@ export function LiveQueueScreen() {
               const patient = getQueuePatient(entry.patientId);
               if (!patient) return null;
               return (
-                <div key={entry.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAFAF8]">
+                <div
+                  key={entry.id}
+                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAFAF8]"
+                >
                   <span className="w-10 shrink-0 text-[10px] font-bold text-[#8A8F8C]">
                     {formatDisplayToken(entry.token)}
                   </span>
@@ -929,9 +929,7 @@ export function LiveQueueScreen() {
         onClick={() => setShowCompleted((v) => !v)}
         className="flex w-full items-center justify-between text-left"
       >
-        <p className="text-sm font-semibold text-[#1B3B2E]">
-          Completed today ({completed.length})
-        </p>
+        <p className="text-sm font-semibold text-[#1B3B2E]">Completed today ({completed.length})</p>
         <span className="text-xs font-semibold text-[#B8735D]">
           {showCompleted ? "Hide" : "Show"}
         </span>
@@ -989,7 +987,8 @@ export function LiveQueueScreen() {
           <p className="mt-0.5 text-sm text-[#8A8F8C]">{formatQueueDate(now)}</p>
           {!serving && waiting.length > 0 && (
             <p className="mt-1 text-xs font-semibold text-[#B8735D] lg:hidden">
-              Next: {formatDisplayToken(waiting[0]!.token)} · {getQueuePatient(waiting[0]!.patientId)?.name}
+              Next: {formatDisplayToken(waiting[0]!.token)} ·{" "}
+              {getQueuePatient(waiting[0]!.patientId)?.name}
             </p>
           )}
           <p className="mt-1 hidden text-[11px] text-[#ADADAD] lg:block">
@@ -1002,9 +1001,7 @@ export function LiveQueueScreen() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#7A9B7E] opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#7A9B7E]" />
             </span>
-            <span className="break-all sm:break-normal">
-              Live · synced {formatLiveClock(now)}
-            </span>
+            <span className="break-all sm:break-normal">Live · synced {formatLiveClock(now)}</span>
           </p>
         </div>
         {alerts.length === 0 && (
@@ -1028,7 +1025,10 @@ export function LiveQueueScreen() {
               key={alert}
               className="flex items-start gap-3 rounded-xl border border-[#F5E6B8] bg-[#F5E6B8]/40 px-4 py-3"
             >
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" strokeWidth={1.75} />
+              <AlertTriangle
+                className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]"
+                strokeWidth={1.75}
+              />
               <p className="text-sm text-[#5C4A1E]">{alert}</p>
             </div>
           ))}
@@ -1047,8 +1047,8 @@ export function LiveQueueScreen() {
 
       {/* Sticky call-next — only when no active consult (Done lives on the serving card) */}
       {!serving && (
-      <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-0 right-0 z-30 px-4 lg:hidden">
-        <div className="mx-auto flex max-w-lg gap-2">
+        <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-0 right-0 z-30 px-4 lg:hidden">
+          <div className="mx-auto flex max-w-lg gap-2">
             <button
               type="button"
               onClick={handleCallNext}
@@ -1058,8 +1058,8 @@ export function LiveQueueScreen() {
               <Megaphone className="h-4 w-4" strokeWidth={1.75} />
               Call next
             </button>
+          </div>
         </div>
-      </div>
       )}
 
       {/* ── Desktop: OPD control desk ── */}

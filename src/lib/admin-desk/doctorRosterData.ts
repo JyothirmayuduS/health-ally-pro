@@ -55,8 +55,13 @@ export const DOCTOR_ROSTER: DoctorRosterEntry[] = [
     specialty: "General Medicine",
     room: "G-12",
     schedule: {
-      mon: "morning", tue: "morning", wed: "morning", thu: "morning",
-      fri: "morning", sat: "off", sun: "off",
+      mon: "morning",
+      tue: "morning",
+      wed: "morning",
+      thu: "morning",
+      fri: "morning",
+      sat: "off",
+      sun: "off",
     },
   },
   {
@@ -65,8 +70,13 @@ export const DOCTOR_ROSTER: DoctorRosterEntry[] = [
     specialty: "Pediatrics",
     room: "P-04",
     schedule: {
-      mon: "morning", tue: "morning", wed: "afternoon", thu: "morning",
-      fri: "morning", sat: "morning", sun: "off",
+      mon: "morning",
+      tue: "morning",
+      wed: "afternoon",
+      thu: "morning",
+      fri: "morning",
+      sat: "morning",
+      sun: "off",
     },
   },
   {
@@ -75,8 +85,13 @@ export const DOCTOR_ROSTER: DoctorRosterEntry[] = [
     specialty: "Orthopedics",
     room: "O-21",
     schedule: {
-      mon: "afternoon", tue: "afternoon", wed: "afternoon", thu: "afternoon",
-      fri: "afternoon", sat: "off", sun: "off",
+      mon: "afternoon",
+      tue: "afternoon",
+      wed: "afternoon",
+      thu: "afternoon",
+      fri: "afternoon",
+      sat: "off",
+      sun: "off",
     },
   },
   {
@@ -85,8 +100,13 @@ export const DOCTOR_ROSTER: DoctorRosterEntry[] = [
     specialty: "Dermatology",
     room: "D-07",
     schedule: {
-      mon: "off", tue: "morning", wed: "morning", thu: "morning",
-      fri: "morning", sat: "off", sun: "off",
+      mon: "off",
+      tue: "morning",
+      wed: "morning",
+      thu: "morning",
+      fri: "morning",
+      sat: "off",
+      sun: "off",
     },
   },
   {
@@ -95,8 +115,13 @@ export const DOCTOR_ROSTER: DoctorRosterEntry[] = [
     specialty: "Cardiology",
     room: "C-15",
     schedule: {
-      mon: "afternoon", tue: "off", wed: "afternoon", thu: "afternoon",
-      fri: "off", sat: "morning", sun: "off",
+      mon: "afternoon",
+      tue: "off",
+      wed: "afternoon",
+      thu: "afternoon",
+      fri: "off",
+      sat: "morning",
+      sun: "off",
     },
   },
 ];
@@ -246,7 +271,9 @@ export function loadRoster(): DoctorRosterEntry[] {
   try {
     const raw = localStorage.getItem(ROSTER_KEY);
     return raw ? JSON.parse(raw) : DOCTOR_ROSTER;
-  } catch { return DOCTOR_ROSTER; }
+  } catch {
+    return DOCTOR_ROSTER;
+  }
 }
 
 export function saveRoster(roster: DoctorRosterEntry[]) {
@@ -258,7 +285,9 @@ export function loadLeaveRequests(): LeaveRequest[] {
   try {
     const raw = localStorage.getItem(LEAVE_KEY);
     return raw ? JSON.parse(raw) : LEAVE_REQUESTS;
-  } catch { return LEAVE_REQUESTS; }
+  } catch {
+    return LEAVE_REQUESTS;
+  }
 }
 
 export function saveLeaveRequests(requests: LeaveRequest[]) {

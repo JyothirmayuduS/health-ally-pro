@@ -82,12 +82,10 @@ export function ProfileHubPage() {
         bloodGroup: p.bloodGroup ?? prev.bloodGroup,
       }));
     });
-    Promise.all([fetchAppointmentsForPatient(), fetchReportsForPatient()]).then(
-      ([a, r]) => {
-        setAppointments(a);
-        setReports(r.length ? r : mockReports);
-      },
-    );
+    Promise.all([fetchAppointmentsForPatient(), fetchReportsForPatient()]).then(([a, r]) => {
+      setAppointments(a);
+      setReports(r.length ? r : mockReports);
+    });
     const syncPrefs = () => setPrefs(getProfilePreferences());
     window.addEventListener(PROFILE_PREFS_EVENT, syncPrefs);
     return () => window.removeEventListener(PROFILE_PREFS_EVENT, syncPrefs);
@@ -100,16 +98,12 @@ export function ProfileHubPage() {
   return (
     <PatientHubLayout widthClass="max-w-3xl lg:max-w-5xl">
       <section className="mb-4 overflow-hidden rounded-[24px] bg-ink p-5 text-white sm:mb-6 sm:rounded-[28px] sm:p-6">
-        <h1 className="font-serif text-[26px] leading-tight sm:text-[32px]">
-          {identity.name}
-        </h1>
+        <h1 className="font-serif text-[26px] leading-tight sm:text-[32px]">{identity.name}</h1>
         <p className="mt-2 inline-flex items-center gap-2 text-[13px] text-white/85 sm:text-sm">
           <Mail className="h-4 w-4 shrink-0" strokeWidth={1.75} />
           <span className="truncate">{identity.email}</span>
         </p>
-        <p className="mt-1 text-xs text-white/60 sm:text-sm">
-          Member since {identity.memberSince}
-        </p>
+        <p className="mt-1 text-xs text-white/60 sm:text-sm">Member since {identity.memberSince}</p>
         <button
           type="button"
           onClick={() => setIdentityOpen(true)}
@@ -122,7 +116,11 @@ export function ProfileHubPage() {
 
       <section className="mb-5 grid grid-cols-3 gap-2 sm:mb-6 sm:gap-3">
         {[
-          { label: "Appointments", value: String(appointmentCount).padStart(2, "0"), icon: Calendar },
+          {
+            label: "Appointments",
+            value: String(appointmentCount).padStart(2, "0"),
+            icon: Calendar,
+          },
           { label: "Reports", value: String(reportCount).padStart(2, "0"), icon: FileText },
           { label: "Visits done", value: String(visitsDone).padStart(2, "0"), icon: Heart },
         ].map(({ label, value, icon: Icon }) => (
@@ -196,14 +194,7 @@ export function ProfileHubPage() {
       <ProfileCard className="mb-5">
         {PROFILE_ACCOUNT_LINKS.map((link) => {
           const Icon = ACCOUNT_ICONS[link.id];
-          return (
-            <ProfileLinkRow
-              key={link.id}
-              icon={Icon}
-              label={link.label}
-              to={link.to}
-            />
-          );
+          return <ProfileLinkRow key={link.id} icon={Icon} label={link.label} to={link.to} />;
         })}
       </ProfileCard>
 

@@ -85,8 +85,7 @@ export function filterDoctors(
     const matchS = specialty === "All" || d.specialty === specialty;
     const matchRating = filters.minRating === 0 || d.rating >= filters.minRating;
     const matchFee = d.fee <= filters.maxFee;
-    const matchToday =
-      !filters.availableToday || d.nextSlot.toLowerCase().includes("today");
+    const matchToday = !filters.availableToday || d.nextSlot.toLowerCase().includes("today");
     return matchQ && matchS && matchRating && matchFee && matchToday;
   });
 
@@ -101,8 +100,7 @@ export function filterDoctors(
 
 export function getPastMedsByDoctor(doctorName?: string) {
   return patientMedications.filter(
-    (m) =>
-      m.status === "past" && (!doctorName || m.prescribedBy === doctorName),
+    (m) => m.status === "past" && (!doctorName || m.prescribedBy === doctorName),
   );
 }
 

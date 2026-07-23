@@ -48,7 +48,17 @@ function MacroPill({
   );
 }
 
-function DvBar({ label, value, unit, pct }: { label: string; value: number; unit: string; pct: number | null }) {
+function DvBar({
+  label,
+  value,
+  unit,
+  pct,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  pct: number | null;
+}) {
   const width = pct != null ? Math.min(100, pct) : 0;
   return (
     <div className="space-y-1">
@@ -79,7 +89,9 @@ function ClinicalMicroChip({ microKey, value }: { microKey: ClinicalMicroKey; va
       <span className="text-xs font-bold tabular-nums text-ink">
         {value}
         {meta.unit}
-        {pct != null ? <span className="ml-0.5 text-[10px] font-medium text-ink-muted">· {pct}% DV</span> : null}
+        {pct != null ? (
+          <span className="ml-0.5 text-[10px] font-medium text-ink-muted">· {pct}% DV</span>
+        ) : null}
       </span>
     </span>
   );
@@ -93,12 +105,7 @@ export function DietNutritionPanel({ meal, variant = "card", className }: Props)
 
   if (variant === "card") {
     return (
-      <div
-        className={cn(
-          "rounded-2xl border border-[#EDEAE6] bg-[#F9F7F2]/60 p-3",
-          className,
-        )}
-      >
+      <div className={cn("rounded-2xl border border-[#EDEAE6] bg-[#F9F7F2]/60 p-3", className)}>
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <p className="text-[10px] font-bold uppercase tracking-wider text-ink-muted">
             Nutrition per serving
@@ -186,10 +193,20 @@ export function DietNutritionPanel({ meal, variant = "card", className }: Props)
           Detailed breakdown
         </p>
         <div className="space-y-3">
-          <DvBar label="Saturated fat" value={n.saturatedFatG} unit="g" pct={pctDaily(n.saturatedFatG, DAILY_VALUES.saturatedFatG)} />
+          <DvBar
+            label="Saturated fat"
+            value={n.saturatedFatG}
+            unit="g"
+            pct={pctDaily(n.saturatedFatG, DAILY_VALUES.saturatedFatG)}
+          />
           <DvBar label="Sodium" value={n.sodiumMg} unit="mg" pct={sodiumPct} />
           <DvBar label="Fiber" value={n.fiberG} unit="g" pct={fiberPct} />
-          <DvBar label="Sugar" value={n.sugarG} unit="g" pct={pctDaily(n.sugarG, DAILY_VALUES.sugarG)} />
+          <DvBar
+            label="Sugar"
+            value={n.sugarG}
+            unit="g"
+            pct={pctDaily(n.sugarG, DAILY_VALUES.sugarG)}
+          />
         </div>
       </div>
 
@@ -199,19 +216,14 @@ export function DietNutritionPanel({ meal, variant = "card", className }: Props)
             Thyroid-relevant micronutrients
           </p>
           <p className="mb-3 text-xs text-ink-muted">
-            Synced to your medication plan — iodine, selenium, zinc, and co-factors for hormone synthesis.
+            Synced to your medication plan — iodine, selenium, zinc, and co-factors for hormone
+            synthesis.
           </p>
           <div className="grid gap-2 sm:grid-cols-2">
             {clinicalMicros.map(({ key, value, pct }) => {
               const meta = CLINICAL_MICRO_LABELS[key];
               return (
-                <DvBar
-                  key={key}
-                  label={meta.label}
-                  value={value}
-                  unit={meta.unit}
-                  pct={pct}
-                />
+                <DvBar key={key} label={meta.label} value={value} unit={meta.unit} pct={pct} />
               );
             })}
           </div>
@@ -220,7 +232,8 @@ export function DietNutritionPanel({ meal, variant = "card", className }: Props)
 
       {meal.nutrients.length > 0 ? (
         <p className="text-xs text-ink-muted">
-          <span className="font-semibold text-ink">Tagged nutrients:</span> {meal.nutrients.join(", ")}
+          <span className="font-semibold text-ink">Tagged nutrients:</span>{" "}
+          {meal.nutrients.join(", ")}
         </p>
       ) : null}
     </div>

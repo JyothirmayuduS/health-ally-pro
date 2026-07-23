@@ -49,7 +49,9 @@ export function LatestAppointmentsCard({ appointments, limit = 4 }: Props) {
                   className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-white"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[15px] font-semibold text-[#1C2A2E]">{patient.name}</p>
+                  <p className="truncate text-[15px] font-semibold text-[#1C2A2E]">
+                    {patient.name}
+                  </p>
                   <p className="truncate text-xs text-[#64748B]">
                     {doctor.specialty} · {dateLabel}
                   </p>

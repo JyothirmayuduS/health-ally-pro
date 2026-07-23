@@ -62,8 +62,7 @@ function parsePlan(raw: string | undefined): LicenseStatus["plan"] {
 export function getLicenseStatus(): LicenseStatus {
   const key = (import.meta.env.VITE_MEDORA_LICENSE_KEY as string | undefined)?.trim() ?? "";
   const hospitalName =
-    (import.meta.env.VITE_HOSPITAL_DISPLAY_NAME as string | undefined)?.trim() ||
-    "Your Hospital";
+    (import.meta.env.VITE_HOSPITAL_DISPLAY_NAME as string | undefined)?.trim() || "Your Hospital";
   const plan = parsePlan(import.meta.env.VITE_MEDORA_PLAN as string | undefined);
   const licensed = key.length >= 16;
 

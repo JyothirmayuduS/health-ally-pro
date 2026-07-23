@@ -34,10 +34,7 @@ export default function HospitalUnitsPage() {
   }, []);
 
   const unit = HOSPITAL_UNITS.find((u) => u.id === unitId)!;
-  const filtered = useMemo(
-    () => records.filter((r) => r.unitId === unitId),
-    [records, unitId],
-  );
+  const filtered = useMemo(() => records.filter((r) => r.unitId === unitId), [records, unitId]);
 
   const add = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,10 +55,12 @@ export default function HospitalUnitsPage() {
   return (
     <div className="space-y-6" data-testid="admin-hospital-units">
       <div className="surface border border-ink-100 rounded-lg p-4">
-        <h2 className="font-heading text-[15px] font-semibold text-ink-950">Hospital support units</h2>
+        <h2 className="font-heading text-[15px] font-semibold text-ink-950">
+          Hospital support units
+        </h2>
         <p className="mt-1 text-[12.5px] text-ink-500">
-          Blood bank, CSSD, ambulance, ICU board, dialysis, mortuary, biomedical, cath lab, chemo day-care
-          and physiotherapy — operational boards for a multi-specialty hospital.
+          Blood bank, CSSD, ambulance, ICU board, dialysis, mortuary, biomedical, cath lab, chemo
+          day-care and physiotherapy — operational boards for a multi-specialty hospital.
         </p>
       </div>
 
@@ -84,7 +83,10 @@ export default function HospitalUnitsPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
-        <form onSubmit={add} className="surface border border-ink-100 rounded-lg p-4 space-y-3 h-fit">
+        <form
+          onSubmit={add}
+          className="surface border border-ink-100 rounded-lg p-4 space-y-3 h-fit"
+        >
           <p className="text-[12px] font-semibold text-ink-800">Add to {unit.name}</p>
           <p className="text-[11px] text-ink-400">{unit.description}</p>
           <input
@@ -119,7 +121,9 @@ export default function HospitalUnitsPage() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-heading text-[14px] font-semibold text-ink-950">{r.title}</h3>
+                      <h3 className="font-heading text-[14px] font-semibold text-ink-950">
+                        {r.title}
+                      </h3>
                       {r.priority ? (
                         <span
                           className={cn(
@@ -132,7 +136,9 @@ export default function HospitalUnitsPage() {
                       ) : null}
                     </div>
                     <p className="mt-1 text-[12.5px] text-ink-500">{r.detail}</p>
-                    {r.meta ? <p className="mt-0.5 text-[11px] font-mono text-ink-400">{r.meta}</p> : null}
+                    {r.meta ? (
+                      <p className="mt-0.5 text-[11px] font-mono text-ink-400">{r.meta}</p>
+                    ) : null}
                   </div>
                   <select
                     value={r.status}

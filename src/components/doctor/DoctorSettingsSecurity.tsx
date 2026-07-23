@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
-import { DoctorProfileSubpage, ProfileSectionCard } from "@/components/doctor/profile/DoctorProfileSubpage";
+import {
+  DoctorProfileSubpage,
+  ProfileSectionCard,
+} from "@/components/doctor/profile/DoctorProfileSubpage";
 
 export function DoctorSettingsSecurity() {
   const [twoFactor, setTwoFactor] = useState(true);
@@ -11,15 +14,14 @@ export function DoctorSettingsSecurity() {
     <DoctorProfileSubpage
       title="Security"
       subtitle="Password, two-factor, and device sessions"
-      breadcrumbs={[
-        { label: "Profile", to: "/doctor/settings" },
-        { label: "Security" },
-      ]}
+      breadcrumbs={[{ label: "Profile", to: "/doctor/settings" }, { label: "Security" }]}
     >
       <ProfileSectionCard title="Password" hint="Last changed 42 days ago">
         <button
           type="button"
-          onClick={() => toast.message("Password change", { description: "Check your email for a reset link." })}
+          onClick={() =>
+            toast.message("Password change", { description: "Check your email for a reset link." })
+          }
           className="w-full rounded-xl border border-[#E8E4DF] bg-white py-3 text-sm font-semibold text-[#1B3B2E]"
         >
           Change password

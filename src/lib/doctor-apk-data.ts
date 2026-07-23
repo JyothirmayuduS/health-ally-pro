@@ -276,9 +276,27 @@ export type ApkRxItem = {
 };
 
 export const apkRecentRx: ApkRxItem[] = [
-  { id: "rx1", drug: "Lisinopril 10 mg", patient: "Arjun Kapoor", initials: "AK", when: "Today 09:15" },
-  { id: "rx2", drug: "Salbutamol inhaler", patient: "Sneha Rao", initials: "SR", when: "Yesterday" },
-  { id: "rx3", drug: "Metformin 500 mg", patient: "Mohammad Ali", initials: "MA", when: "2 days ago" },
+  {
+    id: "rx1",
+    drug: "Lisinopril 10 mg",
+    patient: "Arjun Kapoor",
+    initials: "AK",
+    when: "Today 09:15",
+  },
+  {
+    id: "rx2",
+    drug: "Salbutamol inhaler",
+    patient: "Sneha Rao",
+    initials: "SR",
+    when: "Yesterday",
+  },
+  {
+    id: "rx3",
+    drug: "Metformin 500 mg",
+    patient: "Mohammad Ali",
+    initials: "MA",
+    when: "2 days ago",
+  },
 ];
 
 export const DOCTOR_APK_TABS = [

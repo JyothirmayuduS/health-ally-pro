@@ -24,7 +24,10 @@ import {
 
 const POLL_MS = 4000;
 
-function applySyncEnvelope(envelope: Parameters<typeof upsertPatientPrescriptionFromSync>[0], isNew: boolean) {
+function applySyncEnvelope(
+  envelope: Parameters<typeof upsertPatientPrescriptionFromSync>[0],
+  isNew: boolean,
+) {
   const record = upsertPatientPrescriptionFromSync(envelope);
   if (isNew) {
     notifyNewPrescription({
@@ -81,7 +84,12 @@ export function PatientSyncProvider({ patientId }: { patientId?: string }) {
     let channel: BroadcastChannel | null = null;
     if (typeof BroadcastChannel !== "undefined") {
       channel = new BroadcastChannel(PATIENT_RX_SYNC_CHANNEL);
-      channel.onmessage = (ev: MessageEvent<{ type: string; envelope: Parameters<typeof upsertPatientPrescriptionFromSync>[0] }>) => {
+      channel.onmessage = (
+        ev: MessageEvent<{
+          type: string;
+          envelope: Parameters<typeof upsertPatientPrescriptionFromSync>[0];
+        }>,
+      ) => {
         if (ev.data?.type === "rx" && ev.data.envelope?.patientId === pid) {
           applySyncEnvelope(ev.data.envelope, false);
         }
@@ -95,7 +103,10 @@ export function PatientSyncProvider({ patientId }: { patientId?: string }) {
     };
     window.addEventListener("storage", onStorage);
 
-    if (typeof localStorage !== "undefined" && localStorage.getItem("medora-patient-med-reminders") === null) {
+    if (
+      typeof localStorage !== "undefined" &&
+      localStorage.getItem("medora-patient-med-reminders") === null
+    ) {
       setMedRemindersEnabled(true);
     }
 

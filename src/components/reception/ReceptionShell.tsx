@@ -1,10 +1,4 @@
-import {
-  LayoutDashboard,
-  Users,
-  CalendarDays,
-  ListOrdered,
-  UserCheck,
-} from "lucide-react";
+import { LayoutDashboard, Users, CalendarDays, ListOrdered, UserCheck } from "lucide-react";
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { StaffTopNav } from "@/components/medora-ui/StaffTopNav";
@@ -71,9 +65,7 @@ export function ReceptionShell({
           {(title || greeting) && (
             <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div className="space-y-2">
-                {greeting && (
-                  <p className="text-sm font-semibold text-[#94A3B8]">{greeting}</p>
-                )}
+                {greeting && <p className="text-sm font-semibold text-[#94A3B8]">{greeting}</p>}
                 {title && (
                   <h1 className="text-[2rem] font-bold tracking-tight text-[#1C2A2E] md:text-[2.25rem]">
                     {title}

@@ -1,7 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { loadIcdMaster, saveIcdMaster, type IcdDiagnosis } from "@/lib/hospital-masters";
-import { DeskPanel, DeskTable, DeskThead, DeskTh, DeskTd, DeskTr } from "@/components/desk-shell/ui";
+import {
+  DeskPanel,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskTd,
+  DeskTr,
+} from "@/components/desk-shell/ui";
 import { toast } from "sonner";
 import { Plus, Save } from "lucide-react";
 
@@ -32,7 +39,10 @@ function DiagnosisMasterPage() {
 
   return (
     <div className="space-y-4" data-testid="admin-diagnosis-master">
-      <DeskPanel title="ICD-10 diagnosis master" subtitle="Used in doctor Rx, pre-auth, and morbidity reports">
+      <DeskPanel
+        title="ICD-10 diagnosis master"
+        subtitle="Used in doctor Rx, pre-auth, and morbidity reports"
+      >
         <div className="flex flex-wrap gap-2 border-b border-ink-100 p-4">
           <input
             placeholder="ICD code"
@@ -52,10 +62,18 @@ function DiagnosisMasterPage() {
             onChange={(e) => setDraft({ ...draft, category: e.target.value })}
             className="h-9 w-36 rounded-md border border-ink-200 px-2 text-[13px]"
           />
-          <button type="button" onClick={add} className="flex h-9 items-center gap-1 rounded-md bg-plum px-3 text-[12px] text-white">
+          <button
+            type="button"
+            onClick={add}
+            className="flex h-9 items-center gap-1 rounded-md bg-plum px-3 text-[12px] text-white"
+          >
             <Plus className="h-4 w-4" /> Add
           </button>
-          <button type="button" onClick={saveAll} className="flex h-9 items-center gap-1 rounded-md border border-plum px-3 text-[12px] text-plum">
+          <button
+            type="button"
+            onClick={saveAll}
+            className="flex h-9 items-center gap-1 rounded-md border border-plum px-3 text-[12px] text-plum"
+          >
             <Save className="h-4 w-4" /> Save all
           </button>
         </div>

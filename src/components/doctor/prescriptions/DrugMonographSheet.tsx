@@ -67,7 +67,9 @@ export function DrugMonographSheet({ drugId, open, onOpenChange }: Props) {
                       <h4 className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#B8735D]">
                         Warnings
                       </h4>
-                      <p className="mt-1.5 text-sm leading-relaxed text-[#5C635F]">{mono.warnings}</p>
+                      <p className="mt-1.5 text-sm leading-relaxed text-[#5C635F]">
+                        {mono.warnings}
+                      </p>
                     </div>
                   </div>
                 </section>

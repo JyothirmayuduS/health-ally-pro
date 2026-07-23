@@ -16,8 +16,7 @@ function CardShell({ children, className }: { children: React.ReactNode; classNa
 
 /** Blue line chart — matches reference Heart Rate widget */
 export function QueueFlowCard({ bpm = 102 }: { bpm?: number }) {
-  const points =
-    "4,28 12,22 20,26 28,14 36,18 44,10 52,16 60,8 68,12 76,6";
+  const points = "4,28 12,22 20,26 28,14 36,18 44,10 52,16 60,8 68,12 76,6";
   return (
     <CardShell className="min-h-[130px]">
       <div className="flex items-start justify-between">
@@ -71,7 +70,15 @@ export function WaitingPatientsCard({ count = 7127 }: { count?: number }) {
 }
 
 /** Lime progress — matches reference Water widget */
-export function CapacityCard({ percent = 89, current = 6, total = 8 }: { percent?: number; current?: number; total?: number }) {
+export function CapacityCard({
+  percent = 89,
+  current = 6,
+  total = 8,
+}: {
+  percent?: number;
+  current?: number;
+  total?: number;
+}) {
   return (
     <CardShell className="min-h-[130px]">
       <div className="flex items-start justify-between">

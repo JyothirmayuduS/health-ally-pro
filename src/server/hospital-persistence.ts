@@ -97,7 +97,8 @@ export async function upsertHospitalDoctors(rows: DbHospitalDoctor[]) {
 
 export async function listHospitalDoctors(hospitalId = DEFAULT_HOSPITAL_ID) {
   const admin = getSupabaseAdmin();
-  if (!admin) return { ok: false as const, error: "admin_unavailable", data: [] as DbHospitalDoctor[] };
+  if (!admin)
+    return { ok: false as const, error: "admin_unavailable", data: [] as DbHospitalDoctor[] };
   const { data, error } = await admin
     .from("hospital_doctors")
     .select("*")
@@ -142,7 +143,11 @@ export async function insertSpecialtyChart(row: DbSpecialtyChart) {
     }
   }
 
-  const { data, error } = await admin.from("specialty_chart_notes").insert(payload).select().single();
+  const { data, error } = await admin
+    .from("specialty_chart_notes")
+    .insert(payload)
+    .select()
+    .single();
   if (error) return { ok: false as const, error: error.message };
   return { ok: true as const, data };
 }
@@ -167,7 +172,8 @@ export async function upsertUnitRecords(rows: DbUnitRecord[]) {
   if (!admin || rows.length === 0) return { ok: false as const, error: "admin_unavailable" };
 
   for (const row of rows) {
-    const recordKey = row.record_key || (row.id && !/^[0-9a-f-]{36}$/i.test(row.id) ? row.id : null);
+    const recordKey =
+      row.record_key || (row.id && !/^[0-9a-f-]{36}$/i.test(row.id) ? row.id : null);
     const payload = {
       hospital_id: row.hospital_id,
       unit_id: row.unit_id,
@@ -181,7 +187,9 @@ export async function upsertUnitRecords(rows: DbUnitRecord[]) {
     };
 
     if (row.id && /^[0-9a-f-]{36}$/i.test(row.id)) {
-      const { error } = await admin.from("hospital_unit_records").upsert({ ...payload, id: row.id });
+      const { error } = await admin
+        .from("hospital_unit_records")
+        .upsert({ ...payload, id: row.id });
       if (error) return { ok: false as const, error: error.message };
       continue;
     }
@@ -289,7 +297,13 @@ export async function insertOnboardingLead(
     .single();
 
   if (hospErr || !hospital) {
-    return { ok: true as const, data: leadRow, hospital: null, provisioned: false as const, warning: hospErr?.message };
+    return {
+      ok: true as const,
+      data: leadRow,
+      hospital: null,
+      provisioned: false as const,
+      warning: hospErr?.message,
+    };
   }
 
   await admin

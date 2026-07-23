@@ -142,7 +142,9 @@ export default function NursingBedsPage() {
                       </span>
                       <ErpStatusPill status="pending" />
                     </div>
-                    <p className="mt-1 text-sm text-ink-600">Awaiting pharmacy / billing clearance</p>
+                    <p className="mt-1 text-sm text-ink-600">
+                      Awaiting pharmacy / billing clearance
+                    </p>
                     <p className="mt-1 text-xs text-ink-400">
                       {a.patientId} · {doctorName(a.doctorId)}
                     </p>

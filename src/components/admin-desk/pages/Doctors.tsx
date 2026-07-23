@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  MapPin,
-  Plus,
-  Stethoscope,
-  X,
-} from "lucide-react";
+import { ArrowRight, MapPin, Plus, Stethoscope, X } from "lucide-react";
 import {
   SPECIALTY_LIST,
   addHospitalDoctor,
@@ -30,13 +24,15 @@ export default function AdminDoctors() {
 
   useEffect(() => {
     refresh();
-    void import("@/lib/specialties").then(({ hydrateHospitalDoctorsFromRemote, remotePersistenceStatus }) => {
-      hydrateHospitalDoctorsFromRemote().then(() => refresh());
-      remotePersistenceStatus().then((s) => {
-        if (s?.persistence) setDbOnline(true);
-        else if (s?.offline || s?.ok === false) setDbOnline(false);
-      });
-    });
+    void import("@/lib/specialties").then(
+      ({ hydrateHospitalDoctorsFromRemote, remotePersistenceStatus }) => {
+        hydrateHospitalDoctorsFromRemote().then(() => refresh());
+        remotePersistenceStatus().then((s) => {
+          if (s?.persistence) setDbOnline(true);
+          else if (s?.offline || s?.ok === false) setDbOnline(false);
+        });
+      },
+    );
     return subscribeHospitalDoctors(refresh);
   }, []);
 
@@ -93,7 +89,10 @@ export default function AdminDoctors() {
         name: form.name.trim(),
         email: form.email.trim().toLowerCase(),
         specialtyId: form.specialtyId,
-        room: form.room.trim() || SPECIALTY_LIST.find((s) => s.id === form.specialtyId)?.unitLabel || "OPD",
+        room:
+          form.room.trim() ||
+          SPECIALTY_LIST.find((s) => s.id === form.specialtyId)?.unitLabel ||
+          "OPD",
         fee: form.fee,
         phone: form.phone.trim() || undefined,
         registrationNo: form.registrationNo.trim() || undefined,
@@ -127,7 +126,9 @@ export default function AdminDoctors() {
           }
         }
       }
-      toast.success(`${created.name} added as ${SPECIALTY_LIST.find((s) => s.id === form.specialtyId)?.name}`);
+      toast.success(
+        `${created.name} added as ${SPECIALTY_LIST.find((s) => s.id === form.specialtyId)?.name}`,
+      );
     }
     refresh();
     resetForm();
@@ -140,7 +141,11 @@ export default function AdminDoctors() {
       const slot = rosterDoc ? rosterDoc.schedule[todayDay] : "off";
       const isWorkingToday = slot !== "off" && slot !== "leave";
       const names = sf.name.replace(/^Dr\.?\s*/i, "").split(" ");
-      const initials = names.map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+      const initials = names
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
       const specialty = SPECIALTY_LIST.find((s) => s.id === sf.specialtyId);
       return {
         ...sf,
@@ -163,7 +168,8 @@ export default function AdminDoctors() {
     <div className="space-y-6" data-testid="admin-doctors">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-bone/30 p-4 border border-ink-100 rounded-lg surface">
         <div className="text-[12.5px] text-ink-500">
-          Add doctors with a specialty. The doctor portal shows that specialty’s clinical workstation only.
+          Add doctors with a specialty. The doctor portal shows that specialty’s clinical
+          workstation only.
           {dbOnline === true ? (
             <span className="ml-2 inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-800">
               Synced to database
@@ -197,10 +203,7 @@ export default function AdminDoctors() {
       </div>
 
       {showForm ? (
-        <form
-          onSubmit={submit}
-          className="surface border border-ink-100 rounded-lg p-5 space-y-4"
-        >
+        <form onSubmit={submit} className="surface border border-ink-100 rounded-lg p-5 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-heading font-semibold text-ink-950 flex items-center gap-2">
               <Stethoscope className="h-4 w-4 text-plum" />
@@ -301,8 +304,8 @@ export default function AdminDoctors() {
               className="mt-0.5"
             />
             <span>
-              Link to demo doctor login (<code className="text-[11px]">doctor@oakhaven.demo</code>) so
-              that account opens this specialty desk immediately.
+              Link to demo doctor login (<code className="text-[11px]">doctor@oakhaven.demo</code>)
+              so that account opens this specialty desk immediately.
             </span>
           </label>
 
@@ -360,20 +363,28 @@ export default function AdminDoctors() {
                 </p>
                 <p className="text-[11px] text-ink-400 font-mono">{doc.doctorId}</p>
                 {doc.authUserId === "demo-doctor" ? (
-                  <p className="text-[10px] font-medium text-teal">Linked to doctor@oakhaven.demo</p>
+                  <p className="text-[10px] font-medium text-teal">
+                    Linked to doctor@oakhaven.demo
+                  </p>
                 ) : null}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-stone-100 text-[12px] text-ink-600">
               <div className="space-y-0.5">
-                <div className="text-[10px] text-ink-400 font-mono uppercase tracking-wider">Today</div>
-                <div className={`font-semibold capitalize ${doc.onDuty ? "text-ink-800" : "text-ink-400 font-normal"}`}>
+                <div className="text-[10px] text-ink-400 font-mono uppercase tracking-wider">
+                  Today
+                </div>
+                <div
+                  className={`font-semibold capitalize ${doc.onDuty ? "text-ink-800" : "text-ink-400 font-normal"}`}
+                >
                   {doc.shift}
                 </div>
               </div>
               <div className="space-y-0.5 pl-3 border-l border-stone-100">
-                <div className="text-[10px] text-ink-400 font-mono uppercase tracking-wider">Room</div>
+                <div className="text-[10px] text-ink-400 font-mono uppercase tracking-wider">
+                  Room
+                </div>
                 <div className="font-semibold text-ink-800 flex items-center gap-1">
                   <MapPin className="h-3 w-3 text-ink-400 shrink-0" />
                   {doc.room}

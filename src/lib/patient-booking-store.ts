@@ -130,21 +130,14 @@ export function listPatientBookings(): PatientBooking[] {
   }
 }
 
-export function savePatientBooking(
-  booking: Omit<PatientBooking, "id">,
-): PatientBooking | null {
+export function savePatientBooking(booking: Omit<PatientBooking, "id">): PatientBooking | null {
   const time = normalizeTimeLabel(booking.time);
   const dateKey = booking.dateKey;
   const { doctorId } = booking;
 
   const existing = listPatientBookings();
 
-  if (
-    existing.some(
-      (b) =>
-        b.doctorId === doctorId && b.dateKey === dateKey && b.time === time,
-    )
-  ) {
+  if (existing.some((b) => b.doctorId === doctorId && b.dateKey === dateKey && b.time === time)) {
     return null;
   }
 
@@ -163,7 +156,9 @@ export function savePatientBooking(
     emit();
     void import("@/lib/shared/booking-queue-bridge").then(({ bridgePatientBookingToDoctorQueue }) =>
       bridgePatientBookingToDoctorQueue(entry, {
-        reason: booking.reason?.trim() || (booking.visitType === "video" ? "Video consultation" : "In-person visit"),
+        reason:
+          booking.reason?.trim() ||
+          (booking.visitType === "video" ? "Video consultation" : "In-person visit"),
         visitType: booking.visitType,
       }),
     );
@@ -172,9 +167,7 @@ export function savePatientBooking(
 }
 
 export function hasBookingForDoctorDay(doctorId: string, dateKey: string): boolean {
-  return listPatientBookings().some(
-    (b) => b.doctorId === doctorId && b.dateKey === dateKey,
-  );
+  return listPatientBookings().some((b) => b.doctorId === doctorId && b.dateKey === dateKey);
 }
 
 export function countPatientBookingsForSlot(
@@ -187,10 +180,7 @@ export function countPatientBookingsForSlot(
   ).length;
 }
 
-export function getBookableSlots(
-  doctorId: string,
-  dayIndex: number,
-): BookableSlot[] {
+export function getBookableSlots(doctorId: string, dayIndex: number): BookableSlot[] {
   const dateKey = dateKeyForDayIndex(dayIndex);
   const patientBookings = listPatientBookings();
   const slots = getPublicDoctorSlots(doctorId);
@@ -204,31 +194,26 @@ export function getBookableSlots(
       return { ...base, selectable: false, reason: "unavailable" as const };
     }
 
-    const totalBooked =
-      slot.bookedToday + countPatientBookingsForSlot(doctorId, dateKey, time);
+    const totalBooked = slot.bookedToday + countPatientBookingsForSlot(doctorId, dateKey, time);
     if (totalBooked >= slot.capacity) {
       return { ...base, selectable: false, reason: "full" as const };
     }
 
-    const dayBooked = patientBookings.some(
-      (b) => b.doctorId === doctorId && b.dateKey === dateKey,
-    );
+    const dayBooked = patientBookings.some((b) => b.doctorId === doctorId && b.dateKey === dateKey);
     if (dayBooked) {
       return { ...base, selectable: false, reason: "day_booked" as const };
     }
 
     if (
       patientBookings.some(
-        (b) =>
-          b.doctorId === doctorId && b.dateKey === dateKey && b.time === time,
+        (b) => b.doctorId === doctorId && b.dateKey === dateKey && b.time === time,
       )
     ) {
       return { ...base, selectable: false, reason: "already_booked" as const };
     }
 
     const conflict = patientBookings.find(
-      (b) =>
-        b.dateKey === dateKey && b.time === time && b.doctorId !== doctorId,
+      (b) => b.dateKey === dateKey && b.time === time && b.doctorId !== doctorId,
     );
     if (conflict) {
       return {

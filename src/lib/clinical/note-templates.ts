@@ -20,7 +20,8 @@ export const NOTE_TEMPLATES: NoteTemplate[] = [
     id: "htn-review",
     label: "HTN review",
     complaint: "Follow-up for blood pressure management.",
-    objective: "BP as recorded today. Home readings reviewed. No headache, chest pain, or vision changes.",
+    objective:
+      "BP as recorded today. Home readings reviewed. No headache, chest pain, or vision changes.",
     assessment: "Hypertension — assess control vs target.",
     plan: "Adjust antihypertensive if needed. Lifestyle counseling. Repeat BP in 2 weeks.",
   },

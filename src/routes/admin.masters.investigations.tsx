@@ -5,7 +5,14 @@ import {
   saveInvestigationMaster,
   type InvestigationMaster,
 } from "@/lib/hospital-masters";
-import { DeskPanel, DeskTable, DeskThead, DeskTh, DeskTd, DeskTr } from "@/components/desk-shell/ui";
+import {
+  DeskPanel,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskTd,
+  DeskTr,
+} from "@/components/desk-shell/ui";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/masters/investigations")({
@@ -22,19 +29,26 @@ function InvestigationsMasterPage() {
 
   return (
     <div className="space-y-4" data-testid="admin-investigations-master">
-      <DeskPanel title="Investigation master" subtitle="Lab, radiology & cardiology — orders from doctor & reception">
+      <DeskPanel
+        title="Investigation master"
+        subtitle="Lab, radiology & cardiology — orders from doctor & reception"
+      >
         <div className="flex justify-end border-b border-ink-100 p-3">
-          <button type="button" onClick={saveAll} className="rounded-md bg-plum px-4 py-2 text-[12px] text-white">
+          <button
+            type="button"
+            onClick={saveAll}
+            className="rounded-md bg-plum px-4 py-2 text-[12px] text-white"
+          >
             Save all
           </button>
         </div>
         <DeskTable>
           <DeskThead>
             <DeskTh>Code</DeskTh>
-              <DeskTh>Test name</DeskTh>
-              <DeskTh>Department</DeskTh>
-              <DeskTh>Default ₹</DeskTh>
-            </DeskThead>
+            <DeskTh>Test name</DeskTh>
+            <DeskTh>Department</DeskTh>
+            <DeskTh>Default ₹</DeskTh>
+          </DeskThead>
           <tbody>
             {rows.map((r) => (
               <DeskTr key={r.code}>

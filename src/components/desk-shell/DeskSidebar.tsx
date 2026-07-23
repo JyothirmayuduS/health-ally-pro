@@ -31,7 +31,9 @@ function NavItem({
       )}
     >
       {active && (
-        <span className={cn("absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full", theme.activeBar)} />
+        <span
+          className={cn("absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full", theme.activeBar)}
+        />
       )}
       <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />
       <span className="flex-1">{label}</span>
@@ -132,7 +134,12 @@ export function DeskMobileTrigger({ config }: { config: DeskPortalConfig }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button type="button" data-testid="mobile-menu-btn" className="btn-icon lg:hidden" aria-label="Open menu">
+        <button
+          type="button"
+          data-testid="mobile-menu-btn"
+          className="btn-icon lg:hidden"
+          aria-label="Open menu"
+        >
           <Menu className="h-5 w-5" />
         </button>
       </SheetTrigger>

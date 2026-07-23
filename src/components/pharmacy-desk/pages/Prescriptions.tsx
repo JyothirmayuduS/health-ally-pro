@@ -20,10 +20,23 @@ import {
 import PharmacyPayDialog from "@/components/pharmacy-desk/PharmacyPayDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   ClipboardList,
   CheckCircle,
@@ -38,7 +51,12 @@ import {
 } from "lucide-react";
 import { zoneLabel } from "@/lib/pharmacy-desk/location";
 import { findDrug } from "@/lib/pharmacy-desk/mockData";
-import { balanceDue, fmtInr, printPharmacyReceipt, type PaymentMethod } from "@/lib/pharmacy-desk/billing";
+import {
+  balanceDue,
+  fmtInr,
+  printPharmacyReceipt,
+  type PaymentMethod,
+} from "@/lib/pharmacy-desk/billing";
 import { cn } from "@/lib/utils";
 
 function medsSummary(rx: { lines: { drug_id: string }[] }) {
@@ -118,7 +136,9 @@ export default function Prescriptions() {
   const selected = prescriptions.find((r) => r.id === selectedId);
   const selectedPatient = selected && getPatient(selected, patients);
   const invoice = selected ? getInvoiceForRx(selected.id) : undefined;
-  const unpaidCount = prescriptions.filter((r) => r.payment_status !== "paid" && r.status !== "cancelled").length;
+  const unpaidCount = prescriptions.filter(
+    (r) => r.payment_status !== "paid" && r.status !== "cancelled",
+  ).length;
 
   function handlePay(method: PaymentMethod, amount: number) {
     if (!selected) return;
@@ -151,15 +171,21 @@ export default function Prescriptions() {
           className="min-w-[220px] flex-1 border-ink-200 bg-white"
         />
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40 border-ink-200"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-40 border-ink-200">
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             {STATUS_FILTERS.map((s) => (
-              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-          <SelectTrigger className="w-36 border-ink-200"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-36 border-ink-200">
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All priorities</SelectItem>
             <SelectItem value="stat">STAT</SelectItem>
@@ -175,7 +201,9 @@ export default function Prescriptions() {
               onClick={() => setPaymentFilter(tab.value)}
               className={cn(
                 "rounded px-2.5 py-1.5 text-[11px] font-medium transition",
-                paymentFilter === tab.value ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-700",
+                paymentFilter === tab.value
+                  ? "bg-white text-ink-900 shadow-sm"
+                  : "text-ink-500 hover:text-ink-700",
               )}
             >
               {tab.label}
@@ -192,7 +220,11 @@ export default function Prescriptions() {
           </div>
           <div className="max-h-[calc(100vh-280px)] divide-y divide-ink-100 overflow-y-auto">
             {filtered.length === 0 ? (
-              <EmptyState icon={ClipboardList} title="No prescriptions" hint="Doctor e-Rx orders appear here automatically." />
+              <EmptyState
+                icon={ClipboardList}
+                title="No prescriptions"
+                hint="Doctor e-Rx orders appear here automatically."
+              />
             ) : (
               filtered.map((rx) => {
                 const p = getPatient(rx, patients);
@@ -204,13 +236,19 @@ export default function Prescriptions() {
                     onClick={() => setSelectedId(rx.id)}
                     className={cn(
                       "w-full px-4 py-3.5 text-left transition",
-                      active ? "border-l-2 border-mustard bg-mustard-soft/40" : "border-l-2 border-transparent hover:bg-stone-50/80",
+                      active
+                        ? "border-l-2 border-mustard bg-mustard-soft/40"
+                        : "border-l-2 border-transparent hover:bg-stone-50/80",
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <div className="font-mono text-[12px] font-semibold text-ink-900">{rx.rx_number}</div>
-                        <div className="mt-0.5 truncate text-[13px] font-medium text-ink-900">{p?.name}</div>
+                        <div className="font-mono text-[12px] font-semibold text-ink-900">
+                          {rx.rx_number}
+                        </div>
+                        <div className="mt-0.5 truncate text-[13px] font-medium text-ink-900">
+                          {p?.name}
+                        </div>
                         <div className="truncate text-[11px] text-ink-500">{rx.doctor_name}</div>
                       </div>
                       <PaymentPill status={rx.payment_status} />
@@ -218,7 +256,9 @@ export default function Prescriptions() {
                     <div className="mt-2 flex flex-wrap items-center gap-1.5">
                       <PriorityPill priority={rx.priority} />
                       <RxStatusPill status={rx.status} />
-                      <span className="text-[10px] text-ink-400">{formatRelative(rx.received_at)}</span>
+                      <span className="text-[10px] text-ink-400">
+                        {formatRelative(rx.received_at)}
+                      </span>
                     </div>
                   </button>
                 );
@@ -230,14 +270,20 @@ export default function Prescriptions() {
         {/* Detail panel */}
         <div className="surface lg:col-span-3">
           {!selected || !selectedPatient ? (
-            <EmptyState icon={ClipboardList} title="Select a prescription" hint="Choose an order from the list to review, bill, and accept." />
+            <EmptyState
+              icon={ClipboardList}
+              title="Select a prescription"
+              hint="Choose an order from the list to review, bill, and accept."
+            />
           ) : (
             <div className="flex max-h-[calc(100vh-280px)] flex-col">
               <div className="border-b border-ink-200 px-5 py-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="font-heading text-[20px] font-semibold text-ink-900">{selected.rx_number}</h2>
+                      <h2 className="font-heading text-[20px] font-semibold text-ink-900">
+                        {selected.rx_number}
+                      </h2>
                       {selected.source === "doctor" && (
                         <span className="rounded-sm border border-sage/20 bg-sage-soft px-2 py-0.5 font-mono text-[9px] uppercase text-sage">
                           From doctor
@@ -261,9 +307,15 @@ export default function Prescriptions() {
                 {/* Patient */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-lg border border-ink-200 bg-white p-4">
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">Patient</div>
-                    <div className="mt-2 font-heading text-[17px] font-semibold text-ink-900">{selectedPatient.name}</div>
-                    <div className="mt-1 font-mono text-[12px] text-ink-600">{selectedPatient.mrn}</div>
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">
+                      Patient
+                    </div>
+                    <div className="mt-2 font-heading text-[17px] font-semibold text-ink-900">
+                      {selectedPatient.name}
+                    </div>
+                    <div className="mt-1 font-mono text-[12px] text-ink-600">
+                      {selectedPatient.mrn}
+                    </div>
                     <div className="text-[12px] text-ink-500">
                       {selectedPatient.age}y {selectedPatient.sex} · {selectedPatient.phone}
                     </div>
@@ -283,15 +335,22 @@ export default function Prescriptions() {
                         Billing
                       </div>
                       {invoice && (
-                        <span className="font-mono text-[11px] text-ink-500">{invoice.invoice_number}</span>
+                        <span className="font-mono text-[11px] text-ink-500">
+                          {invoice.invoice_number}
+                        </span>
                       )}
                     </div>
                     {invoice ? (
                       <>
                         <div className="mt-3 space-y-1.5 text-[12px]">
                           {invoice.lines.map((line) => (
-                            <div key={line.drug_id} className="flex justify-between gap-2 text-ink-700">
-                              <span className="min-w-0 truncate">{line.description} × {line.qty}</span>
+                            <div
+                              key={line.drug_id}
+                              className="flex justify-between gap-2 text-ink-700"
+                            >
+                              <span className="min-w-0 truncate">
+                                {line.description} × {line.qty}
+                              </span>
                               <span className="shrink-0 font-mono">{fmtInr(line.amount)}</span>
                             </div>
                           ))}
@@ -324,7 +383,11 @@ export default function Prescriptions() {
                         </div>
                         <div className="mt-4 flex flex-wrap gap-2">
                           {selected.payment_status !== "paid" && (
-                            <Button size="sm" className="btn-primary" onClick={() => setPayOpen(true)}>
+                            <Button
+                              size="sm"
+                              className="btn-primary"
+                              onClick={() => setPayOpen(true)}
+                            >
                               <IndianRupee className="mr-1.5 h-3.5 w-3.5" />
                               Collect payment
                             </Button>
@@ -369,17 +432,26 @@ export default function Prescriptions() {
                       const fefo = fefoBatch(drugBatches);
                       if (!drug) return null;
                       return (
-                        <div key={line.id} className="rounded-lg border border-ink-200 bg-white p-4">
+                        <div
+                          key={line.id}
+                          className="rounded-lg border border-ink-200 bg-white p-4"
+                        >
                           <div className="flex flex-wrap items-start justify-between gap-2">
                             <div>
-                              <div className="font-medium text-ink-900">{drug.generic_name} {drug.strength}</div>
-                              <div className="text-[11px] text-ink-400">{drug.form} · {drug.brand_names[0]}</div>
+                              <div className="font-medium text-ink-900">
+                                {drug.generic_name} {drug.strength}
+                              </div>
+                              <div className="text-[11px] text-ink-400">
+                                {drug.form} · {drug.brand_names[0]}
+                              </div>
                               <div className="mt-1 text-[12px] text-ink-600">{line.sig}</div>
                             </div>
                             <span
                               className={cn(
                                 "rounded-sm px-2 py-0.5 text-[10px] font-medium uppercase",
-                                line.stock_ok ? "bg-status-doneBg text-status-doneText" : "bg-clay-soft text-clay",
+                                line.stock_ok
+                                  ? "bg-status-doneBg text-status-doneText"
+                                  : "bg-clay-soft text-clay",
                               )}
                             >
                               {line.stock_ok ? "In stock" : "Low / out"}
@@ -387,12 +459,15 @@ export default function Prescriptions() {
                           </div>
                           <div className="mt-3 flex flex-wrap items-center gap-2">
                             <LocationChip location={drug.location} size="md" />
-                            <span className="text-[11px] text-ink-400">{zoneLabel(drug.location.zone)} · {drug.location.temp}</span>
+                            <span className="text-[11px] text-ink-400">
+                              {zoneLabel(drug.location.zone)} · {drug.location.temp}
+                            </span>
                           </div>
                           <PickPath location={drug.location} />
                           <div className="mt-2 font-mono text-[11px] text-ink-500">
                             Qty {line.qty_prescribed} · Available {avail}
-                            {fefo && ` · FEFO ${fefo.lot} exp ${new Date(fefo.expiry).toLocaleDateString()}`}
+                            {fefo &&
+                              ` · FEFO ${fefo.lot} exp ${new Date(fefo.expiry).toLocaleDateString()}`}
                           </div>
                         </div>
                       );
@@ -402,13 +477,17 @@ export default function Prescriptions() {
 
                 {/* Timeline */}
                 <div>
-                  <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-ink-400">Timeline</div>
+                  <div className="mb-2 font-mono text-[10px] uppercase tracking-wider text-ink-400">
+                    Timeline
+                  </div>
                   <div className="ml-2 space-y-2.5 border-l-2 border-ink-200 pl-4">
                     {selected.history.map((h, i) => (
                       <div key={i} className="relative">
                         <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-mustard" />
                         <div className="text-[13px] text-ink-900">{h.action}</div>
-                        <div className="text-[11px] text-ink-400">{h.actor} · {formatDateTime(h.at)}</div>
+                        <div className="text-[11px] text-ink-400">
+                          {h.actor} · {formatDateTime(h.at)}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -423,20 +502,39 @@ export default function Prescriptions() {
                       size="sm"
                       className="btn-primary"
                       disabled={selected.payment_status === "unpaid"}
-                      title={selected.payment_status === "unpaid" ? "Collect payment before accepting" : undefined}
+                      title={
+                        selected.payment_status === "unpaid"
+                          ? "Collect payment before accepting"
+                          : undefined
+                      }
                       onClick={() => acceptRx(selected.id)}
                     >
                       <CheckCircle className="mr-1.5 h-3.5 w-3.5" /> Accept for dispense
                     </Button>
                     {selected.payment_status === "unpaid" && (
-                      <Button size="sm" variant="outline" className="border-clay/30 text-clay" onClick={() => setPayOpen(true)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-clay/30 text-clay"
+                        onClick={() => setPayOpen(true)}
+                      >
                         <IndianRupee className="mr-1.5 h-3.5 w-3.5" /> Pay first
                       </Button>
                     )}
-                    <Button size="sm" variant="outline" className="border-ink-200" onClick={() => setHoldOpen(true)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-ink-200"
+                      onClick={() => setHoldOpen(true)}
+                    >
                       <PauseCircle className="mr-1.5 h-3.5 w-3.5" /> Hold
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-clay" onClick={() => setRejectOpen(true)}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-clay"
+                      onClick={() => setRejectOpen(true)}
+                    >
                       <XCircle className="mr-1.5 h-3.5 w-3.5" /> Reject
                     </Button>
                   </>
@@ -453,7 +551,9 @@ export default function Prescriptions() {
                     <Package className="mr-1.5 h-3.5 w-3.5" /> Start dispense
                   </Button>
                 )}
-                <p className="ml-auto hidden text-[11px] text-ink-400 sm:block">{medsSummary(selected)}</p>
+                <p className="ml-auto hidden text-[11px] text-ink-400 sm:block">
+                  {medsSummary(selected)}
+                </p>
               </div>
             </div>
           )}
@@ -469,24 +569,56 @@ export default function Prescriptions() {
 
       <Dialog open={holdOpen} onOpenChange={setHoldOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Place on hold</DialogTitle><DialogDescription>Clinical or stock review required.</DialogDescription></DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Place on hold</DialogTitle>
+            <DialogDescription>Clinical or stock review required.</DialogDescription>
+          </DialogHeader>
           <Label>Reason</Label>
-          <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Allergy check, interaction…" />
+          <Textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="Allergy check, interaction…"
+          />
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setHoldOpen(false)}>Cancel</Button>
-            <Button disabled={!reason.trim()} onClick={() => { holdRx(selected!.id, reason); setHoldOpen(false); setReason(""); }}>Confirm hold</Button>
+            <Button variant="ghost" onClick={() => setHoldOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!reason.trim()}
+              onClick={() => {
+                holdRx(selected!.id, reason);
+                setHoldOpen(false);
+                setReason("");
+              }}
+            >
+              Confirm hold
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Reject prescription</DialogTitle></DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Reject prescription</DialogTitle>
+          </DialogHeader>
           <Label>Reason</Label>
           <Textarea value={reason} onChange={(e) => setReason(e.target.value)} />
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setRejectOpen(false)}>Cancel</Button>
-            <Button className="bg-clay hover:bg-clay/90" disabled={!reason.trim()} onClick={() => { rejectRx(selected!.id, reason); setRejectOpen(false); setReason(""); }}>Reject</Button>
+            <Button variant="ghost" onClick={() => setRejectOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-clay hover:bg-clay/90"
+              disabled={!reason.trim()}
+              onClick={() => {
+                rejectRx(selected!.id, reason);
+                setRejectOpen(false);
+                setReason("");
+              }}
+            >
+              Reject
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -30,7 +30,7 @@ export default function Dispense() {
     completeDispense,
     markCollected,
     startDispense,
-    logDdiOverride
+    logDdiOverride,
   } = usePharmacyStore();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [counseling, setCounseling] = useState("");
@@ -55,7 +55,10 @@ export default function Dispense() {
   const patientActiveDrugs = useMemo(() => {
     if (!patient || !selected) return [];
     const patientRxs = prescriptions.filter(
-      (rx) => rx.patient_id === patient.id && rx.id !== selected.id && ["dispensed", "collected", "ready_pickup"].includes(rx.status)
+      (rx) =>
+        rx.patient_id === patient.id &&
+        rx.id !== selected.id &&
+        ["dispensed", "collected", "ready_pickup"].includes(rx.status),
     );
     const names = new Set<string>();
     patientRxs.forEach((rx) => {
@@ -70,9 +73,7 @@ export default function Dispense() {
   // Current Rx drug names
   const currentDrugs = useMemo(() => {
     if (!selected) return [];
-    return selected.lines
-      .map((l) => findDrug(l.drug_id)?.generic_name)
-      .filter(Boolean) as string[];
+    return selected.lines.map((l) => findDrug(l.drug_id)?.generic_name).filter(Boolean) as string[];
   }, [selected, findDrug]);
 
   function printLabel() {
@@ -90,16 +91,21 @@ export default function Dispense() {
       <div class="row"><span>Bag</span><b>${selected.bag_id || "Pending"}</b></div>
       </div><script>window.print();</script></body></html>`;
     const w = window.open("", "_blank", "width=420,height=560");
-    if (w) { w.document.write(html); w.document.close(); }
+    if (w) {
+      w.document.write(html);
+      w.document.close();
+    }
   }
 
   return (
     <div className="space-y-6" data-testid="dispense-counter">
-      <SectionLabel action={
-        <Button variant="outline" size="sm" className="border-ink-200">
-          <Package className="mr-1.5 h-3.5 w-3.5" /> {queue.length} in queue
-        </Button>
-      }>
+      <SectionLabel
+        action={
+          <Button variant="outline" size="sm" className="border-ink-200">
+            <Package className="mr-1.5 h-3.5 w-3.5" /> {queue.length} in queue
+          </Button>
+        }
+      >
         Dispense counter
       </SectionLabel>
 
@@ -110,7 +116,11 @@ export default function Dispense() {
           </div>
           <div className="divide-y divide-ink-100">
             {queue.length === 0 ? (
-              <EmptyState icon={Package} title="Queue empty" hint="Accept prescriptions from inbox first." />
+              <EmptyState
+                icon={Package}
+                title="Queue empty"
+                hint="Accept prescriptions from inbox first."
+              />
             ) : (
               queue.map((rx) => {
                 const p = getPatient(rx, patients);
@@ -136,21 +146,34 @@ export default function Dispense() {
 
         <div className="surface lg:col-span-2">
           {!selected ? (
-            <EmptyState icon={Package} title="Select a prescription" hint="Choose from the pick queue." />
+            <EmptyState
+              icon={Package}
+              title="Select a prescription"
+              hint="Choose from the pick queue."
+            />
           ) : (
             <div className="p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-heading text-[20px] font-semibold text-ink-900">{selected.rx_number}</h3>
-                  <p className="text-[13px] text-ink-600">{patient?.name} · {patient?.mrn}</p>
-                  {selected.bag_id && <p className="mt-1 font-mono text-[12px] text-mustard">Bag {selected.bag_id}</p>}
+                  <h3 className="font-heading text-[20px] font-semibold text-ink-900">
+                    {selected.rx_number}
+                  </h3>
+                  <p className="text-[13px] text-ink-600">
+                    {patient?.name} · {patient?.mrn}
+                  </p>
+                  {selected.bag_id && (
+                    <p className="mt-1 font-mono text-[12px] text-mustard">Bag {selected.bag_id}</p>
+                  )}
                 </div>
                 <RxStatusPill status={selected.status} />
               </div>
 
               <div className="mt-4 flex items-center gap-2 rounded-md border border-dashed border-ink-200 bg-stone-50 px-3 py-2">
                 <ScanLine className="h-4 w-4 text-ink-400" />
-                <input placeholder="Scan barcode or enter SKU…" className="flex-1 bg-transparent text-[13px] outline-none" />
+                <input
+                  placeholder="Scan barcode or enter SKU…"
+                  className="flex-1 bg-transparent text-[13px] outline-none"
+                />
               </div>
 
               <div className="mt-6 space-y-4">
@@ -167,21 +190,29 @@ export default function Dispense() {
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="font-mono text-[10px] text-ink-400">Step {idx + 1}</span>
-                          <div className="font-medium text-ink-900">{drug.generic_name} {drug.strength}</div>
+                          <div className="font-medium text-ink-900">
+                            {drug.generic_name} {drug.strength}
+                          </div>
                           <div className="text-[12px] text-ink-600">{line.sig}</div>
                         </div>
-                        <span className="font-mono text-[13px]">{line.qty_dispensed}/{line.qty_prescribed}</span>
+                        <span className="font-mono text-[13px]">
+                          {line.qty_dispensed}/{line.qty_prescribed}
+                        </span>
                       </div>
 
                       <div className="mt-3 flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-mustard" />
                         <LocationChip location={drug.location} size="md" />
                       </div>
-                      <div className="mt-2"><PickPath location={drug.location} /></div>
+                      <div className="mt-2">
+                        <PickPath location={drug.location} />
+                      </div>
 
                       {fefo && (
                         <div className="mt-2 rounded-md bg-sage-soft/40 px-3 py-2 text-[12px] text-ink-600">
-                          <strong className="text-sage">FEFO:</strong> Lot {fefo.lot} · Exp {new Date(fefo.expiry).toLocaleDateString()} · Avail {availableQty(drugBatches)}
+                          <strong className="text-sage">FEFO:</strong> Lot {fefo.lot} · Exp{" "}
+                          {new Date(fefo.expiry).toLocaleDateString()} · Avail{" "}
+                          {availableQty(drugBatches)}
                         </div>
                       )}
 
@@ -194,7 +225,11 @@ export default function Dispense() {
                           Pick {remaining} from {drug.location.location_code}
                         </Button>
                       )}
-                      {picked && <div className="mt-2 text-[11px] text-sage">✓ Picked batch {line.pick_batch_id}</div>}
+                      {picked && (
+                        <div className="mt-2 text-[11px] text-sage">
+                          ✓ Picked batch {line.pick_batch_id}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -202,11 +237,20 @@ export default function Dispense() {
 
               {selected.status === "dispensing" && (
                 <div className="mt-6 space-y-3">
-                  <label className="block text-[12px] font-medium text-ink-600">Counseling notes</label>
-                  <Textarea value={counseling} onChange={(e) => setCounseling(e.target.value)} placeholder="Take with food, finish full course…" className="border-ink-200" />
+                  <label className="block text-[12px] font-medium text-ink-600">
+                    Counseling notes
+                  </label>
+                  <Textarea
+                    value={counseling}
+                    onChange={(e) => setCounseling(e.target.value)}
+                    placeholder="Take with food, finish full course…"
+                    className="border-ink-200"
+                  />
                   {hasControlled && (
                     <div>
-                      <label className="block text-[12px] font-medium text-plum">Witness (controlled substance) *</label>
+                      <label className="block text-[12px] font-medium text-plum">
+                        Witness (controlled substance) *
+                      </label>
                       <input
                         value={witness}
                         onChange={(e) => setWitness(e.target.value)}
@@ -247,7 +291,9 @@ export default function Dispense() {
                   <Button variant="outline" className="border-ink-200" onClick={printLabel}>
                     <Printer className="mr-1.5 h-4 w-4" /> Reprint label
                   </Button>
-                  <span className="text-[12px] text-ink-400 self-center">Ready {formatRelative(selected.dispensed_at)}</span>
+                  <span className="text-[12px] text-ink-400 self-center">
+                    Ready {formatRelative(selected.dispensed_at)}
+                  </span>
                 </div>
               )}
 
@@ -290,7 +336,7 @@ function DDIAlertModal({
   alerts,
   onClose,
   onConfirm,
-  rxNumber
+  rxNumber,
 }: {
   open: boolean;
   alerts: any[];
@@ -302,14 +348,16 @@ function DDIAlertModal({
   const [staffId, setStaffId] = useState("");
   const [acknowledged, setAcknowledged] = useState<Record<number, boolean>>({});
 
-  const majorAlerts = alerts.filter(a => a.rule.severity === "major");
-  const moderateAlerts = alerts.filter(a => a.rule.severity === "moderate");
-  const minorAlerts = alerts.filter(a => a.rule.severity === "minor");
+  const majorAlerts = alerts.filter((a) => a.rule.severity === "major");
+  const moderateAlerts = alerts.filter((a) => a.rule.severity === "moderate");
+  const minorAlerts = alerts.filter((a) => a.rule.severity === "minor");
 
   const sortedAlerts = [...majorAlerts, ...moderateAlerts, ...minorAlerts];
 
   const hasMajor = majorAlerts.length > 0;
-  const isMajorCleared = !hasMajor || (overrideText.trim().toUpperCase() === "CONFIRM OVERRIDE" && staffId.trim() !== "");
+  const isMajorCleared =
+    !hasMajor ||
+    (overrideText.trim().toUpperCase() === "CONFIRM OVERRIDE" && staffId.trim() !== "");
 
   const nonMajorAlerts = [...moderateAlerts, ...minorAlerts];
   const allNonMajorAcknowledged = nonMajorAlerts.every((_, idx) => acknowledged[idx] === true);
@@ -326,7 +374,9 @@ function DDIAlertModal({
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-clay" />
             <div>
-              <h3 className="font-heading text-[16px] font-bold text-ink-900">Drug-Drug Interaction (DDI) Warning</h3>
+              <h3 className="font-heading text-[16px] font-bold text-ink-900">
+                Drug-Drug Interaction (DDI) Warning
+              </h3>
               <p className="text-[12px] text-ink-500">Clinical safety check for Rx: {rxNumber}</p>
             </div>
           </div>
@@ -338,18 +388,41 @@ function DDIAlertModal({
         {/* Content */}
         <div className="p-5 overflow-y-auto space-y-4 flex-1">
           <div className="p-3 bg-clay-soft/40 border border-clay/20 text-[12.5px] text-clay rounded-md">
-            <strong>CRITICAL CAUTION:</strong> The following clinical drug interactions were detected. Please review each carefully and consult the prescriber if necessary.
+            <strong>CRITICAL CAUTION:</strong> The following clinical drug interactions were
+            detected. Please review each carefully and consult the prescriber if necessary.
           </div>
 
           <div className="space-y-3">
             {sortedAlerts.map((alert, idx) => {
               const severity = alert.rule.severity;
-              const borderCol = severity === "major" ? "border-l-clay" : severity === "moderate" ? "border-l-mustard" : "border-l-teal";
-              const bgCol = severity === "major" ? "bg-clay-soft/10" : severity === "moderate" ? "bg-mustard-soft/10" : "bg-teal-soft/10";
-              const textCol = severity === "major" ? "text-clay" : severity === "moderate" ? "text-mustard" : "text-teal";
+              const borderCol =
+                severity === "major"
+                  ? "border-l-clay"
+                  : severity === "moderate"
+                    ? "border-l-mustard"
+                    : "border-l-teal";
+              const bgCol =
+                severity === "major"
+                  ? "bg-clay-soft/10"
+                  : severity === "moderate"
+                    ? "bg-mustard-soft/10"
+                    : "bg-teal-soft/10";
+              const textCol =
+                severity === "major"
+                  ? "text-clay"
+                  : severity === "moderate"
+                    ? "text-mustard"
+                    : "text-teal";
 
               return (
-                <div key={idx} className={cn("border border-ink-200 border-l-4 rounded-md p-4 space-y-2", borderCol, bgCol)}>
+                <div
+                  key={idx}
+                  className={cn(
+                    "border border-ink-200 border-l-4 rounded-md p-4 space-y-2",
+                    borderCol,
+                    bgCol,
+                  )}
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-[10.5px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white border border-ink-200 text-ink-600">
                       {alert.drugA} + {alert.drugB}
@@ -360,7 +433,8 @@ function DDIAlertModal({
                   </div>
                   <div className="text-[13px] font-medium text-ink-900">{alert.rule.effect}</div>
                   <div className="text-[12px] text-ink-600">
-                    <strong className="text-ink-900">Recommendation:</strong> {alert.rule.recommendation}
+                    <strong className="text-ink-900">Recommendation:</strong>{" "}
+                    {alert.rule.recommendation}
                   </div>
 
                   {severity !== "major" && (
@@ -368,7 +442,9 @@ function DDIAlertModal({
                       <input
                         type="checkbox"
                         checked={acknowledged[idx] || false}
-                        onChange={(e) => setAcknowledged({ ...acknowledged, [idx]: e.target.checked })}
+                        onChange={(e) =>
+                          setAcknowledged({ ...acknowledged, [idx]: e.target.checked })
+                        }
                         className="rounded border-ink-300 text-mustard focus:ring-mustard"
                       />
                       I acknowledge this {severity} interaction and will counsel the patient.
@@ -382,12 +458,19 @@ function DDIAlertModal({
           {/* Override Form for Major */}
           {hasMajor && (
             <div className="p-4 border border-clay/30 bg-clay-soft/20 rounded-md space-y-3">
-              <h4 className="text-[13px] font-bold text-clay uppercase tracking-wider">Major Override Justification</h4>
-              <p className="text-[12px] text-ink-600">To override major interactions, you must type "CONFIRM OVERRIDE" and input your Pharmacist/Staff ID.</p>
+              <h4 className="text-[13px] font-bold text-clay uppercase tracking-wider">
+                Major Override Justification
+              </h4>
+              <p className="text-[12px] text-ink-600">
+                To override major interactions, you must type "CONFIRM OVERRIDE" and input your
+                Pharmacist/Staff ID.
+              </p>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold uppercase text-ink-600 mb-1">Type CONFIRM OVERRIDE</label>
+                  <label className="block text-[11px] font-semibold uppercase text-ink-600 mb-1">
+                    Type CONFIRM OVERRIDE
+                  </label>
                   <input
                     placeholder="CONFIRM OVERRIDE"
                     value={overrideText}
@@ -396,7 +479,9 @@ function DDIAlertModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold uppercase text-ink-600 mb-1">Staff / Pharmacist ID</label>
+                  <label className="block text-[11px] font-semibold uppercase text-ink-600 mb-1">
+                    Staff / Pharmacist ID
+                  </label>
                   <input
                     placeholder="Riley Chen"
                     value={staffId}
@@ -417,7 +502,14 @@ function DDIAlertModal({
           <Button
             className="btn-primary bg-clay hover:bg-clay-soft text-white"
             disabled={!canProceed}
-            onClick={() => onConfirm(hasMajor ? `Manual override validated: "${overrideText}"` : "Acknowledged moderate/minor alerts", staffId || "Riley Chen")}
+            onClick={() =>
+              onConfirm(
+                hasMajor
+                  ? `Manual override validated: "${overrideText}"`
+                  : "Acknowledged moderate/minor alerts",
+                staffId || "Riley Chen",
+              )
+            }
           >
             <CheckCircle className="mr-1.5 h-4 w-4" /> Override & Complete
           </Button>

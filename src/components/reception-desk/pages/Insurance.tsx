@@ -62,9 +62,11 @@ function StepFlow({ steps, current }: { steps: string[]; current: number }) {
         const active = i === current;
         return (
           <React.Fragment key={label}>
-            <div className={`flex items-center gap-1.5 px-3.5 h-7 rounded-full text-[11px] font-mono font-medium uppercase tracking-wide ${
-              done || active ? "bg-sage text-white" : "bg-ink-100 text-ink-400"
-            }`}>
+            <div
+              className={`flex items-center gap-1.5 px-3.5 h-7 rounded-full text-[11px] font-mono font-medium uppercase tracking-wide ${
+                done || active ? "bg-sage text-white" : "bg-ink-100 text-ink-400"
+              }`}
+            >
               {done && <CheckCircle2 className="w-3 h-3" />}
               {label}
             </div>
@@ -79,11 +81,21 @@ function StepFlow({ steps, current }: { steps: string[]; current: number }) {
 }
 
 /* ─── Field row (flat) ──────────────────────────────────────────────── */
-function Field({ label, children, mono = false }: { label: string; children: React.ReactNode; mono?: boolean }) {
+function Field({
+  label,
+  children,
+  mono = false,
+}: {
+  label: string;
+  children: React.ReactNode;
+  mono?: boolean;
+}) {
   return (
     <div className="flex items-baseline gap-3 py-2.5 border-b border-ink-100 last:border-0">
       <span className="w-36 shrink-0 text-[11.5px] text-ink-400">{label}</span>
-      <span className={`flex-1 text-[13px] text-ink-900 ${mono ? "font-mono" : "font-medium"} leading-snug`}>
+      <span
+        className={`flex-1 text-[13px] text-ink-900 ${mono ? "font-mono" : "font-medium"} leading-snug`}
+      >
         {children}
       </span>
     </div>
@@ -91,7 +103,15 @@ function Field({ label, children, mono = false }: { label: string; children: Rea
 }
 
 /* ─── Section head ──────────────────────────────────────────────────── */
-function SectionHead({ icon: Icon, title, action }: { icon: React.ComponentType<{ className?: string }>; title: string; action?: React.ReactNode }) {
+function SectionHead({
+  icon: Icon,
+  title,
+  action,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  action?: React.ReactNode;
+}) {
   return (
     <div className="flex items-center justify-between mb-1">
       <div className="flex items-center gap-1.5 text-[10.5px] font-mono uppercase tracking-[0.15em] text-ink-400 font-medium">
@@ -104,23 +124,43 @@ function SectionHead({ icon: Icon, title, action }: { icon: React.ComponentType<
 }
 
 /* ─── Form label + input ─────────────────────────────────────────────── */
-function FormRow({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function FormRow({
+  label,
+  required,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex items-start gap-4 py-3 border-b border-ink-100 last:border-0">
       <label className="w-44 shrink-0 text-[12px] text-ink-500 pt-2.5 leading-tight">
-        {label}{required && <span className="text-clay ml-0.5">*</span>}
+        {label}
+        {required && <span className="text-clay ml-0.5">*</span>}
       </label>
       <div className="flex-1">{children}</div>
     </div>
   );
 }
 
-const inputCls = "w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-lg focus:outline-none focus:border-sage transition-colors";
-const selectCls = "w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-lg focus:outline-none focus:border-sage transition-colors";
+const inputCls =
+  "w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-lg focus:outline-none focus:border-sage transition-colors";
+const selectCls =
+  "w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-lg focus:outline-none focus:border-sage transition-colors";
 
 /* ══════════════════════════════════════════════════════════════════════ */
 export default function Insurance() {
-  const { claims, patients, doctors, updateClaim, preAuths, updatePreAuth, convertPreAuthToClaim, addPreAuth } = useStore();
+  const {
+    claims,
+    patients,
+    doctors,
+    updateClaim,
+    preAuths,
+    updatePreAuth,
+    convertPreAuthToClaim,
+    addPreAuth,
+  } = useStore();
 
   const [activeTab, setActiveTab] = useState<"claims" | "preauths">("claims");
   const [filter, setFilter] = useState("All");
@@ -171,7 +211,11 @@ export default function Insurance() {
       const s = q.toLowerCase();
       list = list.filter((c) => {
         const p = patients.find((x) => x.id === c.patientId);
-        return c.id.toLowerCase().includes(s) || c.provider.toLowerCase().includes(s) || p?.name.toLowerCase().includes(s);
+        return (
+          c.id.toLowerCase().includes(s) ||
+          c.provider.toLowerCase().includes(s) ||
+          p?.name.toLowerCase().includes(s)
+        );
       });
     }
     list.sort((a, b) => {
@@ -203,7 +247,11 @@ export default function Insurance() {
       const s = q.toLowerCase();
       list = list.filter((pa) => {
         const p = patients.find((x) => x.id === pa.patientId);
-        return pa.id.toLowerCase().includes(s) || pa.provider.toLowerCase().includes(s) || p?.name.toLowerCase().includes(s);
+        return (
+          pa.id.toLowerCase().includes(s) ||
+          pa.provider.toLowerCase().includes(s) ||
+          p?.name.toLowerCase().includes(s)
+        );
       });
     }
     list.sort((a, b) => {
@@ -231,39 +279,123 @@ export default function Insurance() {
   const filteredPatients = useMemo(() => {
     const s = patientQ.trim().toLowerCase();
     if (!s) return patients.slice(0, 6);
-    return patients.filter((p) => p.name.toLowerCase().includes(s) || p.id.toLowerCase().includes(s) || (p.phone || "").includes(s));
+    return patients.filter(
+      (p) =>
+        p.name.toLowerCase().includes(s) ||
+        p.id.toLowerCase().includes(s) ||
+        (p.phone || "").includes(s),
+    );
   }, [patients, patientQ]);
 
   const claim = claims.find((c) => c.id === selectedClaimId) || filteredClaims[0];
   const pa = preAuths.find((x) => x.id === selectedPAId) || filteredPAs[0];
 
-  const cPatient = useMemo(() => claim && patients.find((p) => p.id === claim.patientId), [claim, patients]);
-  const cDoctor = useMemo(() => claim && doctors.find((d) => d.id === claim.doctorId), [claim, doctors]);
-  const paPatient = useMemo(() => pa && patients.find((p) => p.id === pa.patientId), [pa, patients]);
-  const formPatient = useMemo(() => patients.find((p) => p.id === formPatientId) || null, [patients, formPatientId]);
+  const cPatient = useMemo(
+    () => claim && patients.find((p) => p.id === claim.patientId),
+    [claim, patients],
+  );
+  const cDoctor = useMemo(
+    () => claim && doctors.find((d) => d.id === claim.doctorId),
+    [claim, doctors],
+  );
+  const paPatient = useMemo(
+    () => pa && patients.find((p) => p.id === pa.patientId),
+    [pa, patients],
+  );
+  const formPatient = useMemo(
+    () => patients.find((p) => p.id === formPatientId) || null,
+    [patients, formPatientId],
+  );
 
   const tsNow = () => {
-    const d = new Date(), z = (n: number) => String(n).padStart(2, "0");
+    const d = new Date(),
+      z = (n: number) => String(n).padStart(2, "0");
     return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}:00`;
   };
 
   /* ── Claim actions ── */
-  const doSubmitClaim = () => { updateClaim(claim.id, { status: "submitted", submittedAt: tsNow() }); toast.success(`${claim.id} submitted`); };
-  const doApproveClaim = () => { updateClaim(claim.id, { status: "approved", approvedAmount: claim.requestedAmount, decisionAt: tsNow() }); toast.success("Approved in full"); };
-  const doPartialClaim = () => { const a = Math.round(claim.requestedAmount * 0.75); updateClaim(claim.id, { status: "partial", approvedAmount: a, decisionAt: tsNow() }); toast(`Partial: ${fmt(a)}`); };
-  const doRejectClaim = () => { updateClaim(claim.id, { status: "rejected", approvedAmount: 0, decisionAt: tsNow() }); toast.error(`${claim.id} rejected`); };
-  const doUpload = () => { updateClaim(claim.id, { documents: [...claim.documents, { name: `Attachment-${claim.documents.length + 1}.pdf`, size: `${Math.floor(Math.random() * 900) + 200} KB` }] }); toast.success("Document attached"); };
+  const doSubmitClaim = () => {
+    updateClaim(claim.id, { status: "submitted", submittedAt: tsNow() });
+    toast.success(`${claim.id} submitted`);
+  };
+  const doApproveClaim = () => {
+    updateClaim(claim.id, {
+      status: "approved",
+      approvedAmount: claim.requestedAmount,
+      decisionAt: tsNow(),
+    });
+    toast.success("Approved in full");
+  };
+  const doPartialClaim = () => {
+    const a = Math.round(claim.requestedAmount * 0.75);
+    updateClaim(claim.id, { status: "partial", approvedAmount: a, decisionAt: tsNow() });
+    toast(`Partial: ${fmt(a)}`);
+  };
+  const doRejectClaim = () => {
+    updateClaim(claim.id, { status: "rejected", approvedAmount: 0, decisionAt: tsNow() });
+    toast.error(`${claim.id} rejected`);
+  };
+  const doUpload = () => {
+    updateClaim(claim.id, {
+      documents: [
+        ...claim.documents,
+        {
+          name: `Attachment-${claim.documents.length + 1}.pdf`,
+          size: `${Math.floor(Math.random() * 900) + 200} KB`,
+        },
+      ],
+    });
+    toast.success("Document attached");
+  };
 
   /* ── Pre-auth actions ── */
-  const doSubmitPA = () => { updatePreAuth(pa.id, { status: "submitted", submittedAt: tsNow() }); toast.success(`${pa.id} submitted`); };
-  const doApprovePA = () => { const a = Number(approvedInput) || pa.estimatedCost; updatePreAuth(pa.id, { status: "approved", approvedAmount: a, decisionAt: tsNow() }); toast.success(`Approved ${fmt(a)}`); setApprovedInput(""); };
-  const doRejectPA = () => { updatePreAuth(pa.id, { status: "rejected", approvedAmount: 0, decisionAt: tsNow() }); toast.error(`${pa.id} rejected`); };
-  const doConvert = () => { const nc = convertPreAuthToClaim(pa.id); if (nc) { toast.success(`Converted → ${nc.id}`); setActiveTab("claims"); setFilter("All"); setSelectedClaimId(nc.id); setShowNewForm(false); } else toast.error("Must be approved first."); };
+  const doSubmitPA = () => {
+    updatePreAuth(pa.id, { status: "submitted", submittedAt: tsNow() });
+    toast.success(`${pa.id} submitted`);
+  };
+  const doApprovePA = () => {
+    const a = Number(approvedInput) || pa.estimatedCost;
+    updatePreAuth(pa.id, { status: "approved", approvedAmount: a, decisionAt: tsNow() });
+    toast.success(`Approved ${fmt(a)}`);
+    setApprovedInput("");
+  };
+  const doRejectPA = () => {
+    updatePreAuth(pa.id, { status: "rejected", approvedAmount: 0, decisionAt: tsNow() });
+    toast.error(`${pa.id} rejected`);
+  };
+  const doConvert = () => {
+    const nc = convertPreAuthToClaim(pa.id);
+    if (nc) {
+      toast.success(`Converted → ${nc.id}`);
+      setActiveTab("claims");
+      setFilter("All");
+      setSelectedClaimId(nc.id);
+      setShowNewForm(false);
+    } else toast.error("Must be approved first.");
+  };
 
   /* ── New Pre-auth submit ── */
-  const resetForm = () => { setFormStep("patient"); setPatientQ(""); setFormPatientId(""); setFProvider(""); setFPolicy(""); setFProcedure("OPD Consultation"); setFDiagnosis(""); setFCost(""); setFDoc(""); setFNotes(""); };
-  const openNewForm = () => { resetForm(); setShowNewForm(true); setActiveTab("preauths"); };
-  const cancelForm = () => { setShowNewForm(false); resetForm(); };
+  const resetForm = () => {
+    setFormStep("patient");
+    setPatientQ("");
+    setFormPatientId("");
+    setFProvider("");
+    setFPolicy("");
+    setFProcedure("OPD Consultation");
+    setFDiagnosis("");
+    setFCost("");
+    setFDoc("");
+    setFNotes("");
+  };
+  const openNewForm = () => {
+    resetForm();
+    setShowNewForm(true);
+    setActiveTab("preauths");
+  };
+  const cancelForm = () => {
+    setShowNewForm(false);
+    resetForm();
+  };
 
   const selectFormPatient = (pid: string) => {
     setFormPatientId(pid);
@@ -278,7 +410,18 @@ export default function Insurance() {
     if (!fProvider || !fPolicy) return toast.error("Provider and Policy ID required");
     if (!fDiagnosis) return toast.error("Diagnosis required");
     if (!fCost || Number(fCost) <= 0) return toast.error("Enter a valid estimated cost");
-    const np = addPreAuth({ patientId: formPatientId, provider: fProvider, policyId: fPolicy, procedureType: fProcedure, diagnosis: fDiagnosis, estimatedCost: Number(fCost), notes: fNotes, documentName: fDoc || undefined, status, submittedAt: status === "submitted" ? tsNow() : undefined });
+    const np = addPreAuth({
+      patientId: formPatientId,
+      provider: fProvider,
+      policyId: fPolicy,
+      procedureType: fProcedure,
+      diagnosis: fDiagnosis,
+      estimatedCost: Number(fCost),
+      notes: fNotes,
+      documentName: fDoc || undefined,
+      status,
+      submittedAt: status === "submitted" ? tsNow() : undefined,
+    });
     toast.success(status === "submitted" ? `${np.id} submitted!` : `${np.id} saved as draft`);
     setSelectedPAId(np.id);
     setShowNewForm(false);
@@ -286,35 +429,82 @@ export default function Insurance() {
   };
 
   /* ── KPIs ── */
-  const kpis = activeTab === "claims"
-    ? [
-        { label: "Open", val: claims.filter((c) => ["pending", "submitted"].includes(c.status)).length, color: "text-mustard" },
-        { label: "Approved", val: claims.filter((c) => ["approved", "partial"].includes(c.status)).length, color: "text-money" },
-        { label: "Rejected", val: claims.filter((c) => c.status === "rejected").length, color: "text-clay" },
-        { label: "Pending Amt", val: fmt(claims.filter((c) => ["pending", "submitted"].includes(c.status)).reduce((s, c) => s + (c.requestedAmount || 0), 0)), color: "text-teal" },
-      ]
-    : [
-        { label: "Open", val: preAuths.filter((p) => ["draft", "submitted"].includes(p.status)).length, color: "text-mustard" },
-        { label: "Approved", val: preAuths.filter((p) => p.status === "approved").length, color: "text-money" },
-        { label: "Rejected", val: preAuths.filter((p) => ["rejected", "expired"].includes(p.status)).length, color: "text-clay" },
-        { label: "Pending Amt", val: fmt(preAuths.filter((p) => p.status === "submitted").reduce((s, p) => s + p.estimatedCost, 0)), color: "text-teal" },
-      ];
+  const kpis =
+    activeTab === "claims"
+      ? [
+          {
+            label: "Open",
+            val: claims.filter((c) => ["pending", "submitted"].includes(c.status)).length,
+            color: "text-mustard",
+          },
+          {
+            label: "Approved",
+            val: claims.filter((c) => ["approved", "partial"].includes(c.status)).length,
+            color: "text-money",
+          },
+          {
+            label: "Rejected",
+            val: claims.filter((c) => c.status === "rejected").length,
+            color: "text-clay",
+          },
+          {
+            label: "Pending Amt",
+            val: fmt(
+              claims
+                .filter((c) => ["pending", "submitted"].includes(c.status))
+                .reduce((s, c) => s + (c.requestedAmount || 0), 0),
+            ),
+            color: "text-teal",
+          },
+        ]
+      : [
+          {
+            label: "Open",
+            val: preAuths.filter((p) => ["draft", "submitted"].includes(p.status)).length,
+            color: "text-mustard",
+          },
+          {
+            label: "Approved",
+            val: preAuths.filter((p) => p.status === "approved").length,
+            color: "text-money",
+          },
+          {
+            label: "Rejected",
+            val: preAuths.filter((p) => ["rejected", "expired"].includes(p.status)).length,
+            color: "text-clay",
+          },
+          {
+            label: "Pending Amt",
+            val: fmt(
+              preAuths
+                .filter((p) => p.status === "submitted")
+                .reduce((s, p) => s + p.estimatedCost, 0),
+            ),
+            color: "text-teal",
+          },
+        ];
 
-  const claimStep = !claim ? 0 : ({ pending: 0, submitted: 1, approved: 2, partial: 2, rejected: 2, "not-required": 2 } as any)[claim.status] ?? 0;
-  const paStep = !pa ? 0 : ({ draft: 0, submitted: 1, approved: 2, rejected: 2, expired: 2 } as any)[pa.status] ?? 0;
+  const claimStep = !claim
+    ? 0
+    : ((
+        { pending: 0, submitted: 1, approved: 2, partial: 2, rejected: 2, "not-required": 2 } as any
+      )[claim.status] ?? 0);
+  const paStep = !pa
+    ? 0
+    : (({ draft: 0, submitted: 1, approved: 2, rejected: 2, expired: 2 } as any)[pa.status] ?? 0);
   const claimStepLabels = [
     "Pending",
     "Submitted",
     claim && ["approved", "partial", "rejected", "not-required"].includes(claim.status)
-      ? (STATUS_META[claim.status]?.label || "Decision")
-      : "Decision"
+      ? STATUS_META[claim.status]?.label || "Decision"
+      : "Decision",
   ];
   const paStepLabels = [
     "Draft",
     "Submitted",
     pa && ["approved", "rejected", "expired"].includes(pa.status)
-      ? (PA_META[pa.status]?.label || "Decision")
-      : "Decision"
+      ? PA_META[pa.status]?.label || "Decision"
+      : "Decision",
   ];
 
   const claimFilters = ["All", ...CLAIM_STATUSES.map((s) => s.label)];
@@ -323,12 +513,15 @@ export default function Insurance() {
 
   return (
     <div data-testid="insurance-page" className="flex flex-col h-full gap-0">
-
       {/* ── Page header ──────────────────────────────────────────────── */}
       <div className="flex items-end justify-between mb-4">
         <div>
-          <div className="text-[10.5px] font-mono uppercase tracking-[0.16em] text-ink-400">Front Desk</div>
-          <h1 className="text-[22px] font-heading font-bold text-ink-900 leading-tight">Insurance &amp; Pre-Auth</h1>
+          <div className="text-[10.5px] font-mono uppercase tracking-[0.16em] text-ink-400">
+            Front Desk
+          </div>
+          <h1 className="text-[22px] font-heading font-bold text-ink-900 leading-tight">
+            Insurance &amp; Pre-Auth
+          </h1>
         </div>
         <button
           data-testid="request-preauth-btn"
@@ -342,7 +535,10 @@ export default function Insurance() {
       {/* ── Tabs + Stats ─────────────────────────────────────────────── */}
       <div className="flex items-center justify-between border-b border-ink-200 mb-5">
         <div className="flex">
-          {[{ id: "claims", label: "Claims & Settlements" }, { id: "preauths", label: "Pre-authorizations" }].map((t) => (
+          {[
+            { id: "claims", label: "Claims & Settlements" },
+            { id: "preauths", label: "Pre-authorizations" },
+          ].map((t) => (
             <button
               key={t.id}
               data-testid={`tab-${t.id}`}
@@ -356,7 +552,9 @@ export default function Insurance() {
                 setShowPopover(false);
               }}
               className={`px-5 py-2.5 text-[13px] font-medium border-b-2 -mb-px transition-colors ${
-                activeTab === t.id ? "border-sage text-sage font-semibold" : "border-transparent text-ink-500 hover:text-ink-900"
+                activeTab === t.id
+                  ? "border-sage text-sage font-semibold"
+                  : "border-transparent text-ink-500 hover:text-ink-900"
               }`}
             >
               {t.label}
@@ -366,8 +564,14 @@ export default function Insurance() {
         <div className="flex items-center gap-8 pr-1 pb-2.5">
           {kpis.map((k) => (
             <div key={k.label} className="text-right">
-              <div className={`text-[20px] font-heading font-bold tabular-nums leading-none ${k.color}`}>{k.val}</div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.12em] text-ink-400 mt-0.5">{k.label}</div>
+              <div
+                className={`text-[20px] font-heading font-bold tabular-nums leading-none ${k.color}`}
+              >
+                {k.val}
+              </div>
+              <div className="text-[10px] font-mono uppercase tracking-[0.12em] text-ink-400 mt-0.5">
+                {k.label}
+              </div>
             </div>
           ))}
         </div>
@@ -375,9 +579,11 @@ export default function Insurance() {
 
       {/* ── Two-panel ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-12 gap-5 flex-1 min-h-0">
-
         {/* ── LEFT: list ───────────────────────────────────────────── */}
-        <div className="col-span-4 flex flex-col min-h-0 overflow-hidden rounded-2xl border border-ink-200 bg-white" style={{ height: "calc(100vh - 268px)" }}>
+        <div
+          className="col-span-4 flex flex-col min-h-0 overflow-hidden rounded-2xl border border-ink-200 bg-white"
+          style={{ height: "calc(100vh - 268px)" }}
+        >
           <div className="p-3 border-b border-ink-200 space-y-2.5 shrink-0 relative">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink-400" />
@@ -385,7 +591,11 @@ export default function Insurance() {
                 data-testid="insurance-search"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder={activeTab === "claims" ? "Claim, patient, provider…" : "Request, patient, service…"}
+                placeholder={
+                  activeTab === "claims"
+                    ? "Claim, patient, provider…"
+                    : "Request, patient, service…"
+                }
                 className="w-full h-9 pl-9 pr-8 text-[12.5px] bg-bone rounded-lg border border-ink-200 focus:outline-none focus:border-sage"
               />
               <button
@@ -425,7 +635,9 @@ export default function Insurance() {
 
                 {/* Filter Section */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-ink-400 font-semibold">Filter by Status</div>
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-ink-400 font-semibold">
+                    Filter by Status
+                  </div>
                   <div className="flex gap-1.5 flex-wrap">
                     {(activeTab === "claims" ? claimFilters : paFilters).map((f) => (
                       <button
@@ -446,7 +658,9 @@ export default function Insurance() {
 
                 {/* Sort By Section */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-ink-400 font-semibold">Sort By</div>
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-ink-400 font-semibold">
+                    Sort By
+                  </div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { id: "date", label: "Date" },
@@ -471,11 +685,29 @@ export default function Insurance() {
 
                 {/* Sort Direction Section */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-ink-400 font-semibold">Direction</div>
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-ink-400 font-semibold">
+                    Direction
+                  </div>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { id: "asc", label: tempSortBy === "name" ? "A → Z" : tempSortBy === "amount" ? "Lowest First" : "Oldest First" },
-                      { id: "desc", label: tempSortBy === "name" ? "Z → A" : tempSortBy === "amount" ? "Highest First" : "Newest First" },
+                      {
+                        id: "asc",
+                        label:
+                          tempSortBy === "name"
+                            ? "A → Z"
+                            : tempSortBy === "amount"
+                              ? "Lowest First"
+                              : "Oldest First",
+                      },
+                      {
+                        id: "desc",
+                        label:
+                          tempSortBy === "name"
+                            ? "Z → A"
+                            : tempSortBy === "amount"
+                              ? "Highest First"
+                              : "Newest First",
+                      },
                     ].map((item) => (
                       <button
                         key={item.id}
@@ -562,20 +794,44 @@ export default function Insurance() {
                   const p = patients.find((x) => x.id === c.patientId);
                   const meta = STATUS_META[c.status];
                   const active = !showNewForm && claim?.id === c.id;
-                  const ini = p?.name.split(" ").map((s) => s[0]).slice(0, 2).join("") ?? "?";
+                  const ini =
+                    p?.name
+                      .split(" ")
+                      .map((s) => s[0])
+                      .slice(0, 2)
+                      .join("") ?? "?";
                   return (
                     <li key={c.id}>
-                      <button data-testid={`claim-row-${c.id}`} onClick={() => { setSelectedClaimId(c.id); setShowNewForm(false); }}
-                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${active ? "bg-sage-soft/60" : "hover:bg-bone/50"}`}>
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 ${active ? "bg-sage text-white" : "bg-ink-100 text-ink-600"}`}>{ini}</div>
+                      <button
+                        data-testid={`claim-row-${c.id}`}
+                        onClick={() => {
+                          setSelectedClaimId(c.id);
+                          setShowNewForm(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${active ? "bg-sage-soft/60" : "hover:bg-bone/50"}`}
+                      >
+                        <div
+                          className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 ${active ? "bg-sage text-white" : "bg-ink-100 text-ink-600"}`}
+                        >
+                          {ini}
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-[13px] font-medium text-ink-900 truncate">{p?.name}</div>
-                          <div className="text-[11px] text-ink-400 font-mono truncate">{c.id} · {c.provider}</div>
+                          <div className="text-[13px] font-medium text-ink-900 truncate">
+                            {p?.name}
+                          </div>
+                          <div className="text-[11px] text-ink-400 font-mono truncate">
+                            {c.id} · {c.provider}
+                          </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <div className="text-[12.5px] font-mono font-semibold text-ink-900">{fmt(c.requestedAmount)}</div>
-                          <span className={`${meta?.chip || "chip-ink"} inline-flex items-center gap-1 mt-0.5`}>
-                            <span className={CLAIM_DOT[c.status]} />{meta?.label}
+                          <div className="text-[12.5px] font-mono font-semibold text-ink-900">
+                            {fmt(c.requestedAmount)}
+                          </div>
+                          <span
+                            className={`${meta?.chip || "chip-ink"} inline-flex items-center gap-1 mt-0.5`}
+                          >
+                            <span className={CLAIM_DOT[c.status]} />
+                            {meta?.label}
                           </span>
                         </div>
                       </button>
@@ -586,20 +842,44 @@ export default function Insurance() {
                   const p = patients.find((pt) => pt.id === x.patientId);
                   const meta = PA_META[x.status];
                   const active = !showNewForm && pa?.id === x.id;
-                  const ini = p?.name.split(" ").map((s) => s[0]).slice(0, 2).join("") ?? "?";
+                  const ini =
+                    p?.name
+                      .split(" ")
+                      .map((s) => s[0])
+                      .slice(0, 2)
+                      .join("") ?? "?";
                   return (
                     <li key={x.id}>
-                      <button data-testid={`preauth-row-${x.id}`} onClick={() => { setSelectedPAId(x.id); setShowNewForm(false); }}
-                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${active ? "bg-sage-soft/60" : "hover:bg-bone/50"}`}>
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 ${active ? "bg-sage text-white" : "bg-ink-100 text-ink-600"}`}>{ini}</div>
+                      <button
+                        data-testid={`preauth-row-${x.id}`}
+                        onClick={() => {
+                          setSelectedPAId(x.id);
+                          setShowNewForm(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${active ? "bg-sage-soft/60" : "hover:bg-bone/50"}`}
+                      >
+                        <div
+                          className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 ${active ? "bg-sage text-white" : "bg-ink-100 text-ink-600"}`}
+                        >
+                          {ini}
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-[13px] font-medium text-ink-900 truncate">{p?.name}</div>
-                          <div className="text-[11px] text-ink-400 font-mono truncate">{x.id} · {x.provider}</div>
+                          <div className="text-[13px] font-medium text-ink-900 truncate">
+                            {p?.name}
+                          </div>
+                          <div className="text-[11px] text-ink-400 font-mono truncate">
+                            {x.id} · {x.provider}
+                          </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <div className="text-[12.5px] font-mono font-semibold text-ink-900">{fmt(x.estimatedCost)}</div>
-                          <span className={`${meta?.chip || "chip-ink"} inline-flex items-center gap-1 mt-0.5`}>
-                            <span className={PA_DOT[x.status]} />{meta?.label}
+                          <div className="text-[12.5px] font-mono font-semibold text-ink-900">
+                            {fmt(x.estimatedCost)}
+                          </div>
+                          <span
+                            className={`${meta?.chip || "chip-ink"} inline-flex items-center gap-1 mt-0.5`}
+                          >
+                            <span className={PA_DOT[x.status]} />
+                            {meta?.label}
                           </span>
                         </div>
                       </button>
@@ -613,14 +893,19 @@ export default function Insurance() {
         </div>
 
         {/* ── RIGHT panel ──────────────────────────────────────────── */}
-        <div className="col-span-8 flex flex-col min-h-0 overflow-hidden rounded-2xl border border-ink-200 bg-white" style={{ height: "calc(100vh - 268px)" }}>
-
+        <div
+          className="col-span-8 flex flex-col min-h-0 overflow-hidden rounded-2xl border border-ink-200 bg-white"
+          style={{ height: "calc(100vh - 268px)" }}
+        >
           {/* ════════════ NEW PRE-AUTH INLINE FORM ════════════ */}
           {showNewForm && (
             <>
               {/* Header */}
               <div className="px-6 py-4 border-b border-ink-200 shrink-0 flex items-center gap-3">
-                <button onClick={cancelForm} className="w-8 h-8 rounded-lg hover:bg-ink-100 flex items-center justify-center transition-colors">
+                <button
+                  onClick={cancelForm}
+                  className="w-8 h-8 rounded-lg hover:bg-ink-100 flex items-center justify-center transition-colors"
+                >
                   <ArrowLeft className="w-4 h-4 text-ink-500" />
                 </button>
                 <div className="flex-1 min-w-0">
@@ -628,12 +913,18 @@ export default function Insurance() {
                     {formStep === "patient" ? "Step 1 of 2" : "Step 2 of 2"}
                   </div>
                   <h2 className="text-[18px] font-heading font-bold text-ink-900 leading-tight">
-                    {formStep === "patient" ? "Select Patient" : `New Pre-auth · ${formPatient?.name}`}
+                    {formStep === "patient"
+                      ? "Select Patient"
+                      : `New Pre-auth · ${formPatient?.name}`}
                   </h2>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
-                  <div className={`w-2 h-2 rounded-full ${formStep === "patient" ? "bg-sage" : "bg-ink-200"}`} />
-                  <div className={`w-2 h-2 rounded-full ${formStep === "form" ? "bg-sage" : "bg-ink-200"}`} />
+                  <div
+                    className={`w-2 h-2 rounded-full ${formStep === "patient" ? "bg-sage" : "bg-ink-200"}`}
+                  />
+                  <div
+                    className={`w-2 h-2 rounded-full ${formStep === "form" ? "bg-sage" : "bg-ink-200"}`}
+                  />
                 </div>
               </div>
 
@@ -654,7 +945,11 @@ export default function Insurance() {
                   </div>
                   <ul className="overflow-y-auto flex-1 divide-y divide-ink-100">
                     {filteredPatients.map((p) => {
-                      const ini = p.name.split(" ").map((s) => s[0]).slice(0, 2).join("");
+                      const ini = p.name
+                        .split(" ")
+                        .map((s) => s[0])
+                        .slice(0, 2)
+                        .join("");
                       return (
                         <li key={p.id}>
                           <button
@@ -667,13 +962,20 @@ export default function Insurance() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="text-[14px] font-semibold text-ink-900">{p.name}</div>
-                              <div className="text-[12px] text-ink-400 font-mono mt-0.5">{p.id} · {p.phone}</div>
+                              <div className="text-[12px] text-ink-400 font-mono mt-0.5">
+                                {p.id} · {p.phone}
+                              </div>
                             </div>
                             <div className="flex items-center gap-3 shrink-0">
-                              {p.insurance?.provider
-                                ? <span className="chip-teal text-[11px]">{p.insurance.provider}</span>
-                                : <span className="text-[11px] text-ink-400 italic">No insurance</span>
-                              }
+                              {p.insurance?.provider ? (
+                                <span className="chip-teal text-[11px]">
+                                  {p.insurance.provider}
+                                </span>
+                              ) : (
+                                <span className="text-[11px] text-ink-400 italic">
+                                  No insurance
+                                </span>
+                              )}
                               <ChevronRight className="w-4 h-4 text-ink-300 group-hover:text-sage group-hover:translate-x-0.5 transition-all" />
                             </div>
                           </button>
@@ -681,7 +983,9 @@ export default function Insurance() {
                       );
                     })}
                     {filteredPatients.length === 0 && (
-                      <li className="p-12 text-center text-[12.5px] text-ink-400">No patients found.</li>
+                      <li className="p-12 text-center text-[12.5px] text-ink-400">
+                        No patients found.
+                      </li>
                     )}
                   </ul>
                 </>
@@ -690,16 +994,25 @@ export default function Insurance() {
                 <>
                   <div className="flex-1 overflow-y-auto">
                     <div className="grid grid-cols-2 divide-x divide-ink-100">
-
                       {/* Left column */}
                       <div className="px-6 py-5">
                         <SectionHead icon={Hospital} title="Insurance Details" />
                         <div className="mt-2 space-y-0">
                           <FormRow label="Insurance Provider" required>
-                            <input value={fProvider} onChange={(e) => setFProvider(e.target.value)} className={inputCls} placeholder="e.g. Star Health" />
+                            <input
+                              value={fProvider}
+                              onChange={(e) => setFProvider(e.target.value)}
+                              className={inputCls}
+                              placeholder="e.g. Star Health"
+                            />
                           </FormRow>
                           <FormRow label="Policy / Member ID" required>
-                            <input value={fPolicy} onChange={(e) => setFPolicy(e.target.value)} className={inputCls} placeholder="e.g. SH-882-3341" />
+                            <input
+                              value={fPolicy}
+                              onChange={(e) => setFPolicy(e.target.value)}
+                              className={inputCls}
+                              placeholder="e.g. SH-882-3341"
+                            />
                           </FormRow>
                         </div>
 
@@ -707,7 +1020,11 @@ export default function Insurance() {
                           <SectionHead icon={Stethoscope} title="Clinical Details" />
                           <div className="mt-2 space-y-0">
                             <FormRow label="Procedure Type" required>
-                              <select value={fProcedure} onChange={(e) => setFProcedure(e.target.value)} className={selectCls}>
+                              <select
+                                value={fProcedure}
+                                onChange={(e) => setFProcedure(e.target.value)}
+                                className={selectCls}
+                              >
                                 <option>OPD Consultation</option>
                                 <option>Inpatient Procedure</option>
                                 <option>Diagnostic Scan</option>
@@ -716,7 +1033,12 @@ export default function Insurance() {
                               </select>
                             </FormRow>
                             <FormRow label="Diagnosis & ICD-10" required>
-                              <input value={fDiagnosis} onChange={(e) => setFDiagnosis(e.target.value)} className={inputCls} placeholder="e.g. Lumbar radiculopathy (ICD M54.16)" />
+                              <input
+                                value={fDiagnosis}
+                                onChange={(e) => setFDiagnosis(e.target.value)}
+                                className={inputCls}
+                                placeholder="e.g. Lumbar radiculopathy (ICD M54.16)"
+                              />
                             </FormRow>
                           </div>
                         </div>
@@ -728,8 +1050,16 @@ export default function Insurance() {
                         <div className="mt-2 space-y-0">
                           <FormRow label="Estimated Cost (₹)" required>
                             <div className="relative">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-ink-400 font-mono">₹</span>
-                              <input type="number" value={fCost} onChange={(e) => setFCost(e.target.value)} className={`${inputCls} pl-7`} placeholder="0" />
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-ink-400 font-mono">
+                                ₹
+                              </span>
+                              <input
+                                type="number"
+                                value={fCost}
+                                onChange={(e) => setFCost(e.target.value)}
+                                className={`${inputCls} pl-7`}
+                                placeholder="0"
+                              />
                             </div>
                           </FormRow>
                         </div>
@@ -738,7 +1068,12 @@ export default function Insurance() {
                           <SectionHead icon={FileText} title="Supporting Documents" />
                           <div className="mt-2 space-y-0">
                             <FormRow label="Document Filename">
-                              <input value={fDoc} onChange={(e) => setFDoc(e.target.value)} className={inputCls} placeholder="e.g. prescription_scan.pdf" />
+                              <input
+                                value={fDoc}
+                                onChange={(e) => setFDoc(e.target.value)}
+                                className={inputCls}
+                                placeholder="e.g. prescription_scan.pdf"
+                              />
                             </FormRow>
                           </div>
                         </div>
@@ -760,14 +1095,23 @@ export default function Insurance() {
 
                   {/* Form footer */}
                   <div className="px-6 py-3.5 border-t border-ink-200 flex items-center gap-2 shrink-0">
-                    <button onClick={cancelForm} className="h-9 px-4 text-[12.5px] text-ink-500 hover:bg-ink-100 rounded-lg transition font-medium">
+                    <button
+                      onClick={cancelForm}
+                      className="h-9 px-4 text-[12.5px] text-ink-500 hover:bg-ink-100 rounded-lg transition font-medium"
+                    >
                       Cancel
                     </button>
                     <div className="ml-auto flex items-center gap-2">
-                      <button onClick={() => handleSavePA("draft")} className="btn-outline h-9 flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleSavePA("draft")}
+                        className="btn-outline h-9 flex items-center gap-1.5"
+                      >
                         <Save className="w-3.5 h-3.5" /> Save as Draft
                       </button>
-                      <button onClick={() => handleSavePA("submitted")} className="btn-primary h-9 flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleSavePA("submitted")}
+                        className="btn-primary h-9 flex items-center gap-1.5"
+                      >
                         <Send className="w-3.5 h-3.5" /> Submit to TPA
                       </button>
                     </div>
@@ -778,8 +1122,9 @@ export default function Insurance() {
           )}
 
           {/* ════════════ CLAIMS DETAIL ════════════ */}
-          {!showNewForm && activeTab === "claims" && (
-            !claim ? (
+          {!showNewForm &&
+            activeTab === "claims" &&
+            (!claim ? (
               <div className="flex flex-col items-center justify-center gap-3 flex-1 text-center">
                 <div className="w-12 h-12 rounded-2xl bg-ink-100 grid place-items-center">
                   <ShieldCheck className="w-5 h-5 text-ink-400" />
@@ -791,11 +1136,19 @@ export default function Insurance() {
                 <div className="px-6 py-4 border-b border-ink-200 shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-400">{claim.id}</div>
-                      <h2 className="text-[20px] font-heading font-bold text-ink-900 mt-0.5 leading-tight">{cPatient?.name}</h2>
-                      <div className="text-[12px] text-ink-500 font-mono mt-0.5">{cPatient?.id} · {cDoctor?.name}</div>
+                      <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-400">
+                        {claim.id}
+                      </div>
+                      <h2 className="text-[20px] font-heading font-bold text-ink-900 mt-0.5 leading-tight">
+                        {cPatient?.name}
+                      </h2>
+                      <div className="text-[12px] text-ink-500 font-mono mt-0.5">
+                        {cPatient?.id} · {cDoctor?.name}
+                      </div>
                     </div>
-                    <span className={`${STATUS_META[claim.status]?.chip || "chip-ink"} flex items-center gap-1.5 shrink-0`}>
+                    <span
+                      className={`${STATUS_META[claim.status]?.chip || "chip-ink"} flex items-center gap-1.5 shrink-0`}
+                    >
                       <span className={CLAIM_DOT[claim.status]} />
                       {STATUS_META[claim.status]?.label}
                     </span>
@@ -810,7 +1163,9 @@ export default function Insurance() {
                       <div>
                         <SectionHead icon={Hospital} title="Insurance Provider" />
                         <Field label="Provider">{claim.provider}</Field>
-                        <Field label="Policy ID" mono>{claim.policyId}</Field>
+                        <Field label="Policy ID" mono>
+                          {claim.policyId}
+                        </Field>
                       </div>
                       <div>
                         <SectionHead icon={Stethoscope} title="Diagnosis & Service" />
@@ -819,58 +1174,118 @@ export default function Insurance() {
                       </div>
                       <div>
                         <SectionHead icon={Calendar} title="Timeline" />
-                        <Field label="Created" mono>{claim.createdAt?.slice(0, 10) ?? "—"}</Field>
-                        <Field label="Submitted" mono>{claim.submittedAt ? claim.submittedAt.slice(0, 16).replace("T", " ") : "—"}</Field>
-                        {claim.decisionAt && <Field label="Decision" mono>{claim.decisionAt.slice(0, 16).replace("T", " ")}</Field>}
+                        <Field label="Created" mono>
+                          {claim.createdAt?.slice(0, 10) ?? "—"}
+                        </Field>
+                        <Field label="Submitted" mono>
+                          {claim.submittedAt
+                            ? claim.submittedAt.slice(0, 16).replace("T", " ")
+                            : "—"}
+                        </Field>
+                        {claim.decisionAt && (
+                          <Field label="Decision" mono>
+                            {claim.decisionAt.slice(0, 16).replace("T", " ")}
+                          </Field>
+                        )}
                       </div>
                     </div>
                     <div className="px-6 py-5 space-y-5">
                       <div>
                         <SectionHead icon={IndianRupee} title="Financial Settlement" />
-                        <Field label="Estimated cost" mono>{fmt(claim.estimatedCost)}</Field>
-                        <Field label="Requested claim" mono>{fmt(claim.requestedAmount)}</Field>
+                        <Field label="Estimated cost" mono>
+                          {fmt(claim.estimatedCost)}
+                        </Field>
+                        <Field label="Requested claim" mono>
+                          {fmt(claim.requestedAmount)}
+                        </Field>
                         <div className="flex items-baseline gap-3 pt-3 mt-1">
-                          <span className="w-36 shrink-0 text-[11.5px] font-semibold text-ink-900">Approved Payout</span>
-                          <span className={`text-[24px] font-heading font-bold tabular-nums ${claim.approvedAmount == null ? "text-ink-400" : claim.approvedAmount === 0 ? "text-clay" : claim.approvedAmount < claim.requestedAmount ? "text-plum" : "text-money"}`}>
+                          <span className="w-36 shrink-0 text-[11.5px] font-semibold text-ink-900">
+                            Approved Payout
+                          </span>
+                          <span
+                            className={`text-[24px] font-heading font-bold tabular-nums ${claim.approvedAmount == null ? "text-ink-400" : claim.approvedAmount === 0 ? "text-clay" : claim.approvedAmount < claim.requestedAmount ? "text-plum" : "text-money"}`}
+                          >
                             {claim.approvedAmount == null ? "—" : fmt(claim.approvedAmount)}
                           </span>
                         </div>
                       </div>
                       <div>
-                        <SectionHead icon={FileText} title="Documents" action={
-                          <button onClick={doUpload} className="text-[11px] flex items-center gap-1 text-sage hover:underline font-medium">
-                            <Upload className="w-3 h-3" /> Attach
-                          </button>
-                        } />
-                        {claim.documents.length === 0
-                          ? <div className="text-[12px] text-ink-400 italic pt-1">No documents attached.</div>
-                          : <ul className="space-y-2 pt-1">{claim.documents.map((d: any, i: number) => (
+                        <SectionHead
+                          icon={FileText}
+                          title="Documents"
+                          action={
+                            <button
+                              onClick={doUpload}
+                              className="text-[11px] flex items-center gap-1 text-sage hover:underline font-medium"
+                            >
+                              <Upload className="w-3 h-3" /> Attach
+                            </button>
+                          }
+                        />
+                        {claim.documents.length === 0 ? (
+                          <div className="text-[12px] text-ink-400 italic pt-1">
+                            No documents attached.
+                          </div>
+                        ) : (
+                          <ul className="space-y-2 pt-1">
+                            {claim.documents.map((d: any, i: number) => (
                               <li key={i} className="flex items-center gap-2 text-[12.5px]">
                                 <Paperclip className="w-3.5 h-3.5 text-ink-400 shrink-0" />
                                 <span className="flex-1 truncate text-ink-900">{d.name}</span>
-                                <span className="text-[11px] text-ink-400 font-mono shrink-0">{d.size}</span>
+                                <span className="text-[11px] text-ink-400 font-mono shrink-0">
+                                  {d.size}
+                                </span>
                               </li>
-                            ))}</ul>
-                        }
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="px-6 py-3 border-t border-ink-200 flex items-center gap-2 shrink-0">
-                  {claim.status === "pending" && <button data-testid="claim-submit" onClick={doSubmitClaim} className="btn-teal h-9 flex items-center gap-1.5"><Send className="w-3.5 h-3.5" /> Submit to TPA</button>}
-                  {claim.status === "submitted" && <>
-                    <button data-testid="claim-approve" onClick={doApproveClaim} className="btn-money h-9 flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Approve Full</button>
-                    <button data-testid="claim-partial" onClick={doPartialClaim} className="btn-plum h-9 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> Partial Approval</button>
-                    <button data-testid="claim-reject" onClick={doRejectClaim} className="btn-clay h-9 flex items-center gap-1.5"><XCircle className="w-3.5 h-3.5" /> Reject</button>
-                  </>}
+                  {claim.status === "pending" && (
+                    <button
+                      data-testid="claim-submit"
+                      onClick={doSubmitClaim}
+                      className="btn-teal h-9 flex items-center gap-1.5"
+                    >
+                      <Send className="w-3.5 h-3.5" /> Submit to TPA
+                    </button>
+                  )}
+                  {claim.status === "submitted" && (
+                    <>
+                      <button
+                        data-testid="claim-approve"
+                        onClick={doApproveClaim}
+                        className="btn-money h-9 flex items-center gap-1.5"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Approve Full
+                      </button>
+                      <button
+                        data-testid="claim-partial"
+                        onClick={doPartialClaim}
+                        className="btn-plum h-9 flex items-center gap-1.5"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" /> Partial Approval
+                      </button>
+                      <button
+                        data-testid="claim-reject"
+                        onClick={doRejectClaim}
+                        className="btn-clay h-9 flex items-center gap-1.5"
+                      >
+                        <XCircle className="w-3.5 h-3.5" /> Reject
+                      </button>
+                    </>
+                  )}
                 </div>
               </>
-            )
-          )}
+            ))}
 
           {/* ════════════ PRE-AUTH DETAIL ════════════ */}
-          {!showNewForm && activeTab === "preauths" && (
-            !pa ? (
+          {!showNewForm &&
+            activeTab === "preauths" &&
+            (!pa ? (
               <div className="flex flex-col items-center justify-center gap-3 flex-1 text-center">
                 <div className="w-12 h-12 rounded-2xl bg-ink-100 grid place-items-center">
                   <Shield className="w-5 h-5 text-ink-400" />
@@ -882,11 +1297,19 @@ export default function Insurance() {
                 <div className="px-6 py-4 border-b border-ink-200 shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-400">{pa.id}</div>
-                      <h2 className="text-[20px] font-heading font-bold text-ink-900 mt-0.5 leading-tight">{paPatient?.name}</h2>
-                      <div className="text-[12px] text-ink-500 font-mono mt-0.5">{paPatient?.id} · {paPatient?.phone}</div>
+                      <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-400">
+                        {pa.id}
+                      </div>
+                      <h2 className="text-[20px] font-heading font-bold text-ink-900 mt-0.5 leading-tight">
+                        {paPatient?.name}
+                      </h2>
+                      <div className="text-[12px] text-ink-500 font-mono mt-0.5">
+                        {paPatient?.id} · {paPatient?.phone}
+                      </div>
                     </div>
-                    <span className={`${PA_META[pa.status]?.chip || "chip-ink"} flex items-center gap-1.5 shrink-0`}>
+                    <span
+                      className={`${PA_META[pa.status]?.chip || "chip-ink"} flex items-center gap-1.5 shrink-0`}
+                    >
                       <span className={PA_DOT[pa.status]} />
                       {PA_META[pa.status]?.label}
                     </span>
@@ -901,7 +1324,9 @@ export default function Insurance() {
                       <div>
                         <SectionHead icon={Hospital} title="Insurance Provider" />
                         <Field label="Provider">{pa.provider}</Field>
-                        <Field label="Policy ID" mono>{pa.policyId}</Field>
+                        <Field label="Policy ID" mono>
+                          {pa.policyId}
+                        </Field>
                       </div>
                       <div>
                         <SectionHead icon={Stethoscope} title="Diagnosis & Procedure" />
@@ -910,20 +1335,44 @@ export default function Insurance() {
                       </div>
                       <div>
                         <SectionHead icon={Calendar} title="Timeline" />
-                        <Field label="Created" mono>{pa.createdAt.slice(0, 10)}</Field>
-                        {pa.submittedAt && <Field label="Submitted" mono>{pa.submittedAt.slice(0, 10)}</Field>}
-                        {pa.decisionAt && <Field label="Decision" mono>
-                          <span className={pa.status === "approved" ? "text-money" : pa.status === "rejected" ? "text-clay" : ""}>{pa.decisionAt.slice(0, 10)}</span>
-                        </Field>}
+                        <Field label="Created" mono>
+                          {pa.createdAt.slice(0, 10)}
+                        </Field>
+                        {pa.submittedAt && (
+                          <Field label="Submitted" mono>
+                            {pa.submittedAt.slice(0, 10)}
+                          </Field>
+                        )}
+                        {pa.decisionAt && (
+                          <Field label="Decision" mono>
+                            <span
+                              className={
+                                pa.status === "approved"
+                                  ? "text-money"
+                                  : pa.status === "rejected"
+                                    ? "text-clay"
+                                    : ""
+                              }
+                            >
+                              {pa.decisionAt.slice(0, 10)}
+                            </span>
+                          </Field>
+                        )}
                       </div>
                     </div>
                     <div className="px-6 py-5 space-y-5">
                       <div>
                         <SectionHead icon={IndianRupee} title="Financial Assessment" />
-                        <Field label="Estimated cost" mono>{fmt(pa.estimatedCost)}</Field>
+                        <Field label="Estimated cost" mono>
+                          {fmt(pa.estimatedCost)}
+                        </Field>
                         <div className="flex items-baseline gap-3 pt-3 mt-1">
-                          <span className="w-36 shrink-0 text-[11.5px] font-semibold text-ink-900">Approved Limit</span>
-                          <span className={`text-[24px] font-heading font-bold tabular-nums ${pa.approvedAmount === undefined ? "text-ink-400" : pa.approvedAmount === 0 ? "text-clay" : "text-money"}`}>
+                          <span className="w-36 shrink-0 text-[11.5px] font-semibold text-ink-900">
+                            Approved Limit
+                          </span>
+                          <span
+                            className={`text-[24px] font-heading font-bold tabular-nums ${pa.approvedAmount === undefined ? "text-ink-400" : pa.approvedAmount === 0 ? "text-clay" : "text-money"}`}
+                          >
                             {pa.approvedAmount === undefined ? "—" : fmt(pa.approvedAmount)}
                           </span>
                         </div>
@@ -933,33 +1382,75 @@ export default function Insurance() {
                           <SectionHead icon={FileText} title="Supporting Document" />
                           <div className="flex items-center gap-2 pt-1">
                             <Paperclip className="w-3.5 h-3.5 text-ink-400 shrink-0" />
-                            <span className="text-[12.5px] text-ink-900 truncate">{pa.documentName}</span>
+                            <span className="text-[12.5px] text-ink-900 truncate">
+                              {pa.documentName}
+                            </span>
                           </div>
                         </div>
                       )}
                       {pa.notes && (
                         <div>
                           <SectionHead icon={FileText} title="Receptionist Note" />
-                          <p className="text-[12.5px] text-ink-700 leading-relaxed pt-1">{pa.notes}</p>
+                          <p className="text-[12.5px] text-ink-700 leading-relaxed pt-1">
+                            {pa.notes}
+                          </p>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
                 <div className="px-6 py-3 border-t border-ink-200 flex items-center gap-2 shrink-0">
-                  {pa.status === "draft" && <button data-testid="preauth-submit" onClick={doSubmitPA} className="btn-teal h-9 flex items-center gap-1.5"><Send className="w-3.5 h-3.5" /> Submit to TPA</button>}
-                  {pa.status === "submitted" && <>
-                    <input type="number" placeholder="Approved ₹" value={approvedInput} onChange={(e) => setApprovedInput(e.target.value)} className="h-9 w-36 rounded-lg border border-ink-200 bg-white px-3 text-[12.5px] focus:outline-none focus:border-sage" />
-                    <button data-testid="preauth-approve" onClick={doApprovePA} className="btn-money h-9 flex items-center gap-1.5"><Check className="w-3.5 h-3.5" /> Approve</button>
-                    <button data-testid="preauth-reject" onClick={doRejectPA} className="btn-clay h-9 flex items-center gap-1.5"><XCircle className="w-3.5 h-3.5" /> Reject</button>
-                  </>}
-                  {pa.status === "approved" && <button data-testid="preauth-convert" onClick={doConvert} className="btn-primary h-9 flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Convert to Claim</button>}
+                  {pa.status === "draft" && (
+                    <button
+                      data-testid="preauth-submit"
+                      onClick={doSubmitPA}
+                      className="btn-teal h-9 flex items-center gap-1.5"
+                    >
+                      <Send className="w-3.5 h-3.5" /> Submit to TPA
+                    </button>
+                  )}
+                  {pa.status === "submitted" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="Approved ₹"
+                        value={approvedInput}
+                        onChange={(e) => setApprovedInput(e.target.value)}
+                        className="h-9 w-36 rounded-lg border border-ink-200 bg-white px-3 text-[12.5px] focus:outline-none focus:border-sage"
+                      />
+                      <button
+                        data-testid="preauth-approve"
+                        onClick={doApprovePA}
+                        className="btn-money h-9 flex items-center gap-1.5"
+                      >
+                        <Check className="w-3.5 h-3.5" /> Approve
+                      </button>
+                      <button
+                        data-testid="preauth-reject"
+                        onClick={doRejectPA}
+                        className="btn-clay h-9 flex items-center gap-1.5"
+                      >
+                        <XCircle className="w-3.5 h-3.5" /> Reject
+                      </button>
+                    </>
+                  )}
+                  {pa.status === "approved" && (
+                    <button
+                      data-testid="preauth-convert"
+                      onClick={doConvert}
+                      className="btn-primary h-9 flex items-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Convert to Claim
+                    </button>
+                  )}
                   <div className="ml-auto" />
-                  <span className="text-[11px] text-ink-400 font-mono flex items-center gap-1.5"><Clock className="w-3 h-3" />{pa.createdAt.slice(0, 10)}</span>
+                  <span className="text-[11px] text-ink-400 font-mono flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" />
+                    {pa.createdAt.slice(0, 10)}
+                  </span>
                 </div>
               </>
-            )
-          )}
+            ))}
         </div>
       </div>
     </div>

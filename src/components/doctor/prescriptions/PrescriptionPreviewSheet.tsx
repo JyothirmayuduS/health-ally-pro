@@ -31,7 +31,17 @@ type Props = {
 
 const RX_PAD = "rx-pad-section";
 
-function PadField({ label, value, mono, className }: { label: string; value: string; mono?: boolean; className?: string }) {
+function PadField({
+  label,
+  value,
+  mono,
+  className,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+  className?: string;
+}) {
   return (
     <div className={cn("min-w-0", className)}>
       <span className="rx-pad-field-label">{label}</span>
@@ -43,7 +53,10 @@ function PadField({ label, value, mono, className }: { label: string; value: str
 function RxQrBlock({ rxId, className }: { rxId: string; className?: string }) {
   return (
     <div className={cn("flex flex-col items-center gap-0.5", className)}>
-      <div className="h-10 w-10 border border-[#a8a29e] bg-[#fdf8f0] p-0.5 sm:h-11 sm:w-11" aria-hidden>
+      <div
+        className="h-10 w-10 border border-[#a8a29e] bg-[#fdf8f0] p-0.5 sm:h-11 sm:w-11"
+        aria-hidden
+      >
         <div
           className="h-full w-full"
           style={{
@@ -58,7 +71,9 @@ function RxQrBlock({ rxId, className }: { rxId: string; className?: string }) {
           }}
         />
       </div>
-      <p className="max-w-[4rem] truncate font-mono text-[6px] text-[#78716c] sm:text-[7px]">{rxId}</p>
+      <p className="max-w-[4rem] truncate font-mono text-[6px] text-[#78716c] sm:text-[7px]">
+        {rxId}
+      </p>
     </div>
   );
 }
@@ -99,9 +114,7 @@ export function PrescriptionPreviewDocument({
     (a) => a.severity === "critical" && a.id.startsWith("allergy-") && a.id !== "allergy-doc",
   );
   const hasAllergyConflict = allergyConflicts.length > 0;
-  const diagnosisText = draft.diagnosis
-    ? tPhrase(draft.diagnosis, locale)
-    : labels.notRecorded;
+  const diagnosisText = draft.diagnosis ? tPhrase(draft.diagnosis, locale) : labels.notRecorded;
   const adviceText = tPatientInstructions(
     draft.patientInstructions || draft.instructionTags.join(" · "),
     locale,
@@ -163,7 +176,11 @@ export function PrescriptionPreviewDocument({
 
         <section className={RX_PAD}>
           <div className="rx-pad-patient-grid">
-            <PadField label={labels.patient} value={patient.name} className="min-[640px]:col-span-1" />
+            <PadField
+              label={labels.patient}
+              value={patient.name}
+              className="min-[640px]:col-span-1"
+            />
             <PadField label={labels.ageSex} value={`${patient.age} Y / ${sexLabel}`} />
             <PadField label={labels.uhid} value={patient.patientRef} mono />
             <PadField label={labels.validUntil} value={validUntil} />
@@ -185,7 +202,9 @@ export function PrescriptionPreviewDocument({
           <p className="rx-pad-diagnosis-label">{labels.diagnosis}</p>
           <p className="rx-pad-diagnosis-value">
             {diagnosisText}
-            {draft.diagnosisIcd ? <span className="rx-pad-diagnosis-icd">[{draft.diagnosisIcd}]</span> : null}
+            {draft.diagnosisIcd ? (
+              <span className="rx-pad-diagnosis-icd">[{draft.diagnosisIcd}]</span>
+            ) : null}
           </p>
         </section>
 

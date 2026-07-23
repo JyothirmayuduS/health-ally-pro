@@ -55,19 +55,17 @@ export async function fetchDeskRecords(desk: DeskId) {
       headers: await authHeaders(),
     });
     if (!res.ok) return null;
-    return (await res.json()) as { ok?: boolean; data?: Array<{ record_key: string; payload: Record<string, unknown> }> };
+    return (await res.json()) as {
+      ok?: boolean;
+      data?: Array<{ record_key: string; payload: Record<string, unknown> }>;
+    };
   } catch {
     return null;
   }
 }
 
 /** localStorage helper that dual-writes to remote when licensed. */
-export function writeLicensedLocalJson(
-  key: string,
-  value: unknown,
-  desk: DeskId,
-  recordKey = key,
-) {
+export function writeLicensedLocalJson(key: string, value: unknown, desk: DeskId, recordKey = key) {
   try {
     if (typeof localStorage !== "undefined") {
       localStorage.setItem(key, JSON.stringify(value));

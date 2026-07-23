@@ -18,15 +18,78 @@ import { semanticSearch } from "./semantic-search";
 let cachedIndex: KnowledgeChunk[] | null = null;
 
 const NAV_CHUNKS: KnowledgeChunk[] = [
-  { id: "nav-doctor-queue", category: "nav", title: "Doctor live queue", body: "OPD waiting room and in-consultation patients", keywords: ["queue", "waiting", "opd", "consult"], to: "/doctor/queue" },
-  { id: "nav-prescriptions", category: "nav", title: "E-prescribe", body: "Write prescriptions with AI clinical assistant", keywords: ["prescribe", "rx", "medication", "drug"], to: "/doctor/prescriptions" },
-  { id: "nav-billing", category: "nav", title: "Billing dashboard", body: "Revenue, invoices, payments, finance KPIs", keywords: ["billing", "invoice", "payment", "revenue", "finance"], to: "/billing" },
-  { id: "nav-lab", category: "nav", title: "Laboratory", body: "Lab orders, collection, validation, reports", keywords: ["lab", "blood", "test", "pathology"], to: "/lab" },
-  { id: "nav-radiology", category: "nav", title: "Radiology queue", body: "Imaging orders and scan workflow", keywords: ["radiology", "imaging", "xray", "ct", "mri", "scan"], to: "/lab/radiology" },
-  { id: "nav-pharmacy", category: "nav", title: "Pharmacy desk", body: "Dispensing, stock, prescriptions", keywords: ["pharmacy", "dispense", "stock", "formulary"], to: "/pharmacy" },
-  { id: "nav-beds", category: "nav", title: "IPD beds", body: "Inpatient bed occupancy and admissions", keywords: ["bed", "ipd", "admission", "ward", "inpatient"], to: "/nursing/beds" },
-  { id: "nav-ot", category: "nav", title: "Operation theatre", body: "OT utilization and room status", keywords: ["ot", "surgery", "theatre", "operation"], to: "/admin/ot" },
-  { id: "nav-command", category: "nav", title: "Hospital command center", body: "Unified ERP overview across departments", keywords: ["command", "admin", "dashboard", "erp", "hospital"], to: "/admin" },
+  {
+    id: "nav-doctor-queue",
+    category: "nav",
+    title: "Doctor live queue",
+    body: "OPD waiting room and in-consultation patients",
+    keywords: ["queue", "waiting", "opd", "consult"],
+    to: "/doctor/queue",
+  },
+  {
+    id: "nav-prescriptions",
+    category: "nav",
+    title: "E-prescribe",
+    body: "Write prescriptions with AI clinical assistant",
+    keywords: ["prescribe", "rx", "medication", "drug"],
+    to: "/doctor/prescriptions",
+  },
+  {
+    id: "nav-billing",
+    category: "nav",
+    title: "Billing dashboard",
+    body: "Revenue, invoices, payments, finance KPIs",
+    keywords: ["billing", "invoice", "payment", "revenue", "finance"],
+    to: "/billing",
+  },
+  {
+    id: "nav-lab",
+    category: "nav",
+    title: "Laboratory",
+    body: "Lab orders, collection, validation, reports",
+    keywords: ["lab", "blood", "test", "pathology"],
+    to: "/lab",
+  },
+  {
+    id: "nav-radiology",
+    category: "nav",
+    title: "Radiology queue",
+    body: "Imaging orders and scan workflow",
+    keywords: ["radiology", "imaging", "xray", "ct", "mri", "scan"],
+    to: "/lab/radiology",
+  },
+  {
+    id: "nav-pharmacy",
+    category: "nav",
+    title: "Pharmacy desk",
+    body: "Dispensing, stock, prescriptions",
+    keywords: ["pharmacy", "dispense", "stock", "formulary"],
+    to: "/pharmacy",
+  },
+  {
+    id: "nav-beds",
+    category: "nav",
+    title: "IPD beds",
+    body: "Inpatient bed occupancy and admissions",
+    keywords: ["bed", "ipd", "admission", "ward", "inpatient"],
+    to: "/nursing/beds",
+  },
+  {
+    id: "nav-ot",
+    category: "nav",
+    title: "Operation theatre",
+    body: "OT utilization and room status",
+    keywords: ["ot", "surgery", "theatre", "operation"],
+    to: "/admin/ot",
+  },
+  {
+    id: "nav-command",
+    category: "nav",
+    title: "Hospital command center",
+    body: "Unified ERP overview across departments",
+    keywords: ["command", "admin", "dashboard", "erp", "hospital"],
+    to: "/admin",
+  },
 ];
 
 export function buildKnowledgeIndex(): KnowledgeChunk[] {
@@ -51,7 +114,9 @@ export function buildKnowledgeIndex(): KnowledgeChunk[] {
       category: "patient",
       title: p.name,
       body: `${p.condition} · ${p.patientRef} · ${p.status}${p.allergyWarning ? ` · ${p.allergyWarning}` : ""}`,
-      keywords: [p.name, p.condition, p.patientRef, p.status, p.allergyWarning ?? ""].filter(Boolean),
+      keywords: [p.name, p.condition, p.patientRef, p.status, p.allergyWarning ?? ""].filter(
+        Boolean,
+      ),
       to: `/doctor/patients/${p.id}`,
     });
   }

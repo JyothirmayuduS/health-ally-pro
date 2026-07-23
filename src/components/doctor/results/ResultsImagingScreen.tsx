@@ -51,7 +51,9 @@ export function ResultsImagingScreen({ selectedId }: { selectedId?: string }) {
   const [sort, setSort] = useState<ResultSort>("priority");
   const [openedVersion, setOpenedVersion] = useState(0);
   const userDismissedRef = useRef(false);
-  const [confirmKind, setConfirmKind] = useState<"sign-off-critical" | "decline-upload" | null>(null);
+  const [confirmKind, setConfirmKind] = useState<"sign-off-critical" | "decline-upload" | null>(
+    null,
+  );
 
   useEffect(() => {
     const refresh = () => setDocs(listResultDocuments());
@@ -327,11 +329,16 @@ export function ResultsImagingScreen({ selectedId }: { selectedId?: string }) {
         <p className="sr-only">{overview.openTasksCount} open tasks in messaging</p>
       )}
 
-      <AlertDialog open={confirmKind !== null} onOpenChange={(open) => !open && setConfirmKind(null)}>
+      <AlertDialog
+        open={confirmKind !== null}
+        onOpenChange={(open) => !open && setConfirmKind(null)}
+      >
         <AlertDialogContent className="border-[#EDEAE6] bg-white">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-serif text-[#1B3B2E]">
-              {confirmKind === "sign-off-critical" ? "Sign off critical result?" : "Decline patient upload?"}
+              {confirmKind === "sign-off-critical"
+                ? "Sign off critical result?"
+                : "Decline patient upload?"}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[#8A8F8C]">
               {confirmKind === "sign-off-critical"

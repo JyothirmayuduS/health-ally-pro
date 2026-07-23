@@ -98,7 +98,8 @@ export function linkToEncounter(
   if (idx < 0) return;
   const e = { ...list[idx] };
   if (link.invoiceId && !e.invoiceIds.includes(link.invoiceId)) e.invoiceIds.push(link.invoiceId);
-  if (link.labOrderId && !e.labOrderIds.includes(link.labOrderId)) e.labOrderIds.push(link.labOrderId);
+  if (link.labOrderId && !e.labOrderIds.includes(link.labOrderId))
+    e.labOrderIds.push(link.labOrderId);
   if (link.rxId && !e.rxIds.includes(link.rxId)) e.rxIds.push(link.rxId);
   list[idx] = e;
   save(list);
