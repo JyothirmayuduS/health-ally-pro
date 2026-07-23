@@ -12,7 +12,10 @@
     "note": "Full clean-tree rebuild for commit 398d69e was started but interrupted after long buffered build; prior slim rebuild succeeded and is the recovery artifact."
   },
   "docker_redeploy_rto_sample": {
-    "status": "pending_measure_on_slim_switch"
+    "status": "executed",
+    "seconds": 85,
+    "image": "medora-app:7b4d0b9-20260723T183213Z-slim",
+    "result": "operational, audit_dlq database_rpc open_failures=0"
   },
   "worker_redeploy": {
     "status": "pending",
