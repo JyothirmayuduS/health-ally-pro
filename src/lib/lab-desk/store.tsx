@@ -51,76 +51,20 @@ import {
   type LabInvoice,
   type LabPaymentMethod,
 } from "./billing";
+import {
+  hydrateLabDeskSnapshot,
+  loadLabDeskSnapshot,
+  saveLabDeskSnapshot,
+  type Aliquot,
+  type CriticalValueNotification,
+  type LabShiftReport,
+} from "./desk-persistence";
+
+export type { Aliquot, CriticalValueNotification, LabShiftReport } from "./desk-persistence";
+export type { LabOrder } from "./mockData";
 
 const ACTOR_TECH = "J. Mensah";
 const ACTOR_SUP = "Dr. Rajan";
-
-export interface CriticalValueNotification {
-  id: string;
-  orderId: string;
-  patientId: string;
-  doctorId: string;
-  parameters: {
-    parameterName: string;
-    value: string;
-    unit: string;
-    threshold: string;
-    direction: "low" | "high";
-  }[];
-  notifiedBy: string;
-  notifiedPerson: string;
-  method: string;
-  notes?: string;
-  notifiedAt: string;
-  acknowledgedAt: string | null;
-  status: "pending_ack" | "acknowledged";
-}
-
-export interface Aliquot {
-  id: string;
-  parentAccession: string;
-  volume: number;
-  containerType: string;
-  destination: string;
-  createdAt: string;
-  status: "active" | "disposed";
-}
-
-export interface LabShiftReport {
-  id: string;
-  date: string;
-  shift: "morning" | "afternoon" | "night";
-  technicianName: string;
-  supervisorName?: string;
-  handoverNotes?: string;
-  throughput: {
-    received: number;
-    stat: number;
-    urgent: number;
-    routine: number;
-    completed: number;
-    pending: number;
-    tatComplianceRate: number;
-  };
-  quality: {
-    qcPass: number;
-    qcWarning: number;
-    qcFail: number;
-    criticalAlertsCount: number;
-    deltaFailuresCount: number;
-  };
-  integrity: {
-    rejectedCollection: number;
-    rejectedReception: number;
-    storedCount: number;
-  };
-  reagents: {
-    lowOrExpiredCount: number;
-    blockedTestsCount: number;
-  };
-  status: "draft" | "signed";
-  signedAt?: string;
-}
 
 type StoreValue = {
   orders: LabOrder[];
@@ -205,84 +149,44 @@ function attachBilling(order: LabOrder, patientName: string, mrn: string): { ord
   };
 }
 
+function applyLabSnapshot(
+  snap: ReturnType<typeof loadLabDeskSnapshot>,
+  setters: {
+    setOrders: React.Dispatch<React.SetStateAction<LabOrder[]>>;
+    setInvoices: React.Dispatch<React.SetStateAction<LabInvoice[]>>;
+    setCriticalNotifications: React.Dispatch<React.SetStateAction<CriticalValueNotification[]>>;
+    setQCRuns: React.Dispatch<React.SetStateAction<QCRun[]>>;
+    setQcLocks: React.Dispatch<React.SetStateAction<string[]>>;
+    setReagents: React.Dispatch<React.SetStateAction<Reagent[]>>;
+    setAliquots: React.Dispatch<React.SetStateAction<Aliquot[]>>;
+    setLabShiftReports: React.Dispatch<React.SetStateAction<LabShiftReport[]>>;
+  },
+) {
+  setters.setOrders(snap.orders.map(enrichOrder));
+  setters.setInvoices(snap.invoices);
+  setters.setCriticalNotifications(snap.criticalNotifications);
+  setters.setQCRuns(snap.qcRuns);
+  setters.setQcLocks(snap.qcLocks);
+  setters.setReagents(snap.reagents);
+  setters.setAliquots(snap.aliquots);
+  setters.setLabShiftReports(snap.labShiftReports);
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [orders, setOrders] = useState<LabOrder[]>(() => SEED_ORDERS.map(enrichOrder));
+  const initial = loadLabDeskSnapshot();
+  const [persistReady, setPersistReady] = useState(false);
+  const [orders, setOrders] = useState<LabOrder[]>(() => initial.orders.map(enrichOrder));
   const [patients, setPatients] = useState<LabPatient[]>(LAB_PATIENTS);
   const [catalog, setCatalog] = useState<LabCatalogItem[]>(() => loadLabCatalog());
-  const [invoices, setInvoices] = useState<LabInvoice[]>([]);
-  const [criticalNotifications, setCriticalNotifications] = useState<CriticalValueNotification[]>(() => [
-    {
-      id: "CRIT-001",
-      orderId: "ORD-101",
-      patientId: "P-101",
-      doctorId: "DOC-202",
-      parameters: [
-        { parameterName: "Potassium", value: "6.8", unit: "mmol/L", threshold: ">= 6.5", direction: "high" }
-      ],
-      notifiedBy: "J. Mensah",
-      notifiedPerson: "Dr. Saanvi Reddy",
-      method: "Phone call",
-      notes: "Informed of critical K+ level. Doctor ordered urgent dialysis check.",
-      notifiedAt: new Date(Date.now() - 40 * 60 * 1000).toISOString(),
-      acknowledgedAt: null,
-      status: "pending_ack"
-    },
-    {
-      id: "CRIT-002",
-      orderId: "ORD-102",
-      patientId: "P-102",
-      doctorId: "DOC-203",
-      parameters: [
-        { parameterName: "Glucose", value: "32", unit: "mg/dL", threshold: "<= 40", direction: "low" }
-      ],
-      notifiedBy: "J. Mensah",
-      notifiedPerson: "Nurse Anita",
-      method: "In-person",
-      notes: "Ward 3 nurse notified. Patient being administered IV dextrose.",
-      notifiedAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-      acknowledgedAt: null,
-      status: "pending_ack"
-    }
-  ]);
-  const [qcRuns, setQCRuns] = useState<QCRun[]>(() => SEED_QC_RUNS);
-  const [qcLocks, setQcLocks] = useState<string[]>([]);
-  const [reagents, setReagents] = useState<Reagent[]>(() => SEED_REAGENTS);
-  const [aliquots, setAliquots] = useState<Aliquot[]>(() => [
-    {
-      id: "ACC-001-A",
-      parentAccession: "ACC-001",
-      volume: 1.5,
-      containerType: "Microcentrifuge tube",
-      destination: "Bench — Biochemistry",
-      createdAt: new Date().toISOString(),
-      status: "active"
-    },
-    {
-      id: "ACC-001-B",
-      parentAccession: "ACC-001",
-      volume: 2.0,
-      containerType: "Cryovial",
-      destination: "Archive",
-      createdAt: new Date().toISOString(),
-      status: "active"
-    }
-  ]);
-  const [labShiftReports, setLabShiftReports] = useState<LabShiftReport[]>(() => [
-    {
-      id: "REP-SHIFT-001",
-      date: new Date(Date.now() - 24 * 3600 * 1000).toISOString().slice(0, 10),
-      shift: "morning",
-      technicianName: "J. Mensah",
-      supervisorName: "Dr. Rajan",
-      handoverNotes: "All instruments functioning normally. Controls verified.",
-      throughput: { received: 24, stat: 5, urgent: 8, routine: 11, completed: 22, pending: 2, tatComplianceRate: 95.8 },
-      quality: { qcPass: 12, qcWarning: 2, qcFail: 0, criticalAlertsCount: 2, deltaFailuresCount: 0 },
-      integrity: { rejectedCollection: 1, rejectedReception: 0, storedCount: 21 },
-      reagents: { lowOrExpiredCount: 1, blockedTestsCount: 0 },
-      status: "signed",
-      signedAt: new Date(Date.now() - 20 * 3600 * 1000).toISOString()
-    }
-  ]);
+  const [invoices, setInvoices] = useState<LabInvoice[]>(() => initial.invoices);
+  const [criticalNotifications, setCriticalNotifications] = useState<CriticalValueNotification[]>(
+    () => initial.criticalNotifications,
+  );
+  const [qcRuns, setQCRuns] = useState<QCRun[]>(() => initial.qcRuns);
+  const [qcLocks, setQcLocks] = useState<string[]>(() => initial.qcLocks);
+  const [reagents, setReagents] = useState<Reagent[]>(() => initial.reagents);
+  const [aliquots, setAliquots] = useState<Aliquot[]>(() => initial.aliquots);
+  const [labShiftReports, setLabShiftReports] = useState<LabShiftReport[]>(() => initial.labShiftReports);
 
   const findCatalog = useCallback(
     (code: string) => findCatalogItem(code, catalog),
@@ -412,6 +316,50 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     window.addEventListener(LAB_ORDER_EVENT, onIncoming);
     return () => window.removeEventListener(LAB_ORDER_EVENT, onIncoming);
   }, [syncInbox]);
+
+  useEffect(() => {
+    const setters = {
+      setOrders,
+      setInvoices,
+      setCriticalNotifications,
+      setQCRuns,
+      setQcLocks,
+      setReagents,
+      setAliquots,
+      setLabShiftReports,
+    };
+    void hydrateLabDeskSnapshot().then((snap) => {
+      applyLabSnapshot(snap, setters);
+      setPersistReady(true);
+    });
+    const onRemote = () => applyLabSnapshot(loadLabDeskSnapshot(), setters);
+    window.addEventListener("medora-desk-hydrated", onRemote);
+    return () => window.removeEventListener("medora-desk-hydrated", onRemote);
+  }, []);
+
+  useEffect(() => {
+    if (!persistReady) return;
+    saveLabDeskSnapshot({
+      orders,
+      invoices,
+      criticalNotifications,
+      qcRuns,
+      qcLocks,
+      reagents,
+      aliquots,
+      labShiftReports,
+    });
+  }, [
+    persistReady,
+    orders,
+    invoices,
+    criticalNotifications,
+    qcRuns,
+    qcLocks,
+    reagents,
+    aliquots,
+    labShiftReports,
+  ]);
 
   const patchOrder = useCallback((id: string, patch: Partial<LabOrder>) => {
     setOrders((list) => list.map((o) => (o.id === id ? { ...o, ...patch } : o)));

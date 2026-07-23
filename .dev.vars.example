@@ -1,0 +1,14 @@
+# Local Workers secrets — copy to .dev.vars (gitignored). NEVER commit real values.
+
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+MEDORA_LICENSE_KEY=local-dev-license-key
+MEDORA_AI_API_KEY=local-dev-api-key
+MEDORA_PLAN=professional
+VITE_APP_ENV=development
+VITE_ALLOW_DEMO_AUTH=true
+ALLOW_DEMO_PERSIST=true
+
+# STRIPE_SECRET_KEY=
+# STRIPE_WEBHOOK_SECRET=
+# TURNSTILE_SECRET_KEY=

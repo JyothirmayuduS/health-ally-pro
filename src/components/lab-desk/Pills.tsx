@@ -93,7 +93,7 @@ export function SectionLabel({
     <div className="mb-4 flex items-end justify-between border-b border-ink-200 pb-3">
       <div>
         <div className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-400">
-          Maple · Laboratory
+          Oak Haven · Laboratory
         </div>
         <h2 className="font-heading mt-1 text-[22px] font-semibold text-ink-900">{children}</h2>
       </div>

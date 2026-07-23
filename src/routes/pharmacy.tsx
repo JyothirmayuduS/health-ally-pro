@@ -4,7 +4,10 @@ import AppLayout from "@/components/pharmacy-desk/AppLayout";
 import { requirePortalAccess } from "@/lib/supabase/rbac";
 
 export const Route = createFileRoute("/pharmacy")({
-  beforeLoad: () => requirePortalAccess("pharmacy"),
+  beforeLoad: async () => {
+    if (typeof window === "undefined") return;
+    await requirePortalAccess("pharmacy");
+  },
   component: PharmacyRoot,
 });
 

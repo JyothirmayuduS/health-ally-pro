@@ -1,0 +1,6 @@
+{
+  "vitePreview": {"url":"http://127.0.0.1:3011/","rootHttp":200,"statusHttp":200,"note":"HTML Medora title + /api/status JSON"},
+  "wranglerDev": {"url":"http://127.0.0.1:3012/api/status","http":200,"log":"Ready on http://127.0.0.1:3012; GET /api/status 200 OK"},
+  "rootCause": "vite.config.ts lacked @cloudflare/vite-plugin — wrangler could not resolve @tanstack/react-start/server-entry and vite preview 404'd",
+  "fix": "Added cloudflare({ viteEnvironment: { name: 'ssr' } }) before tanstackStart()"
+}

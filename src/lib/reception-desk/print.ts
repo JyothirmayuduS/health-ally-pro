@@ -3,7 +3,7 @@
 const fmt = (n) => `Rs. ${Number(n || 0).toLocaleString("en-IN")}`;
 
 const HOSPITAL = {
-  name: "Maple Hospital",
+  name: "Oak Haven Medical",
   address: "44 Linking Road, Bandra West, Mumbai 400050",
   phone: "+91 22 4455 1100",
   gst: "27ABCDE1234F1Z9",

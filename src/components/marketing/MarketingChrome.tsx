@@ -78,6 +78,12 @@ export function MarketingFooter() {
           <Link to="/implement" className="hover:text-[#1B3B2E]">
             Implementation
           </Link>
+          <Link to="/trust" className="hover:text-[#1B3B2E]">
+            Trust pack
+          </Link>
+          <Link to="/status" className="hover:text-[#1B3B2E]">
+            Status
+          </Link>
           <Link to="/legal/baa" className="hover:text-[#1B3B2E]">
             BAA
           </Link>

@@ -43,5 +43,22 @@ export function productionReadinessWarnings(): string[] {
   if (isProdBuild() && !import.meta.env.VITE_SUPABASE_ANON_KEY) {
     warnings.push("VITE_SUPABASE_ANON_KEY is missing.");
   }
+  const license = (import.meta.env.VITE_MEDORA_LICENSE_KEY as string | undefined)?.trim() ?? "";
+  if (isProdBuild() && license.length < 16) {
+    warnings.push("VITE_MEDORA_LICENSE_KEY missing — evaluation watermark will remain.");
+  }
   return warnings;
+}
+
+/**
+ * Client-side hard stop for misconfigured production bundles.
+ * Call once from app root — throws if demo auth ships in a PROD build.
+ */
+export function assertClientProductionSafe(): void {
+  if (!isProdBuild()) return;
+  if (allowDemoAuth()) {
+    throw new Error(
+      "Medora client refused to start: VITE_ALLOW_DEMO_AUTH is enabled in a production build.",
+    );
+  }
 }

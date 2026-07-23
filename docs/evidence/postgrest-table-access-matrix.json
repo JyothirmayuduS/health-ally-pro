@@ -1,0 +1,56 @@
+{
+  "specialty_chart_notes": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table specialty_chart_notes",
+    "rows": 0
+  },
+  "hospital_desk_records": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table hospital_desk_records",
+    "rows": 0
+  },
+  "hospital_doctors": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table hospital_doctors",
+    "rows": 0
+  },
+  "hospital_unit_records": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table hospital_unit_records",
+    "rows": 0
+  },
+  "anatomy_markers": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table anatomy_markers",
+    "rows": 0
+  },
+  "hospital_subscriptions": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table hospital_subscriptions",
+    "rows": 0
+  },
+  "hospital_onboarding_leads": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table hospital_onboarding_leads",
+    "rows": 0
+  },
+  "audit_logs": {
+    "ok": false,
+    "code": "42501",
+    "message": "permission denied for table audit_logs",
+    "rows": 0
+  },
+  "patients": {
+    "ok": true,
+    "code": null,
+    "message": null,
+    "rows": 1
+  }
+}

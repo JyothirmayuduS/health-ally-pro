@@ -61,3 +61,33 @@ export function displayHospitalName(fallback = "Medora Hospital"): string {
   if (fromEnv) return fromEnv;
   return loadHospitalBrand()?.hospitalName || fallback;
 }
+
+/** White-label logo (data URL) when enterprise module / brand has one. */
+export function displayHospitalLogo(): string | null {
+  const fromEnv = (import.meta.env.VITE_HOSPITAL_LOGO_URL as string | undefined)?.trim();
+  if (fromEnv) return fromEnv;
+  return loadHospitalBrand()?.logoDataUrl ?? null;
+}
+
+export function updateHospitalLogo(logoDataUrl: string | undefined) {
+  const current = loadHospitalBrand();
+  if (!current) {
+    if (typeof window === "undefined") return;
+    const stub: HospitalBrand = {
+      hospitalName: displayHospitalName("Your Hospital"),
+      legalName: displayHospitalName("Your Hospital"),
+      adminName: "",
+      adminEmail: "",
+      city: "",
+      beds: 0,
+      plan: "professional",
+      specialties: [],
+      accent: "#1B3B2E",
+      createdAt: new Date().toISOString(),
+      logoDataUrl,
+    };
+    saveHospitalBrand(stub, { syncRemote: false });
+    return;
+  }
+  saveHospitalBrand({ ...current, logoDataUrl }, { syncRemote: false });
+}

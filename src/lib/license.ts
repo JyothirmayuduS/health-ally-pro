@@ -93,3 +93,16 @@ export function hasModule(moduleId: string): boolean {
 export function isEvaluationBuild(): boolean {
   return getLicenseStatus().evaluation;
 }
+
+/** Soft seat guidance for admin UI (enforced commercially via license + sales). */
+const PLAN_SEATS: Record<LicenseStatus["plan"], { staff: number; doctors: number }> = {
+  evaluation: { staff: 25, doctors: 10 },
+  starter: { staff: 40, doctors: 15 },
+  professional: { staff: 120, doctors: 50 },
+  enterprise: { staff: 500, doctors: 200 },
+};
+
+export function getSeatLimits() {
+  const { plan } = getLicenseStatus();
+  return { plan, ...PLAN_SEATS[plan] };
+}

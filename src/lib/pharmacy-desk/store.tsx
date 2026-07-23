@@ -70,6 +70,24 @@ import {
   type DrugPricingPatch,
   type ReceiveStockOptions,
 } from "./formulary";
+import {
+  hydratePharmacyDeskSnapshot,
+  loadPharmacyDeskSnapshot,
+  savePharmacyDeskSnapshot,
+  type ColdChainBreachEntry,
+  type ControlledSubstanceReconciliation,
+  type DDIOverrideEntry,
+  type ShiftReport,
+  type WastageEntry,
+} from "./desk-persistence";
+
+export type {
+  ColdChainBreachEntry,
+  ControlledSubstanceReconciliation,
+  DDIOverrideEntry,
+  ShiftReport,
+  WastageEntry,
+};
 
 const ACTOR = PHARMACIST.name;
 
@@ -126,73 +144,6 @@ function rebuildOpenInvoices(
   });
 }
 
-export interface DDIOverrideEntry {
-  id: string;
-  drugA: string;
-  drugB: string;
-  severity: "major" | "moderate" | "minor";
-  pharmacistId: string;
-  timestamp: string;
-  rxRef: string;
-  reason: string;
-}
-
-export interface WastageEntry {
-  id: string;
-  drugName: string;
-  drugCategory: string;
-  batchId: string;
-  qty: number;
-  reason: string;
-  disposalMethod: "Incineration" | "Pharmacy bin" | "Return to supplier";
-  processedBy: string;
-  processedAt: string;
-  cost: number;
-}
-
-export interface ControlledSubstanceReconciliation {
-  drugName: string;
-  openingBalance: number;
-  totalDispensed: number;
-  closingBalance: number;
-  expectedBalance: number;
-  variance: number;
-}
-
-export interface ShiftReport {
-  id: string;
-  signedAt: string;
-  pharmacistName: string;
-  supervisorName: string;
-  notes: string;
-  rxCount: number;
-  priorityBreakdown: { stat: number; urgent: number; routine: number };
-  lineItemsCount: number;
-  avgDispenseTime: string;
-  reconciliation: ControlledSubstanceReconciliation[];
-  otcTotal: number;
-  otcBreakdown: { cash: number; card: number; upi: number };
-  ddiOverridesCount: number;
-  nearExpiryActioned: number;
-  coldChainBreaches: number;
-  wastageValue: number;
-  wardReturnsCount: number;
-}
-
-export interface ColdChainBreachEntry {
-  id: string;
-  loggedAt: string;
-  loggedBy: string;
-  unit: string;
-  tempReading: string;
-  expectedRange: string;
-  acknowledgedBy: string;
-  correctiveAction: string;
-  affectedBatchIds: string[];
-  status: "open" | "resolved";
-  resolvedAt?: string;
-}
-
 type StoreValue = {
   drugs: Drug[];
   batches: StockBatch[];
@@ -244,39 +195,29 @@ type StoreValue = {
   }) => void;
   assignDrugToRack: (input: {
     drugId: string;
-    zone: import('./mockData').StorageZone;
+    zone: import("./mockData").StorageZone;
     aisle: string;
     rack: string;
     tray: string;
     slot: string;
-    temp: import('./mockData').StorageTemp;
+    temp: import("./mockData").StorageTemp;
     initialBatch?: { lot: string; expiry: string; qty: number; supplier?: string };
   }) => void;
   recordCycleCount: (batchId: string, countedQty: number) => void;
   searchDrugs: (q: string) => Drug[];
-
-  // Task 1 DDI
   ddiOverrides: DDIOverrideEntry[];
   logDdiOverride: (entry: Omit<DDIOverrideEntry, "id" | "timestamp">) => void;
-
-  // Task 2 Returns & Wastage
   returns: WardReturn[];
   restockWardReturn: (returnId: string) => void;
   disposeWardReturn: (returnId: string, method: WastageEntry["disposalMethod"], reason: string) => void;
   wastage: WastageEntry[];
-
-  // Task 3 PO & GRN
   purchaseOrders: PurchaseOrder[];
   createPurchaseOrder: (po: Omit<PurchaseOrder, "id" | "po_number" | "status" | "total_value">) => void;
   cancelPurchaseOrder: (poId: string) => void;
   grns: GRN[];
   createGRN: (grn: Omit<GRN, "id" | "grn_number" | "received_by" | "received_date">) => void;
-
-  // Task 4 Shift reports
   shiftReports: ShiftReport[];
   submitShiftReport: (report: Omit<ShiftReport, "id" | "signedAt">) => void;
-
-  // Cold chain breach log
   coldChainBreaches: ColdChainBreachEntry[];
   logColdChainBreach: (entry: Omit<ColdChainBreachEntry, "id" | "loggedAt">) => void;
   resolveColdChainBreach: (id: string) => void;
@@ -299,77 +240,72 @@ function enrichRx(rx: Prescription, batches: StockBatch[]): Prescription {
   return { ...rx, lines };
 }
 
+function applyPharmacySnapshot(
+  snap: ReturnType<typeof loadPharmacyDeskSnapshot>,
+  setters: {
+    setBatches: React.Dispatch<React.SetStateAction<StockBatch[]>>;
+    setPrescriptions: React.Dispatch<React.SetStateAction<Prescription[]>>;
+    setRefills: React.Dispatch<React.SetStateAction<RefillRequest[]>>;
+    setMovements: React.Dispatch<React.SetStateAction<StockMovement[]>>;
+    setControlled: React.Dispatch<React.SetStateAction<ControlledEntry[]>>;
+    setWardOrders: React.Dispatch<React.SetStateAction<WardOrder[]>>;
+    setAlerts: React.Dispatch<React.SetStateAction<PharmacyAlert[]>>;
+    setWalkInSales: React.Dispatch<React.SetStateAction<WalkInItem[]>>;
+    setInvoices: React.Dispatch<React.SetStateAction<PharmacyInvoice[]>>;
+    setDdiOverrides: React.Dispatch<React.SetStateAction<DDIOverrideEntry[]>>;
+    setReturns: React.Dispatch<React.SetStateAction<WardReturn[]>>;
+    setWastage: React.Dispatch<React.SetStateAction<WastageEntry[]>>;
+    setPurchaseOrders: React.Dispatch<React.SetStateAction<PurchaseOrder[]>>;
+    setGrns: React.Dispatch<React.SetStateAction<GRN[]>>;
+    setShiftReports: React.Dispatch<React.SetStateAction<ShiftReport[]>>;
+    setColdChainBreachesList: React.Dispatch<React.SetStateAction<ColdChainBreachEntry[]>>;
+  },
+) {
+  setters.setBatches(snap.batches);
+  setters.setPrescriptions(snap.prescriptions.map((rx) => enrichRx(rx, snap.batches)));
+  setters.setRefills(snap.refills);
+  setters.setMovements(snap.movements);
+  setters.setControlled(snap.controlled);
+  setters.setWardOrders(snap.wardOrders);
+  setters.setAlerts(snap.alerts);
+  setters.setWalkInSales(snap.walkInSales);
+  setters.setInvoices(snap.invoices);
+  setters.setDdiOverrides(snap.ddiOverrides);
+  setters.setReturns(snap.returns);
+  setters.setWastage(snap.wastage);
+  setters.setPurchaseOrders(snap.purchaseOrders);
+  setters.setGrns(snap.grns);
+  setters.setShiftReports(snap.shiftReports);
+  setters.setColdChainBreachesList(snap.coldChainBreachesList);
+}
+
 let drugSeq = 900;
 
 export function StoreProvider({ children }: { children: ReactNode }) {
+  const initial = loadPharmacyDeskSnapshot();
+  const [persistReady, setPersistReady] = useState(false);
   const [drugs, setDrugs] = useState<Drug[]>(() => loadFormulary());
-  const [batches, setBatches] = useState<StockBatch[]>(STOCK_BATCHES);
+  const [batches, setBatches] = useState<StockBatch[]>(() => initial.batches);
   const [patients, setPatients] = useState<PharmacyPatient[]>(PATIENTS);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(() =>
-    SEED_PRESCRIPTIONS.map((rx) => enrichRx(rx, STOCK_BATCHES)),
+    initial.prescriptions.map((rx) => enrichRx(rx, initial.batches)),
   );
-  const [refills, setRefills] = useState<RefillRequest[]>(SEED_REFILLS);
-  const [movements, setMovements] = useState<StockMovement[]>(SEED_MOVEMENTS);
-  const [controlled, setControlled] = useState<ControlledEntry[]>(SEED_CONTROLLED);
-  const [wardOrders, setWardOrders] = useState<WardOrder[]>(SEED_WARD_ORDERS);
-  const [alerts, setAlerts] = useState<PharmacyAlert[]>(SEED_ALERTS);
-  const [walkInSales, setWalkInSales] = useState<WalkInItem[]>([]);
-  const [invoices, setInvoices] = useState<PharmacyInvoice[]>(() =>
-    buildSeedInvoices(SEED_PRESCRIPTIONS, PATIENTS, loadFormulary()),
+  const [refills, setRefills] = useState<RefillRequest[]>(() => initial.refills);
+  const [movements, setMovements] = useState<StockMovement[]>(() => initial.movements);
+  const [controlled, setControlled] = useState<ControlledEntry[]>(() => initial.controlled);
+  const [wardOrders, setWardOrders] = useState<WardOrder[]>(() => initial.wardOrders);
+  const [alerts, setAlerts] = useState<PharmacyAlert[]>(() => initial.alerts);
+  const [walkInSales, setWalkInSales] = useState<WalkInItem[]>(() => initial.walkInSales);
+  const [invoices, setInvoices] = useState<PharmacyInvoice[]>(() => initial.invoices);
+  const [ddiOverrides, setDdiOverrides] = useState<DDIOverrideEntry[]>(() => initial.ddiOverrides);
+  const [returns, setReturns] = useState<WardReturn[]>(() => initial.returns);
+  const [wastage, setWastage] = useState<WastageEntry[]>(() => initial.wastage);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => initial.purchaseOrders);
+  const [grns, setGrns] = useState<GRN[]>(() => initial.grns);
+  const [shiftReports, setShiftReports] = useState<ShiftReport[]>(() => initial.shiftReports);
+  const [coldChainBreachesList, setColdChainBreachesList] = useState<ColdChainBreachEntry[]>(
+    () => initial.coldChainBreachesList,
   );
-
-  // New States for Task 1, 2, 3, and 4
-  const [ddiOverrides, setDdiOverrides] = useState<DDIOverrideEntry[]>([]);
-  const [returns, setReturns] = useState<WardReturn[]>(SEED_RETURNS);
-  const [wastage, setWastage] = useState<WastageEntry[]>([]);
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(SEED_PURCHASE_ORDERS);
-  const [grns, setGrns] = useState<GRN[]>(SEED_GRNS);
-  const [shiftReports, setShiftReports] = useState<ShiftReport[]>(() => [
-    {
-      id: "rep-1",
-      signedAt: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
-      pharmacistName: "Riley Chen",
-      supervisorName: "Dr. Elena Vasquez",
-      notes: "Everything ran smoothly during the morning shift. Controlled counts reconciled perfectly.",
-      rxCount: 14,
-      priorityBreakdown: { stat: 2, urgent: 4, routine: 8 },
-      lineItemsCount: 22,
-      avgDispenseTime: "4.8 mins",
-      reconciliation: [
-        {
-          drugName: "Oxycodone 5 mg",
-          openingBalance: 40,
-          totalDispensed: 12,
-          closingBalance: 28,
-          expectedBalance: 28,
-          variance: 0
-        }
-      ],
-      otcTotal: 145.50,
-      otcBreakdown: { cash: 60.00, card: 85.50, upi: 0.00 },
-      ddiOverridesCount: 1,
-      nearExpiryActioned: 3,
-      coldChainBreaches: 0,
-      wastageValue: 24.50,
-      wardReturnsCount: 2
-    }
-  ]);
-  const [coldChainBreachesList, setColdChainBreachesList] = useState<ColdChainBreachEntry[]>([
-    {
-      id: "ccb-1",
-      loggedAt: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
-      loggedBy: "Riley Chen",
-      unit: "FRIDGE-1",
-      tempReading: "11°C",
-      expectedRange: "2–8°C",
-      acknowledgedBy: "Riley Chen",
-      correctiveAction: "Technician called. Door seal replaced. Affected stock moved to FRIDGE-2 during repair.",
-      affectedBatchIds: ["b4", "b8"],
-      status: "resolved",
-      resolvedAt: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
-    },
-  ]);
-
 
   const findDrugById = useCallback(
     (id: string) => drugs.find((d) => d.id === id),
@@ -509,6 +445,74 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     window.addEventListener(PHARMACY_RX_EVENT, onIncoming);
     return () => window.removeEventListener(PHARMACY_RX_EVENT, onIncoming);
   }, [syncDoctorInbox]);
+
+  useEffect(() => {
+    const setters = {
+      setBatches,
+      setPrescriptions,
+      setRefills,
+      setMovements,
+      setControlled,
+      setWardOrders,
+      setAlerts,
+      setWalkInSales,
+      setInvoices,
+      setDdiOverrides,
+      setReturns,
+      setWastage,
+      setPurchaseOrders,
+      setGrns,
+      setShiftReports,
+      setColdChainBreachesList,
+    };
+    void hydratePharmacyDeskSnapshot().then((snap) => {
+      applyPharmacySnapshot(snap, setters);
+      setPersistReady(true);
+    });
+    const onRemote = () => applyPharmacySnapshot(loadPharmacyDeskSnapshot(), setters);
+    window.addEventListener("medora-desk-hydrated", onRemote);
+    return () => window.removeEventListener("medora-desk-hydrated", onRemote);
+  }, []);
+
+  useEffect(() => {
+    if (!persistReady) return;
+    savePharmacyDeskSnapshot({
+      batches,
+      prescriptions,
+      refills,
+      movements,
+      controlled,
+      wardOrders,
+      alerts,
+      walkInSales,
+      invoices,
+      ddiOverrides,
+      returns,
+      wastage,
+      purchaseOrders,
+      grns,
+      shiftReports,
+      coldChainBreachesList,
+    });
+  }, [
+    persistReady,
+    batches,
+    prescriptions,
+    refills,
+    movements,
+    controlled,
+    wardOrders,
+    alerts,
+    walkInSales,
+    invoices,
+    ddiOverrides,
+    returns,
+    wastage,
+    purchaseOrders,
+    grns,
+    shiftReports,
+    coldChainBreachesList,
+  ]);
 
   const getInvoiceForRx = useCallback(
     (rxId: string) => invoices.find((i) => i.rx_id === rxId),

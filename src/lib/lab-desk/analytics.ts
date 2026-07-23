@@ -82,7 +82,7 @@ export function printSpecimenLabel(
     h3{margin:0 0 8px;font-size:14px;letter-spacing:0.05em;color:#2c5e4e;}
     .barcode{font-size:24px;letter-spacing:0.2em;text-align:center;margin:8px 0;}
     </style></head><body><div class="label">
-    <h3>MAPLE HOSPITAL · SPECIMEN</h3>
+    <h3>OAK HAVEN MEDICAL · SPECIMEN</h3>
     <div class="barcode">|||  ${order.accession}  |||</div>
     <div class="row"><span>Patient</span><b>${patientName}</b></div>
     <div class="row"><span>MRN</span><b>${patientMrn}</b></div>

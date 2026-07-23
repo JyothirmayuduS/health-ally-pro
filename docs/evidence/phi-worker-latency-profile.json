@@ -1,0 +1,49 @@
+{
+  "base": "http://127.0.0.1:8787",
+  "breakdown_ms": {
+    "signIn_once": 336.17,
+    "authorize_getUser": 216.31,
+    "authorize_memberships": 254.66,
+    "authorize_patient_lookup": 248.85,
+    "authorize_chain_sum": 719.83,
+    "service_role_patients_query": 499.56,
+    "direct_row_count": 81,
+    "direct_error": null,
+    "worker_http_runs": [
+      {
+        "status": 200,
+        "ms": 141.54,
+        "count": 81
+      },
+      {
+        "status": 200,
+        "ms": 446.03,
+        "count": 81
+      },
+      {
+        "status": 200,
+        "ms": 397.21,
+        "count": 81
+      },
+      {
+        "status": 200,
+        "ms": 509.31,
+        "count": 81
+      },
+      {
+        "status": 200,
+        "ms": 540.98,
+        "count": 81
+      }
+    ],
+    "worker_median": 446.03,
+    "worker_min": 141.54,
+    "worker_max": 540.98,
+    "sum_auth_plus_db": 1219.4,
+    "residual_http_framework_ms": -773.36
+  },
+  "interpretation": {
+    "avoidable": "Most overhead explained by auth chain + DB.",
+    "tradeoff": "Worker path pays JWT validation + membership/patient lookups each request. Caching memberships in-memory (short TTL) could cut authorize_chain; cold isolate adds more on Cloudflare."
+  }
+}

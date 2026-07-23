@@ -54,7 +54,7 @@ const titleFromPath = (pathname: string, isSupervisor: boolean) => {
     return { eyebrow: "Specimens", title: "Storage & Aliquots" };
   if (pathname.startsWith("/lab/settings"))
     return { eyebrow: "Operations", title: "Lab settings" };
-  return { eyebrow: "Laboratory", title: "Maple Hospital" };
+  return { eyebrow: "Laboratory", title: "Oak Haven Medical" };
 };
 
 export default function AppLayout() {

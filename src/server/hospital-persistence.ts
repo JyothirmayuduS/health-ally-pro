@@ -351,3 +351,54 @@ export async function listAnatomyMarkers(hospitalId: string, specialtyId: string
   if (error) return { ok: false as const, data: [] as DbAnatomyMarker[] };
   return { ok: true as const, data: (data ?? []) as DbAnatomyMarker[] };
 }
+
+export type DeskId =
+  | "reception"
+  | "lab"
+  | "pharmacy"
+  | "billing"
+  | "nursing"
+  | "admin"
+  | "doctor"
+  | "patient";
+
+export type DbDeskRecord = {
+  id?: string;
+  hospital_id: string;
+  desk: DeskId;
+  record_key: string;
+  payload: Record<string, unknown>;
+  updated_at?: string;
+};
+
+export async function upsertDeskRecords(rows: DbDeskRecord[]) {
+  const admin = getSupabaseAdmin();
+  if (!admin || rows.length === 0) return { ok: false as const, error: "admin_unavailable" };
+  const { data, error } = await admin
+    .from("hospital_desk_records")
+    .upsert(
+      rows.map((r) => ({
+        hospital_id: r.hospital_id,
+        desk: r.desk,
+        record_key: r.record_key,
+        payload: r.payload ?? {},
+      })),
+      { onConflict: "hospital_id,desk,record_key" },
+    )
+    .select();
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const, data };
+}
+
+export async function listDeskRecords(hospitalId: string, desk: DeskId) {
+  const admin = getSupabaseAdmin();
+  if (!admin) return { ok: false as const, data: [] as DbDeskRecord[] };
+  const { data, error } = await admin
+    .from("hospital_desk_records")
+    .select("*")
+    .eq("hospital_id", hospitalId)
+    .eq("desk", desk)
+    .order("updated_at", { ascending: false });
+  if (error) return { ok: false as const, data: [] as DbDeskRecord[], error: error.message };
+  return { ok: true as const, data: (data ?? []) as DbDeskRecord[] };
+}

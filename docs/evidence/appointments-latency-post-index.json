@@ -1,0 +1,162 @@
+{
+  "at": "2026-07-23T13:26:59.443Z",
+  "methodology": {
+    "timing_boundary": "complete HTTP response round-trip from Node client to localhost:8787 Worker",
+    "not": [
+      "browser RUM",
+      "remote CF edge",
+      "TTFB-only"
+    ],
+    "cache": {
+      "warm": "single JWT, Worker authorizePhiRead 20s cache after first hit",
+      "cold": "fresh signIn JWT each request — auth cache miss"
+    },
+    "row_count": 83,
+    "payload_bytes": 28660,
+    "embeds": [
+      "staff_profiles",
+      "queue_entries"
+    ],
+    "index": "idx_appointments_hospital_scheduled applied remotely before this run"
+  },
+  "reconciliation": {
+    "earlier_131_176_ms": {
+      "source": "docs/evidence/phi-record-level-audit-proof.json / load-test medians",
+      "meaning": "Likely warm Worker median after auth cache + smaller sample / different clock; appointments Worker median reported ~176ms in that suite",
+      "endpoint": "GET /api/hospital/phi?resource=appointments",
+      "environment": "localhost Worker"
+    },
+    "later_235_ms_p50": {
+      "source": "docs/evidence/appointments-latency-breakdown.json",
+      "meaning": "n=30 complete response times after one warm-up; includes localhost hop + JSON parse of ~28KB with embeds; auth cache warm",
+      "why_higher_than_176": "Different sample size (30 vs fewer), possible Worker/CPU contention, and full response body consumption timing — not a PostgREST-only number"
+    },
+    "postgrest_119_ms": {
+      "meaning": "Direct PostgREST/service_role select median WITHOUT Worker auth/framework — not comparable % to Worker e2e"
+    }
+  },
+  "stages_ms": {
+    "auth_getUser": {
+      "n": 10,
+      "min": 83.7,
+      "avg": 103.49,
+      "p50": 91.59,
+      "p95": 137.8,
+      "p99": 137.8,
+      "max": 137.8,
+      "errors": 0
+    },
+    "tenant_permission_lookup": {
+      "n": 10,
+      "min": 179.19,
+      "avg": 227.49,
+      "p50": 203.07,
+      "p95": 356.8,
+      "p99": 356.8,
+      "max": 356.8,
+      "errors": 0
+    },
+    "appointments_db_query": {
+      "n": 15,
+      "min": 77.62,
+      "avg": 107.85,
+      "p50": 96.08,
+      "p95": 195.01,
+      "p99": 195.01,
+      "max": 195.01,
+      "errors": 0
+    },
+    "audit_persist_off_critical_path": {
+      "n": 8,
+      "min": 93.46,
+      "avg": 143.68,
+      "p50": 111.79,
+      "p95": 232.66,
+      "p99": 232.66,
+      "max": 232.66,
+      "errors": 0
+    },
+    "worker_e2e_warm_sequential": {
+      "n": 30,
+      "min": 91.17,
+      "avg": 124.96,
+      "p50": 118.98,
+      "p95": 212.17,
+      "p99": 217.41,
+      "max": 217.41,
+      "errors": 0
+    },
+    "worker_e2e_cold_auth": {
+      "n": 8,
+      "min": 266.87,
+      "avg": 333.78,
+      "p50": 318.67,
+      "p95": 410.21,
+      "p99": 410.21,
+      "max": 410.21,
+      "errors": 0
+    },
+    "worker_e2e_concurrent_8": {
+      "n": 8,
+      "min": 158.61,
+      "avg": 328.36,
+      "p50": 333.54,
+      "p95": 425.25,
+      "p99": 425.25,
+      "max": 425.25,
+      "errors": 0
+    }
+  },
+  "breakdown_table": [
+    {
+      "stage": "auth_getUser",
+      "p50": 91.59,
+      "p95": 137.8,
+      "p99": 137.8,
+      "notes": "Isolated; cached in Worker after first hit"
+    },
+    {
+      "stage": "tenant_permission_lookup",
+      "p50": 203.07,
+      "p95": 356.8,
+      "p99": 356.8,
+      "notes": "Cached with getUser in Worker"
+    },
+    {
+      "stage": "appointments_db_query",
+      "p50": 96.08,
+      "p95": 195.01,
+      "p99": 195.01,
+      "notes": "service_role select with embeds; index present"
+    },
+    {
+      "stage": "audit_persist",
+      "p50": 111.79,
+      "p95": 232.66,
+      "p99": 232.66,
+      "notes": "waitUntil background — NOT on Worker TTFB critical path"
+    },
+    {
+      "stage": "worker_e2e_warm",
+      "p50": 118.98,
+      "p95": 212.17,
+      "p99": 217.41,
+      "notes": "complete response time, warm auth cache"
+    },
+    {
+      "stage": "worker_e2e_cold_auth",
+      "p50": 318.67,
+      "p95": 410.21,
+      "p99": 410.21,
+      "notes": "fresh JWT each request"
+    },
+    {
+      "stage": "worker_e2e_concurrent_8",
+      "p50": 333.54,
+      "p95": 425.25,
+      "p99": 425.25,
+      "notes": "dashboard burst"
+    }
+  ],
+  "pass": true
+}

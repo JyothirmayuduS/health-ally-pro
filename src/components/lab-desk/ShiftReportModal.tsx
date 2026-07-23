@@ -187,7 +187,7 @@ export default function ShiftReportModal({ open, onOpenChange }: ShiftReportModa
       </style></head>
       <body>
         <div class="header">
-          <h1>MAPLE HOSPITAL LABORATORY</h1>
+          <h1>OAK HAVEN MEDICAL LABORATORY</h1>
           <div class="row"><span>Report Type:</span><span class="bold">SHIFT HANDOVER SUMMARY</span></div>
           <div class="row"><span>Shift Date:</span><span>${new Date().toLocaleDateString()}</span></div>
           <div class="row"><span>Shift Cycle:</span><span class="bold">${shift.toUpperCase()}</span></div>

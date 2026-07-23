@@ -59,7 +59,7 @@ export default function TokenDisplay() {
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.2em] text-[#7a7d75] font-mono">
-              Maple Hospital · Reception
+              Oak Haven Medical · Reception
             </div>
             <div className="text-[26px] font-semibold leading-tight">Waiting room display</div>
           </div>

@@ -1,4 +1,5 @@
 import { getSharedPatient, resolvePatientId } from "./patients";
+import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
 
 export type EncounterSoap = {
   complaint?: string;
@@ -35,18 +36,18 @@ export function nextEncounterId() {
 }
 
 function load(): Encounter[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as Encounter[]) : [];
-  } catch {
-    return [];
-  }
+  return loadPersistedJson(KEY, []);
 }
 
 function save(list: Encounter[]) {
+  savePersistedJson(KEY, deskForKey(KEY), list);
+  void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+    upsertClinicalEntities(
+      "encounters",
+      list.map((e) => ({ legacy_id: e.id, payload: e as unknown as Record<string, unknown> })),
+    ),
+  );
   if (typeof window !== "undefined") {
-    localStorage.setItem(KEY, JSON.stringify(list));
     window.dispatchEvent(new CustomEvent(ENCOUNTERS_EVENT));
   }
 }

@@ -8,6 +8,7 @@ export type PersistAuthOk = {
   ok: true;
   hospitalId: string;
   userId: string | null;
+  actorEmail: string | null;
   /** May create hospital tenants (onboard provision) */
   canProvision: boolean;
   /** Staff clinical/ops writes (doctors, charts, units, anatomy) */
@@ -93,6 +94,7 @@ export async function authorizeHospitalPersist(
       ok: true,
       hospitalId: requestedHospitalId || DEFAULT_HOSPITAL_ID,
       userId: null,
+      actorEmail: "api-key",
       canProvision: true,
       canWriteClinical: true,
       mode: "api_key",
@@ -142,6 +144,7 @@ export async function authorizeHospitalPersist(
       ok: true,
       hospitalId,
       userId: data.user.id,
+      actorEmail: data.user.email ?? null,
       canProvision,
       canWriteClinical: true,
       mode: "jwt",
@@ -158,6 +161,7 @@ export async function authorizeHospitalPersist(
       ok: true,
       hospitalId: DEFAULT_HOSPITAL_ID,
       userId: null,
+      actorEmail: "demo",
       canProvision: false,
       canWriteClinical: true,
       mode: "demo",

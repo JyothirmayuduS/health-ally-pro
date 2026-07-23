@@ -1,5 +1,6 @@
 import { resolvePatientId } from "./patients";
 import { doctorPatientIdFromMrn } from "./clinic-queue";
+import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
 
 export type ReleasedLabResult = {
   id: string;
@@ -21,21 +22,13 @@ const KEY = "medora-lab-results-v1";
 export const LAB_RESULTS_EVENT = "medora-lab-results-updated";
 
 function load(): ReleasedLabResult[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as ReleasedLabResult[]) : [];
-  } catch {
-    return [];
-  }
+  return loadPersistedJson(KEY, []);
 }
 
 function save(list: ReleasedLabResult[]) {
+  savePersistedJson(KEY, deskForKey(KEY), list);
   if (typeof window !== "undefined") {
-    localStorage.setItem(KEY, JSON.stringify(list));
-    // Notify the shared lab-results listeners
     window.dispatchEvent(new CustomEvent(LAB_RESULTS_EVENT));
-    // Also notify the doctor's results inbox so it refreshes immediately
     window.dispatchEvent(new Event("medora-doctor-results-updated"));
   }
 }

@@ -1,0 +1,93 @@
+{
+  "project_ref": "wsnpwyqypgclsclktoyf",
+  "project_name": "health_ally_pro",
+  "region": "ap-south-1",
+  "migration": {
+    "name": "audit_dlq_lifecycle_appointments_index",
+    "remote_version": "20260723132326",
+    "applied": true
+  },
+  "index_explain": {
+    "index": "idx_appointments_hospital_scheduled",
+    "used": true,
+    "plan": "Index Scan using idx_appointments_hospital_scheduled",
+    "execution_time_ms": 0.173,
+    "rows": 83
+  },
+  "closure_pass": true,
+  "live_force_fail": {
+    "clinical_status": 200,
+    "clinical_ok": true,
+    "rows": 83,
+    "request_id": "live-force-1784813255220",
+    "open_new": 1,
+    "dlq_id": "7b493d34-b03b-4828-bed8-5b4682d86780",
+    "health": {
+      "ok": false,
+      "alert": true,
+      "source": "database_rpc",
+      "checked_at": "2026-07-23T13:27:40.13034+00:00",
+      "open_failures": 1,
+      "resolved_or_artifact": 8,
+      "acknowledged_failures": 0
+    },
+    "cleanup": {
+      "rpc_ok": true,
+      "health_after": {
+        "ok": true,
+        "alert": false,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:27:40.334972+00:00",
+        "open_failures": 0,
+        "resolved_or_artifact": 9,
+        "acknowledged_failures": 0
+      },
+      "retained": {
+        "id": "7b493d34-b03b-4828-bed8-5b4682d86780",
+        "status": "test_artifact",
+        "resolved_at": "2026-07-23T13:27:40.261579+00:00"
+      }
+    },
+    "pass": true
+  },
+  "latency_post_index_warm": {
+    "n": 30,
+    "min": 91.17,
+    "avg": 124.96,
+    "p50": 118.98,
+    "p95": 212.17,
+    "p99": 217.41,
+    "max": 217.41,
+    "errors": 0
+  },
+  "latency_post_index_cold": {
+    "n": 8,
+    "min": 266.87,
+    "avg": 333.78,
+    "p50": 318.67,
+    "p95": 410.21,
+    "p99": 410.21,
+    "max": 410.21,
+    "errors": 0
+  },
+  "latency_post_index_conc": {
+    "n": 8,
+    "min": 158.61,
+    "avg": 328.36,
+    "p50": 333.54,
+    "p95": 425.25,
+    "p99": 425.25,
+    "max": 425.25,
+    "errors": 0
+  },
+  "latency_pre_index_warm_for_compare": {
+    "n": 30,
+    "min": 169.2,
+    "avg": 256.33,
+    "p50": 235.45,
+    "p95": 310.3,
+    "p99": 689.82,
+    "max": 689.82
+  },
+  "health_source": "database_rpc"
+}

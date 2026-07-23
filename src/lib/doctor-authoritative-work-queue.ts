@@ -37,7 +37,8 @@ export function buildAuthoritativeWorkQueue(
       id: `adherence-${alert.panelPatientId}-${alert.tier}`,
       tier: alert.tier === "critical" ? "critical" : "warn",
       title: alert.label,
-      subtitle: `${alert.patientName} · ${alert.detail}`,
+      // detail already includes patientName — do not prefix again ("Sneha · Sneha · …")
+      subtitle: alert.detail,
       to: "/doctor/patients/$patientId",
       params: { patientId: alert.panelPatientId },
     });

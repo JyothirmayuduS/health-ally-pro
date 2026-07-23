@@ -1,0 +1,120 @@
+{
+  "git_commit": "7b4d0b9438a5c557f4c45f2ddedb21e551147923",
+  "git_branch": "cursor/specialty-doctor-workspaces",
+  "working_tree_dirty": true,
+  "included_uncommitted_security_files": [
+    "src/server/phi-audit.ts",
+    "src/routes/api/status.ts",
+    "src/routes/api/hospital/audit-dlq.ts",
+    "supabase/migrations/20260723140000_audit_dlq_lifecycle_appointments_index.sql"
+  ],
+  "image_id": "sha256:350d7f8eba75",
+  "image_tag": "medora-app:post-migration-closure",
+  "image_tag_immutable": "7b4d0b9-20260723T143535Z-envbridge",
+  "base_no_cache_image": "medora-app:7b4d0b9-20260723T133316Z",
+  "container_id": "377dff8dec31",
+  "container_health": "healthy",
+  "container_status": "running",
+  "restart_count": null,
+  "started_at": "2026-07-23T14:39:31.684581547Z",
+  "port_mapping": "3001:3000",
+  "status_endpoint_result": {
+    "ok": true,
+    "status": "operational",
+    "build": {
+      "git_commit": "7b4d0b9438a5c557f4c45f2ddedb21e551147923",
+      "build_version": "7b4d0b9-20260723T133316Z",
+      "built_at": "2026-07-23T13:33:16Z",
+      "environment": "docker-compose",
+      "dirty_working_tree": true
+    },
+    "audit_dlq": {
+      "ok": true,
+      "alert": false,
+      "open_failures": 0,
+      "acknowledged_failures": 0,
+      "resolved_or_artifact": 9,
+      "checked_at": "2026-07-23T14:42:51.572981+00:00",
+      "source": "database_rpc"
+    },
+    "optional_checks_not_ok": [
+      "billing",
+      "bot_guard"
+    ],
+    "required_checks_not_ok": []
+  },
+  "audit_health_source": "database_rpc",
+  "open_failures": 0,
+  "authenticated_test_results": [
+    {
+      "test": "appointments_auth_200",
+      "expected": "200 ok rows>0",
+      "actual": "200 ok=true rows=83",
+      "result": "PASS",
+      "ms": 858
+    },
+    {
+      "test": "patients_auth_200",
+      "expected": "200 ok",
+      "actual": "200 ok=true rows=81",
+      "result": "PASS"
+    },
+    {
+      "test": "lab_results_auth_200",
+      "expected": "200 ok",
+      "actual": "200 ok=true rows=85",
+      "result": "PASS"
+    }
+  ],
+  "unauthorized_test_results": [
+    {
+      "test": "missing_auth_401",
+      "expected": "401",
+      "actual": "401",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid_auth_401",
+      "expected": "401",
+      "actual": "401",
+      "result": "PASS"
+    }
+  ],
+  "cross_tenant_test_result": {
+    "test": "cross_tenant_403",
+    "expected": "403",
+    "actual": "403 Hospital out of scope",
+    "result": "PASS"
+  },
+  "audit_durability_result": {
+    "test": "audit_durability_waituntil",
+    "expected": "200 + audit with record_ids",
+    "actual": "status=200 audit=399379cd-4d0c-4896-b2a6-33dd97978720 ids=83",
+    "result": "PASS",
+    "request_id": "docker-durability-1784817628866",
+    "response_ms": 234.47,
+    "audit_id": "399379cd-4d0c-4896-b2a6-33dd97978720",
+    "record_count": 83,
+    "poll_timeout_ms": 8000
+  },
+  "forced_failure_flag_state": "absent_or_empty",
+  "build_timestamp": "2026-07-23T14:35:35Z",
+  "smoke_pass": true,
+  "image_security_summary": {
+    "user": "medora",
+    "exposed_ports": [
+      "3000/tcp"
+    ],
+    "healthcheck": true,
+    "no_git_in_image": true,
+    "no_env_local": true,
+    "no_dev_vars_file": true,
+    "no_evidence_dir": true,
+    "uses_vite_preview_not_dev": true,
+    "vulnerability_scan": {
+      "tool": "docker scout",
+      "ran": false,
+      "error": "Command '['docker', 'scout', 'cves', 'medora-app:post-migration-closure', '--format', 'sarif']' timed out after 120 seconds"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { apkDoctor } from "@/lib/doctor-apk-data";
+import { deskForKey, loadPersistedJson, savePersistedJson } from "@/lib/shared/persisted-store";
 import { PANEL_PATIENTS } from "@/lib/doctor-patients-apk-data";
 import type { PrescriptionDraft, RxFrequency } from "@/lib/doctor-prescription-workflow";
 import {
@@ -55,37 +55,30 @@ function emit() {
 }
 
 function loadSent(): DoctorSentRxRecord[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(SENT_KEY);
-    return raw ? (JSON.parse(raw) as DoctorSentRxRecord[]) : [];
-  } catch {
-    return [];
-  }
+  return loadPersistedJson(SENT_KEY, []);
 }
 
 function saveSent(list: DoctorSentRxRecord[]) {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(SENT_KEY, JSON.stringify(list));
-    emit();
-  }
+  savePersistedJson(SENT_KEY, deskForKey(SENT_KEY), list);
+  void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+    upsertClinicalEntities(
+      "prescriptions",
+      list.map((r) => ({
+        legacy_id: r.id,
+        payload: r as unknown as Record<string, unknown>,
+      })),
+    ),
+  );
+  emit();
 }
 
 function loadTemplates(): DoctorRxTemplate[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(TEMPLATE_KEY);
-    return raw ? (JSON.parse(raw) as DoctorRxTemplate[]) : [];
-  } catch {
-    return [];
-  }
+  return loadPersistedJson(TEMPLATE_KEY, []);
 }
 
 function saveTemplates(list: DoctorRxTemplate[]) {
-  if (typeof window !== "undefined") {
-    localStorage.setItem(TEMPLATE_KEY, JSON.stringify(list));
-    emit();
-  }
+  savePersistedJson(TEMPLATE_KEY, deskForKey(TEMPLATE_KEY), list);
+  emit();
 }
 
 function seedSentIfEmpty() {

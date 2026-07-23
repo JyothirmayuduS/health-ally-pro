@@ -1,0 +1,37 @@
+{
+  "note": "20s in-memory authorizePhiRead cache keyed by token fingerprint. First request may be cold; subsequent should skip getUser+memberships.",
+  "worker_burst_ms": [
+    850.14,
+    280.38,
+    786.27,
+    362.18,
+    849.23,
+    440.82,
+    256.16,
+    201.74
+  ],
+  "worker_first_ms": 850.14,
+  "worker_rest_median_ms": 440.82,
+  "worker_min_ms": 201.74,
+  "worker_median_ms": 440.82,
+  "direct_runs_ms": [
+    615.53,
+    227.53,
+    228.87,
+    235.98,
+    261.28
+  ],
+  "direct_median_ms": 235.98,
+  "ratio_worker_median_vs_direct": 1.87,
+  "statuses": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "conclusion": "Still >1.5x direct — residual is DB round-trip + Worker/Vite hop; further gains need architectural change (edge JWT verify without Auth API round-trip, or connection pooling closer to DB)."
+}

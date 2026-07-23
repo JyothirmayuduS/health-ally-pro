@@ -1,0 +1,255 @@
+{
+  "at": "2026-07-23T13:26:18.118Z",
+  "project_ref": "wsnpwyqypgclsclktoyf",
+  "hospital_id": "a0000001-0001-4001-8001-000000000001",
+  "actor_id": "b0000001-0001-4001-8001-000000000004",
+  "tests": {
+    "health_database_rpc": {
+      "pass": true,
+      "status_audit_dlq": {
+        "ok": true,
+        "alert": false,
+        "open_failures": 0,
+        "acknowledged_failures": 0,
+        "resolved_or_artifact": 5,
+        "checked_at": "2026-07-23T13:26:20.18446+00:00",
+        "source": "database_rpc"
+      },
+      "rpc_health": {
+        "ok": true,
+        "alert": false,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:20.311709+00:00",
+        "open_failures": 0,
+        "resolved_or_artifact": 5,
+        "acknowledged_failures": 0
+      }
+    },
+    "known_artifacts": {
+      "pass": true,
+      "rows": [
+        {
+          "id": "27be26a6-a418-4828-974a-66970cb78a64",
+          "status": "test_artifact",
+          "resolved_at": "2026-07-23T13:05:22.191+00:00",
+          "resolution_reason": "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident",
+          "simulated": true,
+          "proof": "audit-write-dlq",
+          "error_message": "PHI_AUDIT_FORCE_FAIL"
+        },
+        {
+          "id": "f302f5ee-f085-47df-b849-27203e5460b8",
+          "status": "test_artifact",
+          "resolved_at": "2026-07-23T13:05:23.082+00:00",
+          "resolution_reason": "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident",
+          "simulated": false,
+          "proof": null,
+          "error_message": "PHI_AUDIT_FORCE_FAIL"
+        },
+        {
+          "id": "6f9ca1f1-01e5-420e-9c18-76d2c58363ff",
+          "status": "test_artifact",
+          "resolved_at": "2026-07-23T13:09:16.401+00:00",
+          "resolution_reason": "Live Worker PHI_AUDIT_FORCE_FAIL probe — test artifact",
+          "simulated": false,
+          "proof": null,
+          "error_message": "PHI_AUDIT_FORCE_FAIL"
+        },
+        {
+          "id": "ad905f3f-fa4f-422d-9f67-54241ee0a790",
+          "status": "test_artifact",
+          "resolved_at": "2026-07-23T13:05:22.606+00:00",
+          "resolution_reason": "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident",
+          "simulated": true,
+          "proof": "record-level-dlq",
+          "error_message": "PHI_AUDIT_FORCE_FAIL"
+        }
+      ]
+    },
+    "lifecycle_open_ack_resolved": {
+      "pass": true,
+      "record_id": "f6dc96b6-5448-44ce-ab05-d120f2df22ed",
+      "health_open": {
+        "ok": false,
+        "alert": true,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:21.396904+00:00",
+        "open_failures": 1,
+        "resolved_or_artifact": 5,
+        "acknowledged_failures": 0
+      },
+      "health_acked": {
+        "ok": true,
+        "alert": false,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:21.659539+00:00",
+        "open_failures": 0,
+        "resolved_or_artifact": 5,
+        "acknowledged_failures": 1
+      },
+      "health_resolved": {
+        "ok": true,
+        "alert": false,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:22.352407+00:00",
+        "open_failures": 0,
+        "resolved_or_artifact": 6,
+        "acknowledged_failures": 0
+      },
+      "ack_row": {
+        "status": "acknowledged",
+        "acknowledged_at": "2026-07-23T13:26:21.513771+00:00",
+        "acknowledged_by": "infra-closure"
+      },
+      "resolved_row": {
+        "status": "resolved",
+        "resolved_at": "2026-07-23T13:26:22.122996+00:00",
+        "resolved_by": "infra-closure",
+        "reason": "lifecycle resolve step",
+        "retained_payload_proof": "lifecycle-1784813180498"
+      }
+    },
+    "lifecycle_open_test_artifact": {
+      "pass": true,
+      "record_id": "11d89452-6324-4579-98dc-c0d041d89a08",
+      "health_before": {
+        "ok": false,
+        "alert": true,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:22.972015+00:00",
+        "open_failures": 1,
+        "resolved_or_artifact": 6,
+        "acknowledged_failures": 0
+      },
+      "health_after": {
+        "ok": true,
+        "alert": false,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:23.592976+00:00",
+        "open_failures": 0,
+        "resolved_or_artifact": 7,
+        "acknowledged_failures": 0
+      },
+      "retained": true
+    },
+    "rpc_unauthorized": {
+      "pass": true,
+      "resolve_error": "permission denied for function resolve_audit_write_failure",
+      "health_error": "permission denied for function audit_write_failures_health"
+    },
+    "forced_failure": {
+      "pass": true,
+      "clinical_status": 200,
+      "rows": 83,
+      "request_id": "force-1784813184418",
+      "dlq_id": "f416e84d-5bf3-423a-93e4-997b06d22ddd",
+      "health_alert": {
+        "ok": false,
+        "alert": true,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:25.386202+00:00",
+        "open_failures": 1,
+        "resolved_or_artifact": 7,
+        "acknowledged_failures": 0
+      },
+      "health_after": {
+        "ok": true,
+        "alert": false,
+        "source": "database_rpc",
+        "checked_at": "2026-07-23T13:26:25.942082+00:00",
+        "open_failures": 0,
+        "resolved_or_artifact": 8,
+        "acknowledged_failures": 0
+      },
+      "retained_status": "test_artifact"
+    },
+    "waituntil_durability": {
+      "pass": true,
+      "response_ms": 353.28,
+      "response_status": 200,
+      "audit_id": "152da120-f95a-4644-9bd4-d53656d0e1e6",
+      "audit_created_at": "2026-07-23T13:26:26.864737+00:00",
+      "record_ids_count": 83,
+      "poll_timeout_ms": 8000,
+      "note": "Audit may complete after TTFB via waitUntil; bounded poll verifies durability"
+    },
+    "concurrent_8": {
+      "pass": true,
+      "latency": {
+        "n": 8,
+        "min": 284.8,
+        "avg": 637.39,
+        "p50": 642.24,
+        "p95": 1033.14,
+        "p99": 1033.14,
+        "max": 1033.14
+      },
+      "audit_count": 10,
+      "audit_ids": [
+        "9c6fd5bd-eb3d-48f4-aaa5-082c43bb7711",
+        "aa80dd72-0c42-4988-a5f0-461b7e2599e8",
+        "e6e7f55c-14bd-471b-ac17-3af40da62fb3",
+        "3086962b-1b34-4231-832c-08e53554098d",
+        "952cd609-d468-458c-a8ff-d3a9c5858f2e",
+        "1a8722a0-1f3a-4188-a1db-a7ad2b5162a9",
+        "4dbbb2cc-ad26-4e52-8c0b-b3e5e61f8ce4",
+        "97ac3928-0f9b-4037-b0d3-305a3f5f2ee1",
+        "8ed6d10a-dc30-4d1a-9bfc-5c513f7233e5",
+        "152da120-f95a-4644-9bd4-d53656d0e1e6"
+      ],
+      "unique_fingerprints": 1,
+      "rows": 83
+    },
+    "tenant_isolation": {
+      "pass": true,
+      "status": 403,
+      "error": "Hospital out of scope"
+    },
+    "unauthorized": {
+      "pass": true,
+      "unauth": 401,
+      "bad": 401
+    },
+    "clinical_flows": {
+      "pass": true,
+      "flows": {
+        "patients": {
+          "status": 200,
+          "ok": true,
+          "rows": 81
+        },
+        "appointments": {
+          "status": 200,
+          "ok": true,
+          "rows": 83
+        },
+        "lab_results": {
+          "status": 200,
+          "ok": true,
+          "rows": 85
+        }
+      }
+    },
+    "docker": {
+      "pass": true,
+      "root": 200
+    },
+    "force_fail_flag_off": {
+      "pass": true,
+      "env_value": null
+    },
+    "final_health": {
+      "pass": true,
+      "audit_dlq": {
+        "ok": true,
+        "alert": false,
+        "open_failures": 0,
+        "acknowledged_failures": 0,
+        "resolved_or_artifact": 8,
+        "checked_at": "2026-07-23T13:26:33.718269+00:00",
+        "source": "database_rpc"
+      }
+    }
+  },
+  "pass": true
+}

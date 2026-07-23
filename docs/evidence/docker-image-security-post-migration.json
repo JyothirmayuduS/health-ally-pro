@@ -1,0 +1,59 @@
+{
+  "image": "medora-app:post-migration-closure",
+  "container_id": "377dff8dec31",
+  "inspect": {
+    "user": "medora",
+    "exposed_ports": [
+      "3000/tcp"
+    ],
+    "env_names": [
+      "CLOUDFLARE_INCLUDE_PROCESS_ENV",
+      "HOST",
+      "MEDORA_BUILD_DIRTY",
+      "MEDORA_BUILD_ENVIRONMENT",
+      "MEDORA_BUILD_VERSION",
+      "MEDORA_BUILT_AT",
+      "MEDORA_GIT_COMMIT",
+      "NODE_ENV",
+      "NODE_VERSION",
+      "PATH",
+      "PHI_AUDIT_FORCE_FAIL",
+      "PORT",
+      "YARN_VERSION"
+    ],
+    "healthcheck": true,
+    "cmd": [
+      "npx",
+      "vite",
+      "preview",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "3000"
+    ],
+    "entrypoint": [
+      "/app/docker-entrypoint.sh"
+    ],
+    "workdir": "/app",
+    "created": "2026-07-23T14:35:37.856264966Z",
+    "id": "sha256:350d7f8eba75",
+    "size_bytes": 611667350
+  },
+  "filesystem_probe": {
+    "user": "medora",
+    "has_git": "NO",
+    "has_env_local": "NO",
+    "has_dev_vars": "NO",
+    "has_evidence": "NO",
+    "cmd": "npm exec vite preview --host 0.0.0.0 --port 3000",
+    "force_fail": "absent_or_empty"
+  },
+  "history_secret_filename_hits": [],
+  "vulnerability_scan": {
+    "tool": "docker scout",
+    "ran": false,
+    "error": "Command '['docker', 'scout', 'cves', 'medora-app:post-migration-closure', '--format', 'sarif']' timed out after 120 seconds"
+  },
+  "production_deps_note": "Image runs NODE_ENV=production but Dockerfile uses npm ci --include=dev because vite preview/workerd requires vite as a runtime dependency.",
+  "no_dev_server": true
+}

@@ -1,3 +1,4 @@
+import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
 import type { BodyMarker } from "@/lib/shared/body-anatomy";
 import type { ExtraVitalEntry } from "@/lib/shared/vitals-config";
 import { appendClinicalEvent, demoPanelPatientId } from "@/lib/shared/clinical-event-log";
@@ -28,22 +29,6 @@ function emit() {
   }
 }
 
-function readAll(): VitalsReading[] {
-  if (typeof localStorage === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as VitalsReading[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeAll(readings: VitalsReading[]) {
-  if (typeof localStorage === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(readings));
-  emit();
-}
-
 const SEED: VitalsReading[] = [
   {
     id: "v-seed-1",
@@ -64,6 +49,25 @@ const SEED: VitalsReading[] = [
     recordedAt: "2025-06-21T14:30:00.000Z",
   },
 ];
+
+function readAll(): VitalsReading[] {
+  const loaded = loadPersistedJson(STORAGE_KEY, []);
+  return loaded.length ? loaded : SEED;
+}
+
+function writeAll(readings: VitalsReading[]) {
+  savePersistedJson(STORAGE_KEY, deskForKey(STORAGE_KEY), readings);
+  void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+    upsertClinicalEntities(
+      "vitals_readings",
+      readings.map((r) => ({
+        legacy_id: r.id,
+        payload: r as unknown as Record<string, unknown>,
+      })),
+    ),
+  );
+  emit();
+}
 
 function seedIfEmpty(): VitalsReading[] {
   const items = readAll();

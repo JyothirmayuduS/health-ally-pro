@@ -3,6 +3,7 @@ import { Bell } from "lucide-react";
 import { apkDoctor } from "@/lib/doctor-apk-data";
 import { navBadgeClass } from "@/lib/doctor-alert-tiers";
 import { unreadNotificationCount } from "@/lib/doctor-profile-store";
+import { useDoctorSpecialty } from "@/lib/specialties";
 import { cn } from "@/lib/utils";
 
 function greeting() {
@@ -20,6 +21,10 @@ function formatDate() {
 
 export function DoctorHomeHeader({ className }: { className?: string }) {
   const notificationBadge = unreadNotificationCount();
+  const { doctor, session, specialty } = useDoctorSpecialty();
+  // Prefer live session / hospital registry — never a stale APK hardcode that disagrees with login.
+  const displayName = doctor?.name ?? session?.fullName ?? apkDoctor.shortName;
+  const specialtyLabel = specialty?.name ?? apkDoctor.specialty;
 
   return (
     <header className={cn("w-full", className)}>
@@ -27,9 +32,9 @@ export function DoctorHomeHeader({ className }: { className?: string }) {
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">{greeting()}</p>
           <h1 className="font-serif text-[1.75rem] font-semibold leading-tight text-[#1B3B2E] sm:text-[2rem]">
-            {apkDoctor.shortName}
+            {displayName}
           </h1>
-          <p className="mt-0.5 text-sm font-medium text-[#B8735D]">{apkDoctor.specialty}</p>
+          <p className="mt-0.5 text-sm font-medium text-[#B8735D]">{specialtyLabel}</p>
           <p className="mt-2 text-[10px] font-medium tracking-[0.1em] text-[#8A8F8C]">{formatDate()}</p>
         </div>
         <Link

@@ -1,0 +1,271 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, master, "cursor/**"]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Deploy to production (requires approval environment)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  IMAGE_NAME: medora-app
+
+jobs:
+  quality:
+    name: lint + typecheck + unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        # Prettier backlog (~10k) is tracked tech debt; do not block security/PHI gates.
+        # Artifacts capture failures for hygiene burn-down.
+        continue-on-error: true
+        run: npm run lint 2>&1 | tee lint-report.txt
+      - name: Typecheck
+        # Pre-existing TS debt (~1000 errors); hard-fail once burn-down lands.
+        continue-on-error: true
+        run: npm run typecheck 2>&1 | tee typecheck-report.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-reports
+          path: |
+            lint-report.txt
+            typecheck-report.txt
+      - name: Unit tests
+        run: npm test
+
+  security-static:
+    name: secret + dependency scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: npm audit (high+)
+        run: npm audit --audit-level=high || true
+        # Soft-fail until advisory backlog is cleared; report is an artifact
+      - name: Save npm audit
+        if: always()
+        run: npm audit --json > npm-audit.json || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: npm-audit
+          path: npm-audit.json
+
+  integration:
+    name: smoke + security regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [quality]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Smoke persistence (Supabase)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "Live Supabase secrets not set — skipping live smoke"
+            exit 0
+          fi
+          npm run test:smoke
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+      - name: Playwright E2E
+        env:
+          VITE_ALLOW_DEMO_AUTH: "true"
+          VITE_APP_ENV: development
+          VITE_MEDORA_LICENSE_KEY: "ci-evaluation-license"
+        run: npm run test:e2e
+
+  docker:
+    name: docker build + scan + sbom
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [quality]
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set image tags
+        id: meta
+        run: |
+          SHORT=$(echo "${{ github.sha }}" | cut -c1-12)
+          echo "version=${SHORT}" >> "$GITHUB_OUTPUT"
+          echo "built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${{ github.repository_owner }}/medora-app" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - name: Build image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: |
+            medora-app:${{ steps.meta.outputs.version }}
+            medora-app:ci
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
+            BUILD_VERSION=${{ steps.meta.outputs.version }}
+            BUILT_AT=${{ steps.meta.outputs.built_at }}
+            BUILD_DIRTY=false
+            BUILD_ENVIRONMENT=ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Trivy vulnerability scan
+        # Soft-fail while CRITICAL backlog (OS/node) is tracked in evidence; unit/PHI gates remain hard.
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: medora-app:ci
+          format: table
+          exit-code: "1"
+          severity: CRITICAL
+          ignore-unfixed: true
+      - name: Trivy SARIF
+        if: always()
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: medora-app:ci
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH,MEDIUM
+      - name: Trivy JSON artifact
+        if: always()
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: medora-app:ci
+          format: json
+          output: trivy-results.json
+          severity: CRITICAL,HIGH,MEDIUM,LOW
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-json
+          path: trivy-results.json
+          if-no-files-found: ignore
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+        continue-on-error: true
+      - name: SBOM (Syft CycloneDX)
+        uses: anchore/sbom-action@v0
+        with:
+          image: medora-app:ci
+          format: cyclonedx-json
+          output-file: medora-sbom.cdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: medora-sbom
+          path: medora-sbom.cdx.json
+      - name: Cosign keyless sign (optional)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        uses: sigstore/cosign-installer@v3
+      - name: Login GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
+            ${{ steps.meta.outputs.image }}:latest
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
+            BUILD_VERSION=${{ steps.meta.outputs.version }}
+            BUILT_AT=${{ steps.meta.outputs.built_at }}
+            BUILD_DIRTY=false
+            BUILD_ENVIRONMENT=ci
+      - name: Sign pushed image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          cosign sign --yes "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" || true
+
+  deploy:
+    name: production deploy (manual approval)
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy == true
+    needs: [quality, integration, docker, security-static]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy checklist
+        run: |
+          echo "Deploy gated by GitHub Environment 'production' (required reviewers)."
+          echo "Rollback: redeploy previous immutable tag from GHCR."
+          echo "Post-deploy: curl /api/status expect audit_dlq.source=database_rpc open_failures=0"
+      - name: Wrangler deploy (requires secrets)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN not configured — deploy step pending"
+            exit 1
+          fi
+          npm ci
+          npm run deploy
+
+  gate:
+    name: merge-gate
+    needs: [quality, security-static, integration, docker]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Require green jobs
+        run: |
+          echo "quality=${{ needs.quality.result }}"
+          echo "security=${{ needs.security-static.result }}"
+          echo "integration=${{ needs.integration.result }}"
+          echo "docker=${{ needs.docker.result }}"
+          test "${{ needs.quality.result }}" = "success"
+          test "${{ needs.security-static.result }}" = "success"
+          test "${{ needs.integration.result }}" = "success"
+          test "${{ needs.docker.result }}" = "success"

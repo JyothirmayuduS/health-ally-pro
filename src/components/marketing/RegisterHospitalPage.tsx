@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ONBOARDING_SPECIALTIES,
@@ -6,6 +6,7 @@ import {
   type HospitalBrand,
 } from "@/lib/hospital-brand";
 import { MarketingFooter, MarketingHeader } from "@/components/marketing/MarketingChrome";
+import { TurnstileWidget } from "@/components/marketing/TurnstileWidget";
 import { salesMailto, SALES_CONTACT } from "@/lib/legal-content";
 import { toast } from "sonner";
 
@@ -13,6 +14,8 @@ type PlanId = HospitalBrand["plan"];
 
 export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: string }) {
   const [done, setDone] = useState<HospitalBrand | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const onTurnstile = useCallback((token: string | null) => setTurnstileToken(token), []);
   const [form, setForm] = useState({
     hospitalName: "",
     legalName: "",
@@ -47,6 +50,13 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
       toast.error("Hospital name and admin email are required");
       return;
     }
+    const needsTurnstile = Boolean(
+      (import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined)?.trim(),
+    );
+    if (needsTurnstile && !turnstileToken) {
+      toast.error("Complete bot verification");
+      return;
+    }
     const brand: HospitalBrand = {
       hospitalName: form.hospitalName.trim(),
       legalName: form.legalName.trim() || form.hospitalName.trim(),
@@ -61,7 +71,7 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
     };
     saveHospitalBrand(brand, { syncRemote: false });
     const { syncOnboardingLead } = await import("@/lib/specialties/remote-sync");
-    const res = await syncOnboardingLead(brand);
+    const res = await syncOnboardingLead(brand, { turnstileToken: turnstileToken ?? undefined });
     const ok = res && typeof res === "object" && "ok" in res && (res as { ok?: boolean }).ok;
     toast.success(ok ? "Registration received" : "Saved — we will sync when online");
     setDone(brand);
@@ -234,6 +244,8 @@ export default function RegisterHospitalPage({ initialPlan }: { initialPlan?: st
               .
             </span>
           </label>
+
+          <TurnstileWidget onToken={onTurnstile} />
 
           <button
             type="submit"

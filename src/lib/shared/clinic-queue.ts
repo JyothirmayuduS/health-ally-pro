@@ -1,4 +1,5 @@
 import { resolvePatientId } from "./patients";
+import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
 
 export type ClinicQueueEntry = {
   id: string;
@@ -43,22 +44,15 @@ const SEED: ClinicQueueEntry[] = [
 ];
 
 function load(): ClinicQueueEntry[] {
-  if (typeof window === "undefined") return [...SEED];
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) {
-      localStorage.setItem(KEY, JSON.stringify(SEED));
-      return [...SEED];
-    }
-    return JSON.parse(raw) as ClinicQueueEntry[];
-  } catch {
-    return [...SEED];
-  }
+  const loaded = loadPersistedJson(KEY, []);
+  if (loaded.length) return loaded;
+  if (typeof window !== "undefined") savePersistedJson(KEY, deskForKey(KEY), SEED);
+  return [...SEED];
 }
 
 function save(list: ClinicQueueEntry[]) {
+  savePersistedJson(KEY, deskForKey(KEY), list);
   if (typeof window !== "undefined") {
-    localStorage.setItem(KEY, JSON.stringify(list));
     window.dispatchEvent(new CustomEvent(CLINIC_QUEUE_EVENT));
   }
 }

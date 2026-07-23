@@ -108,7 +108,7 @@ export default function Operations() {
   return (
     <div className="space-y-6" data-testid="pharmacy-operations">
       <SectionLabel
-        eyebrow="Maple · Pharmacy ops"
+        eyebrow="Oak Haven · Pharmacy ops"
         action={
           <Button variant="outline" size="sm" className="border-ink-200" onClick={exportCsv}>
             <Download className="mr-1.5 h-3.5 w-3.5" /> Export audit CSV

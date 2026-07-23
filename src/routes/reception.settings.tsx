@@ -28,7 +28,7 @@ function ReceptionSettings() {
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <Label className="text-xs">Hospital name</Label>
-            <Input className="mt-1 border-ink-200" defaultValue="Maple Hospital" />
+            <Input className="mt-1 border-ink-200" defaultValue="Oak Haven Medical" />
           </div>
           <div>
             <Label className="text-xs">Desk / location</Label>
@@ -93,7 +93,7 @@ function ReceptionSettings() {
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <Label className="text-xs">Receipt header</Label>
-            <Input className="mt-1 border-ink-200" defaultValue="Maple Hospital · OPD" />
+            <Input className="mt-1 border-ink-200" defaultValue="Oak Haven Medical · OPD" />
           </div>
           <div>
             <Label className="text-xs">Tax label</Label>

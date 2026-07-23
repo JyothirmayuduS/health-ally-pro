@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrustRouteImport } from './routes/trust'
+import { Route as StatusRouteImport } from './routes/status'
 import { Route as SlaRouteImport } from './routes/sla'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as RegisterHospitalRouteImport } from './routes/register-hospital'
@@ -49,10 +51,12 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ReportsHistoryRouteImport } from './routes/reports.history'
 import { Route as ReportsReportIdRouteImport } from './routes/reports.$reportId'
 import { Route as ReceptionVitalsRouteImport } from './routes/reception.vitals'
+import { Route as ReceptionVaccinationRouteImport } from './routes/reception.vaccination'
 import { Route as ReceptionTokenDisplayRouteImport } from './routes/reception.token-display'
 import { Route as ReceptionTokenBoardRouteImport } from './routes/reception.token-board'
 import { Route as ReceptionSettingsRouteImport } from './routes/reception.settings'
 import { Route as ReceptionReportsRouteImport } from './routes/reception.reports'
+import { Route as ReceptionRemindersRouteImport } from './routes/reception.reminders'
 import { Route as ReceptionRegisterRouteImport } from './routes/reception.register'
 import { Route as ReceptionQueueRouteImport } from './routes/reception.queue'
 import { Route as ReceptionPatientsRouteImport } from './routes/reception.patients'
@@ -65,6 +69,7 @@ import { Route as ReceptionBoardRouteImport } from './routes/reception.board'
 import { Route as ReceptionBillingRouteImport } from './routes/reception.billing'
 import { Route as ReceptionAppointmentsRouteImport } from './routes/reception.appointments'
 import { Route as ReceptionAdmissionsRouteImport } from './routes/reception.admissions'
+import { Route as ReceptionAddressBookRouteImport } from './routes/reception.address-book'
 import { Route as ProfileTermsRouteImport } from './routes/profile.terms'
 import { Route as ProfileSupportRouteImport } from './routes/profile.support'
 import { Route as ProfilePrivacyRouteImport } from './routes/profile.privacy'
@@ -141,13 +146,17 @@ import { Route as BillingPaymentsRouteImport } from './routes/billing.payments'
 import { Route as BillingLeaveRouteImport } from './routes/billing.leave'
 import { Route as BillingInvoicesRouteImport } from './routes/billing.invoices'
 import { Route as BillingEncountersRouteImport } from './routes/billing.encounters'
+import { Route as ApiStatusRouteImport } from './routes/api/status'
+import { Route as ApiMetricsRouteImport } from './routes/api/metrics'
 import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminRevenueRouteImport } from './routes/admin.revenue'
+import { Route as AdminRegistersRouteImport } from './routes/admin.registers'
 import { Route as AdminPharmacyFormularyRouteImport } from './routes/admin.pharmacy-formulary'
 import { Route as AdminOtRouteImport } from './routes/admin.ot'
 import { Route as AdminOccupancyRouteImport } from './routes/admin.occupancy'
+import { Route as AdminMastersRouteImport } from './routes/admin.masters'
 import { Route as AdminLabCatalogRouteImport } from './routes/admin.lab-catalog'
 import { Route as AdminHrRouteImport } from './routes/admin.hr'
 import { Route as AdminHospitalUnitsRouteImport } from './routes/admin.hospital-units'
@@ -156,6 +165,7 @@ import { Route as AdminDoctorsRouteImport } from './routes/admin.doctors'
 import { Route as AdminDoctorRosterRouteImport } from './routes/admin.doctor-roster'
 import { Route as AdminDepartmentsRouteImport } from './routes/admin.departments'
 import { Route as AdminBranchesRouteImport } from './routes/admin.branches'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminAccessControlRouteImport } from './routes/admin.access-control'
@@ -184,20 +194,41 @@ import { Route as DietMealIdClinicalRulesRouteImport } from './routes/diet.$meal
 import { Route as CareVisitsVisitIdRouteImport } from './routes/care.visits.$visitId'
 import { Route as ApiPatientRxInboxRouteImport } from './routes/api/patient/rx-inbox'
 import { Route as ApiPatientClinicalEventsRouteImport } from './routes/api/patient/clinical-events'
+import { Route as ApiHospitalPhiRouteImport } from './routes/api/hospital/phi'
 import { Route as ApiHospitalPersistRouteImport } from './routes/api/hospital/persist'
+import { Route as ApiHospitalAuditDlqRouteImport } from './routes/api/hospital/audit-dlq'
+import { Route as ApiHospitalAuditRouteImport } from './routes/api/hospital/audit'
 import { Route as ApiExerciseYoutubeRouteImport } from './routes/api/exercise/youtube'
 import { Route as ApiDietYoutubeRouteImport } from './routes/api/diet/youtube'
 import { Route as ApiDietMealMediaRouteImport } from './routes/api/diet/meal-media'
 import { Route as ApiDietMealImageRouteImport } from './routes/api/diet/meal-image'
+import { Route as ApiBillingWebhookRouteImport } from './routes/api/billing/webhook'
+import { Route as ApiBillingPortalRouteImport } from './routes/api/billing/portal'
 import { Route as ApiBillingCheckoutRouteImport } from './routes/api/billing/checkout'
 import { Route as ApiAiStatusRouteImport } from './routes/api/ai/status'
 import { Route as ApiAiPrescriptionRouteImport } from './routes/api/ai/prescription'
 import { Route as ApiAiDietRouteImport } from './routes/api/ai/diet'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
+import { Route as AdminMastersVaccinesRouteImport } from './routes/admin.masters.vaccines'
+import { Route as AdminMastersReferringDoctorsRouteImport } from './routes/admin.masters.referring-doctors'
+import { Route as AdminMastersInvestigationsRouteImport } from './routes/admin.masters.investigations'
+import { Route as AdminMastersDiagnosisRouteImport } from './routes/admin.masters.diagnosis'
+import { Route as AdminMastersCommsRouteImport } from './routes/admin.masters.comms'
+import { Route as AdminMastersAdviseRouteImport } from './routes/admin.masters.advise'
 import { Route as DoctorPatientsPatientIdIndexRouteImport } from './routes/doctor.patients.$patientId.index'
 import { Route as DoctorSettingsReferralsReferralIdRouteImport } from './routes/doctor.settings.referrals.$referralId'
 import { Route as DoctorPatientsPatientIdHistoryRouteImport } from './routes/doctor.patients.$patientId.history'
 
+const TrustRoute = TrustRouteImport.update({
+  id: '/trust',
+  path: '/trust',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SlaRoute = SlaRouteImport.update({
   id: '/sla',
   path: '/sla',
@@ -398,6 +429,11 @@ const ReceptionVitalsRoute = ReceptionVitalsRouteImport.update({
   path: '/vitals',
   getParentRoute: () => ReceptionRoute,
 } as any)
+const ReceptionVaccinationRoute = ReceptionVaccinationRouteImport.update({
+  id: '/vaccination',
+  path: '/vaccination',
+  getParentRoute: () => ReceptionRoute,
+} as any)
 const ReceptionTokenDisplayRoute = ReceptionTokenDisplayRouteImport.update({
   id: '/token-display',
   path: '/token-display',
@@ -416,6 +452,11 @@ const ReceptionSettingsRoute = ReceptionSettingsRouteImport.update({
 const ReceptionReportsRoute = ReceptionReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionRemindersRoute = ReceptionRemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
   getParentRoute: () => ReceptionRoute,
 } as any)
 const ReceptionRegisterRoute = ReceptionRegisterRouteImport.update({
@@ -476,6 +517,11 @@ const ReceptionAppointmentsRoute = ReceptionAppointmentsRouteImport.update({
 const ReceptionAdmissionsRoute = ReceptionAdmissionsRouteImport.update({
   id: '/admissions',
   path: '/admissions',
+  getParentRoute: () => ReceptionRoute,
+} as any)
+const ReceptionAddressBookRoute = ReceptionAddressBookRouteImport.update({
+  id: '/address-book',
+  path: '/address-book',
   getParentRoute: () => ReceptionRoute,
 } as any)
 const ProfileTermsRoute = ProfileTermsRouteImport.update({
@@ -859,6 +905,16 @@ const BillingEncountersRoute = BillingEncountersRouteImport.update({
   path: '/encounters',
   getParentRoute: () => BillingRoute,
 } as any)
+const ApiStatusRoute = ApiStatusRouteImport.update({
+  id: '/api/status',
+  path: '/api/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMetricsRoute = ApiMetricsRouteImport.update({
+  id: '/api/metrics',
+  path: '/api/metrics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminStaffRoute = AdminStaffRouteImport.update({
   id: '/staff',
   path: '/staff',
@@ -879,6 +935,11 @@ const AdminRevenueRoute = AdminRevenueRouteImport.update({
   path: '/revenue',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRegistersRoute = AdminRegistersRouteImport.update({
+  id: '/registers',
+  path: '/registers',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPharmacyFormularyRoute = AdminPharmacyFormularyRouteImport.update({
   id: '/pharmacy-formulary',
   path: '/pharmacy-formulary',
@@ -892,6 +953,11 @@ const AdminOtRoute = AdminOtRouteImport.update({
 const AdminOccupancyRoute = AdminOccupancyRouteImport.update({
   id: '/occupancy',
   path: '/occupancy',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMastersRoute = AdminMastersRouteImport.update({
+  id: '/masters',
+  path: '/masters',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminLabCatalogRoute = AdminLabCatalogRouteImport.update({
@@ -932,6 +998,11 @@ const AdminDepartmentsRoute = AdminDepartmentsRouteImport.update({
 const AdminBranchesRoute = AdminBranchesRouteImport.update({
   id: '/branches',
   path: '/branches',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
@@ -1080,9 +1151,24 @@ const ApiPatientClinicalEventsRoute =
     path: '/api/patient/clinical-events',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiHospitalPhiRoute = ApiHospitalPhiRouteImport.update({
+  id: '/api/hospital/phi',
+  path: '/api/hospital/phi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHospitalPersistRoute = ApiHospitalPersistRouteImport.update({
   id: '/api/hospital/persist',
   path: '/api/hospital/persist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHospitalAuditDlqRoute = ApiHospitalAuditDlqRouteImport.update({
+  id: '/api/hospital/audit-dlq',
+  path: '/api/hospital/audit-dlq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHospitalAuditRoute = ApiHospitalAuditRouteImport.update({
+  id: '/api/hospital/audit',
+  path: '/api/hospital/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiExerciseYoutubeRoute = ApiExerciseYoutubeRouteImport.update({
@@ -1103,6 +1189,16 @@ const ApiDietMealMediaRoute = ApiDietMealMediaRouteImport.update({
 const ApiDietMealImageRoute = ApiDietMealImageRouteImport.update({
   id: '/api/diet/meal-image',
   path: '/api/diet/meal-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBillingWebhookRoute = ApiBillingWebhookRouteImport.update({
+  id: '/api/billing/webhook',
+  path: '/api/billing/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBillingPortalRoute = ApiBillingPortalRouteImport.update({
+  id: '/api/billing/portal',
+  path: '/api/billing/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiBillingCheckoutRoute = ApiBillingCheckoutRouteImport.update({
@@ -1129,6 +1225,38 @@ const ApiAiChatRoute = ApiAiChatRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMastersVaccinesRoute = AdminMastersVaccinesRouteImport.update({
+  id: '/vaccines',
+  path: '/vaccines',
+  getParentRoute: () => AdminMastersRoute,
+} as any)
+const AdminMastersReferringDoctorsRoute =
+  AdminMastersReferringDoctorsRouteImport.update({
+    id: '/referring-doctors',
+    path: '/referring-doctors',
+    getParentRoute: () => AdminMastersRoute,
+  } as any)
+const AdminMastersInvestigationsRoute =
+  AdminMastersInvestigationsRouteImport.update({
+    id: '/investigations',
+    path: '/investigations',
+    getParentRoute: () => AdminMastersRoute,
+  } as any)
+const AdminMastersDiagnosisRoute = AdminMastersDiagnosisRouteImport.update({
+  id: '/diagnosis',
+  path: '/diagnosis',
+  getParentRoute: () => AdminMastersRoute,
+} as any)
+const AdminMastersCommsRoute = AdminMastersCommsRouteImport.update({
+  id: '/comms',
+  path: '/comms',
+  getParentRoute: () => AdminMastersRoute,
+} as any)
+const AdminMastersAdviseRoute = AdminMastersAdviseRouteImport.update({
+  id: '/advise',
+  path: '/advise',
+  getParentRoute: () => AdminMastersRoute,
 } as any)
 const DoctorPatientsPatientIdIndexRoute =
   DoctorPatientsPatientIdIndexRouteImport.update({
@@ -1171,9 +1299,12 @@ export interface FileRoutesByFullPath {
   '/register-hospital': typeof RegisterHospitalRoute
   '/security': typeof SecurityRoute
   '/sla': typeof SlaRoute
+  '/status': typeof StatusRoute
+  '/trust': typeof TrustRoute
   '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/branches': typeof AdminBranchesRoute
   '/admin/departments': typeof AdminDepartmentsRoute
   '/admin/doctor-roster': typeof AdminDoctorRosterRoute
@@ -1182,13 +1313,17 @@ export interface FileRoutesByFullPath {
   '/admin/hospital-units': typeof AdminHospitalUnitsRoute
   '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
+  '/admin/masters': typeof AdminMastersRouteWithChildren
   '/admin/occupancy': typeof AdminOccupancyRoute
   '/admin/ot': typeof AdminOtRoute
   '/admin/pharmacy-formulary': typeof AdminPharmacyFormularyRoute
+  '/admin/registers': typeof AdminRegistersRoute
   '/admin/revenue': typeof AdminRevenueRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/staff': typeof AdminStaffRoute
+  '/api/metrics': typeof ApiMetricsRoute
+  '/api/status': typeof ApiStatusRoute
   '/billing/encounters': typeof BillingEncountersRoute
   '/billing/invoices': typeof BillingInvoicesRoute
   '/billing/leave': typeof BillingLeaveRoute
@@ -1265,6 +1400,7 @@ export interface FileRoutesByFullPath {
   '/profile/privacy': typeof ProfilePrivacyRoute
   '/profile/support': typeof ProfileSupportRoute
   '/profile/terms': typeof ProfileTermsRoute
+  '/reception/address-book': typeof ReceptionAddressBookRoute
   '/reception/admissions': typeof ReceptionAdmissionsRoute
   '/reception/appointments': typeof ReceptionAppointmentsRouteWithChildren
   '/reception/billing': typeof ReceptionBillingRoute
@@ -1277,10 +1413,12 @@ export interface FileRoutesByFullPath {
   '/reception/patients': typeof ReceptionPatientsRoute
   '/reception/queue': typeof ReceptionQueueRoute
   '/reception/register': typeof ReceptionRegisterRoute
+  '/reception/reminders': typeof ReceptionRemindersRoute
   '/reception/reports': typeof ReceptionReportsRoute
   '/reception/settings': typeof ReceptionSettingsRoute
   '/reception/token-board': typeof ReceptionTokenBoardRoute
   '/reception/token-display': typeof ReceptionTokenDisplayRoute
+  '/reception/vaccination': typeof ReceptionVaccinationRoute
   '/reception/vitals': typeof ReceptionVitalsRoute
   '/reports/$reportId': typeof ReportsReportIdRoute
   '/reports/history': typeof ReportsHistoryRoute
@@ -1300,16 +1438,27 @@ export interface FileRoutesByFullPath {
   '/profile/': typeof ProfileIndexRoute
   '/reception/': typeof ReceptionIndexRoute
   '/reports/': typeof ReportsIndexRoute
+  '/admin/masters/advise': typeof AdminMastersAdviseRoute
+  '/admin/masters/comms': typeof AdminMastersCommsRoute
+  '/admin/masters/diagnosis': typeof AdminMastersDiagnosisRoute
+  '/admin/masters/investigations': typeof AdminMastersInvestigationsRoute
+  '/admin/masters/referring-doctors': typeof AdminMastersReferringDoctorsRoute
+  '/admin/masters/vaccines': typeof AdminMastersVaccinesRoute
   '/api/ai/chat': typeof ApiAiChatRoute
   '/api/ai/diet': typeof ApiAiDietRoute
   '/api/ai/prescription': typeof ApiAiPrescriptionRoute
   '/api/ai/status': typeof ApiAiStatusRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
+  '/api/billing/portal': typeof ApiBillingPortalRoute
+  '/api/billing/webhook': typeof ApiBillingWebhookRoute
   '/api/diet/meal-image': typeof ApiDietMealImageRoute
   '/api/diet/meal-media': typeof ApiDietMealMediaRoute
   '/api/diet/youtube': typeof ApiDietYoutubeRoute
   '/api/exercise/youtube': typeof ApiExerciseYoutubeRoute
+  '/api/hospital/audit': typeof ApiHospitalAuditRoute
+  '/api/hospital/audit-dlq': typeof ApiHospitalAuditDlqRoute
   '/api/hospital/persist': typeof ApiHospitalPersistRoute
+  '/api/hospital/phi': typeof ApiHospitalPhiRoute
   '/api/patient/clinical-events': typeof ApiPatientClinicalEventsRoute
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
@@ -1353,9 +1502,12 @@ export interface FileRoutesByTo {
   '/register-hospital': typeof RegisterHospitalRoute
   '/security': typeof SecurityRoute
   '/sla': typeof SlaRoute
+  '/status': typeof StatusRoute
+  '/trust': typeof TrustRoute
   '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/branches': typeof AdminBranchesRoute
   '/admin/departments': typeof AdminDepartmentsRoute
   '/admin/doctor-roster': typeof AdminDoctorRosterRoute
@@ -1364,13 +1516,17 @@ export interface FileRoutesByTo {
   '/admin/hospital-units': typeof AdminHospitalUnitsRoute
   '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
+  '/admin/masters': typeof AdminMastersRouteWithChildren
   '/admin/occupancy': typeof AdminOccupancyRoute
   '/admin/ot': typeof AdminOtRoute
   '/admin/pharmacy-formulary': typeof AdminPharmacyFormularyRoute
+  '/admin/registers': typeof AdminRegistersRoute
   '/admin/revenue': typeof AdminRevenueRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/staff': typeof AdminStaffRoute
+  '/api/metrics': typeof ApiMetricsRoute
+  '/api/status': typeof ApiStatusRoute
   '/billing/encounters': typeof BillingEncountersRoute
   '/billing/invoices': typeof BillingInvoicesRoute
   '/billing/leave': typeof BillingLeaveRoute
@@ -1444,6 +1600,7 @@ export interface FileRoutesByTo {
   '/profile/privacy': typeof ProfilePrivacyRoute
   '/profile/support': typeof ProfileSupportRoute
   '/profile/terms': typeof ProfileTermsRoute
+  '/reception/address-book': typeof ReceptionAddressBookRoute
   '/reception/admissions': typeof ReceptionAdmissionsRoute
   '/reception/billing': typeof ReceptionBillingRoute
   '/reception/board': typeof ReceptionBoardRoute
@@ -1455,10 +1612,12 @@ export interface FileRoutesByTo {
   '/reception/patients': typeof ReceptionPatientsRoute
   '/reception/queue': typeof ReceptionQueueRoute
   '/reception/register': typeof ReceptionRegisterRoute
+  '/reception/reminders': typeof ReceptionRemindersRoute
   '/reception/reports': typeof ReceptionReportsRoute
   '/reception/settings': typeof ReceptionSettingsRoute
   '/reception/token-board': typeof ReceptionTokenBoardRoute
   '/reception/token-display': typeof ReceptionTokenDisplayRoute
+  '/reception/vaccination': typeof ReceptionVaccinationRoute
   '/reception/vitals': typeof ReceptionVitalsRoute
   '/reports/$reportId': typeof ReportsReportIdRoute
   '/reports/history': typeof ReportsHistoryRoute
@@ -1478,16 +1637,27 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileIndexRoute
   '/reception': typeof ReceptionIndexRoute
   '/reports': typeof ReportsIndexRoute
+  '/admin/masters/advise': typeof AdminMastersAdviseRoute
+  '/admin/masters/comms': typeof AdminMastersCommsRoute
+  '/admin/masters/diagnosis': typeof AdminMastersDiagnosisRoute
+  '/admin/masters/investigations': typeof AdminMastersInvestigationsRoute
+  '/admin/masters/referring-doctors': typeof AdminMastersReferringDoctorsRoute
+  '/admin/masters/vaccines': typeof AdminMastersVaccinesRoute
   '/api/ai/chat': typeof ApiAiChatRoute
   '/api/ai/diet': typeof ApiAiDietRoute
   '/api/ai/prescription': typeof ApiAiPrescriptionRoute
   '/api/ai/status': typeof ApiAiStatusRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
+  '/api/billing/portal': typeof ApiBillingPortalRoute
+  '/api/billing/webhook': typeof ApiBillingWebhookRoute
   '/api/diet/meal-image': typeof ApiDietMealImageRoute
   '/api/diet/meal-media': typeof ApiDietMealMediaRoute
   '/api/diet/youtube': typeof ApiDietYoutubeRoute
   '/api/exercise/youtube': typeof ApiExerciseYoutubeRoute
+  '/api/hospital/audit': typeof ApiHospitalAuditRoute
+  '/api/hospital/audit-dlq': typeof ApiHospitalAuditDlqRoute
   '/api/hospital/persist': typeof ApiHospitalPersistRoute
+  '/api/hospital/phi': typeof ApiHospitalPhiRoute
   '/api/patient/clinical-events': typeof ApiPatientClinicalEventsRoute
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
@@ -1539,9 +1709,12 @@ export interface FileRoutesById {
   '/register-hospital': typeof RegisterHospitalRoute
   '/security': typeof SecurityRoute
   '/sla': typeof SlaRoute
+  '/status': typeof StatusRoute
+  '/trust': typeof TrustRoute
   '/admin/access-control': typeof AdminAccessControlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/branches': typeof AdminBranchesRoute
   '/admin/departments': typeof AdminDepartmentsRoute
   '/admin/doctor-roster': typeof AdminDoctorRosterRoute
@@ -1550,13 +1723,17 @@ export interface FileRoutesById {
   '/admin/hospital-units': typeof AdminHospitalUnitsRoute
   '/admin/hr': typeof AdminHrRoute
   '/admin/lab-catalog': typeof AdminLabCatalogRoute
+  '/admin/masters': typeof AdminMastersRouteWithChildren
   '/admin/occupancy': typeof AdminOccupancyRoute
   '/admin/ot': typeof AdminOtRoute
   '/admin/pharmacy-formulary': typeof AdminPharmacyFormularyRoute
+  '/admin/registers': typeof AdminRegistersRoute
   '/admin/revenue': typeof AdminRevenueRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/staff': typeof AdminStaffRoute
+  '/api/metrics': typeof ApiMetricsRoute
+  '/api/status': typeof ApiStatusRoute
   '/billing/encounters': typeof BillingEncountersRoute
   '/billing/invoices': typeof BillingInvoicesRoute
   '/billing/leave': typeof BillingLeaveRoute
@@ -1633,6 +1810,7 @@ export interface FileRoutesById {
   '/profile/privacy': typeof ProfilePrivacyRoute
   '/profile/support': typeof ProfileSupportRoute
   '/profile/terms': typeof ProfileTermsRoute
+  '/reception/address-book': typeof ReceptionAddressBookRoute
   '/reception/admissions': typeof ReceptionAdmissionsRoute
   '/reception/appointments': typeof ReceptionAppointmentsRouteWithChildren
   '/reception/billing': typeof ReceptionBillingRoute
@@ -1645,10 +1823,12 @@ export interface FileRoutesById {
   '/reception/patients': typeof ReceptionPatientsRoute
   '/reception/queue': typeof ReceptionQueueRoute
   '/reception/register': typeof ReceptionRegisterRoute
+  '/reception/reminders': typeof ReceptionRemindersRoute
   '/reception/reports': typeof ReceptionReportsRoute
   '/reception/settings': typeof ReceptionSettingsRoute
   '/reception/token-board': typeof ReceptionTokenBoardRoute
   '/reception/token-display': typeof ReceptionTokenDisplayRoute
+  '/reception/vaccination': typeof ReceptionVaccinationRoute
   '/reception/vitals': typeof ReceptionVitalsRoute
   '/reports/$reportId': typeof ReportsReportIdRoute
   '/reports/history': typeof ReportsHistoryRoute
@@ -1668,16 +1848,27 @@ export interface FileRoutesById {
   '/profile/': typeof ProfileIndexRoute
   '/reception/': typeof ReceptionIndexRoute
   '/reports/': typeof ReportsIndexRoute
+  '/admin/masters/advise': typeof AdminMastersAdviseRoute
+  '/admin/masters/comms': typeof AdminMastersCommsRoute
+  '/admin/masters/diagnosis': typeof AdminMastersDiagnosisRoute
+  '/admin/masters/investigations': typeof AdminMastersInvestigationsRoute
+  '/admin/masters/referring-doctors': typeof AdminMastersReferringDoctorsRoute
+  '/admin/masters/vaccines': typeof AdminMastersVaccinesRoute
   '/api/ai/chat': typeof ApiAiChatRoute
   '/api/ai/diet': typeof ApiAiDietRoute
   '/api/ai/prescription': typeof ApiAiPrescriptionRoute
   '/api/ai/status': typeof ApiAiStatusRoute
   '/api/billing/checkout': typeof ApiBillingCheckoutRoute
+  '/api/billing/portal': typeof ApiBillingPortalRoute
+  '/api/billing/webhook': typeof ApiBillingWebhookRoute
   '/api/diet/meal-image': typeof ApiDietMealImageRoute
   '/api/diet/meal-media': typeof ApiDietMealMediaRoute
   '/api/diet/youtube': typeof ApiDietYoutubeRoute
   '/api/exercise/youtube': typeof ApiExerciseYoutubeRoute
+  '/api/hospital/audit': typeof ApiHospitalAuditRoute
+  '/api/hospital/audit-dlq': typeof ApiHospitalAuditDlqRoute
   '/api/hospital/persist': typeof ApiHospitalPersistRoute
+  '/api/hospital/phi': typeof ApiHospitalPhiRoute
   '/api/patient/clinical-events': typeof ApiPatientClinicalEventsRoute
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
@@ -1731,9 +1922,12 @@ export interface FileRouteTypes {
     | '/register-hospital'
     | '/security'
     | '/sla'
+    | '/status'
+    | '/trust'
     | '/admin/access-control'
     | '/admin/analytics'
     | '/admin/announcements'
+    | '/admin/audit'
     | '/admin/branches'
     | '/admin/departments'
     | '/admin/doctor-roster'
@@ -1742,13 +1936,17 @@ export interface FileRouteTypes {
     | '/admin/hospital-units'
     | '/admin/hr'
     | '/admin/lab-catalog'
+    | '/admin/masters'
     | '/admin/occupancy'
     | '/admin/ot'
     | '/admin/pharmacy-formulary'
+    | '/admin/registers'
     | '/admin/revenue'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/staff'
+    | '/api/metrics'
+    | '/api/status'
     | '/billing/encounters'
     | '/billing/invoices'
     | '/billing/leave'
@@ -1825,6 +2023,7 @@ export interface FileRouteTypes {
     | '/profile/privacy'
     | '/profile/support'
     | '/profile/terms'
+    | '/reception/address-book'
     | '/reception/admissions'
     | '/reception/appointments'
     | '/reception/billing'
@@ -1837,10 +2036,12 @@ export interface FileRouteTypes {
     | '/reception/patients'
     | '/reception/queue'
     | '/reception/register'
+    | '/reception/reminders'
     | '/reception/reports'
     | '/reception/settings'
     | '/reception/token-board'
     | '/reception/token-display'
+    | '/reception/vaccination'
     | '/reception/vitals'
     | '/reports/$reportId'
     | '/reports/history'
@@ -1860,16 +2061,27 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/reception/'
     | '/reports/'
+    | '/admin/masters/advise'
+    | '/admin/masters/comms'
+    | '/admin/masters/diagnosis'
+    | '/admin/masters/investigations'
+    | '/admin/masters/referring-doctors'
+    | '/admin/masters/vaccines'
     | '/api/ai/chat'
     | '/api/ai/diet'
     | '/api/ai/prescription'
     | '/api/ai/status'
     | '/api/billing/checkout'
+    | '/api/billing/portal'
+    | '/api/billing/webhook'
     | '/api/diet/meal-image'
     | '/api/diet/meal-media'
     | '/api/diet/youtube'
     | '/api/exercise/youtube'
+    | '/api/hospital/audit'
+    | '/api/hospital/audit-dlq'
     | '/api/hospital/persist'
+    | '/api/hospital/phi'
     | '/api/patient/clinical-events'
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
@@ -1913,9 +2125,12 @@ export interface FileRouteTypes {
     | '/register-hospital'
     | '/security'
     | '/sla'
+    | '/status'
+    | '/trust'
     | '/admin/access-control'
     | '/admin/analytics'
     | '/admin/announcements'
+    | '/admin/audit'
     | '/admin/branches'
     | '/admin/departments'
     | '/admin/doctor-roster'
@@ -1924,13 +2139,17 @@ export interface FileRouteTypes {
     | '/admin/hospital-units'
     | '/admin/hr'
     | '/admin/lab-catalog'
+    | '/admin/masters'
     | '/admin/occupancy'
     | '/admin/ot'
     | '/admin/pharmacy-formulary'
+    | '/admin/registers'
     | '/admin/revenue'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/staff'
+    | '/api/metrics'
+    | '/api/status'
     | '/billing/encounters'
     | '/billing/invoices'
     | '/billing/leave'
@@ -2004,6 +2223,7 @@ export interface FileRouteTypes {
     | '/profile/privacy'
     | '/profile/support'
     | '/profile/terms'
+    | '/reception/address-book'
     | '/reception/admissions'
     | '/reception/billing'
     | '/reception/board'
@@ -2015,10 +2235,12 @@ export interface FileRouteTypes {
     | '/reception/patients'
     | '/reception/queue'
     | '/reception/register'
+    | '/reception/reminders'
     | '/reception/reports'
     | '/reception/settings'
     | '/reception/token-board'
     | '/reception/token-display'
+    | '/reception/vaccination'
     | '/reception/vitals'
     | '/reports/$reportId'
     | '/reports/history'
@@ -2038,16 +2260,27 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reception'
     | '/reports'
+    | '/admin/masters/advise'
+    | '/admin/masters/comms'
+    | '/admin/masters/diagnosis'
+    | '/admin/masters/investigations'
+    | '/admin/masters/referring-doctors'
+    | '/admin/masters/vaccines'
     | '/api/ai/chat'
     | '/api/ai/diet'
     | '/api/ai/prescription'
     | '/api/ai/status'
     | '/api/billing/checkout'
+    | '/api/billing/portal'
+    | '/api/billing/webhook'
     | '/api/diet/meal-image'
     | '/api/diet/meal-media'
     | '/api/diet/youtube'
     | '/api/exercise/youtube'
+    | '/api/hospital/audit'
+    | '/api/hospital/audit-dlq'
     | '/api/hospital/persist'
+    | '/api/hospital/phi'
     | '/api/patient/clinical-events'
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
@@ -2098,9 +2331,12 @@ export interface FileRouteTypes {
     | '/register-hospital'
     | '/security'
     | '/sla'
+    | '/status'
+    | '/trust'
     | '/admin/access-control'
     | '/admin/analytics'
     | '/admin/announcements'
+    | '/admin/audit'
     | '/admin/branches'
     | '/admin/departments'
     | '/admin/doctor-roster'
@@ -2109,13 +2345,17 @@ export interface FileRouteTypes {
     | '/admin/hospital-units'
     | '/admin/hr'
     | '/admin/lab-catalog'
+    | '/admin/masters'
     | '/admin/occupancy'
     | '/admin/ot'
     | '/admin/pharmacy-formulary'
+    | '/admin/registers'
     | '/admin/revenue'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/staff'
+    | '/api/metrics'
+    | '/api/status'
     | '/billing/encounters'
     | '/billing/invoices'
     | '/billing/leave'
@@ -2192,6 +2432,7 @@ export interface FileRouteTypes {
     | '/profile/privacy'
     | '/profile/support'
     | '/profile/terms'
+    | '/reception/address-book'
     | '/reception/admissions'
     | '/reception/appointments'
     | '/reception/billing'
@@ -2204,10 +2445,12 @@ export interface FileRouteTypes {
     | '/reception/patients'
     | '/reception/queue'
     | '/reception/register'
+    | '/reception/reminders'
     | '/reception/reports'
     | '/reception/settings'
     | '/reception/token-board'
     | '/reception/token-display'
+    | '/reception/vaccination'
     | '/reception/vitals'
     | '/reports/$reportId'
     | '/reports/history'
@@ -2227,16 +2470,27 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/reception/'
     | '/reports/'
+    | '/admin/masters/advise'
+    | '/admin/masters/comms'
+    | '/admin/masters/diagnosis'
+    | '/admin/masters/investigations'
+    | '/admin/masters/referring-doctors'
+    | '/admin/masters/vaccines'
     | '/api/ai/chat'
     | '/api/ai/diet'
     | '/api/ai/prescription'
     | '/api/ai/status'
     | '/api/billing/checkout'
+    | '/api/billing/portal'
+    | '/api/billing/webhook'
     | '/api/diet/meal-image'
     | '/api/diet/meal-media'
     | '/api/diet/youtube'
     | '/api/exercise/youtube'
+    | '/api/hospital/audit'
+    | '/api/hospital/audit-dlq'
     | '/api/hospital/persist'
+    | '/api/hospital/phi'
     | '/api/patient/clinical-events'
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
@@ -2289,6 +2543,10 @@ export interface RootRouteChildren {
   RegisterHospitalRoute: typeof RegisterHospitalRoute
   SecurityRoute: typeof SecurityRoute
   SlaRoute: typeof SlaRoute
+  StatusRoute: typeof StatusRoute
+  TrustRoute: typeof TrustRoute
+  ApiMetricsRoute: typeof ApiMetricsRoute
+  ApiStatusRoute: typeof ApiStatusRoute
   BookDoctorIdRoute: typeof BookDoctorIdRoute
   CareVisitsRoute: typeof CareVisitsRouteWithChildren
   DietMealIdRoute: typeof DietMealIdRouteWithChildren
@@ -2313,11 +2571,16 @@ export interface RootRouteChildren {
   ApiAiPrescriptionRoute: typeof ApiAiPrescriptionRoute
   ApiAiStatusRoute: typeof ApiAiStatusRoute
   ApiBillingCheckoutRoute: typeof ApiBillingCheckoutRoute
+  ApiBillingPortalRoute: typeof ApiBillingPortalRoute
+  ApiBillingWebhookRoute: typeof ApiBillingWebhookRoute
   ApiDietMealImageRoute: typeof ApiDietMealImageRoute
   ApiDietMealMediaRoute: typeof ApiDietMealMediaRoute
   ApiDietYoutubeRoute: typeof ApiDietYoutubeRoute
   ApiExerciseYoutubeRoute: typeof ApiExerciseYoutubeRoute
+  ApiHospitalAuditRoute: typeof ApiHospitalAuditRoute
+  ApiHospitalAuditDlqRoute: typeof ApiHospitalAuditDlqRoute
   ApiHospitalPersistRoute: typeof ApiHospitalPersistRoute
+  ApiHospitalPhiRoute: typeof ApiHospitalPhiRoute
   ApiPatientClinicalEventsRoute: typeof ApiPatientClinicalEventsRoute
   ApiPatientRxInboxRoute: typeof ApiPatientRxInboxRoute
   ReportsShareReportIdRoute: typeof ReportsShareReportIdRoute
@@ -2326,6 +2589,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trust': {
+      id: '/trust'
+      path: '/trust'
+      fullPath: '/trust'
+      preLoaderRoute: typeof TrustRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sla': {
       id: '/sla'
       path: '/sla'
@@ -2606,6 +2883,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReceptionVitalsRouteImport
       parentRoute: typeof ReceptionRoute
     }
+    '/reception/vaccination': {
+      id: '/reception/vaccination'
+      path: '/vaccination'
+      fullPath: '/reception/vaccination'
+      preLoaderRoute: typeof ReceptionVaccinationRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
     '/reception/token-display': {
       id: '/reception/token-display'
       path: '/token-display'
@@ -2632,6 +2916,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reception/reports'
       preLoaderRoute: typeof ReceptionReportsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/reminders': {
+      id: '/reception/reminders'
+      path: '/reminders'
+      fullPath: '/reception/reminders'
+      preLoaderRoute: typeof ReceptionRemindersRouteImport
       parentRoute: typeof ReceptionRoute
     }
     '/reception/register': {
@@ -2716,6 +3007,13 @@ declare module '@tanstack/react-router' {
       path: '/admissions'
       fullPath: '/reception/admissions'
       preLoaderRoute: typeof ReceptionAdmissionsRouteImport
+      parentRoute: typeof ReceptionRoute
+    }
+    '/reception/address-book': {
+      id: '/reception/address-book'
+      path: '/address-book'
+      fullPath: '/reception/address-book'
+      preLoaderRoute: typeof ReceptionAddressBookRouteImport
       parentRoute: typeof ReceptionRoute
     }
     '/profile/terms': {
@@ -3250,6 +3548,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BillingEncountersRouteImport
       parentRoute: typeof BillingRoute
     }
+    '/api/status': {
+      id: '/api/status'
+      path: '/api/status'
+      fullPath: '/api/status'
+      preLoaderRoute: typeof ApiStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/metrics': {
+      id: '/api/metrics'
+      path: '/api/metrics'
+      fullPath: '/api/metrics'
+      preLoaderRoute: typeof ApiMetricsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/staff': {
       id: '/admin/staff'
       path: '/staff'
@@ -3278,6 +3590,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRevenueRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/registers': {
+      id: '/admin/registers'
+      path: '/registers'
+      fullPath: '/admin/registers'
+      preLoaderRoute: typeof AdminRegistersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pharmacy-formulary': {
       id: '/admin/pharmacy-formulary'
       path: '/pharmacy-formulary'
@@ -3297,6 +3616,13 @@ declare module '@tanstack/react-router' {
       path: '/occupancy'
       fullPath: '/admin/occupancy'
       preLoaderRoute: typeof AdminOccupancyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/masters': {
+      id: '/admin/masters'
+      path: '/masters'
+      fullPath: '/admin/masters'
+      preLoaderRoute: typeof AdminMastersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/lab-catalog': {
@@ -3353,6 +3679,13 @@ declare module '@tanstack/react-router' {
       path: '/branches'
       fullPath: '/admin/branches'
       preLoaderRoute: typeof AdminBranchesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/announcements': {
@@ -3551,11 +3884,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPatientClinicalEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hospital/phi': {
+      id: '/api/hospital/phi'
+      path: '/api/hospital/phi'
+      fullPath: '/api/hospital/phi'
+      preLoaderRoute: typeof ApiHospitalPhiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hospital/persist': {
       id: '/api/hospital/persist'
       path: '/api/hospital/persist'
       fullPath: '/api/hospital/persist'
       preLoaderRoute: typeof ApiHospitalPersistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hospital/audit-dlq': {
+      id: '/api/hospital/audit-dlq'
+      path: '/api/hospital/audit-dlq'
+      fullPath: '/api/hospital/audit-dlq'
+      preLoaderRoute: typeof ApiHospitalAuditDlqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hospital/audit': {
+      id: '/api/hospital/audit'
+      path: '/api/hospital/audit'
+      fullPath: '/api/hospital/audit'
+      preLoaderRoute: typeof ApiHospitalAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/exercise/youtube': {
@@ -3584,6 +3938,20 @@ declare module '@tanstack/react-router' {
       path: '/api/diet/meal-image'
       fullPath: '/api/diet/meal-image'
       preLoaderRoute: typeof ApiDietMealImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/billing/webhook': {
+      id: '/api/billing/webhook'
+      path: '/api/billing/webhook'
+      fullPath: '/api/billing/webhook'
+      preLoaderRoute: typeof ApiBillingWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/billing/portal': {
+      id: '/api/billing/portal'
+      path: '/api/billing/portal'
+      fullPath: '/api/billing/portal'
+      preLoaderRoute: typeof ApiBillingPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/billing/checkout': {
@@ -3621,6 +3989,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/masters/vaccines': {
+      id: '/admin/masters/vaccines'
+      path: '/vaccines'
+      fullPath: '/admin/masters/vaccines'
+      preLoaderRoute: typeof AdminMastersVaccinesRouteImport
+      parentRoute: typeof AdminMastersRoute
+    }
+    '/admin/masters/referring-doctors': {
+      id: '/admin/masters/referring-doctors'
+      path: '/referring-doctors'
+      fullPath: '/admin/masters/referring-doctors'
+      preLoaderRoute: typeof AdminMastersReferringDoctorsRouteImport
+      parentRoute: typeof AdminMastersRoute
+    }
+    '/admin/masters/investigations': {
+      id: '/admin/masters/investigations'
+      path: '/investigations'
+      fullPath: '/admin/masters/investigations'
+      preLoaderRoute: typeof AdminMastersInvestigationsRouteImport
+      parentRoute: typeof AdminMastersRoute
+    }
+    '/admin/masters/diagnosis': {
+      id: '/admin/masters/diagnosis'
+      path: '/diagnosis'
+      fullPath: '/admin/masters/diagnosis'
+      preLoaderRoute: typeof AdminMastersDiagnosisRouteImport
+      parentRoute: typeof AdminMastersRoute
+    }
+    '/admin/masters/comms': {
+      id: '/admin/masters/comms'
+      path: '/comms'
+      fullPath: '/admin/masters/comms'
+      preLoaderRoute: typeof AdminMastersCommsRouteImport
+      parentRoute: typeof AdminMastersRoute
+    }
+    '/admin/masters/advise': {
+      id: '/admin/masters/advise'
+      path: '/advise'
+      fullPath: '/admin/masters/advise'
+      preLoaderRoute: typeof AdminMastersAdviseRouteImport
+      parentRoute: typeof AdminMastersRoute
+    }
     '/doctor/patients/$patientId/': {
       id: '/doctor/patients/$patientId/'
       path: '/'
@@ -3645,10 +4055,33 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminMastersRouteChildren {
+  AdminMastersAdviseRoute: typeof AdminMastersAdviseRoute
+  AdminMastersCommsRoute: typeof AdminMastersCommsRoute
+  AdminMastersDiagnosisRoute: typeof AdminMastersDiagnosisRoute
+  AdminMastersInvestigationsRoute: typeof AdminMastersInvestigationsRoute
+  AdminMastersReferringDoctorsRoute: typeof AdminMastersReferringDoctorsRoute
+  AdminMastersVaccinesRoute: typeof AdminMastersVaccinesRoute
+}
+
+const AdminMastersRouteChildren: AdminMastersRouteChildren = {
+  AdminMastersAdviseRoute: AdminMastersAdviseRoute,
+  AdminMastersCommsRoute: AdminMastersCommsRoute,
+  AdminMastersDiagnosisRoute: AdminMastersDiagnosisRoute,
+  AdminMastersInvestigationsRoute: AdminMastersInvestigationsRoute,
+  AdminMastersReferringDoctorsRoute: AdminMastersReferringDoctorsRoute,
+  AdminMastersVaccinesRoute: AdminMastersVaccinesRoute,
+}
+
+const AdminMastersRouteWithChildren = AdminMastersRoute._addFileChildren(
+  AdminMastersRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminAccessControlRoute: typeof AdminAccessControlRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
+  AdminAuditRoute: typeof AdminAuditRoute
   AdminBranchesRoute: typeof AdminBranchesRoute
   AdminDepartmentsRoute: typeof AdminDepartmentsRoute
   AdminDoctorRosterRoute: typeof AdminDoctorRosterRoute
@@ -3657,9 +4090,11 @@ interface AdminRouteChildren {
   AdminHospitalUnitsRoute: typeof AdminHospitalUnitsRoute
   AdminHrRoute: typeof AdminHrRoute
   AdminLabCatalogRoute: typeof AdminLabCatalogRoute
+  AdminMastersRoute: typeof AdminMastersRouteWithChildren
   AdminOccupancyRoute: typeof AdminOccupancyRoute
   AdminOtRoute: typeof AdminOtRoute
   AdminPharmacyFormularyRoute: typeof AdminPharmacyFormularyRoute
+  AdminRegistersRoute: typeof AdminRegistersRoute
   AdminRevenueRoute: typeof AdminRevenueRoute
   AdminServicesRoute: typeof AdminServicesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -3671,6 +4106,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAccessControlRoute: AdminAccessControlRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminAnnouncementsRoute: AdminAnnouncementsRoute,
+  AdminAuditRoute: AdminAuditRoute,
   AdminBranchesRoute: AdminBranchesRoute,
   AdminDepartmentsRoute: AdminDepartmentsRoute,
   AdminDoctorRosterRoute: AdminDoctorRosterRoute,
@@ -3679,9 +4115,11 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminHospitalUnitsRoute: AdminHospitalUnitsRoute,
   AdminHrRoute: AdminHrRoute,
   AdminLabCatalogRoute: AdminLabCatalogRoute,
+  AdminMastersRoute: AdminMastersRouteWithChildren,
   AdminOccupancyRoute: AdminOccupancyRoute,
   AdminOtRoute: AdminOtRoute,
   AdminPharmacyFormularyRoute: AdminPharmacyFormularyRoute,
+  AdminRegistersRoute: AdminRegistersRoute,
   AdminRevenueRoute: AdminRevenueRoute,
   AdminServicesRoute: AdminServicesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
@@ -4006,6 +4444,7 @@ const ReceptionAppointmentsRouteWithChildren =
   )
 
 interface ReceptionRouteChildren {
+  ReceptionAddressBookRoute: typeof ReceptionAddressBookRoute
   ReceptionAdmissionsRoute: typeof ReceptionAdmissionsRoute
   ReceptionAppointmentsRoute: typeof ReceptionAppointmentsRouteWithChildren
   ReceptionBillingRoute: typeof ReceptionBillingRoute
@@ -4018,15 +4457,18 @@ interface ReceptionRouteChildren {
   ReceptionPatientsRoute: typeof ReceptionPatientsRoute
   ReceptionQueueRoute: typeof ReceptionQueueRoute
   ReceptionRegisterRoute: typeof ReceptionRegisterRoute
+  ReceptionRemindersRoute: typeof ReceptionRemindersRoute
   ReceptionReportsRoute: typeof ReceptionReportsRoute
   ReceptionSettingsRoute: typeof ReceptionSettingsRoute
   ReceptionTokenBoardRoute: typeof ReceptionTokenBoardRoute
   ReceptionTokenDisplayRoute: typeof ReceptionTokenDisplayRoute
+  ReceptionVaccinationRoute: typeof ReceptionVaccinationRoute
   ReceptionVitalsRoute: typeof ReceptionVitalsRoute
   ReceptionIndexRoute: typeof ReceptionIndexRoute
 }
 
 const ReceptionRouteChildren: ReceptionRouteChildren = {
+  ReceptionAddressBookRoute: ReceptionAddressBookRoute,
   ReceptionAdmissionsRoute: ReceptionAdmissionsRoute,
   ReceptionAppointmentsRoute: ReceptionAppointmentsRouteWithChildren,
   ReceptionBillingRoute: ReceptionBillingRoute,
@@ -4039,10 +4481,12 @@ const ReceptionRouteChildren: ReceptionRouteChildren = {
   ReceptionPatientsRoute: ReceptionPatientsRoute,
   ReceptionQueueRoute: ReceptionQueueRoute,
   ReceptionRegisterRoute: ReceptionRegisterRoute,
+  ReceptionRemindersRoute: ReceptionRemindersRoute,
   ReceptionReportsRoute: ReceptionReportsRoute,
   ReceptionSettingsRoute: ReceptionSettingsRoute,
   ReceptionTokenBoardRoute: ReceptionTokenBoardRoute,
   ReceptionTokenDisplayRoute: ReceptionTokenDisplayRoute,
+  ReceptionVaccinationRoute: ReceptionVaccinationRoute,
   ReceptionVitalsRoute: ReceptionVitalsRoute,
   ReceptionIndexRoute: ReceptionIndexRoute,
 }
@@ -4110,6 +4554,10 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterHospitalRoute: RegisterHospitalRoute,
   SecurityRoute: SecurityRoute,
   SlaRoute: SlaRoute,
+  StatusRoute: StatusRoute,
+  TrustRoute: TrustRoute,
+  ApiMetricsRoute: ApiMetricsRoute,
+  ApiStatusRoute: ApiStatusRoute,
   BookDoctorIdRoute: BookDoctorIdRoute,
   CareVisitsRoute: CareVisitsRouteWithChildren,
   DietMealIdRoute: DietMealIdRouteWithChildren,
@@ -4134,11 +4582,16 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiPrescriptionRoute: ApiAiPrescriptionRoute,
   ApiAiStatusRoute: ApiAiStatusRoute,
   ApiBillingCheckoutRoute: ApiBillingCheckoutRoute,
+  ApiBillingPortalRoute: ApiBillingPortalRoute,
+  ApiBillingWebhookRoute: ApiBillingWebhookRoute,
   ApiDietMealImageRoute: ApiDietMealImageRoute,
   ApiDietMealMediaRoute: ApiDietMealMediaRoute,
   ApiDietYoutubeRoute: ApiDietYoutubeRoute,
   ApiExerciseYoutubeRoute: ApiExerciseYoutubeRoute,
+  ApiHospitalAuditRoute: ApiHospitalAuditRoute,
+  ApiHospitalAuditDlqRoute: ApiHospitalAuditDlqRoute,
   ApiHospitalPersistRoute: ApiHospitalPersistRoute,
+  ApiHospitalPhiRoute: ApiHospitalPhiRoute,
   ApiPatientClinicalEventsRoute: ApiPatientClinicalEventsRoute,
   ApiPatientRxInboxRoute: ApiPatientRxInboxRoute,
   ReportsShareReportIdRoute: ReportsShareReportIdRoute,

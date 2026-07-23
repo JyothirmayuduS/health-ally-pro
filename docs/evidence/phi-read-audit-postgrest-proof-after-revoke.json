@@ -1,0 +1,12 @@
+{
+  "patients_postgrest": {
+    "code": "42501",
+    "message": "permission denied for table patients",
+    "expect_42501": true,
+    "pass": true
+  },
+  "specialty_chart_notes": {
+    "code": "42501",
+    "message": "permission denied for table specialty_chart_notes"
+  }
+}

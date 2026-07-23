@@ -45,7 +45,7 @@ const titleFromPath = (pathname: string) => {
     return { eyebrow: "End of day", title: "Day sheet" };
   if (pathname.startsWith("/reception/reports"))
     return { eyebrow: "Insights", title: "Reception reports" };
-  return { eyebrow: "Reception", title: "Maple Hospital" };
+  return { eyebrow: "Reception", title: "Oak Haven Medical" };
 };
 
 export default function AppLayout() {

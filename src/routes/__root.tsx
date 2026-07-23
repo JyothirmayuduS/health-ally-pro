@@ -1,5 +1,6 @@
 import { Link, createRootRoute, HeadContent, Outlet, Scripts, useLocation } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
+import { DeskHydrator } from "@/components/DeskHydrator";
 
 import appCss from "../styles.css?url";
 
@@ -13,7 +14,9 @@ function usesPatientShell(pathname: string) {
     pathname.startsWith("/legal") ||
     pathname.startsWith("/security") ||
     pathname.startsWith("/sla") ||
-    pathname.startsWith("/implement")
+    pathname.startsWith("/implement") ||
+    pathname.startsWith("/status") ||
+    pathname.startsWith("/trust")
   ) {
     return false;
   }
@@ -45,7 +48,9 @@ function isMarketingPath(pathname: string) {
     pathname.startsWith("/legal") ||
     pathname.startsWith("/security") ||
     pathname.startsWith("/sla") ||
-    pathname.startsWith("/implement")
+    pathname.startsWith("/implement") ||
+    pathname.startsWith("/status") ||
+    pathname.startsWith("/trust")
   );
 }
 
@@ -111,6 +116,7 @@ export const Route = createRootRoute({
 
 import { useState, useEffect } from "react";
 import { isEvaluationBuild, getLicenseStatus } from "@/lib/license";
+import { assertClientProductionSafe } from "@/lib/production";
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
@@ -132,8 +138,12 @@ function RootComponent() {
   const [showWatermark, setShowWatermark] = useState(false);
 
   useEffect(() => {
+    assertClientProductionSafe();
+  }, []);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
-    // Public marketing site stays clean; evaluation watermark only on product shells.
+    // Licensed prod builds: no watermark. Evaluation only on product shells.
     if (isMarketingPath(pathname) || !isEvaluationBuild()) {
       setShowWatermark(false);
       return;
@@ -146,6 +156,7 @@ function RootComponent() {
 
   return (
     <>
+      <DeskHydrator />
       {content}
       {showWatermark && (
         <>

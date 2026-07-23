@@ -1,0 +1,140 @@
+{
+  "health_before_cleanup": {
+    "ok": false,
+    "alert": true,
+    "checked_at": "2026-07-23T13:05:21.939534+00:00",
+    "open_failures": 3
+  },
+  "health_after_cleanup_rpc": {
+    "ok": true,
+    "alert": false,
+    "checked_at": "2026-07-23T13:05:23.720146+00:00",
+    "open_failures": 0
+  },
+  "health_after_status_endpoint": {
+    "ok": false,
+    "status": "degraded",
+    "audit_dlq": {
+      "ok": true,
+      "alert": false,
+      "open_failures": 0,
+      "acknowledged_failures": 0,
+      "resolved_or_artifact": 5,
+      "checked_at": "2026-07-23T13:11:37.921Z",
+      "source": "app_layer"
+    },
+    "latency_budgets": {
+      "appointments_worker_p95_warn_ms": 400,
+      "appointments_worker_p95_critical_ms": 800,
+      "appointments_worker_p99_critical_ms": 1500,
+      "reasoning": "Measured Worker p50 ~130\u2013180ms with auth+DB+async audit; warn at ~2.5\u00d7 p50, critical at ~5\u00d7 / Round-1 regression floor."
+    }
+  },
+  "live_worker_force_fail_probe": {
+    "clinical_status": 200,
+    "clinical_ok": true,
+    "rows": 83,
+    "open_new": 1,
+    "fail_ids": [
+      "6f9ca1f1-01e5-420e-9c18-76d2c58363ff"
+    ],
+    "health": {
+      "ok": false,
+      "alert": true,
+      "checked_at": "2026-07-23T13:08:57.060525+00:00",
+      "open_failures": 1
+    }
+  },
+  "regression_pass": true,
+  "regression_summary": {
+    "known_artifacts_not_open": {
+      "pass": true
+    },
+    "historical_retained": {
+      "pass": true
+    },
+    "new_forced_failure": {
+      "pass": true
+    },
+    "resolve_returns_health": {
+      "pass": true
+    },
+    "concurrent_8": {
+      "pass": true
+    },
+    "tenant_isolation": {
+      "pass": true
+    },
+    "unauthorized": {
+      "pass": true
+    },
+    "docker": {
+      "pass": true
+    },
+    "clinical_flows": {
+      "pass": true
+    }
+  },
+  "latency_breakdown_table": [
+    {
+      "stage": "auth_getUser",
+      "p50": 94.24,
+      "p95": 132.55,
+      "p99": 132.55,
+      "notes": "Cached 20s in authorizePhiRead after first hit"
+    },
+    {
+      "stage": "tenant_permission_lookup",
+      "p50": 100.47,
+      "p95": 896.11,
+      "p99": 896.11,
+      "notes": "memberships + patient profile parallel; cached with getUser"
+    },
+    {
+      "stage": "db_query_appointments",
+      "p50": 99.51,
+      "p95": 476.17,
+      "p99": 476.17,
+      "notes": "hospital_id filter + embeds staff_profiles/queue_entries; rows=83"
+    },
+    {
+      "stage": "audit_persist",
+      "p50": 108.96,
+      "p95": 125.16,
+      "p99": 125.16,
+      "notes": "waitUntil after response \u2014 NOT on critical path of Worker TTFB"
+    },
+    {
+      "stage": "worker_e2e_sequential",
+      "p50": 235.45,
+      "p95": 310.3,
+      "p99": 689.82,
+      "notes": "includes auth cache hits, DB, JSON serialize, localhost hop"
+    },
+    {
+      "stage": "worker_e2e_concurrent_8",
+      "p50": 486.68,
+      "p95": 922.69,
+      "p99": 922.69,
+      "notes": "dashboard-like parallel"
+    }
+  ],
+  "worker_sequential": {
+    "n": 30,
+    "min": 169.2,
+    "avg": 256.33,
+    "p50": 235.45,
+    "p95": 310.3,
+    "p99": 689.82,
+    "max": 689.82
+  },
+  "worker_concurrent_8": {
+    "n": 8,
+    "min": 226.52,
+    "avg": 572.3,
+    "p50": 486.68,
+    "p95": 922.69,
+    "p99": 922.69,
+    "max": 922.69
+  }
+}

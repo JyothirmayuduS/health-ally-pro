@@ -97,12 +97,23 @@ function seedDoctors(): HospitalDoctorRecord[] {
     });
   }
 
-  // Ensure demo-doctor always resolves
+  // Ensure demo-doctor always resolves to the Oak Haven general-medicine login identity
   if (!merged.some((d) => d.authUserId === "demo-doctor")) {
-    merged[0] = { ...merged[0], authUserId: "demo-doctor", email: "doctor@oakhaven.demo" };
+    merged[0] = {
+      ...merged[0],
+      authUserId: "demo-doctor",
+      email: "doctor@oakhaven.demo",
+      name: "Dr. Aarav Mehta",
+    };
   } else {
     const linked = merged.find((d) => d.authUserId === "demo-doctor");
-    if (linked) linked.email = "doctor@oakhaven.demo";
+    if (linked) {
+      linked.email = "doctor@oakhaven.demo";
+      // Keep display name aligned with demo credentials / DEFAULT_SERVICES DOC-001
+      if (!linked.name || /rajesh/i.test(linked.name)) {
+        linked.name = "Dr. Aarav Mehta";
+      }
+    }
   }
 
   return merged;
@@ -131,6 +142,19 @@ export function loadHospitalDoctors(): HospitalDoctorRecord[] {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
       return seeded;
     }
+    // Repair stale local caches that still say "Dr. Rajesh" for the demo login
+    let dirty = false;
+    for (const d of parsed) {
+      if (d.authUserId === "demo-doctor" || d.email === "doctor@oakhaven.demo") {
+        if (!d.name || /rajesh/i.test(d.name)) {
+          d.name = "Dr. Aarav Mehta";
+          d.email = "doctor@oakhaven.demo";
+          d.authUserId = "demo-doctor";
+          dirty = true;
+        }
+      }
+    }
+    if (dirty) localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
     return parsed;
   } catch {
     return seedDoctors();

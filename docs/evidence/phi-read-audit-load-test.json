@@ -1,0 +1,139 @@
+{
+  "seedInfo": {
+    "seeded": false,
+    "existing": 80
+  },
+  "limit": 80,
+  "tables": [
+    "patients",
+    "appointments",
+    "lab_results"
+  ],
+  "active": {
+    "patients": {
+      "rows": 80,
+      "error": null,
+      "ms_runs": [
+        3617.99,
+        3323.54,
+        3345.6
+      ],
+      "ms_median": 3345.6,
+      "ms_min": 3323.54,
+      "ms_max": 3617.99
+    },
+    "appointments": {
+      "rows": 3,
+      "error": null,
+      "ms_runs": [
+        202.67,
+        195.1,
+        201.27
+      ],
+      "ms_median": 201.27,
+      "ms_min": 195.1,
+      "ms_max": 202.67
+    },
+    "lab_results": {
+      "rows": 5,
+      "error": null,
+      "ms_runs": [
+        292.6,
+        309.25,
+        299.17
+      ],
+      "ms_median": 299.17,
+      "ms_min": 292.6,
+      "ms_max": 309.25
+    }
+  },
+  "baseline_http_off": {
+    "patients": {
+      "rows": 80,
+      "error": null,
+      "ms_runs": [
+        141.95,
+        140.59,
+        153.21
+      ],
+      "ms_median": 141.95,
+      "ms_min": 140.59,
+      "ms_max": 153.21
+    },
+    "appointments": {
+      "rows": 3,
+      "error": null,
+      "ms_runs": [
+        82.12,
+        82.35,
+        75.33
+      ],
+      "ms_median": 82.12,
+      "ms_min": 75.33,
+      "ms_max": 82.35
+    },
+    "lab_results": {
+      "rows": 5,
+      "error": null,
+      "ms_runs": [
+        83.55,
+        79.81,
+        133.69
+      ],
+      "ms_median": 83.55,
+      "ms_min": 79.81,
+      "ms_max": 133.69
+    }
+  },
+  "delta_ms_median": {
+    "patients": 3203.65,
+    "appointments": 119.15,
+    "lab_results": 215.62
+  },
+  "broken_url": {
+    "read": {
+      "ms": 5593.360375,
+      "rows": 5,
+      "error": null
+    },
+    "clinical_read_succeeded": true,
+    "phi_read_audit_rows_after": 0,
+    "dlq_rows_after": 5,
+    "sample_dlq": {
+      "id": "667d5aad-ff31-4318-9363-375c37e01ae3",
+      "created_at": "2026-07-21T21:23:40.70985+00:00",
+      "reason": "primary_ingest_http_status_0",
+      "payload": {
+        "p_table": "patients",
+        "p_row_id": "e3e17282-2296-4853-983c-660b095c5294",
+        "p_jwt_role": "authenticated",
+        "p_actor_sub": "b0000001-0001-4001-8001-000000000004",
+        "p_actor_role": "doctor",
+        "p_row_hospital": "a0000001-0001-4001-8001-000000000001",
+        "p_requester_hospital_ids": [
+          "a0000001-0001-4001-8001-000000000001"
+        ],
+        "p_secret": "[REDACTED]"
+      },
+      "resolved_at": null
+    },
+    "health_check": {
+      "ok": false,
+      "alert": true,
+      "checked_at": "2026-07-21T21:23:44.094238+00:00",
+      "open_dlq_rows": 5,
+      "open_dlq_last_15m": 5
+    },
+    "cron_check_proof": {
+      "health": {
+        "ok": false,
+        "alert": true,
+        "checked_at": "2026-07-21T21:23:44.266041+00:00",
+        "open_dlq_rows": 5,
+        "open_dlq_last_15m": 5
+      },
+      "alerts_last_5m": 1
+    },
+    "classification": "READ_OK_PRIMARY_FAILED_DLQ_CAPTURED"
+  }
+}

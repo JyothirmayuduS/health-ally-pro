@@ -1,0 +1,20 @@
+{
+  "at": "2026-07-23T15:31:00Z",
+  "procedure": "Supabase PITR / backup restore drill",
+  "status": "pending",
+  "reason": "No restore drill executed in this session: requires Supabase plan PITR capability and operator-approved restore window. Documented procedure lives in docs/ops/DISASTER_RECOVERY_GUIDE.md.",
+  "targets": {
+    "RPO_pilot": "<= 24h",
+    "RTO_pilot": "<= 4h",
+    "RPO_enterprise_goal": "<= 1h",
+    "RTO_enterprise_goal": "<= 1h"
+  },
+  "backup_verification": {
+    "supabase_dashboard_backups": "pending_operator_confirm",
+    "note": "Confirm Project Settings → Database → Backups in wsnpwyqypgclsclktoyf"
+  },
+  "app_recovery_verified_separately": {
+    "docker_redeploy": "prior evidence docs/evidence/docker-post-migration-closure.json",
+    "worker_redeploy": "pending CLOUDFLARE_API_TOKEN in this environment"
+  }
+}

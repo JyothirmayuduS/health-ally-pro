@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:8787/doctor",
+  "hasRajesh": true,
+  "hasAarav": false,
+  "snehaDup": true,
+  "callDisabled": true,
+  "greeting": "GOOD MORNING Dr. Rajesh Internal Medicine WEDNESDAY 22 JULY 4 YOUR SPECIALTY WORKSTATION General Medicine ",
+  "queue": "CRITICAL Non-Adherence (48h) Sneha Rao · Sneha Rao · 2 dose(s) outstanding today · PT skipped in 48h CRITICAL Non-Adherence (48h) Arjun Kapo"
+}

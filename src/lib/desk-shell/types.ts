@@ -7,6 +7,8 @@ export type DeskNavLink = {
   exact?: boolean;
   dot?: string;
   badge?: number;
+  /** When set, link hidden unless license includes this module */
+  moduleId?: string;
 };
 
 export type DeskNavSection = {
@@ -39,6 +41,8 @@ export type DeskPortalConfig = {
   portalLabel: string;
   version: string;
   hospitalName: string;
+  /** Optional white-label logo URL / data URL */
+  logoUrl?: string;
   wrapperClass: string;
   theme: DeskPortalTheme;
   sections: DeskNavSection[];

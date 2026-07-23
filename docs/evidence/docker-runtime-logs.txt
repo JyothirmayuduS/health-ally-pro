@@ -1,0 +1,71 @@
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+
+Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-31-40_812.log"
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.0.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+npm notice To update run: npm install -g npm@12.0.1
+npm notice
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-31-50_306.log"
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-31-52_339.log"
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-31-54_639.log"
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-31-58_072.log"
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-32-02_031.log"
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-32-07_245.log"
+
+ ⛅️ wrangler 4.28.0 (update available 4.113.0)
+──────────────────────────────────────────────
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mThe entry-point file at "@tanstack/react-start/server-entry" was not found.[0m
+
+
+🪵  Logs were written to "/home/medora/.config/.wrangler/logs/wrangler-2026-07-22_04-32-15_350.log"

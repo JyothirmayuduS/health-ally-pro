@@ -15,6 +15,11 @@ import {
   PATIENT_REGISTRY_EVENT,
 } from "@/lib/shared/patient-registry";
 import {
+  loadPersistedJson,
+  savePersistedJson,
+  hydratePersistedJson,
+} from "@/lib/shared/persisted-store";
+import {
   enqueueFromCheckIn,
   listClinicQueue,
   updateQueueByAppointment,
@@ -99,13 +104,7 @@ const SEED_PREAUTHS: PreAuthRecord[] = [
 const PREAUTHS_KEY = "medora-reception-preauths-v1";
 
 function loadPreAuths(): PreAuthRecord[] {
-  if (typeof window === "undefined") return SEED_PREAUTHS;
-  try {
-    const raw = localStorage.getItem(PREAUTHS_KEY);
-    return raw ? JSON.parse(raw) : SEED_PREAUTHS;
-  } catch {
-    return SEED_PREAUTHS;
-  }
+  return loadPersistedJson(PREAUTHS_KEY, SEED_PREAUTHS);
 }
 
 export interface Bed {
@@ -201,37 +200,28 @@ const SEED_ADMISSIONS: AdmissionRecord[] = [
 
 const BEDS_KEY = "medora-reception-beds-v1";
 const ADMISSIONS_KEY = "medora-reception-admissions-v1";
+export const RECEPTION_IPD_EVENT = "medora-reception-ipd-change";
 
 function loadBeds(): Bed[] {
-  if (typeof window === "undefined") return SEED_BEDS;
-  try {
-    const raw = localStorage.getItem(BEDS_KEY);
-    return raw ? JSON.parse(raw) : SEED_BEDS;
-  } catch {
-    return SEED_BEDS;
-  }
+  return loadPersistedJson(BEDS_KEY, SEED_BEDS);
+}
+
+export function loadReceptionBeds(): Bed[] {
+  return loadBeds();
+}
+
+export function loadReceptionAdmissions(): AdmissionRecord[] {
+  return loadPersistedJson(ADMISSIONS_KEY, SEED_ADMISSIONS);
 }
 
 function loadAdmissions(): AdmissionRecord[] {
-  if (typeof window === "undefined") return SEED_ADMISSIONS;
-  try {
-    const raw = localStorage.getItem(ADMISSIONS_KEY);
-    return raw ? JSON.parse(raw) : SEED_ADMISSIONS;
-  } catch {
-    return SEED_ADMISSIONS;
-  }
+  return loadReceptionAdmissions();
 }
 
 const APPOINTMENTS_KEY = "medora-reception-appointments-v1";
 
 function loadAppointments() {
-  if (typeof window === "undefined") return APPOINTMENTS;
-  try {
-    const raw = localStorage.getItem(APPOINTMENTS_KEY);
-    return raw ? JSON.parse(raw) : APPOINTMENTS;
-  } catch {
-    return APPOINTMENTS;
-  }
+  return loadPersistedJson(APPOINTMENTS_KEY, APPOINTMENTS);
 }
 
 function ledgerToReceptionInvoice(li: LedgerInvoice) {
@@ -278,6 +268,7 @@ export function StoreProvider({ children }) {
   const [preAuths, setPreAuths] = useState<PreAuthRecord[]>(() => loadPreAuths());
   const [beds, setBeds] = useState<Bed[]>(() => loadBeds());
   const [admissions, setAdmissions] = useState<AdmissionRecord[]>(() => loadAdmissions());
+  const [persistReady, setPersistReady] = useState(false);
 
   const notifyPatientBillingEvent = useCallback((patientId, title, body) => {
     const patient = getSharedPatient(resolvePatientId(patientId));
@@ -355,36 +346,48 @@ export function StoreProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(appointments));
-    } catch {
-      /* ignore quota */
-    }
-  }, [appointments]);
+    if (!persistReady) return;
+    savePersistedJson(APPOINTMENTS_KEY, "reception", appointments);
+  }, [persistReady, appointments]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(PREAUTHS_KEY, JSON.stringify(preAuths));
-    } catch {
-      /* ignore quota */
-    }
-  }, [preAuths]);
+    if (!persistReady) return;
+    savePersistedJson(PREAUTHS_KEY, "reception", preAuths);
+  }, [persistReady, preAuths]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(BEDS_KEY, JSON.stringify(beds));
-    } catch {
-      /* ignore quota */
-    }
-  }, [beds]);
+    if (!persistReady) return;
+    savePersistedJson(BEDS_KEY, "reception", beds);
+    window.dispatchEvent(new Event(RECEPTION_IPD_EVENT));
+  }, [persistReady, beds]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(ADMISSIONS_KEY, JSON.stringify(admissions));
-    } catch {
-      /* ignore quota */
-    }
-  }, [admissions]);
+    if (!persistReady) return;
+    savePersistedJson(ADMISSIONS_KEY, "reception", admissions);
+    window.dispatchEvent(new Event(RECEPTION_IPD_EVENT));
+  }, [persistReady, admissions]);
+
+  useEffect(() => {
+    void Promise.all([
+      hydratePersistedJson(APPOINTMENTS_KEY, "reception", APPOINTMENTS),
+      hydratePersistedJson(PREAUTHS_KEY, "reception", SEED_PREAUTHS),
+      hydratePersistedJson(BEDS_KEY, "reception", SEED_BEDS),
+      hydratePersistedJson(ADMISSIONS_KEY, "reception", SEED_ADMISSIONS),
+    ]).then(([apts, auths, remoteBeds, remoteAdmissions]) => {
+      setAppointments(apts);
+      setPreAuths(auths);
+      setBeds(remoteBeds);
+      setAdmissions(remoteAdmissions);
+    }).finally(() => setPersistReady(true));
+    const onRemote = () => {
+      setAppointments(loadAppointments());
+      setPreAuths(loadPreAuths());
+      setBeds(loadBeds());
+      setAdmissions(loadAdmissions());
+    };
+    window.addEventListener("medora-desk-hydrated", onRemote);
+    return () => window.removeEventListener("medora-desk-hydrated", onRemote);
+  }, []);
 
   useEffect(() => {
     ensureLedgerHydrated();

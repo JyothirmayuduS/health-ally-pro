@@ -69,40 +69,42 @@ export const DEFAULT_STAFF: StaffMember[] = [
   { id: "ST-07", name: "Admin User", role: "Hospital admin", email: "admin@oakhaven.demo", department: "Administration", active: true },
 ];
 
-function load<T>(key: string, fallback: T): T {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function save<T>(key: string, data: T) {
-  if (typeof window !== "undefined") localStorage.setItem(key, JSON.stringify(data));
-}
+import { deskForKey, loadPersistedJson, savePersistedJson } from "@/lib/shared/persisted-store";
 
 export function loadHospital(): HospitalProfile {
-  return load(HOSPITAL_KEY, DEFAULT_HOSPITAL);
+  return loadPersistedJson(HOSPITAL_KEY, DEFAULT_HOSPITAL);
 }
 
 export function saveHospital(profile: HospitalProfile) {
-  save(HOSPITAL_KEY, profile);
+  savePersistedJson(HOSPITAL_KEY, deskForKey(HOSPITAL_KEY), profile);
+  void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+    upsertClinicalEntities("branches", [
+      { legacy_id: "hospital-profile", payload: profile as unknown as Record<string, unknown> },
+    ]),
+  );
 }
 
 export function loadBranches(): Branch[] {
-  return load(BRANCH_KEY, DEFAULT_BRANCHES);
+  return loadPersistedJson(BRANCH_KEY, DEFAULT_BRANCHES);
 }
 
 export function saveBranches(branches: Branch[]) {
-  save(BRANCH_KEY, branches);
+  savePersistedJson(BRANCH_KEY, deskForKey(BRANCH_KEY), branches);
+  void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+    upsertClinicalEntities(
+      "branches",
+      branches.map((b) => ({
+        legacy_id: b.id,
+        payload: b as unknown as Record<string, unknown>,
+      })),
+    ),
+  );
 }
 
 export function loadDepartments(): Department[] {
-  return load(DEPT_KEY, DEFAULT_DEPARTMENTS);
+  return loadPersistedJson(DEPT_KEY, DEFAULT_DEPARTMENTS);
 }
 
 export function saveDepartments(departments: Department[]) {
-  save(DEPT_KEY, departments);
+  savePersistedJson(DEPT_KEY, deskForKey(DEPT_KEY), departments);
 }

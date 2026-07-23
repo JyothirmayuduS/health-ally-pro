@@ -170,6 +170,8 @@ export function labRoleLabel(roles: UserRole[]) {
 }
 
 export async function requireLabSupervisor() {
+  // Demo auth is client-only (sessionStorage/cookie). SSR beforeLoad cannot see it.
+  if (typeof window === "undefined") return null as unknown as Awaited<ReturnType<typeof requirePortalAccess>>;
   const session = await requirePortalAccess("lab");
   if (!isLabSupervisor(session.roles)) {
     throw redirect({ to: "/lab", search: { denied: "supervisor" } });
@@ -178,6 +180,7 @@ export async function requireLabSupervisor() {
 }
 
 export async function requireLabTechnician() {
+  if (typeof window === "undefined") return null as unknown as Awaited<ReturnType<typeof requirePortalAccess>>;
   const session = await requirePortalAccess("lab");
   if (isLabSupervisor(session.roles)) {
     throw redirect({ to: "/lab", search: { denied: "technician" } });

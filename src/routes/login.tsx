@@ -1,8 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { getAuthSession, signIn } from "@/lib/supabase/auth";
 import { allowDemoAuth } from "@/lib/production";
 import { redirectPathForRoles } from "@/lib/supabase/rbac";
+import { DEMO_STAFF_TABLE } from "@/lib/supabase/demo-credentials";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -12,102 +13,105 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+function demoPassword(email: string): string {
+  return DEMO_STAFF_TABLE[email]?.password ?? "";
+}
+
 const DEMO_ACCOUNTS = [
   {
     role: "Lab technician",
     workspace: "Bench — collection, processing, my records",
     email: "lab@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("lab@oakhaven.demo"),
     accent: "border-l-teal",
   },
   {
     role: "Lab supervisor",
     workspace: "Control desk — validation, analytics, team",
     email: "lab.supervisor@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("lab.supervisor@oakhaven.demo"),
     accent: "border-l-sage",
   },
   {
     role: "Pharmacist",
     workspace: "Dispense, inventory, medicine search & shelf map",
     email: "pharmacy@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("pharmacy@oakhaven.demo"),
     accent: "border-l-mustard",
   },
   {
     role: "Receptionist",
     workspace: "Register, check-in, queue, billing counter",
     email: "reception@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("reception@oakhaven.demo"),
     accent: "border-l-sky",
   },
   {
     role: "Billing staff",
     workspace: "Invoices, payments, encounter linkage",
     email: "billing@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("billing@oakhaven.demo"),
     accent: "border-l-indigo",
   },
   {
     role: "Nurse",
     workspace: "Patient census, vitals recording",
     email: "nursing@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("nursing@oakhaven.demo"),
     accent: "border-l-rose",
   },
   {
     role: "Doctor (Medicine)",
     workspace: "General medicine specialty desk + EMR",
     email: "doctor@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("doctor@oakhaven.demo"),
     accent: "border-l-sage",
   },
   {
     role: "Doctor (Eye)",
     workspace: "Ophthalmology visual acuity, IOP, procedures",
     email: "ophthalmology@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("ophthalmology@oakhaven.demo"),
     accent: "border-l-sky",
   },
   {
     role: "Doctor (Heart)",
     workspace: "Cardiology ECG, echo, risk scores",
     email: "cardiology@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("cardiology@oakhaven.demo"),
     accent: "border-l-rose",
   },
   {
     role: "Doctor (Children)",
     workspace: "Pediatrics growth, immunization, PEWS",
     email: "pediatrics@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("pediatrics@oakhaven.demo"),
     accent: "border-l-teal",
   },
   {
     role: "Doctor (Bones)",
     workspace: "Orthopedics fracture, ROM, implant OT",
     email: "orthopedics@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("orthopedics@oakhaven.demo"),
     accent: "border-l-mustard",
   },
   {
     role: "Patient",
     workspace: "Book visits, live queue, reports, profile",
     email: "patient@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("patient@oakhaven.demo"),
     accent: "border-l-clay",
   },
   {
     role: "Hospital admin",
     workspace: "Add doctors + specialty → specialty desks",
     email: "admin@oakhaven.demo",
-    password: "Demo1234!",
+    password: demoPassword("admin@oakhaven.demo"),
     accent: "border-l-ink",
   },
 ] as const;
 
 function LoginPage() {
-  const navigate = useNavigate();
   const { redirect, error: searchError } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -122,8 +126,13 @@ function LoginPage() {
     try {
       await signIn(targetEmail, targetPassword);
       const session = await getAuthSession();
-      const path = redirect ?? (session ? redirectPathForRoles(session.roles) : "/pharmacy");
-      await navigate({ to: path });
+      if (!session) {
+        setError("Sign in failed — no session");
+        return;
+      }
+      const path = redirect ?? redirectPathForRoles(session.roles);
+      // Full navigation so portal shells reliably pick up demo sessionStorage
+      window.location.assign(path);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign in failed");
     } finally {

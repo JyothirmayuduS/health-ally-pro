@@ -37,3 +37,17 @@ supabase/.temp/
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+.env.docker
+
+# Binary UI evidence (keep JSON proofs)
+docs/evidence/**/*.png
+docs/evidence/**/*.jpg
+docs/evidence/**/*.jpeg
+docs/evidence/**/*.webp

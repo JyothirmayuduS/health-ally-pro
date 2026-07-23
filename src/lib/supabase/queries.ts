@@ -14,22 +14,15 @@ import {
   getPortalPatientProfile,
   getPortalReports,
 } from "@/lib/shared/patient-portal";
+import { fetchPhiResource } from "@/lib/supabase/phi-api";
 
 export async function fetchDoctors(): Promise<Doctor[]> {
   if (!isSupabaseConfigured()) return mockDoctors;
 
-  const { data, error } = await supabase
-    .from("staff_profiles")
-    .select(
-      "id, legacy_id, specialty, initials, bio, rating, review_count, experience_years, consultation_fee, next_available_slot, hospital_id",
-    )
-    .eq("is_active", true)
-    .not("specialty", "is", null)
-    .order("rating", { ascending: false });
+  const res = await fetchPhiResource<StaffProfile[]>("staff_profiles");
+  if (!res.ok || !res.data?.length) return mockDoctors;
 
-  if (error || !data?.length) return mockDoctors;
-
-  return (data as StaffProfile[]).map((d) => ({
+  return res.data.map((d) => ({
     id: d.legacy_id ?? d.id,
     name: doctorNameFromInitials(d.initials, d.specialty),
     specialty: d.specialty ?? "General",
@@ -63,23 +56,10 @@ export async function fetchAppointmentsForPatient(): Promise<Appointment[]> {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return mockAppointments;
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", userData.user.id)
-    .maybeSingle();
+  const res = await fetchPhiResource<AppointmentRow[]>("appointments");
+  if (!res.ok || !res.data?.length) return portal.length ? portal : mockAppointments;
 
-  if (!patient) return mockAppointments;
-
-  const { data, error } = await supabase
-    .from("appointments")
-    .select("id, legacy_id, scheduled_at, time_label, reason, status, doctor_staff_id, staff_profiles(legacy_id, initials, specialty), queue_entries(position, estimated_wait_minutes)")
-    .eq("patient_id", patient.id)
-    .order("scheduled_at", { ascending: true });
-
-  if (error || !data?.length) return portal.length ? portal : mockAppointments;
-
-  return (data as AppointmentRow[]).map((a) => ({
+  return res.data.map((a) => ({
     id: a.legacy_id ?? a.id,
     doctorId: a.staff_profiles?.legacy_id ?? a.doctor_staff_id ?? "",
     date: a.scheduled_at,
@@ -98,23 +78,10 @@ export async function fetchReportsForPatient(): Promise<Report[]> {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return mockReports;
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", userData.user.id)
-    .maybeSingle();
+  const res = await fetchPhiResource<LabResultRow[]>("lab_results");
+  if (!res.ok || !res.data?.length) return portal.length ? portal : mockReports;
 
-  if (!patient) return mockReports;
-
-  const { data, error } = await supabase
-    .from("lab_results")
-    .select("id, legacy_id, title, report_type, result_date, file_size, doctor_name, shared_with_staff_ids")
-    .eq("patient_id", patient.id)
-    .order("result_date", { ascending: false });
-
-  if (error || !data?.length) return portal.length ? portal : mockReports;
-
-  return (data as LabResultRow[]).map((r) => ({
+  return res.data.map((r) => ({
     id: r.legacy_id ?? r.id,
     title: r.title,
     type: r.report_type,
@@ -132,21 +99,23 @@ export async function fetchPatientProfile() {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return mockPatient;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, email")
-    .eq("id", userData.user.id)
-    .maybeSingle();
+  const res = await fetchPhiResource<{
+    profile: { full_name: string | null; email: string | null } | null;
+    patient: {
+      blood_group: string | null;
+      member_since: string | null;
+      date_of_birth: string | null;
+    } | null;
+  }>("patient_profile");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("blood_group, member_since, date_of_birth")
-    .eq("profile_id", userData.user.id)
-    .maybeSingle();
+  const profile = res.data?.profile;
+  const patient = res.data?.patient;
+  if (!res.ok) return mockPatient;
 
   const name = profile?.full_name ?? portal.name;
   const parts = name.split(" ");
-  const initials = parts.length >= 2 ? `${parts[0][0]}${parts[1][0]}` : name.slice(0, 2).toUpperCase();
+  const initials =
+    parts.length >= 2 ? `${parts[0][0]}${parts[1][0]}` : name.slice(0, 2).toUpperCase();
 
   return {
     name,
@@ -154,7 +123,9 @@ export async function fetchPatientProfile() {
     email: profile?.email ?? userData.user.email ?? portal.email,
     memberSince: patient?.member_since ?? portal.memberSince,
     age: patient?.date_of_birth
-      ? Math.floor((Date.now() - new Date(patient.date_of_birth).getTime()) / (365.25 * 86400000))
+      ? Math.floor(
+          (Date.now() - new Date(patient.date_of_birth).getTime()) / (365.25 * 86400000),
+        )
       : portal.age,
     bloodGroup: patient?.blood_group ?? portal.bloodGroup,
   };

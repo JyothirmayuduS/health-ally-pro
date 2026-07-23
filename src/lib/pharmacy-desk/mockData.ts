@@ -206,7 +206,7 @@ export type WalkInItem = {
 
 export const HOSPITAL = {
   id: "a0000001-0001-4001-8001-000000000001",
-  name: "Maple Hospital",
+  name: "Oak Haven Medical",
   pharmacy: "Oak Haven Outpatient Pharmacy",
 };
 

@@ -1,0 +1,49 @@
+{
+  "at": "2026-07-22T06:59:05.095Z",
+  "results": [
+    {
+      "portal": "admin",
+      "url": "http://127.0.0.1:8787/admin",
+      "hasOakHaven": true,
+      "hasMaple": false,
+      "preview": "Oak Haven Medical\nADMINISTRATION · V1.0\nOVERVIEW\nCommand center\nAnalytics\nRevenue\nOccupancy & load\nORGANIZATION\nHospital\nDepartments\nStaff\nAccess control\nAnnouncements\nHR & Perform"
+    },
+    {
+      "portal": "lab",
+      "url": "http://127.0.0.1:8787/lab",
+      "hasOakHaven": true,
+      "hasMaple": false,
+      "bouncedToLogin": false,
+      "preview": "JM\nJ. Mensah\nlab@oakhaven.demo\nOak Haven Medical\nLAB TECHNICIAN\nOVERVIEW\nMy bench\n3\nBENCH WORK\nCollection\n3\nProcessing\n5\nReagents\nStorage & Aliquots\nMY RECORDS\nMy submissions\n7\nMy "
+    },
+    {
+      "portal": "pharmacy",
+      "url": "http://127.0.0.1:8787/pharmacy",
+      "hasOakHaven": true,
+      "hasMaple": false,
+      "bouncedToLogin": false,
+      "preview": "RC\nRiley Chen\npharmacy@oakhaven.demo\nOak Haven Medical\nPHARMACIST\nOVERVIEW\nControl desk\nQUEUE\nPrescriptions inbox\n4\nBilling counter\n3\nDispense counter\n2\nWard deliveries\n4\nRefills\n2"
+    },
+    {
+      "portal": "billing",
+      "url": "http://127.0.0.1:8787/billing",
+      "hasOakHaven": true,
+      "hasMaple": false,
+      "bouncedToLogin": false,
+      "preview": "Oak Haven Medical\nBILLING · V1.0\nOVERVIEW\nDashboard\nREVENUE\nInvoices\nPayments\nEncounters\nMy Leaves\nAR\nAnita Rao\nFINANCE · BACK OFFICE\nFINANCE\nBilling dashboard\n12:28 PM\n·\nWed, Jul "
+    },
+    {
+      "portal": "nursing",
+      "url": "http://127.0.0.1:8787/nursing",
+      "hasOakHaven": true,
+      "hasMaple": false,
+      "bouncedToLogin": false,
+      "preview": "Oak Haven Medical\nNURSING · V1.0\nWARD\nDashboard\nIPD & beds\nPatients\nVitals\nMy Leaves\nSP\nSunita Pillai\nWARD · DAY SHIFT\nWARD\nNursing station\n12:29 PM\n·\nWed, Jul 22\nPATIENTS ON FILE\n"
+    },
+    {
+      "portal": "lab/collection",
+      "url": "http://127.0.0.1:8787/lab/collection",
+      "bouncedToLogin": false
+    }
+  ]
+}

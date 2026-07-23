@@ -64,9 +64,13 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
       toast.error("No patients waiting");
       return;
     }
+    // callNextPatient() already completes any current serving entry, then calls next.
+    const wasServing = servingPatient?.name;
     callNext();
     toast.success(`Calling ${nextPatient.name}`, {
-      description: `${formatDisplayToken(overview.nextWaiting.token)} · ${room}`,
+      description: wasServing
+        ? `${wasServing} completed · ${formatDisplayToken(overview.nextWaiting.token)} · ${room}`
+        : `${formatDisplayToken(overview.nextWaiting.token)} · ${room}`,
     });
   };
 
@@ -161,8 +165,13 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
           <button
             type="button"
             onClick={handleCallNext}
-            disabled={!accepting || !!overview.serving}
+            disabled={!accepting || !overview.nextWaiting}
             className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-xl bg-[#B8735D] px-3.5 py-2 text-xs font-semibold text-white disabled:opacity-45"
+            title={
+              overview.serving
+                ? "Completes current consult, then calls the next patient"
+                : "Call the next waiting patient"
+            }
           >
             Call now
           </button>

@@ -108,7 +108,7 @@ export function LocationChip({ location, size = "sm" }: { location: DrugLocation
 export function SectionLabel({
   children,
   action,
-  eyebrow = "Maple · Pharmacy",
+  eyebrow = "Oak Haven · Pharmacy",
 }: {
   children: React.ReactNode;
   action?: React.ReactNode;

@@ -121,6 +121,26 @@ export function DeskTh({
   );
 }
 
+export function DeskTr({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <tr className={cn("border-b border-ink-100 hover:bg-bone/10", className)}>{children}</tr>;
+}
+
+export function DeskTd({
+  children,
+  className,
+  colSpan,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  colSpan?: number;
+}) {
+  return (
+    <td className={cn("px-4 py-3 text-ink-700", className)} colSpan={colSpan}>
+      {children}
+    </td>
+  );
+}
+
 export function DeskEmpty({ children }: { children: React.ReactNode }) {
   return <p className="px-5 py-10 text-center text-[13px] text-ink-400">{children}</p>;
 }

@@ -1067,7 +1067,7 @@ export const STAFF = [
 ];
 
 export const HOSPITAL = {
-  "name": "Maple Hospital",
+  "name": "Oak Haven Medical",
   "tagline": "Clinical laboratory services",
   "address": "412 Linden Way · Suite 2200 · Auckland 1010",
   "phone": "+64 9 555 0188",

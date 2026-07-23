@@ -82,7 +82,11 @@ export function loadFormulary(): Drug[] {
 
 export function saveFormulary(drugs: Drug[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(drugs.map(normalizeDrug)));
+  const normalized = drugs.map(normalizeDrug);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+  void import("@/lib/licensed-desk-store").then(({ writeLicensedLocalJson }) => {
+    writeLicensedLocalJson(STORAGE_KEY, normalized, "pharmacy");
+  });
 }
 
 export function marginPercent(selling: number, cost: number) {

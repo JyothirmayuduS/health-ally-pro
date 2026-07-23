@@ -1,0 +1,16 @@
+{
+  "beforeClick": {
+    "hasRajesh": false,
+    "hasAarav": true,
+    "snehaDup": false,
+    "queueLine": "CRITICAL Non-Adherence (48h) Sneha Rao · 2 dose(s) outstanding today · PT skipped in 48h CRITICAL Non-Adherence (48h) Arjun Kapoor · 2 dose(",
+    "greeting": "GOOD MORNING Dr. Aarav Mehta General Medicine WEDNESDAY 22 JULY 4 YOUR SPECIALTY WORKSTATION General Medic",
+    "callDisabled": false,
+    "upNext": "UP NEXT Q-03 Mohammed Ali Cardiology co-management — post-PCI day 14 Avg wait 11m 02s · Room 3A Call now APPROVALS 2 Bo",
+    "nowInRoom": "NOW IN ROOM Q-02 Sneha Rao Asthma exacerbation — peak flow low, O₂ sat 91% 18:02 in consult Mark done Open chart UP NEXT"
+  },
+  "afterClick": {
+    "nowInRoom": "NOW IN ROOM Q-03 Mohammed Ali Cardiology co-management — post-PCI day 14 0:01 in consult Mark done Open chart UP NEXT Q-04 Arjun Kapoor Walk-in — repeat BP chec",
+    "toastOrCalled": true
+  }
+}

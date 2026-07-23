@@ -1,0 +1,105 @@
+=== POSITIVE TRIGGER ===
+Checking for new versions...
+
+Setting up fixture for: customer
+Running fixture for: customer
+Setting up fixture for: product
+Running fixture for: product
+Setting up fixture for: price
+Running fixture for: price
+Setting up fixture for: subscription
+Running fixture for: subscription
+Setting up fixture for: subscription_updated
+Running fixture for: subscription_updated
+Trigger succeeded! Check dashboard for event details.
+=== PROXY EVIDENCE (positive) ===
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667205,v1=c338e81d90ea6ee0e3ee4bbe5a4ecda7857e79e775a71796e481dcef1fe64b72,v0=ca329f0f912c05a7a626611c44f34fd9df6e", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1TvkfIPCjzLqIkUKVAFX8zJC\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667204,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfEPCjzLqIkUKXzAEqIWx\",\n  "}
+=== LISTEN LOG ===
+---
+pid: 77839
+cwd: "/Users/s.jyothirmayudu/Downloads/health-ally-pro-main"
+command: "export STRIPE_API_KEY='rkcs_test_REDACTED' && stripe listen --api-key \"$STRIPE_API_KEY\" --forward-to http://127.0.0.1:8798/ --events customer.subscription.updated"
+started_at: 2026-07-21T20:53:07.545Z
+running_for_ms: 25009    
+---
+Checking for new versions...
+
+Getting ready...
+Ready! You are using Stripe API Version [2026-06-24.dahlia]. Your webhook signing secret is whsec_REDACTED (^C to quit)
+2026-07-22 02:23:25   --> customer.subscription.updated [evt_1TvkfIPCjzLqIkUKVAFX8zJC]
+2026-07-22 02:23:28  <--  [200] POST http://127.0.0.1:8798/ [evt_1TvkfIPCjzLqIkUKVAFX8zJC]
+=== NEGATIVE TRIGGER (corrupt server secret) ===
+Checking for new versions...
+
+Setting up fixture for: customer
+Running fixture for: customer
+Setting up fixture for: product
+Running fixture for: product
+Setting up fixture for: price
+Running fixture for: price
+Setting up fixture for: subscription
+Running fixture for: subscription
+Setting up fixture for: subscription_updated
+Running fixture for: subscription_updated
+Trigger succeeded! Check dashboard for event details.
+=== PROXY EVIDENCE AFTER NEGATIVE ===
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667205,v1=c338e81d90ea6ee0e3ee4bbe5a4ecda7857e79e775a71796e481dcef1fe64b72,v0=ca329f0f912c05a7a626611c44f34fd9df6e", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1TvkfIPCjzLqIkUKVAFX8zJC\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667204,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfEPCjzLqIkUKXzAEqIWx\",\n  "}
+{"phase":"NEGATIVE_START"}
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667250,v1=c0a370650e69755f08427970a26366fc40812625015570f8f3498417796a61c1,v0=16c737f53d84054f655f13b0c68c74542b56", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1Tvkg2PCjzLqIkUKHXPepm9z\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667250,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfyPCjzLqIkUKnwhGFPjn\",\n  "}
+=== LISTEN TAIL ===
+running_for_ms: 70029    
+---
+Checking for new versions...
+
+Getting ready...
+Ready! You are using Stripe API Version [2026-06-24.dahlia]. Your webhook signing secret is whsec_REDACTED (^C to quit)
+2026-07-22 02:23:25   --> customer.subscription.updated [evt_1TvkfIPCjzLqIkUKVAFX8zJC]
+2026-07-22 02:23:28  <--  [200] POST http://127.0.0.1:8798/ [evt_1TvkfIPCjzLqIkUKVAFX8zJC]
+2026-07-22 02:24:11   --> customer.subscription.updated [evt_1Tvkg2PCjzLqIkUKHXPepm9z]
+2026-07-22 02:24:14  <--  [200] POST http://127.0.0.1:8798/ [evt_1Tvkg2PCjzLqIkUKHXPepm9z]
+=== NEGATIVE TRIGGER (server has corrupt secret; CLI signs with real listen secret) ===
+Checking for new versions...
+
+Setting up fixture for: customer
+Running fixture for: customer
+Setting up fixture for: product
+Running fixture for: product
+Setting up fixture for: price
+Running fixture for: price
+Setting up fixture for: subscription
+Running fixture for: subscription
+Setting up fixture for: subscription_updated
+Running fixture for: subscription_updated
+Trigger succeeded! Check dashboard for event details.
+=== FULL PROXY LOG ===
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667205,v1=c338e81d90ea6ee0e3ee4bbe5a4ecda7857e79e775a71796e481dcef1fe64b72,v0=ca329f0f912c05a7a626611c44f34fd9df6e", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1TvkfIPCjzLqIkUKVAFX8zJC\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667204,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfEPCjzLqIkUKXzAEqIWx\",\n  "}
+{"phase":"NEGATIVE_START"}
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667250,v1=c0a370650e69755f08427970a26366fc40812625015570f8f3498417796a61c1,v0=16c737f53d84054f655f13b0c68c74542b56", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1Tvkg2PCjzLqIkUKHXPepm9z\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667250,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfyPCjzLqIkUKnwhGFPjn\",\n  "}
+{"phase":"NEGATIVE_CONFIRMED_START"}
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667311,v1=e5b2b3f8b6651a67e8bbc5652ee05c48742ea8ddbd4be3f5eff0b704c52670ca,v0=9bac883b07ff3494d1fa28374ff47ade0902", "status": 400, "response_body": "{\"error\":\"Signature mismatch\"}", "request_body_prefix": "{\n  \"id\": \"evt_1Tvkh1PCjzLqIkUK60E7fKqn\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667311,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkgyPCjzLqIkUKttPwxEAs\",\n  "}
+=== LISTEN ===
+cwd: "/Users/s.jyothirmayudu/Downloads/health-ally-pro-main"
+command: "export STRIPE_API_KEY='rkcs_test_REDACTED' && stripe listen --api-key \"$STRIPE_API_KEY\" --forward-to http://127.0.0.1:8798/ --events customer.subscription.updated"
+started_at: 2026-07-21T20:53:07.545Z
+running_for_ms: 130058   
+---
+Checking for new versions...
+
+Getting ready...
+Ready! You are using Stripe API Version [2026-06-24.dahlia]. Your webhook signing secret is whsec_REDACTED (^C to quit)
+2026-07-22 02:23:25   --> customer.subscription.updated [evt_1TvkfIPCjzLqIkUKVAFX8zJC]
+2026-07-22 02:23:28  <--  [200] POST http://127.0.0.1:8798/ [evt_1TvkfIPCjzLqIkUKVAFX8zJC]
+2026-07-22 02:24:11   --> customer.subscription.updated [evt_1Tvkg2PCjzLqIkUKHXPepm9z]
+2026-07-22 02:24:14  <--  [200] POST http://127.0.0.1:8798/ [evt_1Tvkg2PCjzLqIkUKHXPepm9z]
+2026-07-22 02:25:11   --> customer.subscription.updated [evt_1Tvkh1PCjzLqIkUK60E7fKqn]
+2026-07-22 02:25:11  <--  [400] POST http://127.0.0.1:8798/ [evt_1Tvkh1PCjzLqIkUK60E7fKqn]
+pid: 77731
+cwd: "/Users/s.jyothirmayudu/Downloads/health-ally-pro-main"
+command: "cd /Users/s.jyothirmayudu/Downloads/health-ally-pro-main && FORWARD_TO=http://127.0.0.1:8787/api/billing/webhook STRIPE_PROXY_LOG=/tmp/stripe-proxy-evidence.jsonl PROXY_PORT=8798 python3 scripts/stripe-webhook-evidence-proxy.py"
+started_at: 2026-07-21T20:52:56.277Z
+running_for_ms: 140054   
+---
+proxy listening on 8798 -> http://127.0.0.1:8787/api/billing/webhook log=/tmp/stripe-proxy-evidence.jsonl
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667205,v1=c338e81d90ea6ee0e3ee4bbe5a4ecda7857e79e775a71796e481dcef1fe64b72,v0=ca329f0f912c05a7a626611c44f34fd9df6e", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1TvkfIPCjzLqIkUKVAFX8zJC\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667204,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfEPCjzLqIkUKXzAEqIWx\",\n  "}
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667250,v1=c0a370650e69755f08427970a26366fc40812625015570f8f3498417796a61c1,v0=16c737f53d84054f655f13b0c68c74542b56", "status": 200, "response_body": "{\"ok\":true,\"hospitalId\":\"a0000001-0001-4001-8001-000000000001\",\"status\":\"active\",\"event\":\"customer.subscription.updated\"}", "request_body_prefix": "{\n  \"id\": \"evt_1Tvkg2PCjzLqIkUKHXPepm9z\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667250,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkfyPCjzLqIkUKnwhGFPjn\",\n  "}
+{"forward": "http://127.0.0.1:8787/api/billing/webhook", "req_bytes": 5691, "stripe_signature": "t=1784667311,v1=e5b2b3f8b6651a67e8bbc5652ee05c48742ea8ddbd4be3f5eff0b704c52670ca,v0=9bac883b07ff3494d1fa28374ff47ade0902", "status": 400, "response_body": "{\"error\":\"Signature mismatch\"}", "request_body_prefix": "{\n  \"id\": \"evt_1Tvkh1PCjzLqIkUK60E7fKqn\",\n  \"object\": \"event\",\n  \"api_version\": \"2026-06-24.dahlia\",\n  \"created\": 1784667311,\n  \"data\": {\n    \"object\": {\n      \"id\": \"sub_1TvkgyPCjzLqIkUKttPwxEAs\",\n  "}

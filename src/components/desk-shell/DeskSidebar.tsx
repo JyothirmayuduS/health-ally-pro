@@ -46,21 +46,29 @@ function NavItem({
 }
 
 function NavContent({ config, onClick }: { config: DeskPortalConfig; onClick?: () => void }) {
-  const { theme, sections, portalLabel, version, hospitalName, staff } = config;
+  const { theme, sections, portalLabel, version, hospitalName, staff, logoUrl } = config;
 
   return (
     <>
       <div className="border-b border-ink-200 px-5 pb-5 pt-6">
         <div className="flex items-center gap-2.5">
-          <div
-            className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-md",
-              theme.brandIconBg,
-              theme.brandIconFg,
-            )}
-          >
-            <HeartPulse className="h-4 w-4" strokeWidth={2.5} />
-          </div>
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt=""
+              className="h-8 w-8 rounded-md object-contain bg-white ring-1 ring-ink-100"
+            />
+          ) : (
+            <div
+              className={cn(
+                "flex h-8 w-8 items-center justify-center rounded-md",
+                theme.brandIconBg,
+                theme.brandIconFg,
+              )}
+            >
+              <HeartPulse className="h-4 w-4" strokeWidth={2.5} />
+            </div>
+          )}
           <div>
             <div className="font-heading text-[15px] font-semibold leading-none text-ink-900">
               {hospitalName}

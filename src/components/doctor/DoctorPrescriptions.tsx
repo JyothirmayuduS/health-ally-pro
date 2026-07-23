@@ -20,6 +20,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { DrugMonographSheet } from "@/components/doctor/prescriptions/DrugMonographSheet";
+import { IcdPicker } from "@/components/doctor/IcdPicker";
 import { PrescriptionPreviewSheet } from "@/components/doctor/prescriptions/PrescriptionPreviewSheet";
 import {
   PrescriptionDispatchConfirmation,
@@ -709,8 +710,25 @@ export default function DoctorPrescriptions({
               setDiagnosisSearch(e.target.value);
               updateDraft({ diagnosis: e.target.value });
             }}
-            placeholder="ICD-10 or diagnosis name"
+            placeholder="Diagnosis name or clinical indication"
             className="mt-2 min-h-[48px] w-full rounded-2xl border border-[#EDEAE6] bg-[#FAF9F7] px-4 text-base sm:text-sm"
+          />
+          <label className="mt-3 block text-xs font-medium text-[#8A8F8C]">ICD-10 code (optional)</label>
+          <IcdPicker
+            value={
+              draft.diagnosisIcd
+                ? `${draft.diagnosisIcd}${draft.diagnosis ? ` — ${draft.diagnosis}` : ""}`
+                : ""
+            }
+            onChange={(code, entry) => {
+              updateDraft({
+                diagnosisIcd: code,
+                diagnosis: entry?.description ?? draft.diagnosis,
+              });
+              setDiagnosisSearch("");
+            }}
+            placeholder="Search ICD-10 code or description…"
+            className="mt-1 [&_input]:min-h-[48px] [&_input]:rounded-2xl [&_input]:border-[#EDEAE6] [&_input]:bg-[#FAF9F7] [&_input]:px-4 [&_input]:text-base sm:[&_input]:text-sm"
           />
           <div className="mt-2 flex flex-wrap gap-2">
             {diagnosisOptions.slice(0, 4).map((d) => (

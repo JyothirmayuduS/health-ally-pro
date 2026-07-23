@@ -1,9 +1,9 @@
 export const apkDoctor = {
-  name: "Dr. Rajesh Mehta",
-  shortName: "Dr. Rajesh",
-  specialty: "Internal Medicine",
-  initials: "RM",
-  email: "dr.mehta@clinic.in",
+  name: "Dr. Aarav Mehta",
+  shortName: "Dr. Aarav Mehta",
+  specialty: "General Medicine",
+  initials: "AM",
+  email: "doctor@oakhaven.demo",
   rating: 4.9,
   scheduleSlots: 8,
 };

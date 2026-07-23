@@ -45,6 +45,9 @@ function writeQueue(items: DoctorLabPayload[]) {
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
+  void import("@/lib/licensed-desk-store").then(({ writeLicensedLocalJson }) => {
+    writeLicensedLocalJson(STORAGE_KEY, items, "lab");
+  });
 }
 
 export function pushLabOrder(payload: DoctorLabPayload) {

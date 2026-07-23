@@ -1,0 +1,194 @@
+{
+  "at": "2026-07-23T15:29:50.625Z",
+  "source": "npm audit",
+  "totals": {
+    "critical": 0,
+    "high": 10,
+    "medium": 5,
+    "low": 2,
+    "informational": 0
+  },
+  "findings": {
+    "Critical": [],
+    "High": [
+      {
+        "name": "@cloudflare/vite-plugin",
+        "severity": "high",
+        "via": [
+          "miniflare",
+          "wrangler",
+          "ws"
+        ],
+        "range": "<=0.0.0-7b9716462 || 0.1.5 - 1.41.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "brace-expansion",
+        "severity": "high",
+        "via": [
+          "brace-expansion: Large numeric range defeats documented `max` DoS protection",
+          "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+          "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups"
+        ],
+        "range": "<=1.1.15 || 3.0.0 - 5.0.6",
+        "fixAvailable": true
+      },
+      {
+        "name": "js-yaml",
+        "severity": "high",
+        "via": [
+          "JS-YAML: Quadratic-complexity DoS in merge key handling via repeated aliases",
+          "js-yaml: YAML merge-key chains can force quadratic CPU consumption"
+        ],
+        "range": "4.0.0 - 4.2.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "miniflare",
+        "severity": "high",
+        "via": [
+          "sharp",
+          "undici",
+          "ws"
+        ],
+        "range": "<=0.0.0-fff677e35 || >=3.20250204.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "postcss",
+        "severity": "high",
+        "via": [
+          "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+          "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments"
+        ],
+        "range": "<=8.5.11",
+        "fixAvailable": true
+      },
+      {
+        "name": "sharp",
+        "severity": "high",
+        "via": [
+          "sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591"
+        ],
+        "range": "<0.35.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "undici",
+        "severity": "high",
+        "via": [
+          "undici vulnerable to TLS certificate validation bypass via dropped requestTls in SOCKS5 ProxyAgent",
+          "undici vulnerable to HTTP header injection via Set-Cookie percent-decoding",
+          "undici WebSocket client vulnerable to denial of service via fragment count bypass"
+        ],
+        "range": "7.0.0 - 7.27.2",
+        "fixAvailable": true
+      },
+      {
+        "name": "vite",
+        "severity": "high",
+        "via": [
+          "Vite Vulnerable to Path Traversal in Optimized Deps `.map` Handling",
+          "Vite: `server.fs.deny` bypassed with queries",
+          "Vite Vulnerable to Arbitrary File Read via Vite Dev Server WebSocket"
+        ],
+        "range": "7.0.0 - 7.3.3",
+        "fixAvailable": true
+      },
+      {
+        "name": "wrangler",
+        "severity": "high",
+        "via": [
+          "Wrangler affected by OS Command Injection in `wrangler pages deploy`",
+          "esbuild",
+          "miniflare"
+        ],
+        "range": "<=0.0.0-7ae5dd357 || >=4.0.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "ws",
+        "severity": "high",
+        "via": [
+          "ws: Uninitialized memory disclosure",
+          "ws: Memory exhaustion DoS from tiny fragments and data chunks"
+        ],
+        "range": "8.0.0 - 8.20.1",
+        "fixAvailable": true
+      }
+    ],
+    "Medium": [
+      {
+        "name": "@tanstack/react-start",
+        "severity": "moderate",
+        "via": [
+          "@tanstack/react-start-rsc",
+          "@tanstack/react-start-server",
+          "@tanstack/start-plugin-core"
+        ],
+        "range": "1.121.23 - 1.167.63",
+        "fixAvailable": true
+      },
+      {
+        "name": "@tanstack/react-start-rsc",
+        "severity": "moderate",
+        "via": [
+          "@tanstack/react-start-server",
+          "@tanstack/start-plugin-core",
+          "@tanstack/start-server-core"
+        ],
+        "range": "<=0.0.42",
+        "fixAvailable": true
+      },
+      {
+        "name": "@tanstack/react-start-server",
+        "severity": "moderate",
+        "via": [
+          "@tanstack/start-server-core"
+        ],
+        "range": "1.121.23 - 1.166.51",
+        "fixAvailable": true
+      },
+      {
+        "name": "@tanstack/start-plugin-core",
+        "severity": "moderate",
+        "via": [
+          "@tanstack/start-server-core"
+        ],
+        "range": "1.121.23 - 1.169.18",
+        "fixAvailable": true
+      },
+      {
+        "name": "@tanstack/start-server-core",
+        "severity": "moderate",
+        "via": [
+          "TanStack Start - Server Core: Inbound server-function request deserialization could invoke a sibling client-referenced server function"
+        ],
+        "range": "<1.167.30",
+        "fixAvailable": true
+      }
+    ],
+    "Low": [
+      {
+        "name": "@babel/core",
+        "severity": "low",
+        "via": [
+          "@babel/core: Arbitrary File Read via sourceMappingURL Comment"
+        ],
+        "range": "<=7.29.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "esbuild",
+        "severity": "low",
+        "via": [
+          "esbuild allows arbitrary file read when running the development server on Windows"
+        ],
+        "range": "0.27.3 - 0.28.0",
+        "fixAvailable": true
+      }
+    ],
+    "Informational": []
+  },
+  "note": "Dependency advisories; not claimed zero-CVE. Image Trivy/Scout run separately."
+}

@@ -2,9 +2,14 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let adminClient: SupabaseClient | null = null;
 
-function readEnv(key: string): string | undefined {
+export function getRequestEnv(key: string): string | undefined {
   if (typeof process !== "undefined" && process.env[key]) return process.env[key];
   return undefined;
+}
+
+/** Read Worker/runtime env — process.env (incl. CLOUDFLARE_INCLUDE_PROCESS_ENV) first. */
+function readEnv(key: string): string | undefined {
+  return getRequestEnv(key);
 }
 
 export function getSupabaseAdmin(): SupabaseClient | null {

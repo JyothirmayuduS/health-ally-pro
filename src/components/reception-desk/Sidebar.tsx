@@ -24,6 +24,9 @@ import {
   FileText,
   Bed,
   CalendarOff,
+  Syringe,
+  BookUser,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +38,9 @@ const items = [
   { to: "/reception/admissions", label: "Admissions & Beds", icon: Bed, dot: "bg-teal" },
   { to: "/reception/check-in", label: "Check-in", icon: LogIn, dot: "bg-sage" },
   { to: "/reception/vitals", label: "Record vitals", icon: Activity, dot: "bg-teal" },
+  { to: "/reception/vaccination", label: "Vaccination", icon: Syringe, dot: "bg-mustard" },
+  { to: "/reception/reminders", label: "Reminders", icon: Bell, dot: "bg-clay" },
+  { to: "/reception/address-book", label: "Address book", icon: BookUser, dot: "bg-plum" },
   { to: "/reception/queue", label: "Queue", icon: ListOrdered, dot: "bg-mustard" },
   { to: "/reception/board", label: "Doctor board", icon: Stethoscope, dot: "bg-teal" },
   { to: "/reception/token-display", label: "Display", icon: MonitorPlay, dot: "bg-ink-900" },
@@ -96,7 +102,7 @@ function NavContent({ onClick }: { onClick?: () => void }) {
           </div>
           <div>
             <div className="font-heading text-[15px] font-semibold leading-none text-ink-900">
-              Maple Hospital
+              Oak Haven Medical
             </div>
             <div className="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink-400">
               Reception · v1.2

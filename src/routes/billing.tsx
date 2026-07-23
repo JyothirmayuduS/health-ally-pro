@@ -5,7 +5,10 @@ import { BILLING_DESK } from "@/lib/desk-shell/portals";
 import { requirePortalAccess } from "@/lib/supabase/rbac";
 
 export const Route = createFileRoute("/billing")({
-  beforeLoad: () => requirePortalAccess("billing"),
+  beforeLoad: async () => {
+    if (typeof window === "undefined") return;
+    await requirePortalAccess("billing");
+  },
   component: BillingRoot,
 });
 

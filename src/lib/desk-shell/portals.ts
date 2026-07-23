@@ -28,14 +28,19 @@ import {
   TrendingUp,
   CalendarOff,
   Droplets,
+  ScrollText,
+  BookOpen,
+  FileBarChart,
 } from "lucide-react";
 import type { DeskPortalConfig } from "./types";
+import { displayHospitalLogo, displayHospitalName } from "@/lib/hospital-brand";
+import { hasModule } from "@/lib/license";
 
 export const BILLING_DESK: DeskPortalConfig = {
   id: "billing",
   portalLabel: "Billing",
   version: "v1.0",
-  hospitalName: "Maple Hospital",
+  hospitalName: "Oak Haven Medical",
   wrapperClass: "billing-desk reception-desk",
   theme: {
     activeBg: "bg-teal-soft",
@@ -85,7 +90,7 @@ export const NURSING_DESK: DeskPortalConfig = {
   id: "nursing",
   portalLabel: "Nursing",
   version: "v1.0",
-  hospitalName: "Maple Hospital",
+  hospitalName: "Oak Haven Medical",
   wrapperClass: "nursing-desk reception-desk",
   theme: {
     activeBg: "bg-clay-soft",
@@ -156,7 +161,13 @@ export const ADMIN_DESK: DeskPortalConfig = {
       title: "Organization",
       items: [
         { to: "/admin/hospital", label: "Hospital", icon: Building2, dot: "bg-sage" },
-        { to: "/admin/branches", label: "Branches", icon: GitBranch, dot: "bg-mustard" },
+        {
+          to: "/admin/branches",
+          label: "Branches",
+          icon: GitBranch,
+          dot: "bg-mustard",
+          moduleId: "multi_branch",
+        },
         { to: "/admin/departments", label: "Departments", icon: Layers, dot: "bg-clay" },
         { to: "/admin/staff", label: "Staff", icon: Users, dot: "bg-plum" },
         { to: "/admin/access-control", label: "Access control", icon: Shield, dot: "bg-plum" },
@@ -167,18 +178,35 @@ export const ADMIN_DESK: DeskPortalConfig = {
     {
       title: "Clinical config",
       items: [
-        { to: "/admin/doctors", label: "Doctors", icon: Stethoscope, dot: "bg-teal" },
+        {
+          to: "/admin/doctors",
+          label: "Doctors",
+          icon: Stethoscope,
+          dot: "bg-teal",
+          moduleId: "specialty_desk",
+        },
         { to: "/admin/doctor-roster", label: "Doctor roster", icon: CalendarRange, dot: "bg-teal" },
-        { to: "/admin/ot", label: "Operation theatre", icon: Activity, dot: "bg-plum" },
-        { to: "/admin/hospital-units", label: "Hospital units", icon: Droplets, dot: "bg-sage" },
+        { to: "/admin/ot", label: "Operation theatre", icon: Activity, dot: "bg-plum", moduleId: "ot" },
+        {
+          to: "/admin/hospital-units",
+          label: "Hospital units",
+          icon: Droplets,
+          dot: "bg-sage",
+          moduleId: "hospital_units",
+        },
         { to: "/admin/services", label: "Services & fees", icon: Briefcase, dot: "bg-money" },
         { to: "/admin/lab-catalog", label: "Lab catalog", icon: FlaskConical, dot: "bg-sage" },
         { to: "/admin/pharmacy-formulary", label: "Pharmacy formulary", icon: Pill, dot: "bg-mustard" },
+        { to: "/admin/masters", label: "Hospital masters", icon: BookOpen, dot: "bg-plum" },
+        { to: "/admin/registers", label: "Statutory registers", icon: FileBarChart, dot: "bg-money" },
       ],
     },
     {
       title: "System",
-      items: [{ to: "/admin/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" }],
+      items: [
+        { to: "/admin/audit", label: "PHI audit", icon: ScrollText, dot: "bg-plum" },
+        { to: "/admin/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" },
+      ],
     },
   ],
   searchPlaceholder: "Search staff, department, doctor…",
@@ -206,6 +234,8 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "Clinical", title: "Pharmacy formulary" };
     if (pathname.startsWith("/admin/settings"))
       return { eyebrow: "System", title: "Hospital settings" };
+    if (pathname.startsWith("/admin/audit"))
+      return { eyebrow: "Compliance", title: "PHI access audit" };
     if (pathname.startsWith("/admin/analytics"))
       return { eyebrow: "Insights", title: "Analytics" };
     if (pathname.startsWith("/admin/revenue"))
@@ -220,17 +250,35 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "Communications", title: "Announcements" };
     if (pathname.startsWith("/admin/ot"))
       return { eyebrow: "Clinical", title: "Operation theatre" };
-    if (pathname.startsWith("/admin/hr"))
-      return { eyebrow: "People", title: "HR & Performance" };
+    if (pathname.startsWith("/admin/masters"))
+      return { eyebrow: "Masters", title: "Hospital master data" };
+    if (pathname.startsWith("/admin/registers"))
+      return { eyebrow: "Reports", title: "Statutory registers" };
     return { eyebrow: "Admin", title: "Control center" };
   },
 };
+
+/** Apply white-label name/logo + module entitlement filters for admin nav. */
+export function resolveAdminDesk(): DeskPortalConfig {
+  const name = displayHospitalName(ADMIN_DESK.hospitalName);
+  return {
+    ...ADMIN_DESK,
+    hospitalName: name,
+    logoUrl: displayHospitalLogo() ?? undefined,
+    sections: ADMIN_DESK.sections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => !item.moduleId || hasModule(item.moduleId)),
+      }))
+      .filter((section) => section.items.length > 0),
+  };
+}
 
 export const DOCTOR_DESK: DeskPortalConfig = {
   id: "doctor",
   portalLabel: "Doctor",
   version: "v1.0",
-  hospitalName: "Maple Hospital",
+  hospitalName: "Oak Haven Medical",
   wrapperClass: "doctor-desk reception-desk",
   theme: {
     activeBg: "bg-clay-soft",

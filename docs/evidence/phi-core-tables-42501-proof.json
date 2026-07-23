@@ -1,0 +1,47 @@
+{
+  "pass": true,
+  "matrix": {
+    "patients": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table patients",
+      "rows": 0
+    },
+    "appointments": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table appointments",
+      "rows": 0
+    },
+    "lab_results": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table lab_results",
+      "rows": 0
+    },
+    "patient_medications": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table patient_medications",
+      "rows": 0
+    },
+    "staff_profiles": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table staff_profiles",
+      "rows": 0
+    },
+    "hospital_memberships": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table hospital_memberships",
+      "rows": 0
+    },
+    "queue_entries": {
+      "denied": true,
+      "code": "42501",
+      "message": "permission denied for table queue_entries",
+      "rows": 0
+    }
+  }
+}
