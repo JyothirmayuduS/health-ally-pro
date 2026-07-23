@@ -19,8 +19,14 @@ const BASE =
 const H = "a0000001-0001-4001-8001-000000000001";
 const EMAIL = "doctor@oakhaven.demo";
 const PASS = "MedoraDemo!2026Doc";
-const USERS = Math.min(Number(process.env.USERS || 100), 250); // cap for local safety
-const CONCURRENCY = Math.min(Number(process.env.CONCURRENCY || 20), 50);
+const USERS = Math.min(
+  Number(process.env.USERS || 100),
+  process.env.ALLOW_HIGH_LOAD === "1" ? 1000 : 250,
+);
+const CONCURRENCY = Math.min(
+  Number(process.env.CONCURRENCY || 20),
+  process.env.ALLOW_HIGH_LOAD === "1" ? 100 : 50,
+);
 
 const admin = createClient(url, service, {
   auth: { persistSession: false, autoRefreshToken: false },

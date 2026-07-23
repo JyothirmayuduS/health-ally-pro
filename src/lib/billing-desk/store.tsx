@@ -34,7 +34,9 @@ function subtotal(items: { amount: number }[]) {
   return items.reduce((s, i) => s + i.amount, 0);
 }
 
-export function receptionInvoiceToLedger(inv: (typeof SEED_INVOICES)[number]): LedgerInvoice {
+export function receptionInvoiceToLedger(
+  inv: (typeof SEED_INVOICES)[number] & { refunds?: { amount: number }[] },
+): LedgerInvoice {
   const p = getSharedPatient(inv.patientId);
   const sub = subtotal(inv.items);
   const tax = Math.round(sub * TAX_RATE * 100) / 100;
@@ -44,14 +46,11 @@ export function receptionInvoiceToLedger(inv: (typeof SEED_INVOICES)[number]): L
   let status = inv.status === "paid" ? "paid" : "unpaid";
   if (inv.status === "refunded") {
     paid = 0;
-    status = "refunded" as any;
+    status = "refunded";
   } else if (inv.status === "partial-refund") {
-    const totalRefunded = ((inv as any).refunds || []).reduce(
-      (sum: number, r: any) => sum + r.amount,
-      0,
-    );
+    const totalRefunded = (inv.refunds || []).reduce((sum, r) => sum + r.amount, 0);
     paid = Math.max(0, total - totalRefunded);
-    status = "partial-refund" as any;
+    status = "partial-refund";
   }
 
   return {
@@ -66,7 +65,7 @@ export function receptionInvoiceToLedger(inv: (typeof SEED_INVOICES)[number]): L
     tax,
     total,
     amountPaid: paid,
-    status: status as any,
+    status: status as LedgerInvoice["status"],
     method: inv.method ?? undefined,
     paidAt: inv.paidAt,
     referenceId: inv.appointmentId,

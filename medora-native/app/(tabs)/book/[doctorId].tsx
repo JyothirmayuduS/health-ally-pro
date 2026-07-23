@@ -101,8 +101,8 @@ function SlotTile({
 
   const isLoadingSlot = selected && slotState === "loading";
 
-  let bg = slot.available ? colors.surface : colors.background;
-  let borderColor = colors.border;
+  let bg: string = slot.available ? colors.surface : colors.background;
+  let borderColor: string = colors.border;
   if (selected && slotState === "idle") {
     bg = colors.ink;
     borderColor = colors.ink;
