@@ -175,7 +175,7 @@ export default function SupervisorDashboard() {
               <button
                 key={t.value}
                 type="button"
-                onClick={() => setActiveTab(t.value as any)}
+                onClick={() => setActiveTab(t.value as typeof activeTab)}
                 className={cn(
                   "flex-1 rounded py-1 px-2.5 text-[11px] font-medium transition text-center",
                   activeTab === t.value
@@ -536,7 +536,7 @@ export default function SupervisorDashboard() {
                   criticalNotifications
                     .filter((n) => n.status === "pending_ack")
                     .map((n) => {
-                      const p = getPatient({ patient_id: n.patientId } as any, patients);
+                      const p = getPatient(n.patientId, patients);
                       const elapsedMin = Math.round(
                         (Date.now() - new Date(n.notifiedAt).getTime()) / 60_000,
                       );
@@ -596,7 +596,7 @@ export default function SupervisorDashboard() {
                   </p>
                 ) : (
                   criticalNotifications.map((n) => {
-                    const p = getPatient({ patient_id: n.patientId } as any, patients);
+                    const p = getPatient(n.patientId, patients);
                     return (
                       <div key={n.id} className="p-3 bg-stone-50 border rounded-lg text-ink-800">
                         <div className="font-semibold text-ink-900">{p?.name}</div>

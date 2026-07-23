@@ -1367,3 +1367,8 @@ export function useStore() {
   if (!ctx) throw new Error("useStore must be used within StoreProvider");
   return ctx;
 }
+
+/** Like useStore, but returns null instead of throwing when used outside a StoreProvider. */
+export function useStoreOptional() {
+  return useContext(StoreCtx);
+}

@@ -287,7 +287,8 @@ export default function AdminAccessControl() {
                             checked={isChecked}
                             onChange={(e) => {
                               const updated = { ...editingRole };
-                              (updated.permissions[module] as any)[permission] = e.target.checked;
+                              (updated.permissions[module] as Record<string, boolean>)[permission] =
+                                e.target.checked;
                               setEditingRole(updated);
                             }}
                             className="rounded border-stone-300 text-plum focus:ring-plum"

@@ -405,7 +405,11 @@ export default function AdminStaff() {
                   </label>
                   <select
                     value={formShift}
-                    onChange={(e) => setFormShift(e.target.value as any)}
+                    onChange={(e) =>
+                      setFormShift(
+                        e.target.value as "morning" | "afternoon" | "night" | "rotational",
+                      )
+                    }
                     className="w-full rounded border-stone-300 text-[13px] focus:ring-plum focus:border-plum"
                   >
                     <option value="morning">Morning Shift</option>

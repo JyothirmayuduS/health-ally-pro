@@ -312,7 +312,7 @@ export default function Dashboard() {
                     <div className="text-[13px] text-ink-900">
                       <span className="font-medium">{String(r.actor)}</span>{" "}
                       <span className="text-ink-600">{String(r.action).toLowerCase()}</span>{" "}
-                      <span className="font-mono text-ink-400">{(r.order as any).id}</span>
+                      <span className="font-mono text-ink-400">{r.order.id}</span>
                     </div>
                     <div className="text-xs text-ink-400">{formatRelative(String(r.at))}</div>
                   </div>

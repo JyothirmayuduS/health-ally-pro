@@ -43,6 +43,7 @@ import {
 import { doctors, medications } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { useTheme } from "@/theme/ThemeProvider";
+import type { ThemeColors } from "@/theme/colors";
 import * as LocalAuthentication from "expo-local-authentication";
 
 // ── Data ──────────────────────────────────────────────────────────
@@ -83,7 +84,7 @@ function SlotTile({
   selected: boolean;
   slotState: SlotState;
   onPress: () => void;
-  colors: any;
+  colors: ThemeColors;
 }) {
   const scale = useSharedValue(1);
 
@@ -162,7 +163,7 @@ function SlotTile({
 }
 
 // ─── Biometric Success Overlay ──────────────────────────────────────
-function AuthSuccessOverlay({ colors }: { colors: any }) {
+function AuthSuccessOverlay({ colors }: { colors: ThemeColors }) {
   return (
     <Animated.View
       entering={FadeIn.duration(400)}

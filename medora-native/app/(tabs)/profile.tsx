@@ -22,10 +22,12 @@ import {
   User,
   Users,
   Scale,
+  type LucideIcon,
 } from "lucide-react-native";
 import { patient, appointments, reports, familyMembers } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { useTheme } from "@/theme/ThemeProvider";
+import type { ThemeColors } from "@/theme/colors";
 
 function PreferenceRow({
   icon: Icon,
@@ -34,11 +36,11 @@ function PreferenceRow({
   defaultOn,
   colors,
 }: {
-  icon: any;
+  icon: LucideIcon;
   title: string;
   subtitle: string;
   defaultOn: boolean;
-  colors: any;
+  colors: ThemeColors;
 }) {
   const [enabled, setEnabled] = useState(defaultOn);
   return (
@@ -70,9 +72,9 @@ function MenuRow({
   destructive,
   onPress,
 }: {
-  icon: any;
+  icon: LucideIcon;
   label: string;
-  colors: any;
+  colors: ThemeColors;
   destructive?: boolean;
   onPress?: () => void;
 }) {

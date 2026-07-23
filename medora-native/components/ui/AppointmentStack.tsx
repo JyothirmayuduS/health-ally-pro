@@ -14,9 +14,10 @@ import { Card } from "@/components/ui/Card";
 import { CalendarDays, Clock4, Video, CheckCircle2 } from "lucide-react-native";
 import { format } from "date-fns";
 import { useTheme } from "@/theme/ThemeProvider";
-import { doctors } from "@/lib/mock-data";
+import { doctors, type Appointment } from "@/lib/mock-data";
+import type { ThemeColors } from "@/theme/colors";
 
-export function AppointmentStack({ appointments }: { appointments: any[] }) {
+export function AppointmentStack({ appointments }: { appointments: Appointment[] }) {
   const { colors } = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -69,7 +70,19 @@ export function AppointmentStack({ appointments }: { appointments: any[] }) {
   );
 }
 
-function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
+function SwipeableCard({
+  appt,
+  isTop,
+  depth,
+  colors,
+  onSwipeComplete,
+}: {
+  appt: Appointment;
+  isTop: boolean;
+  depth: number;
+  colors: ThemeColors;
+  onSwipeComplete: () => void;
+}) {
   const doc = doctors.find((d) => d.id === appt.doctorId);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);

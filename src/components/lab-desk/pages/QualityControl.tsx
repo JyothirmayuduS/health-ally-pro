@@ -45,6 +45,20 @@ import {
 import { cn } from "@/lib/utils";
 import type { QCRun } from "@/lib/lab-desk/qcData";
 
+type QcChartPoint = {
+  name: string;
+  value: number;
+  mean: number;
+  plus1SD: number;
+  plus2SD: number;
+  plus3SD: number;
+  minus1SD: number;
+  minus2SD: number;
+  minus3SD: number;
+  pointColor: string;
+  runId: string;
+};
+
 export default function QualityControl() {
   const { qcRuns, catalog, qcLocks, logQCRun, logQCCorrectiveAction } = useLabStore();
   const { name } = useLabAuth();
@@ -179,7 +193,7 @@ export default function QualityControl() {
           <button
             key={t.value}
             type="button"
-            onClick={() => setActiveTab(t.value as any)}
+            onClick={() => setActiveTab(t.value as typeof activeTab)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
               activeTab === t.value
@@ -415,7 +429,7 @@ export default function QualityControl() {
                     stroke="#3f6b58"
                     strokeWidth={2}
                     activeDot={{ r: 6 }}
-                    dot={(props: any) => {
+                    dot={(props: { cx?: number; cy?: number; payload: QcChartPoint }) => {
                       const { cx, cy, payload } = props;
                       return (
                         <Dot
@@ -473,7 +487,10 @@ export default function QualityControl() {
                 </div>
                 <div>
                   <Label>Control Level</Label>
-                  <Select value={formLevel} onValueChange={(val: any) => setFormLevel(val)}>
+                  <Select
+                    value={formLevel}
+                    onValueChange={(val) => setFormLevel(val as typeof formLevel)}
+                  >
                     <SelectTrigger className="w-full bg-white border-ink-200 mt-1">
                       <SelectValue placeholder="Level" />
                     </SelectTrigger>
@@ -489,7 +506,10 @@ export default function QualityControl() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Current Shift</Label>
-                  <Select value={formShift} onValueChange={(val: any) => setFormShift(val)}>
+                  <Select
+                    value={formShift}
+                    onValueChange={(val) => setFormShift(val as typeof formShift)}
+                  >
                     <SelectTrigger className="w-full bg-white border-ink-200 mt-1">
                       <SelectValue placeholder="Shift" />
                     </SelectTrigger>

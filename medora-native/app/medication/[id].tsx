@@ -18,6 +18,7 @@ import Animated, { FadeIn, FadeInDown, FadeInUp, SlideInDown } from "react-nativ
 import { useTheme } from "@/theme/ThemeProvider";
 import { medications } from "@/lib/mock-data";
 import { isMedicationTaken, toggleMedicationTaken } from "@/lib/patient-meds-store";
+import medAbstractImage from "../../assets/images/med-abstract.png";
 
 export default function MedicationDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -60,11 +61,7 @@ export default function MedicationDetailScreen() {
       >
         {/* Hero Image Section */}
         <Animated.View entering={FadeIn.duration(600)} style={s.heroImageWrap}>
-          <Image
-            source={require("../../assets/images/med-abstract.png")}
-            style={s.heroImage}
-            resizeMode="cover"
-          />
+          <Image source={medAbstractImage} style={s.heroImage} resizeMode="cover" />
           <View style={s.heroGradient} />
         </Animated.View>
 

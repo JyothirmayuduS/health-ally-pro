@@ -32,13 +32,8 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Lint
-        # Prettier backlog (~10k) is tracked tech debt; do not block security/PHI gates.
-        # Artifacts capture failures for hygiene burn-down.
-        continue-on-error: true
-        run: npm run lint 2>&1 | tee lint-report.txt
+        run: npx eslint . --max-warnings 500 2>&1 | tee lint-report.txt
       - name: Typecheck
-        # Pre-existing TS debt (~1000 errors); hard-fail once burn-down lands.
-        continue-on-error: true
         run: npm run typecheck 2>&1 | tee typecheck-report.txt
       - uses: actions/upload-artifact@v4
         if: always()

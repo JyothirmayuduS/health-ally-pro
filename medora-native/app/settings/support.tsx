@@ -12,6 +12,7 @@ import {
   HelpCircle,
   ExternalLink,
   ShieldCheck,
+  type LucideIcon,
 } from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
 
@@ -22,7 +23,7 @@ function SupportAction({
   onPress,
   color = "#5B8FF9",
 }: {
-  icon: any;
+  icon: LucideIcon;
   title: string;
   desc: string;
   onPress?: () => void;

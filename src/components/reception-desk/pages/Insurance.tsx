@@ -219,8 +219,8 @@ export default function Insurance() {
       });
     }
     list.sort((a, b) => {
-      let valA: any = "";
-      let valB: any = "";
+      let valA: string | number = "";
+      let valB: string | number = "";
       if (sortBy === "date") {
         valA = a.submittedAt || a.decisionAt || "";
         valB = b.submittedAt || b.decisionAt || "";
@@ -231,10 +231,10 @@ export default function Insurance() {
         valA = a.requestedAmount || 0;
         valB = b.requestedAmount || 0;
       }
-      if (typeof valA === "string") {
+      if (typeof valA === "string" && typeof valB === "string") {
         return sortOrder === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
       } else {
-        return sortOrder === "asc" ? valA - valB : valB - valA;
+        return sortOrder === "asc" ? Number(valA) - Number(valB) : Number(valB) - Number(valA);
       }
     });
     return list;
@@ -255,8 +255,8 @@ export default function Insurance() {
       });
     }
     list.sort((a, b) => {
-      let valA: any = "";
-      let valB: any = "";
+      let valA: string | number = "";
+      let valB: string | number = "";
       if (sortBy === "date") {
         valA = a.createdAt || a.submittedAt || "";
         valB = b.createdAt || b.submittedAt || "";
@@ -267,10 +267,10 @@ export default function Insurance() {
         valA = a.estimatedCost || 0;
         valB = b.estimatedCost || 0;
       }
-      if (typeof valA === "string") {
+      if (typeof valA === "string" && typeof valB === "string") {
         return sortOrder === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
       } else {
-        return sortOrder === "asc" ? valA - valB : valB - valA;
+        return sortOrder === "asc" ? Number(valA) - Number(valB) : Number(valB) - Number(valA);
       }
     });
     return list;
@@ -487,11 +487,20 @@ export default function Insurance() {
   const claimStep = !claim
     ? 0
     : ((
-        { pending: 0, submitted: 1, approved: 2, partial: 2, rejected: 2, "not-required": 2 } as any
+        {
+          pending: 0,
+          submitted: 1,
+          approved: 2,
+          partial: 2,
+          rejected: 2,
+          "not-required": 2,
+        } as Record<string, number>
       )[claim.status] ?? 0);
   const paStep = !pa
     ? 0
-    : (({ draft: 0, submitted: 1, approved: 2, rejected: 2, expired: 2 } as any)[pa.status] ?? 0);
+    : (({ draft: 0, submitted: 1, approved: 2, rejected: 2, expired: 2 } as Record<string, number>)[
+        pa.status
+      ] ?? 0);
   const claimStepLabels = [
     "Pending",
     "Submitted",
@@ -543,7 +552,7 @@ export default function Insurance() {
               key={t.id}
               data-testid={`tab-${t.id}`}
               onClick={() => {
-                setActiveTab(t.id as any);
+                setActiveTab(t.id as typeof activeTab);
                 setFilter("All");
                 setSortBy("date");
                 setSortOrder("desc");
@@ -670,7 +679,7 @@ export default function Insurance() {
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => setTempSortBy(item.id as any)}
+                        onClick={() => setTempSortBy(item.id as typeof tempSortBy)}
                         className={`h-7 rounded-lg text-[11px] font-medium border transition-colors ${
                           tempSortBy === item.id
                             ? "bg-sage text-white border-sage"
@@ -712,7 +721,7 @@ export default function Insurance() {
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => setTempSortOrder(item.id as any)}
+                        onClick={() => setTempSortOrder(item.id as typeof tempSortOrder)}
                         className={`h-7 rounded-lg text-[11px] font-medium border transition-colors ${
                           tempSortOrder === item.id
                             ? "bg-sage text-white border-sage"
@@ -1228,7 +1237,7 @@ export default function Insurance() {
                           </div>
                         ) : (
                           <ul className="space-y-2 pt-1">
-                            {claim.documents.map((d: any, i: number) => (
+                            {claim.documents.map((d: { name: string; size: string }, i: number) => (
                               <li key={i} className="flex items-center gap-2 text-[12.5px]">
                                 <Paperclip className="w-3.5 h-3.5 text-ink-400 shrink-0" />
                                 <span className="flex-1 truncate text-ink-900">{d.name}</span>

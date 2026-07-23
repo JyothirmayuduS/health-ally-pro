@@ -46,7 +46,7 @@ function inrFmt(v: number) {
   return `₹${v.toLocaleString("en-IN")}`;
 }
 
-function downloadCSV(filename: string, headers: string[], rows: any[][]) {
+function downloadCSV(filename: string, headers: string[], rows: (string | number)[][]) {
   const csvContent =
     "data:text/csv;charset=utf-8," +
     [headers.join(","), ...rows.map((r) => r.map((val) => `"${val}"`).join(","))].join("\n");

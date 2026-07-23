@@ -339,7 +339,7 @@ function DDIAlertModal({
   rxNumber,
 }: {
   open: boolean;
-  alerts: any[];
+  alerts: DDIAlert[];
   onClose: () => void;
   onConfirm: (overrideNotes: string, staffId: string) => void;
   rxNumber: string;

@@ -265,7 +265,7 @@ function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/\s*·\s*(breakfast|lunch|dinner|snack)\s*$/i, "")
-    .split(/[^a-z0-9\u0900-\u097F\u0B80-\u0BFF\u0C00-\u0C7F]+/i)
+    .split(/[^a-z0-9\p{Script=Devanagari}\p{Script=Tamil}\p{Script=Telugu}]+/iu)
     .filter((t) => t.length > 2);
 }
 

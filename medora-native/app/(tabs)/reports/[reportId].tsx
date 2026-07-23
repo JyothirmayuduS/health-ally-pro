@@ -59,10 +59,12 @@ import {
   Send,
   Stethoscope,
 } from "lucide-react-native";
-import { reports, doctors } from "@/lib/mock-data";
+import { reports, doctors, type Doctor } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useTheme } from "@/theme/ThemeProvider";
+import type { ThemeColors } from "@/theme/colors";
+import type { LucideIcon } from "lucide-react-native";
 
 const { height: SCREEN_H } = Dimensions.get("window");
 
@@ -75,12 +77,14 @@ const TYPE_COLORS: Record<string, string> = {
 
 type ShareStatus = "pending" | "accepted" | "declined";
 
-const STATUS_CONFIG: Record<ShareStatus, { label: string; color: string; bg: string; Icon: any }> =
-  {
-    accepted: { label: "Accepted", color: "#4CAF7D", bg: "#E8F5E9", Icon: CheckCircle2 },
-    pending: { label: "Pending", color: "#F59E0B", bg: "#FFF8E1", Icon: Clock },
-    declined: { label: "Declined", color: "#EF4444", bg: "#FEF2F2", Icon: XCircle },
-  };
+const STATUS_CONFIG: Record<
+  ShareStatus,
+  { label: string; color: string; bg: string; Icon: LucideIcon }
+> = {
+  accepted: { label: "Accepted", color: "#4CAF7D", bg: "#E8F5E9", Icon: CheckCircle2 },
+  pending: { label: "Pending", color: "#F59E0B", bg: "#FFF8E1", Icon: Clock },
+  declined: { label: "Declined", color: "#EF4444", bg: "#FEF2F2", Icon: XCircle },
+};
 
 // ─── Animated doctor selection card ───────────────────────────────
 function DoctorSelectCard({
@@ -89,10 +93,10 @@ function DoctorSelectCard({
   onPress,
   colors,
 }: {
-  doctor: any;
+  doctor: Doctor;
   selected: boolean;
   onPress: () => void;
-  colors: any;
+  colors: ThemeColors;
 }) {
   const scale = useSharedValue(1);
   const handlePress = useCallback(() => {
@@ -202,10 +206,10 @@ function DoctorStatusCard({
   index,
   colors,
 }: {
-  doctor: any;
+  doctor: Doctor;
   status: ShareStatus;
   index: number;
-  colors: any;
+  colors: ThemeColors;
 }) {
   const cfg = STATUS_CONFIG[status];
   const IconComp = cfg.Icon;
@@ -263,7 +267,7 @@ const dsc = StyleSheet.create({
 });
 
 // ─── Biometric Success Overlay ──────────────────────────────────────
-function AuthSuccessOverlay({ colors }: { colors: any }) {
+function AuthSuccessOverlay({ colors }: { colors: ThemeColors }) {
   return (
     <Animated.View
       entering={FadeIn.duration(400)}
@@ -297,7 +301,7 @@ function ShareProgressModal({
 }: {
   progress: number;
   stage: string;
-  colors: any;
+  colors: ThemeColors;
 }) {
   const barWidth = useSharedValue(0);
 

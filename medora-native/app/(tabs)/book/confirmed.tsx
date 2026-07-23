@@ -29,19 +29,21 @@ import {
   Video,
   Briefcase,
   Activity,
+  type LucideIcon,
 } from "lucide-react-native";
 import { doctors } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { useTheme } from "@/theme/ThemeProvider";
+import type { ThemeColors } from "@/theme/colors";
 
-const VISIT_TYPE_MAP: Record<string, { label: string; icon: any }> = {
+const VISIT_TYPE_MAP: Record<string, { label: string; icon: LucideIcon }> = {
   in_person: { label: "In Person", icon: Briefcase },
   video: { label: "Video Call", icon: Video },
   follow_up: { label: "Follow-up", icon: Activity },
 };
 
 // ── Pulsing ring behind the tick ──────────────────────────────────
-function PulseRing({ colors }: { colors: any }) {
+function PulseRing({ colors }: { colors: ThemeColors }) {
   const scale = useSharedValue(0.8);
   const opacity = useSharedValue(0.6);
 

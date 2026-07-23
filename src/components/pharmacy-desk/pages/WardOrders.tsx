@@ -120,7 +120,7 @@ export default function WardOrders() {
             key={t.value}
             type="button"
             onClick={() => {
-              setActiveTab(t.value as any);
+              setActiveTab(t.value as typeof activeTab);
               setSelectedId(null);
             }}
             className={cn(
@@ -315,7 +315,7 @@ export default function WardOrders() {
               <button
                 key={t.value}
                 type="button"
-                onClick={() => setReturnsSubTab(t.value as any)}
+                onClick={() => setReturnsSubTab(t.value as typeof returnsSubTab)}
                 className={cn(
                   "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
                   returnsSubTab === t.value
@@ -423,7 +423,11 @@ export default function WardOrders() {
                                     </label>
                                     <select
                                       value={disposalMethod}
-                                      onChange={(e) => setDisposalMethod(e.target.value as any)}
+                                      onChange={(e) =>
+                                        setDisposalMethod(
+                                          e.target.value as WastageEntry["disposalMethod"],
+                                        )
+                                      }
                                       className="w-full text-[12px] bg-white border border-ink-200 rounded h-7 px-1.5 focus:outline-none"
                                     >
                                       <option>Pharmacy bin</option>

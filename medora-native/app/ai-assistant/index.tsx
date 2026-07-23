@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, type Href } from "expo-router";
 import {
   ArrowLeft,
   Send,
@@ -158,7 +158,7 @@ export default function AIAssistantScreen() {
               {msg.suggestedAction && (
                 <Animated.View entering={ZoomIn.delay(300)}>
                   <Pressable
-                    onPress={() => router.push(msg.suggestedAction!.route as any)}
+                    onPress={() => router.push(msg.suggestedAction!.route as Href)}
                     style={[s.actionBtn, { borderColor: colors.clay }]}
                   >
                     <Text style={[s.actionText, { color: colors.clay }]}>

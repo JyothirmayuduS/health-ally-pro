@@ -6,6 +6,9 @@ const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreCl
 export function getNotificationsModule() {
   if (isExpoGo) return null;
   try {
+    // Intentionally dynamic: this native module isn't available in Expo Go, and a
+    // static import would be evaluated eagerly and crash there. Guard with require().
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require("expo-notifications");
   } catch {
     return null;

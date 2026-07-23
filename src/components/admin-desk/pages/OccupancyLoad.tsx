@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useStore as useReceptionStore } from "@/lib/reception-desk/store";
+import { useStoreOptional as useReceptionStoreOptional } from "@/lib/reception-desk/store";
 import { listClinicQueue } from "@/lib/shared/clinic-queue";
 import { listEncounters } from "@/lib/shared/encounters";
 import { HOURLY_LOAD } from "@/lib/admin-desk/analyticsData";
@@ -16,21 +16,13 @@ import {
 } from "recharts";
 
 export default function AdminOccupancyLoad() {
-  const receptionStore = receptionStoreSafe();
+  // Resolved safely via useStoreOptional (returns null outside a StoreProvider, avoiding runtime crash)
+  const receptionStore = useReceptionStoreOptional();
   const queue = listClinicQueue();
   const encounters = listEncounters();
 
   const [lastRefreshed, setLastRefreshed] = useState<string>(() => new Date().toLocaleTimeString());
   const [successMsg, setSuccessMsg] = useState(false);
-
-  // Let's resolve safely if receptionStore is not wrapped or available (avoiding runtime crash)
-  function receptionStoreSafe() {
-    try {
-      return useReceptionStore();
-    } catch {
-      return null;
-    }
-  }
 
   // Live metrics calculation
   const opdWaiting = useMemo(() => {

@@ -151,7 +151,7 @@ function TokenCard({
               className="h-8 flex-1 rounded-md border border-ink-200 bg-white px-2 text-[12px] focus:outline-none focus:border-sage"
               data-testid="checkin-lab-select"
             >
-              {labCatalog.map((t: any) => (
+              {labCatalog.map((t) => (
                 <option key={t.code} value={t.code}>
                   {t.code} — {t.name}
                 </option>

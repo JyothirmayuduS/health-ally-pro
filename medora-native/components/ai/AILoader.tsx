@@ -10,20 +10,14 @@ import Animated, {
   FadeOut,
   Layout,
 } from "react-native-reanimated";
-import {
-  ChefHat,
-  Activity,
-  Pill,
-  Brain,
-  Sparkles,
-  Stethoscopes as Stethoscope,
-} from "lucide-react-native";
+import { ChefHat, Activity, Pill, Brain, Sparkles, Stethoscope } from "lucide-react-native";
 import { AIIntent } from "@/lib/ai/brain";
+import type { ThemeColors } from "@/theme/colors";
 
 interface AILoaderProps {
   intent: AIIntent;
   isLoading: boolean;
-  colors: any;
+  colors: ThemeColors;
 }
 
 export function AILoader({ intent, isLoading, colors }: AILoaderProps) {

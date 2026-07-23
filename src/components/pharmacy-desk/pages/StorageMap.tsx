@@ -14,7 +14,7 @@ import {
   Lock,
   Info,
 } from "lucide-react";
-import { type Drug, type StockBatch } from "@/lib/pharmacy-desk/mockData";
+import { type Drug, type StockBatch, type StorageTemp } from "@/lib/pharmacy-desk/mockData";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type DrugEnriched = Drug & {
@@ -704,9 +704,7 @@ function AddMedicineModal({
   const [selectedDrugId, setSelectedDrugId] = useState("");
   const [tray, setTray] = useState("T01");
   const [slot, setSlot] = useState("1");
-  const [temp, setTemp] = useState<import("@/lib/pharmacy-desk/mockData").StorageTemp>(
-    zone === "cold" ? "2–8 °C" : "Room",
-  );
+  const [temp, setTemp] = useState<StorageTemp>(zone === "cold" ? "2–8 °C" : "Room");
 
   // Search state
   const [searchDrugQ, setSearchDrugQ] = useState("");
@@ -886,7 +884,7 @@ function AddMedicineModal({
               </label>
               <select
                 value={temp}
-                onChange={(e) => setTemp(e.target.value as any)}
+                onChange={(e) => setTemp(e.target.value as StorageTemp)}
                 className="w-full h-9 border border-ink-200 rounded-md bg-white px-2 text-[12.5px] focus:outline-none focus:border-sage"
               >
                 <option value="Room">Room Temp (25°C)</option>

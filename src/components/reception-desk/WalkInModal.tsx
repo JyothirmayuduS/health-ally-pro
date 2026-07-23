@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useStore } from "@/lib/reception-desk/store";
-import { TODAY_STR, TIME_SLOTS } from "@/lib/reception-desk/mockData";
+import { TODAY_STR, TIME_SLOTS, type DOCTORS } from "@/lib/reception-desk/mockData";
 import {
   X,
   Search,
@@ -157,7 +157,7 @@ function DoctorOption({
   selected,
   onSelect,
 }: {
-  doctor: any;
+  doctor: (typeof DOCTORS)[number];
   fee: number;
   selected: boolean;
   onSelect: () => void;

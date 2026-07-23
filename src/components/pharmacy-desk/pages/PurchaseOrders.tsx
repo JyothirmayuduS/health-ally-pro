@@ -167,7 +167,7 @@ export default function PurchaseOrders() {
           <button
             key={t.value}
             type="button"
-            onClick={() => setActiveTab(t.value as any)}
+            onClick={() => setActiveTab(t.value as typeof activeTab)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
               activeTab === t.value
@@ -557,7 +557,10 @@ export default function PurchaseOrders() {
                             value={item.condition}
                             onChange={(e) => {
                               const next = [...grnItems];
-                              next[idx].condition = e.target.value as any;
+                              next[idx].condition = e.target.value as
+                                | "Good"
+                                | "Damaged"
+                                | "Short expiry";
                               setGrnItems(next);
                             }}
                             className="h-8 border border-ink-200 bg-white px-1.5 focus:outline-none w-full"

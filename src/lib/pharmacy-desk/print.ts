@@ -1,3 +1,5 @@
+import type { ShiftReport } from "./desk-persistence";
+
 const fmt = (n: number) =>
   `₹${Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -42,10 +44,10 @@ ${bodyHtml}
   w.focus();
 }
 
-export function printPharmacistShiftReport(report: any) {
+export function printPharmacistShiftReport(report: ShiftReport) {
   const reconRows = report.reconciliation
     .map(
-      (r: any) => `
+      (r) => `
       <tr>
         <td>${r.drugName}</td>
         <td class="right mono">${r.openingBalance}</td>

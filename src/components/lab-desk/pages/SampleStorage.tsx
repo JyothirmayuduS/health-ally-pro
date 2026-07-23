@@ -138,7 +138,7 @@ export default function SampleStorage() {
           <button
             key={t.value}
             type="button"
-            onClick={() => setActiveTab(t.value as any)}
+            onClick={() => setActiveTab(t.value as typeof activeTab)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
               activeTab === t.value

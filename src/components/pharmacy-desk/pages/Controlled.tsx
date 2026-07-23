@@ -31,7 +31,7 @@ export default function Controlled() {
           <button
             key={t.value}
             type="button"
-            onClick={() => setTab(t.value as any)}
+            onClick={() => setTab(t.value as typeof tab)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
               tab === t.value

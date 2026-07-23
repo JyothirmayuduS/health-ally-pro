@@ -1,5 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { useStore, Bed, AdmissionRecord, WARD_CATEGORIES } from "@/lib/reception-desk/store";
+import type { SharedPatient } from "@/lib/shared/patients";
+import type { DOCTORS } from "@/lib/reception-desk/mockData";
+
+type ReceptionDoctor = (typeof DOCTORS)[number];
 import { toast } from "sonner";
 import {
   Search,
@@ -25,7 +29,7 @@ import {
   UserX,
 } from "lucide-react";
 
-const fmt = (n: any) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 const calcDaysAdmittedStr = (admittedAt: string) => {
   if (!admittedAt) return "—";
@@ -171,7 +175,7 @@ export default function Admissions() {
   const filteredPatients = useMemo(() => {
     if (!patientSearchQuery.trim()) return [];
     return patients.filter(
-      (p: any) =>
+      (p: SharedPatient) =>
         p.name.toLowerCase().includes(patientSearchQuery.toLowerCase()) ||
         p.mrn.toLowerCase().includes(patientSearchQuery.toLowerCase()) ||
         p.phone.includes(patientSearchQuery),
@@ -352,8 +356,8 @@ export default function Admissions() {
           ) : (
             <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto pr-1">
               {activeAdmissionsList.map((adm) => {
-                const pat = patients.find((p: any) => p.id === adm.patientId);
-                const doc = doctors.find((d: any) => d.id === adm.doctorId);
+                const pat = patients.find((p: SharedPatient) => p.id === adm.patientId);
+                const doc = doctors.find((d: ReceptionDoctor) => d.id === adm.doctorId);
                 const bed = beds.find((b: Bed) => b.id === adm.bedId);
                 const active = selectedBedId === adm.bedId;
 
@@ -393,7 +397,7 @@ export default function Admissions() {
 
           <div className="flex flex-col gap-2.5">
             {MOCK_RECOMMENDATIONS.map((rec) => {
-              const doc = doctors.find((d: any) => d.id === rec.recommendedBy);
+              const doc = doctors.find((d: ReceptionDoctor) => d.id === rec.recommendedBy);
               return (
                 <div
                   key={rec.patientId}
@@ -480,7 +484,9 @@ export default function Admissions() {
                     const adm = admissions.find(
                       (a: AdmissionRecord) => a.bedId === bed.id && a.status !== "discharged",
                     );
-                    const pat = adm ? patients.find((p: any) => p.id === adm.patientId) : null;
+                    const pat = adm
+                      ? patients.find((p: SharedPatient) => p.id === adm.patientId)
+                      : null;
 
                     let bgCls = "";
                     let dotCls = "";
@@ -633,7 +639,7 @@ export default function Admissions() {
 
               {filteredPatients.length > 0 && !admitPatientId && (
                 <div className="bg-bone border border-ink-200 rounded-lg max-h-[150px] overflow-y-auto flex flex-col p-1.5 gap-1 shadow-inner mt-1">
-                  {filteredPatients.map((p: any) => (
+                  {filteredPatients.map((p: SharedPatient) => (
                     <button
                       key={p.id}
                       type="button"
@@ -677,7 +683,7 @@ export default function Admissions() {
                 value={admitDoctorId}
                 onChange={(e) => setAdmitDoctorId(e.target.value)}
               >
-                {doctors.map((d: any) => (
+                {doctors.map((d: ReceptionDoctor) => (
                   <option key={d.id} value={d.id}>
                     Dr. {d.name} ({d.specialty})
                   </option>
@@ -691,7 +697,9 @@ export default function Admissions() {
               <select
                 className="w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-lg focus:outline-none focus:border-sage transition-colors"
                 value={admitTariff}
-                onChange={(e: any) => setAdmitTariff(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setAdmitTariff(e.target.value as typeof admitTariff)
+                }
               >
                 <option value="standard">Standard Tariff Rates</option>
                 <option value="star-corporate">Star Health Corporate (15% Procedures Disc)</option>
@@ -735,8 +743,9 @@ export default function Admissions() {
                 </span>
               </div>
               <div className="text-[14.5px] font-bold text-ink-900">
-                {patients.find((p: any) => p.id === activeAdmissionForSelectedBed.patientId)
-                  ?.name || activeAdmissionForSelectedBed.patientId}
+                {patients.find(
+                  (p: SharedPatient) => p.id === activeAdmissionForSelectedBed.patientId,
+                )?.name || activeAdmissionForSelectedBed.patientId}
               </div>
               <div className="text-[12px] text-ink-600 flex flex-col gap-1 font-medium mt-1">
                 <div className="flex items-center gap-1.5">
@@ -744,8 +753,9 @@ export default function Admissions() {
                   <span>
                     MRN:{" "}
                     {
-                      patients.find((p: any) => p.id === activeAdmissionForSelectedBed.patientId)
-                        ?.mrn
+                      patients.find(
+                        (p: SharedPatient) => p.id === activeAdmissionForSelectedBed.patientId,
+                      )?.mrn
                     }
                   </span>
                 </div>
@@ -754,8 +764,9 @@ export default function Admissions() {
                   <span>
                     Doctor: Dr.{" "}
                     {
-                      doctors.find((d: any) => d.id === activeAdmissionForSelectedBed.doctorId)
-                        ?.name
+                      doctors.find(
+                        (d: ReceptionDoctor) => d.id === activeAdmissionForSelectedBed.doctorId,
+                      )?.name
                     }
                   </span>
                 </div>

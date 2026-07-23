@@ -8,7 +8,7 @@ export function mealMediaFingerprint(mealName: string, ingredients: string[]): s
       i
         .toLowerCase()
         .replace(/\([^)]*\)/g, "")
-        .replace(/[^a-z0-9\u0900-\u097F]+/gi, " ")
+        .replace(/[^a-z0-9\p{Script=Devanagari}]+/giu, " ")
         .trim(),
     )
     .filter(Boolean)

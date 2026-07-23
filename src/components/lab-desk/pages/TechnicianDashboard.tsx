@@ -435,7 +435,7 @@ export default function TechnicianDashboard() {
                   </p>
                 ) : (
                   criticalNotifications.map((n) => {
-                    const p = getPatient({ patient_id: n.patientId } as any, patients);
+                    const p = getPatient(n.patientId, patients);
                     return (
                       <div key={n.id} className="p-3 bg-stone-50 border rounded-lg text-ink-800">
                         <div className="font-semibold text-ink-900">{p?.name}</div>

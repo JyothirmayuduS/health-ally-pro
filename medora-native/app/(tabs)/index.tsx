@@ -11,7 +11,14 @@
  */
 
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, Pressable, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  type GestureResponderEvent,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useFocusEffect } from "expo-router";
 import Animated, {
@@ -48,8 +55,10 @@ import {
   reports,
   patient as mockPatient,
   getNextMealPreview,
+  type Medication,
 } from "@/lib/mock-data";
 import { usePatientMedications } from "@/hooks/usePatientMedications";
+import type { ThemeColors } from "@/theme/colors";
 import {
   formatRxRelative,
   listPatientPrescriptions,
@@ -76,7 +85,7 @@ function statusLabel(status: string) {
   return status;
 }
 
-function statusColor(status: string, colors: any) {
+function statusColor(status: string, colors: ThemeColors) {
   if (status === "in-queue") return colors.clay;
   if (status === "upcoming") return "#4CAF7D";
   return colors.inkMuted;
@@ -89,8 +98,8 @@ function MedCard({
   delay,
   onToggle,
 }: {
-  med: any;
-  colors: any;
+  med: Medication;
+  colors: ThemeColors;
   delay: number;
   onToggle: (id: string, next: boolean) => void;
 }) {
@@ -101,7 +110,7 @@ function MedCard({
   const checkProgress = useSharedValue(taken ? 1 : 0);
 
   const toggle = useCallback(
-    (e?: any) => {
+    (e?: GestureResponderEvent) => {
       if (e && e.stopPropagation) e.stopPropagation();
       const next = !taken;
       onToggle(med.id, next);

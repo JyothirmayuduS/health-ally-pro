@@ -409,7 +409,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             collected_at: now,
             collector: ACTOR_TECH,
             bench_tech_email: DEMO_TECH_EMAIL,
-            specimen: { ...specimen, condition: finalCondition as any },
+            specimen: { ...specimen, condition: finalCondition },
             chainOfCustody: coc,
             history: pushHistory(
               o,
@@ -801,7 +801,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         });
 
         const nextSpecimen = o.specimen
-          ? { ...o.specimen, condition: condition as any }
+          ? {
+              ...o.specimen,
+              condition: condition as NonNullable<LabOrder["specimen"]>["condition"],
+            }
           : undefined;
 
         return {

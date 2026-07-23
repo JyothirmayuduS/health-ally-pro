@@ -29,6 +29,7 @@ import {
   formatRelative,
   isLowStock,
   availableQty,
+  type ColdChainBreachEntry,
 } from "@/lib/pharmacy-desk/store";
 import { SectionLabel, KpiCard, LocationChip } from "@/components/pharmacy-desk/Pills";
 import { findDrug, HOURLY_DISPENSE_SEED } from "@/lib/pharmacy-desk/mockData";
@@ -551,7 +552,7 @@ function LogBreachModal({
 }: {
   open: boolean;
   onClose: () => void;
-  onSubmit: (entry: any) => void;
+  onSubmit: (entry: Omit<ColdChainBreachEntry, "id" | "loggedAt">) => void;
 }) {
   const { batches, drugs } = usePharmacyStore();
   const [unit, setUnit] = useState("FRIDGE-1");

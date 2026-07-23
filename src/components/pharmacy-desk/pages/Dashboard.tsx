@@ -34,9 +34,33 @@ import {
   LocationChip,
   EmptyState,
 } from "@/components/pharmacy-desk/Pills";
-import { findDrug } from "@/lib/pharmacy-desk/mockData";
+import { findDrug, type Drug } from "@/lib/pharmacy-desk/mockData";
 import { printPharmacistShiftReport } from "@/lib/pharmacy-desk/print";
 import { cn } from "@/lib/utils";
+
+type ShiftReconciliationRow = {
+  drugName: string;
+  openingBalance: number;
+  totalDispensed: number;
+  closingBalance: number;
+  expectedBalance: number;
+  variance: number;
+};
+
+type ShiftMetrics = {
+  rxCount: number;
+  priorityBreakdown: { stat: number; urgent: number; routine: number };
+  lineItemsCount: number;
+  avgDispenseTime: string;
+  reconciliation: ShiftReconciliationRow[];
+  otcTotal: number;
+  otcBreakdown: { cash: number; card: number; upi: number };
+  ddiOverridesCount: number;
+  nearExpiryActioned: number;
+  coldChainBreaches: number;
+  wastageValue: number;
+  wardReturnsCount: number;
+};
 
 export default function Dashboard() {
   const {
@@ -205,7 +229,7 @@ export default function Dashboard() {
           <button
             key={t.value}
             type="button"
-            onClick={() => setDashboardTab(t.value as any)}
+            onClick={() => setDashboardTab(t.value as typeof dashboardTab)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
               dashboardTab === t.value
@@ -686,7 +710,7 @@ function ShiftReportModal({
 }: {
   open: boolean;
   onClose: () => void;
-  metrics: any;
+  metrics: ShiftMetrics;
   onSubmit: (notes: string, supervisor: string) => void;
   pharmacistName: string;
 }) {
@@ -699,7 +723,7 @@ function ShiftReportModal({
   // All controlled rows must have non-empty initials to enable submit
   const allReconciled =
     metrics.reconciliation.length === 0 ||
-    metrics.reconciliation.every((_: any, idx: number) => (initials[idx] ?? "").trim().length > 0);
+    metrics.reconciliation.every((_, idx: number) => (initials[idx] ?? "").trim().length > 0);
 
   if (!open) return null;
 
@@ -783,9 +807,9 @@ function ShiftReportModal({
                       </td>
                     </tr>
                   ) : (
-                    metrics.reconciliation.map((r: any, idx: number) => {
+                    metrics.reconciliation.map((r, idx: number) => {
                       const drug = drugs.find(
-                        (d: any) => `${d.generic_name} ${d.strength}` === r.drugName,
+                        (d: Drug) => `${d.generic_name} ${d.strength}` === r.drugName,
                       );
                       const schedule = drug?.controlled_schedule ?? "H";
                       return (

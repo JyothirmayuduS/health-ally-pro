@@ -3,7 +3,15 @@ import { View, Text, StyleSheet, Pressable, ScrollView, Switch } from "react-nat
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { ChevronLeft, Shield, Eye, Brain, Share2, Info } from "lucide-react-native";
+import {
+  ChevronLeft,
+  Shield,
+  Eye,
+  Brain,
+  Share2,
+  Info,
+  type LucideIcon,
+} from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
 
 function PrivacyToggle({
@@ -12,7 +20,7 @@ function PrivacyToggle({
   desc,
   defaultVal,
 }: {
-  icon: any;
+  icon: LucideIcon;
   title: string;
   desc: string;
   defaultVal: boolean;

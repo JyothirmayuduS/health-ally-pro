@@ -95,7 +95,7 @@ export default function ShiftReportModal({ open, onOpenChange }: ShiftReportModa
         return hours <= 12;
       })
       .map((n) => {
-        const p = getPatient({ patient_id: n.patientId } as any, patients);
+        const p = getPatient(n.patientId, patients);
         return {
           patientName: p?.name || "Unknown Patient",
           notifiedPerson: n.notifiedPerson,
@@ -335,7 +335,7 @@ export default function ShiftReportModal({ open, onOpenChange }: ShiftReportModa
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Active Shift</Label>
-              <Select value={shift} onValueChange={(val: any) => setShift(val)}>
+              <Select value={shift} onValueChange={(val) => setShift(val as typeof shift)}>
                 <SelectTrigger className="w-full bg-white border-ink-200 mt-1">
                   <SelectValue placeholder="Shift" />
                 </SelectTrigger>

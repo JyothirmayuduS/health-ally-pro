@@ -106,7 +106,7 @@ export default function NutritionScreen() {
             ].map((f) => (
               <Pressable
                 key={f.id}
-                onPress={() => setDietType(f.id as any)}
+                onPress={() => setDietType(f.id as "all" | "vegan" | "non-veg" | "indian")}
                 style={[
                   s.filterChip,
                   {
