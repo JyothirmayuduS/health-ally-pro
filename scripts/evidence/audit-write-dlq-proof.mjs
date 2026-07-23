@@ -8,7 +8,9 @@ import { writeFileSync } from "node:fs";
 
 const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const before = new Date().toISOString();
 const row = {

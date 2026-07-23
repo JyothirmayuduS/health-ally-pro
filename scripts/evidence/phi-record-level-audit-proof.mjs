@@ -28,14 +28,18 @@ const POST_FIX_BASELINE = {
   lab_results: 103.92,
 };
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 function median(arr) {
   const s = [...arr].sort((a, b) => a - b);
@@ -44,7 +48,11 @@ function median(arr) {
 
 async function directSelect(table) {
   const t0 = performance.now();
-  const { data, error } = await admin.from(table).select("id, hospital_id").eq("hospital_id", H).limit(LIMIT);
+  const { data, error } = await admin
+    .from(table)
+    .select("id, hospital_id")
+    .eq("hospital_id", H)
+    .limit(LIMIT);
   return {
     ms: performance.now() - t0,
     rows: data?.length ?? 0,
@@ -97,8 +105,7 @@ for (const table of TABLES) {
     post_fix_postgrest_median_ms: POST_FIX_BASELINE[table],
     delta_worker_vs_post_fix_ms: Math.round((workerMed - POST_FIX_BASELINE[table]) * 100) / 100,
     delta_direct_vs_post_fix_ms: Math.round((directMed - POST_FIX_BASELINE[table]) * 100) / 100,
-    note:
-      "post_fix baseline was PostgREST SELECT (temporary grant). Production path is Worker+service_role; direct_median approximates DB cost; worker_median includes auth+framework. Async audit must not push worker_median far above prior worker profiles (~200–450ms warm).",
+    note: "post_fix baseline was PostgREST SELECT (temporary grant). Production path is Worker+service_role; direct_median approximates DB cost; worker_median includes auth+framework. Async audit must not push worker_median far above prior worker profiles (~200–450ms warm).",
   };
 }
 
@@ -143,7 +150,8 @@ const recordLevel = {
   record_ids_logged: recordIds,
   count_matches: meta.count === recordIds.length,
   ids_match_response: idsMatch,
-  pass: hit.ok && hit.status === 200 && meta.record_level === true && idsMatch && recordIds.length > 0,
+  pass:
+    hit.ok && hit.status === 200 && meta.record_level === true && idsMatch && recordIds.length > 0,
 };
 
 // patient_medications spot-check

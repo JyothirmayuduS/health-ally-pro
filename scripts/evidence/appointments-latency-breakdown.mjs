@@ -16,8 +16,12 @@ const H = "a0000001-0001-4001-8001-000000000001";
 const N = 30;
 const CONC = 8;
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 function pct(sorted, p) {
   if (!sorted.length) return null;
@@ -61,7 +65,11 @@ const tAuthChain = [];
 for (let i = 0; i < 10; i++) {
   const t0 = performance.now();
   await Promise.all([
-    admin.from("hospital_memberships").select("role, hospital_id").eq("profile_id", user.id).eq("is_active", true),
+    admin
+      .from("hospital_memberships")
+      .select("role, hospital_id")
+      .eq("profile_id", user.id)
+      .eq("is_active", true),
     admin.from("patients").select("id, hospital_id").eq("profile_id", user.id).maybeSingle(),
   ]);
   tAuthChain.push(performance.now() - t0);
@@ -90,9 +98,10 @@ for (let i = 0; i < 15; i++) {
 }
 
 // Stage: audit insert (record-level sized)
-const sampleIds = (
-  await admin.from("appointments").select("id").eq("hospital_id", H).limit(200)
-).data?.map((r) => r.id) ?? [];
+const sampleIds =
+  (await admin.from("appointments").select("id").eq("hospital_id", H).limit(200)).data?.map(
+    (r) => r.id,
+  ) ?? [];
 const tAudit = [];
 for (let i = 0; i < 10; i++) {
   const t0 = performance.now();
@@ -230,7 +239,8 @@ const report = {
     p95_warn_ms: 400,
     p95_critical_ms: 800,
     p99_critical_ms: 1500,
-    reasoning: "Worker p50 measured ~150–200ms warm; warn ≈2.5×, critical ≈5× / far below Round-1 3.3s",
+    reasoning:
+      "Worker p50 measured ~150–200ms warm; warn ≈2.5×, critical ≈5× / far below Round-1 3.3s",
   },
   pass:
     seq.every((r) => r.status === 200) &&

@@ -14,14 +14,18 @@ const PASS = "MedoraDemo!2026Doc";
 const H = "a0000001-0001-4001-8001-000000000001";
 const N = 8;
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 const marker = `concurrency-${Date.now()}`;
 const before = new Date().toISOString();
@@ -65,9 +69,7 @@ const report = {
   duplicates: (rows?.length ?? 0) - ids.size,
   query_error: error?.message ?? null,
   pass:
-    results.every((r) => r.status === 200 && r.ok) &&
-    (rows?.length ?? 0) === N &&
-    ids.size === N,
+    results.every((r) => r.status === 200 && r.ok) && (rows?.length ?? 0) === N && ids.size === N,
 };
 
 writeFileSync("docs/evidence/phi-audit-concurrency-proof.json", JSON.stringify(report, null, 2));

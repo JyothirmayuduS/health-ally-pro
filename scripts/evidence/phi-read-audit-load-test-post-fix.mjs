@@ -16,8 +16,12 @@ const PASS = "MedoraDemo!2026Doc";
 const TABLES = ["patients", "appointments", "lab_results"];
 const LIMIT = 80;
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const client = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const client = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 // Use REST RPC to run grants via a one-shot SQL function if available; else document that
 // grants must be applied via MCP. We'll call apply via supabase rpc execute_sql isn't available
@@ -60,7 +64,10 @@ if (probe.error) {
     error: "authenticated SELECT still denied — apply temporary GRANT via MCP before this script",
     probe,
   };
-  writeFileSync("docs/evidence/phi-read-audit-load-test-post-fix.json", JSON.stringify(report, null, 2));
+  writeFileSync(
+    "docs/evidence/phi-read-audit-load-test-post-fix.json",
+    JSON.stringify(report, null, 2),
+  );
   console.log(JSON.stringify(report, null, 2));
   process.exit(2);
 }
@@ -88,20 +95,29 @@ const report = {
   post_fix: results,
   prior_round1: prior,
   vs_prior_baseline: {
-    patients_delta_vs_off: Math.round((results.patients.ms_median - prior.patients_baseline_off_median_ms) * 100) / 100,
+    patients_delta_vs_off:
+      Math.round((results.patients.ms_median - prior.patients_baseline_off_median_ms) * 100) / 100,
     appointments_delta_vs_off:
-      Math.round((results.appointments.ms_median - prior.appointments_baseline_off_median_ms) * 100) / 100,
+      Math.round(
+        (results.appointments.ms_median - prior.appointments_baseline_off_median_ms) * 100,
+      ) / 100,
     lab_results_delta_vs_off:
-      Math.round((results.lab_results.ms_median - prior.lab_results_baseline_off_median_ms) * 100) / 100,
+      Math.round((results.lab_results.ms_median - prior.lab_results_baseline_off_median_ms) * 100) /
+      100,
   },
   vs_prior_active: {
-    patients_improvement_ms: Math.round((prior.patients_active_median_ms - results.patients.ms_median) * 100) / 100,
+    patients_improvement_ms:
+      Math.round((prior.patients_active_median_ms - results.patients.ms_median) * 100) / 100,
     appointments_improvement_ms:
-      Math.round((prior.appointments_active_median_ms - results.appointments.ms_median) * 100) / 100,
+      Math.round((prior.appointments_active_median_ms - results.appointments.ms_median) * 100) /
+      100,
     lab_results_improvement_ms:
       Math.round((prior.lab_results_active_median_ms - results.lab_results.ms_median) * 100) / 100,
   },
 };
 
-writeFileSync("docs/evidence/phi-read-audit-load-test-post-fix.json", JSON.stringify(report, null, 2));
+writeFileSync(
+  "docs/evidence/phi-read-audit-load-test-post-fix.json",
+  JSON.stringify(report, null, 2),
+);
 console.log(JSON.stringify(report, null, 2));

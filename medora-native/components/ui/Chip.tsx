@@ -12,9 +12,7 @@ export function Chip({ label, active = false, onPress }: ChipProps) {
     <Pressable
       onPress={onPress}
       className={`rounded-full border px-4 py-2 ${
-        active
-          ? "border-ink bg-ink"
-          : "border-border bg-surface"
+        active ? "border-ink bg-ink" : "border-border bg-surface"
       }`}
     >
       <Text

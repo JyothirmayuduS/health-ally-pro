@@ -4,13 +4,9 @@ import Constants from "expo-constants";
 const extra = Constants.expoConfig?.extra ?? {};
 
 const supabaseUrl =
-  (extra.supabaseUrl as string | undefined) ??
-  process.env.EXPO_PUBLIC_SUPABASE_URL ??
-  "";
+  (extra.supabaseUrl as string | undefined) ?? process.env.EXPO_PUBLIC_SUPABASE_URL ?? "";
 const supabaseAnonKey =
-  (extra.supabaseAnonKey as string | undefined) ??
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ??
-  "";
+  (extra.supabaseAnonKey as string | undefined) ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 export const supabase = createClient(
   supabaseUrl || "https://placeholder.supabase.co",

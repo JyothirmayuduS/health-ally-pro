@@ -15,14 +15,18 @@ const H = "a0000001-0001-4001-8001-000000000001";
 const N = 8;
 const RESOURCE = "patients";
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 const before = new Date().toISOString();
 
@@ -91,6 +95,9 @@ const report = {
     perRowOk.every((p) => p.match),
 };
 
-writeFileSync("docs/evidence/phi-record-level-concurrency-proof.json", JSON.stringify(report, null, 2));
+writeFileSync(
+  "docs/evidence/phi-record-level-concurrency-proof.json",
+  JSON.stringify(report, null, 2),
+);
 console.log(JSON.stringify(report, null, 2));
 process.exit(report.pass ? 0 : 1);

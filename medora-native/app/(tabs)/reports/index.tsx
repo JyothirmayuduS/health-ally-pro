@@ -3,25 +3,11 @@
  * Visual hierarchy: Stats strip → Search → Filter chips → Report list
  */
 import React, { useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  FlatList,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { View, Text, Pressable, FlatList, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import {
-  Search,
-  FileText,
-  Share2,
-  Plus,
-  ChevronRight,
-  Lock,
-} from "lucide-react-native";
+import { Search, FileText, Share2, Plus, ChevronRight, Lock } from "lucide-react-native";
 import { reports, doctors } from "@/lib/mock-data";
 import { useTheme } from "@/theme/ThemeProvider";
 import { ScrollView } from "react-native";
@@ -45,10 +31,7 @@ export default function ReportsScreen() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return reports.filter((r) => {
-      const matchQ =
-        !q ||
-        r.title.toLowerCase().includes(q) ||
-        r.doctor.toLowerCase().includes(q);
+      const matchQ = !q || r.title.toLowerCase().includes(q) || r.doctor.toLowerCase().includes(q);
       const matchT = type === "All" || r.type === type;
       return matchQ && matchT;
     });
@@ -70,11 +53,10 @@ export default function ReportsScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={[s.eyebrow, { color: colors.clay }]}>CLINICAL ARCHIVE</Text>
                 <Text style={[s.heading, { color: colors.foreground }]}>
-                  Your{" "}
-                  <Text style={{ fontStyle: "italic" }}>reports</Text>
+                  Your <Text style={{ fontStyle: "italic" }}>reports</Text>
                 </Text>
               </View>
-              <Pressable 
+              <Pressable
                 style={[s.uploadBtn, { backgroundColor: colors.ink }]}
                 onPress={() => router.push("/upload")}
               >
@@ -86,7 +68,10 @@ export default function ReportsScreen() {
             {/* Privacy note */}
             <Animated.View
               entering={FadeInDown.duration(400).delay(60)}
-              style={[s.privacyBanner, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              style={[
+                s.privacyBanner,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
             >
               <Lock size={13} color={colors.inkMuted} strokeWidth={1.75} />
               <Text style={[s.privacyText, { color: colors.inkMuted }]}>
@@ -103,7 +88,10 @@ export default function ReportsScreen() {
               ].map(({ label, value }) => (
                 <View
                   key={label}
-                  style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                  style={[
+                    s.statCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border },
+                  ]}
                 >
                   <Text style={[s.statValue, { color: colors.foreground }]}>{value}</Text>
                   <Text style={[s.statLabel, { color: colors.inkMuted }]}>{label}</Text>
@@ -128,7 +116,11 @@ export default function ReportsScreen() {
 
             {/* Type filter */}
             <Animated.View entering={FadeInDown.duration(400).delay(180)}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.chips}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={s.chips}
+              >
                 {TYPES.map((t) => (
                   <Pressable
                     key={t}
@@ -142,7 +134,9 @@ export default function ReportsScreen() {
                     ]}
                   >
                     {t !== "All" && (
-                      <View style={[s.chipDot, { backgroundColor: TYPE_COLORS[t] ?? colors.clay }]} />
+                      <View
+                        style={[s.chipDot, { backgroundColor: TYPE_COLORS[t] ?? colors.clay }]}
+                      />
                     )}
                     <Text
                       style={[
@@ -170,7 +164,10 @@ export default function ReportsScreen() {
             <Animated.View entering={FadeInDown.duration(400).delay(index * 40)}>
               <Pressable
                 onPress={() =>
-                  router.push({ pathname: "/(tabs)/reports/[reportId]", params: { reportId: r.id } })
+                  router.push({
+                    pathname: "/(tabs)/reports/[reportId]",
+                    params: { reportId: r.id },
+                  })
                 }
                 style={[
                   s.reportRow,
@@ -181,7 +178,12 @@ export default function ReportsScreen() {
                 ]}
               >
                 {/* File icon with type color accent */}
-                <View style={[s.fileIcon, { backgroundColor: typeColor + "18", borderColor: typeColor + "40" }]}>
+                <View
+                  style={[
+                    s.fileIcon,
+                    { backgroundColor: typeColor + "18", borderColor: typeColor + "40" },
+                  ]}
+                >
                   <FileText size={18} color={typeColor} strokeWidth={1.75} />
                 </View>
 
@@ -196,13 +198,15 @@ export default function ReportsScreen() {
                     </View>
                   </View>
                   <Text style={[s.reportMeta, { color: colors.inkMuted }]}>
-                    {r.doctor}{"  ·  "}
+                    {r.doctor}
+                    {"  ·  "}
                     {new Date(r.date).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
                     })}
-                    {"  ·  "}{r.size}
+                    {"  ·  "}
+                    {r.size}
                   </Text>
 
                   {/* Shared avatars */}
@@ -226,9 +230,15 @@ export default function ReportsScreen() {
           <Animated.View entering={FadeInDown.duration(400).delay(300)} style={{ marginTop: 24 }}>
             <Pressable
               onPress={() =>
-                router.push({ pathname: "/(tabs)/reports/[reportId]", params: { reportId: reports[0]?.id } })
+                router.push({
+                  pathname: "/(tabs)/reports/[reportId]",
+                  params: { reportId: reports[0]?.id },
+                })
               }
-              style={[s.shareCard, { backgroundColor: colors.claySoft, borderColor: colors.clay + "40" }]}
+              style={[
+                s.shareCard,
+                { backgroundColor: colors.claySoft, borderColor: colors.clay + "40" },
+              ]}
             >
               <Share2 size={22} color={colors.clay} strokeWidth={1.5} />
               <View style={{ flex: 1 }}>
@@ -245,7 +255,9 @@ export default function ReportsScreen() {
         }
         ListEmptyComponent={
           <View style={s.empty}>
-            <Text style={[s.emptyText, { color: colors.inkMuted }]}>No reports match your search.</Text>
+            <Text style={[s.emptyText, { color: colors.inkMuted }]}>
+              No reports match your search.
+            </Text>
           </View>
         }
       />
@@ -260,7 +272,13 @@ const s = StyleSheet.create({
 
   titleRow: { flexDirection: "row", alignItems: "flex-end", gap: 12 },
   eyebrow: { fontSize: 11, fontFamily: "DMSans_500Medium", letterSpacing: 2.5 },
-  heading: { fontSize: 36, fontFamily: "Fraunces_400Regular", letterSpacing: -1.2, lineHeight: 42, marginTop: 4 },
+  heading: {
+    fontSize: 36,
+    fontFamily: "Fraunces_400Regular",
+    letterSpacing: -1.2,
+    lineHeight: 42,
+    marginTop: 4,
+  },
   uploadBtn: {
     flexDirection: "row",
     alignItems: "center",
@@ -291,7 +309,13 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   statValue: { fontSize: 22, fontFamily: "Fraunces_400Regular", letterSpacing: -0.5 },
-  statLabel: { fontSize: 10, fontFamily: "DMSans_500Medium", letterSpacing: 0.5, textTransform: "uppercase", marginTop: 2 },
+  statLabel: {
+    fontSize: 10,
+    fontFamily: "DMSans_500Medium",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    marginTop: 2,
+  },
 
   searchBar: {
     flexDirection: "row",
@@ -338,7 +362,12 @@ const s = StyleSheet.create({
   reportTitleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   reportTitle: { flex: 1, fontSize: 14, fontFamily: "DMSans_600SemiBold", letterSpacing: -0.2 },
   typePill: { borderRadius: 8, paddingHorizontal: 7, paddingVertical: 3 },
-  typePillText: { fontSize: 9, fontFamily: "DMSans_600SemiBold", letterSpacing: 0.5, textTransform: "uppercase" },
+  typePillText: {
+    fontSize: 9,
+    fontFamily: "DMSans_600SemiBold",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
   reportMeta: { fontSize: 11, fontFamily: "DMSans_400Regular" },
   sharedRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 2 },
   sharedText: { fontSize: 11, fontFamily: "DMSans_400Regular" },

@@ -15,14 +15,18 @@ const PASS = "MedoraDemo!2026Doc";
 const H = "a0000001-0001-4001-8001-000000000001";
 const OTHER = "a0000001-0001-4001-8001-000000000099";
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 const status = await fetch(`${BASE}/api/status`).then((r) => r.json());
 const { data: healthBefore } = await admin.rpc("audit_write_failures_health");
@@ -32,15 +36,16 @@ async function phi(resource, opts = {}) {
   const headers = {
     Origin: BASE,
     "Sec-Fetch-Site": "same-origin",
-    ...(opts.token === null
-      ? {}
-      : { Authorization: `Bearer ${opts.token ?? token}` }),
+    ...(opts.token === null ? {} : { Authorization: `Bearer ${opts.token ?? token}` }),
     ...(opts.requestId ? { "X-Request-Id": opts.requestId } : {}),
   };
   const t0 = performance.now();
-  const res = await fetch(`${BASE}/api/hospital/phi?resource=${resource}&hospitalId=${hospitalId}`, {
-    headers,
-  });
+  const res = await fetch(
+    `${BASE}/api/hospital/phi?resource=${resource}&hospitalId=${hospitalId}`,
+    {
+      headers,
+    },
+  );
   const body = await res.json().catch(() => ({}));
   return {
     status: res.status,
@@ -57,11 +62,27 @@ function add(name, expected, actual, pass, extra = {}) {
 }
 
 const appt = await phi("appointments");
-add("appointments_auth_200", "200 ok rows>0", `${appt.status} ok=${appt.ok} rows=${appt.rows}`, appt.status === 200 && appt.ok && appt.rows > 0, { ms: Math.round(appt.ms) });
+add(
+  "appointments_auth_200",
+  "200 ok rows>0",
+  `${appt.status} ok=${appt.ok} rows=${appt.rows}`,
+  appt.status === 200 && appt.ok && appt.rows > 0,
+  { ms: Math.round(appt.ms) },
+);
 const patients = await phi("patients");
-add("patients_auth_200", "200 ok", `${patients.status} ok=${patients.ok} rows=${patients.rows}`, patients.status === 200 && patients.ok);
+add(
+  "patients_auth_200",
+  "200 ok",
+  `${patients.status} ok=${patients.ok} rows=${patients.rows}`,
+  patients.status === 200 && patients.ok,
+);
 const labs = await phi("lab_results");
-add("lab_results_auth_200", "200 ok", `${labs.status} ok=${labs.ok} rows=${labs.rows}`, labs.status === 200 && labs.ok);
+add(
+  "lab_results_auth_200",
+  "200 ok",
+  `${labs.status} ok=${labs.ok} rows=${labs.rows}`,
+  labs.status === 200 && labs.ok,
+);
 const noTok = await phi("appointments", { token: null });
 add("missing_auth_401", "401", String(noTok.status), noTok.status === 401);
 const badTok = await phi("appointments", { token: "not-a-real-token" });
@@ -89,7 +110,10 @@ while (Date.now() < deadline) {
     .order("created_at", { ascending: false })
     .limit(5);
   audit = (data ?? []).find(
-    (a) => a.metadata?.record_level === true && Array.isArray(a.metadata?.record_ids) && a.metadata.record_ids.length === dur.rows,
+    (a) =>
+      a.metadata?.record_level === true &&
+      Array.isArray(a.metadata?.record_ids) &&
+      a.metadata.record_ids.length === dur.rows,
   );
   if (audit) break;
   await new Promise((r) => setTimeout(r, 250));
@@ -122,7 +146,9 @@ add(
   "open_failures_remain_0",
   "0 / database_rpc",
   `${statusAfter.audit_dlq?.open_failures} ${statusAfter.audit_dlq?.source}`,
-  statusAfter.audit_dlq?.open_failures === 0 && statusAfter.audit_dlq?.source === "database_rpc" && healthAfter?.open_failures === 0,
+  statusAfter.audit_dlq?.open_failures === 0 &&
+    statusAfter.audit_dlq?.source === "database_rpc" &&
+    healthAfter?.open_failures === 0,
 );
 add(
   "no_new_dlq_from_normal_reads",
@@ -144,8 +170,12 @@ const report = {
     status: statusAfter.status,
     build: statusAfter.build,
     audit_dlq: statusAfter.audit_dlq,
-    optional_degraded: (statusAfter.checks ?? []).filter((c) => c.optional && !c.ok).map((c) => c.id),
-    required_failed: (statusAfter.checks ?? []).filter((c) => !c.optional && !c.ok).map((c) => c.id),
+    optional_degraded: (statusAfter.checks ?? [])
+      .filter((c) => c.optional && !c.ok)
+      .map((c) => c.id),
+    required_failed: (statusAfter.checks ?? [])
+      .filter((c) => !c.optional && !c.ok)
+      .map((c) => c.id),
   },
   tests,
   pass: tests.every((t) => t.result === "PASS"),

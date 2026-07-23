@@ -456,7 +456,7 @@ export function callPatient(entryId: string) {
   const target = state.entries.find((e) => e.id === entryId && e.status === "waiting");
   if (!target) return state;
 
-  let entries = state.entries.map((e) => {
+  const entries = state.entries.map((e) => {
     if (e.status === "serving") return markCompleted(e);
     if (e.id === entryId) return markServing(e);
     return e;

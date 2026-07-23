@@ -44,7 +44,9 @@ export default function VisitDetailScreen() {
           </View>
           <Text style={[s.doctorName, { color: colors.foreground }]}>{doctor.name}</Text>
           <Text style={[s.doctorMeta, { color: colors.inkMuted }]}>{doctor.specialty}</Text>
-          <Text style={[s.doctorMeta, { color: colors.inkMuted, marginTop: 4 }]}>{doctor.hospital}</Text>
+          <Text style={[s.doctorMeta, { color: colors.inkMuted, marginTop: 4 }]}>
+            {doctor.hospital}
+          </Text>
 
           <View style={s.actions}>
             <Pressable
@@ -77,7 +79,12 @@ export default function VisitDetailScreen() {
             <Text style={[s.detailLabel, { color: colors.inkMuted }]}>{label}</Text>
             <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 6, flex: 1 }}>
               {label === "Location" ? (
-                <MapPin size={14} color={colors.inkMuted} strokeWidth={1.75} style={{ marginTop: 2 }} />
+                <MapPin
+                  size={14}
+                  color={colors.inkMuted}
+                  strokeWidth={1.75}
+                  style={{ marginTop: 2 }}
+                />
               ) : null}
               <Text style={[s.detailValue, { color: colors.foreground }]}>{value}</Text>
             </View>

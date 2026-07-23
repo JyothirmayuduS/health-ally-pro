@@ -1,23 +1,17 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { 
-  ArrowLeft, 
-  ShieldCheck, 
-  Clock, 
+import {
+  ArrowLeft,
+  ShieldCheck,
+  Clock,
   AlertCircle,
   CheckCircle2,
   Info,
   ChevronRight,
   Flame,
-  Zap
+  Zap,
 } from "lucide-react-native";
 import { dietMeals } from "@/lib/mock-data";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -33,17 +27,28 @@ export default function ClinicalRulesScreen() {
 
   if (!meal) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }]}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: colors.background, justifyContent: "center", alignItems: "center" },
+        ]}
+      >
         <Text style={{ color: colors.inkMuted, fontSize: 16 }}>Clinical protocol not found</Text>
-        <Pressable onPress={() => router.back()} style={{ marginTop: 20, padding: 12, backgroundColor: colors.clay, borderRadius: 12 }}>
-          <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Go Back</Text>
+        <Pressable
+          onPress={() => router.back()}
+          style={{ marginTop: 20, padding: 12, backgroundColor: colors.clay, borderRadius: 12 }}
+        >
+          <Text style={{ color: "#FFF", fontWeight: "bold" }}>Go Back</Text>
         </Pressable>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top"]}
+    >
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <ArrowLeft size={22} color={colors.ink} />
@@ -54,66 +59,94 @@ export default function ClinicalRulesScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInDown.duration(500)}>
-           <View style={styles.heroSection}>
-              <View style={[styles.shieldLarge, { backgroundColor: colors.clay + "15" }]}>
-                 <ShieldCheck size={32} color={colors.clay} />
-              </View>
-              <Text style={[styles.heroTitle, { color: colors.foreground }]}>Absorption Guard Protocol</Text>
-              <Text style={[styles.heroSub, { color: colors.inkMuted }]}>
-                Clinical guidelines for consuming {meal.name} while on thyroid medication.
-              </Text>
-           </View>
+          <View style={styles.heroSection}>
+            <View style={[styles.shieldLarge, { backgroundColor: colors.clay + "15" }]}>
+              <ShieldCheck size={32} color={colors.clay} />
+            </View>
+            <Text style={[styles.heroTitle, { color: colors.foreground }]}>
+              Absorption Guard Protocol
+            </Text>
+            <Text style={[styles.heroSub, { color: colors.inkMuted }]}>
+              Clinical guidelines for consuming {meal.name} while on thyroid medication.
+            </Text>
+          </View>
         </Animated.View>
 
         {/* ⏱️ Timing Protocol */}
         <Animated.View entering={FadeInDown.duration(500).delay(100)} style={styles.section}>
-           <View style={styles.sectionHeader}>
-              <Clock size={18} color={colors.clay} />
-              <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Timing Strategy</Text>
-           </View>
-           <View style={[styles.ruleCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <View style={[styles.gapHighlight, { backgroundColor: colors.clay + "10" }]}>
-                 <Text style={[styles.gapValue, { color: colors.clay }]}>{meal.protocol?.medGap || "60 mins"}</Text>
-                 <Text style={[styles.gapLabel, { color: colors.clay }]}>Minimum Gap Required</Text>
-              </View>
-              <Text style={[styles.ruleText, { color: colors.inkMuted }]}>
-                Levothyroxine requires a high-acid, low-interference environment for peak absorption. 
-                Wait at least {meal.protocol?.medGap || "60 mins"} after taking your medication before consuming this meal.
+          <View style={styles.sectionHeader}>
+            <Clock size={18} color={colors.clay} />
+            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Timing Strategy</Text>
+          </View>
+          <View
+            style={[
+              styles.ruleCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <View style={[styles.gapHighlight, { backgroundColor: colors.clay + "10" }]}>
+              <Text style={[styles.gapValue, { color: colors.clay }]}>
+                {meal.protocol?.medGap || "60 mins"}
               </Text>
-           </View>
+              <Text style={[styles.gapLabel, { color: colors.clay }]}>Minimum Gap Required</Text>
+            </View>
+            <Text style={[styles.ruleText, { color: colors.inkMuted }]}>
+              Levothyroxine requires a high-acid, low-interference environment for peak absorption.
+              Wait at least {meal.protocol?.medGap || "60 mins"} after taking your medication before
+              consuming this meal.
+            </Text>
+          </View>
         </Animated.View>
 
         {/* ⚠️ Critical Cautions */}
         <Animated.View entering={FadeInDown.duration(500).delay(200)} style={styles.section}>
-           <View style={styles.sectionHeader}>
-              <AlertCircle size={18} color="#E55B46" />
-              <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Absorption Barriers</Text>
-           </View>
-           <View style={styles.cautionContainer}>
-              {meal.protocol?.caution.map((item, i) => (
-                <View key={i} style={[styles.cautionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                   <View style={[styles.cautionIcon, { backgroundColor: "#E55B4610" }]}>
-                      <Info size={14} color="#E55B46" />
-                   </View>
-                   <Text style={[styles.cautionText, { color: colors.foreground }]}>{item}</Text>
+          <View style={styles.sectionHeader}>
+            <AlertCircle size={18} color="#E55B46" />
+            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+              Absorption Barriers
+            </Text>
+          </View>
+          <View style={styles.cautionContainer}>
+            {meal.protocol?.caution.map((item, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.cautionCard,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                ]}
+              >
+                <View style={[styles.cautionIcon, { backgroundColor: "#E55B4610" }]}>
+                  <Info size={14} color="#E55B46" />
                 </View>
-              ))}
-           </View>
+                <Text style={[styles.cautionText, { color: colors.foreground }]}>{item}</Text>
+              </View>
+            ))}
+          </View>
         </Animated.View>
 
         {/* ✅ Optimization Tips */}
         <Animated.View entering={FadeInDown.duration(500).delay(300)} style={styles.section}>
-           <View style={styles.sectionHeader}>
-              <CheckCircle2 size={18} color="#4CAF7D" />
-              <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Optimization Strategy</Text>
-           </View>
-           <View style={[styles.tipCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <Text style={[styles.tipTitle, { color: colors.foreground }]}>Maximizing Bioavailability</Text>
-              <Text style={[styles.tipDesc, { color: colors.inkMuted, marginTop: 8 }]}>
-                To ensure nutrients like Selenium and Iodine in this meal reach your thyroid follicular cells efficiently, 
-                avoid concurrent intake of calcium or iron supplements, which compete for transport pathways.
-              </Text>
-           </View>
+          <View style={styles.sectionHeader}>
+            <CheckCircle2 size={18} color="#4CAF7D" />
+            <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+              Optimization Strategy
+            </Text>
+          </View>
+          <View
+            style={[
+              styles.tipCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <Text style={[styles.tipTitle, { color: colors.foreground }]}>
+              Maximizing Bioavailability
+            </Text>
+            <Text style={[styles.tipDesc, { color: colors.inkMuted, marginTop: 8 }]}>
+              To ensure nutrients like Selenium and Iodine in this meal reach your thyroid
+              follicular cells efficiently, avoid concurrent intake of calcium or iron supplements,
+              which compete for transport pathways.
+            </Text>
+          </View>
         </Animated.View>
 
         <View style={{ height: 40 }} />

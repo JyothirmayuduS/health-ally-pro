@@ -19,14 +19,18 @@ const EMAIL = "doctor@oakhaven.demo";
 const PASS = "MedoraDemo!2026Doc";
 const H = "a0000001-0001-4001-8001-000000000001";
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 const before = new Date().toISOString();
 
@@ -88,9 +92,7 @@ const { data: failures } = await admin
   .limit(10);
 
 const recordLevelFailure = (failures ?? []).find(
-  (f) =>
-    f.error_message === forcedError &&
-    f.payload?.path === "writeRecordLevelPhiReadAudit",
+  (f) => f.error_message === forcedError && f.payload?.path === "writeRecordLevelPhiReadAudit",
 );
 
 const { data: health } = await admin.rpc("audit_write_failures_health");
@@ -99,11 +101,7 @@ const report = {
   a_clinical_read_succeeds: {
     status: clinicalRes.status,
     ok: clinicalBody.ok === true,
-    rows: Array.isArray(clinicalBody.data)
-      ? clinicalBody.data.length
-      : clinicalBody.data
-        ? 1
-        : 0,
+    rows: Array.isArray(clinicalBody.data) ? clinicalBody.data.length : clinicalBody.data ? 1 : 0,
   },
   b_failure_in_dlq: {
     primary_broke: !!primaryBreak.error,

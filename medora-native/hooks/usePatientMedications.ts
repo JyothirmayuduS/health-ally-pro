@@ -24,14 +24,11 @@ export function usePatientMedications() {
     });
   }, [refresh]);
 
-  const toggle = useCallback(
-    async (medId: string) => {
-      const next = await toggleMedicationTaken(medId);
-      setMeds(next);
-      return next;
-    },
-    [],
-  );
+  const toggle = useCallback(async (medId: string) => {
+    const next = await toggleMedicationTaken(medId);
+    setMeds(next);
+    return next;
+  }, []);
 
   const taken = meds.filter((m) => m.taken).length;
   const total = meds.length;

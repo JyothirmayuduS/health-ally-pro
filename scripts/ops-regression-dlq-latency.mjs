@@ -23,8 +23,12 @@ const KNOWN_TEST_IDS = [
   "f302f5ee-f085-47df-b849-27203e5460b8",
 ];
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 function pct(sorted, p) {
   if (!sorted.length) return null;
@@ -77,8 +81,8 @@ async function resolveId(id, reason) {
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 const report = { at: new Date().toISOString(), hospital_id: H, actor_id: user.id, tests: {} };
 
@@ -179,7 +183,9 @@ if (!newDlq) {
     .is("resolved_at", null)
     .order("created_at", { ascending: false })
     .limit(20));
-  newDlq = (newFailures ?? []).find((f) => f.payload?.proof === forceMarker || f.payload?.row?.metadata?.proof === forceMarker);
+  newDlq = (newFailures ?? []).find(
+    (f) => f.payload?.proof === forceMarker || f.payload?.row?.metadata?.proof === forceMarker,
+  );
 }
 
 const { data: healthAlert } = await admin.rpc("audit_write_failures_health");
@@ -214,7 +220,11 @@ const resolveRes = newDlq
 const { data: healthAfter } = await admin.rpc("audit_write_failures_health");
 const statusAfter = await fetch(`${BASE}/api/status`).then((r) => r.json());
 const { data: retainedNew } = newDlq
-  ? await admin.from("audit_write_failures").select("id, resolved_at, payload").eq("id", newDlq.id).maybeSingle()
+  ? await admin
+      .from("audit_write_failures")
+      .select("id, resolved_at, payload")
+      .eq("id", newDlq.id)
+      .maybeSingle()
   : { data: null };
 report.tests.resolve_returns_health = {
   pass:
@@ -333,7 +343,9 @@ report.tests.unauthorized = {
 };
 
 // --- 8. Docker still serves ---
-const dockerRoot = await fetch(`${DOCKER}/`).then((r) => r.status).catch(() => 0);
+const dockerRoot = await fetch(`${DOCKER}/`)
+  .then((r) => r.status)
+  .catch(() => 0);
 const dockerStatus = await fetch(`${DOCKER}/api/status`)
   .then(async (r) => ({ status: r.status, body: await r.json().catch(() => ({})) }))
   .catch(() => ({ status: 0, body: {} }));

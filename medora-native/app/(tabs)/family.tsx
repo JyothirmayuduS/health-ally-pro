@@ -18,8 +18,8 @@ function ProgressRing({ progress, color }: { progress: number; color: string }) 
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      <Svg width={size} height={size} style={{ position: 'absolute' }}>
+    <View style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+      <Svg width={size} height={size} style={{ position: "absolute" }}>
         <Circle
           cx={size / 2}
           cy={size / 2}
@@ -53,17 +53,23 @@ function DependentCard({ member, delay }: { member: FamilyMember; delay: number 
   return (
     <Animated.View entering={FadeInDown.duration(400).delay(delay)}>
       <Pressable style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        
         <View style={s.cardHeader}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
             <View style={[s.avatar, { backgroundColor: member.avatarColor }]}>
               <Text style={s.avatarText}>{member.initials}</Text>
             </View>
             <View>
               <Text style={[s.memberName, { color: colors.foreground }]}>{member.name}</Text>
               <View style={s.badgeRow}>
-                <View style={[s.relationBadge, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[s.relationText, { color: colors.inkMuted }]}>{member.relation} · {member.age}y</Text>
+                <View
+                  style={[
+                    s.relationBadge,
+                    { backgroundColor: colors.background, borderColor: colors.border },
+                  ]}
+                >
+                  <Text style={[s.relationText, { color: colors.inkMuted }]}>
+                    {member.relation} · {member.age}y
+                  </Text>
                 </View>
               </View>
             </View>
@@ -74,7 +80,7 @@ function DependentCard({ member, delay }: { member: FamilyMember; delay: number 
         <View style={[s.divider, { backgroundColor: colors.border }]} />
 
         <View style={s.planRow}>
-          <View style={[s.iconBox, { backgroundColor: member.avatarColor + '15' }]}>
+          <View style={[s.iconBox, { backgroundColor: member.avatarColor + "15" }]}>
             <Activity size={16} color={member.avatarColor} strokeWidth={2} />
           </View>
           <View style={{ flex: 1 }}>
@@ -85,7 +91,7 @@ function DependentCard({ member, delay }: { member: FamilyMember; delay: number 
 
         {member.nextAppt && (
           <View style={s.planRow}>
-            <View style={[s.iconBox, { backgroundColor: colors.clay + '15' }]}>
+            <View style={[s.iconBox, { backgroundColor: colors.clay + "15" }]}>
               <CalendarClock size={16} color={colors.clay} strokeWidth={2} />
             </View>
             <View style={{ flex: 1 }}>
@@ -94,7 +100,6 @@ function DependentCard({ member, delay }: { member: FamilyMember; delay: number 
             </View>
           </View>
         )}
-
       </Pressable>
     </Animated.View>
   );
@@ -105,13 +110,16 @@ export default function FamilyTrackingScreen() {
   const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: colors.background }]} edges={["top", "bottom"]}>
+    <SafeAreaView
+      style={[s.safe, { backgroundColor: colors.background }]}
+      edges={["top", "bottom"]}
+    >
       <View style={s.header}>
         <Pressable onPress={() => router.back()} style={s.backBtn}>
           <ChevronLeft size={24} color={colors.foreground} strokeWidth={2} />
         </Pressable>
         <Text style={[s.headerTitle, { color: colors.foreground }]}>Dependents</Text>
-        <Pressable 
+        <Pressable
           onPress={() => router.push("/settings/family-create")}
           style={[s.addBtn, { backgroundColor: colors.ink }]}
         >
@@ -121,10 +129,11 @@ export default function FamilyTrackingScreen() {
 
       <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeIn.duration(400)}>
-          <View style={[s.banner, { backgroundColor: '#4CAF5015' }]}>
+          <View style={[s.banner, { backgroundColor: "#4CAF5015" }]}>
             <ShieldAlert size={18} color="#4CAF50" strokeWidth={2} />
-            <Text style={[s.bannerText, { color: '#2E7D32' }]}>
-              Family tracking is HIPAA compliant. You have full proxy access to manage these clinical profiles.
+            <Text style={[s.bannerText, { color: "#2E7D32" }]}>
+              Family tracking is HIPAA compliant. You have full proxy access to manage these
+              clinical profiles.
             </Text>
           </View>
         </Animated.View>
@@ -133,7 +142,6 @@ export default function FamilyTrackingScreen() {
           <DependentCard key={fm.id} member={fm} delay={100 + i * 100} />
         ))}
       </ScrollView>
-
     </SafeAreaView>
   );
 }
@@ -141,21 +149,28 @@ export default function FamilyTrackingScreen() {
 const s = StyleSheet.create({
   safe: { flex: 1 },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   backBtn: {
-    width: 40, height: 40, alignItems: 'center', justifyContent: 'center'
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerTitle: {
     fontSize: 18,
     fontFamily: "Fraunces_600SemiBold",
   },
   addBtn: {
-    width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center'
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
   scroll: {
     padding: 20,
@@ -163,7 +178,7 @@ const s = StyleSheet.create({
     paddingBottom: 40,
   },
   banner: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 16,
     borderRadius: 16,
     gap: 12,
@@ -181,20 +196,20 @@ const s = StyleSheet.create({
     padding: 20,
   },
   cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 16,
   },
   avatar: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 18,
     fontFamily: "DMSans_700Bold",
   },
@@ -204,7 +219,7 @@ const s = StyleSheet.create({
     marginBottom: 4,
   },
   badgeRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   relationBadge: {
     paddingHorizontal: 8,
@@ -215,7 +230,7 @@ const s = StyleSheet.create({
   relationText: {
     fontSize: 10,
     fontFamily: "DMSans_600SemiBold",
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   divider: {
@@ -223,8 +238,8 @@ const s = StyleSheet.create({
     marginBottom: 16,
   },
   planRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 14,
     marginBottom: 12,
   },
@@ -232,17 +247,17 @@ const s = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   infoLabel: {
     fontSize: 11,
     fontFamily: "DMSans_500Medium",
     marginBottom: 2,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   infoValue: {
     fontSize: 14,
     fontFamily: "DMSans_600SemiBold",
-  }
+  },
 });

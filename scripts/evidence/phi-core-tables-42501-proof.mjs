@@ -20,8 +20,12 @@ const TABLES = [
   "queue_entries",
 ];
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const client = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const client = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed?.users?.find((u) => u.email === EMAIL);

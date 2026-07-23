@@ -13,8 +13,12 @@ const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const EMAIL = "doctor@oakhaven.demo";
 const PASS = "MedoraDemo!2026Doc";
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const client = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const client = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed?.users?.find((u) => u.email === EMAIL);
@@ -29,7 +33,8 @@ const report = {
     code: patients.error?.code ?? null,
     message: patients.error?.message ?? null,
     expect_42501: true,
-    pass: patients.error?.code === "42501" || /permission denied/i.test(patients.error?.message || ""),
+    pass:
+      patients.error?.code === "42501" || /permission denied/i.test(patients.error?.message || ""),
   },
   specialty_chart_notes: {
     code: locked.error?.code ?? null,

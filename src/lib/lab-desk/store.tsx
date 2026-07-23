@@ -472,7 +472,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
       const testCode = orderToSave.test_code;
       let blocked = false;
-      let lowReagents: string[] = [];
+      const lowReagents: string[] = [];
 
       setReagents((list) => {
         const linked = list.filter((r) => r.testCodes.includes(testCode.toLowerCase()));
@@ -739,7 +739,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const diff = run.value - run.mean;
     const sdUnits = Math.abs(diff / run.sd);
     let status: "pass" | "warning" | "fail" = "pass";
-    let rules: string[] = [];
+    const rules: string[] = [];
 
     if (sdUnits >= 3.0) {
       status = "fail";

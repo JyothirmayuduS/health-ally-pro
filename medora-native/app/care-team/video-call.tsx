@@ -23,15 +23,15 @@ import {
   ShieldCheck,
 } from "lucide-react-native";
 import { useTheme } from "../../theme/ThemeProvider";
-import Animated, { 
-  FadeIn, 
-  FadeInDown, 
-  FadeInUp, 
-  useAnimatedStyle, 
-  useSharedValue, 
-  withRepeat, 
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeInUp,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
   withTiming,
-  withSequence
+  withSequence,
 } from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
@@ -39,7 +39,7 @@ const { width, height } = Dimensions.get("window");
 export default function VideoCallScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  
+
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [callTime, setCallTime] = useState(0);
@@ -50,10 +50,10 @@ export default function VideoCallScreen() {
     pulse.value = withRepeat(
       withSequence(withTiming(1.2, { duration: 800 }), withTiming(1, { duration: 800 })),
       -1,
-      true
+      true,
     );
-    
-    const timer = setInterval(() => setCallTime(t => t + 1), 1000);
+
+    const timer = setInterval(() => setCallTime((t) => t + 1), 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -71,14 +71,14 @@ export default function VideoCallScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      
+
       {/* 📸 Background Feed (Doctor) */}
-      <Image 
-        source={{ uri: "doctor_video_feed_1776603317496.png" }} 
+      <Image
+        source={{ uri: "doctor_video_feed_1776603317496.png" }}
         style={styles.fullScreenFeed}
         resizeMode="cover"
       />
-      
+
       {/* 🟢 Dark Overlay for readability */}
       <View style={styles.overlay} />
 
@@ -86,88 +86,92 @@ export default function VideoCallScreen() {
       <SafeAreaView style={styles.topBar}>
         <Animated.View entering={FadeInUp.delay(300)} style={styles.topInfo}>
           <View style={styles.liveIndicator}>
-             <Animated.View style={[styles.pulseDot, pulseStyle]} />
-             <View style={styles.solidDot} />
-             <Text style={styles.liveText}>LIVE: DR. ELEANOR THORNE</Text>
+            <Animated.View style={[styles.pulseDot, pulseStyle]} />
+            <View style={styles.solidDot} />
+            <Text style={styles.liveText}>LIVE: DR. ELEANOR THORNE</Text>
           </View>
           <Text style={styles.timerText}>{formatTime(callTime)}</Text>
         </Animated.View>
-        
+
         <View style={styles.headerActions}>
-           <View style={styles.encryptionBadge}>
-             <ShieldCheck size={14} color="#4ADE80" />
-             <Text style={styles.encryptionText}>End-to-end Encrypted</Text>
-           </View>
+          <View style={styles.encryptionBadge}>
+            <ShieldCheck size={14} color="#4ADE80" />
+            <Text style={styles.encryptionText}>End-to-end Encrypted</Text>
+          </View>
         </View>
       </SafeAreaView>
 
       {/* 📊 Floating Health Vitals (Premium Overlay) */}
       <Animated.View entering={FadeIn.delay(600)} style={styles.vitalsColumn}>
         <View style={styles.vitalCard}>
-           <Activity size={18} color="#FF6B6B" />
-           <View>
-              <Text style={styles.vitalVal}>72 BPM</Text>
-              <Text style={styles.vitalLabel}>Heart Rate</Text>
-           </View>
-        </View>
-        
-        <View style={styles.vitalCard}>
-           <Wind size={18} color="#4EA8DE" />
-           <View>
-              <Text style={styles.vitalVal}>98%</Text>
-              <Text style={styles.vitalLabel}>SpO2</Text>
-           </View>
+          <Activity size={18} color="#FF6B6B" />
+          <View>
+            <Text style={styles.vitalVal}>72 BPM</Text>
+            <Text style={styles.vitalLabel}>Heart Rate</Text>
+          </View>
         </View>
 
         <View style={styles.vitalCard}>
-           <Text style={[styles.vitalVal, { color: colors.clay, fontSize: 16 }]}>T4-Active</Text>
-           <Text style={styles.vitalLabel}>Current Status</Text>
+          <Wind size={18} color="#4EA8DE" />
+          <View>
+            <Text style={styles.vitalVal}>98%</Text>
+            <Text style={styles.vitalLabel}>SpO2</Text>
+          </View>
+        </View>
+
+        <View style={styles.vitalCard}>
+          <Text style={[styles.vitalVal, { color: colors.clay, fontSize: 16 }]}>T4-Active</Text>
+          <Text style={styles.vitalLabel}>Current Status</Text>
         </View>
       </Animated.View>
 
       {/* 🤳 Picture-in-Picture (Patient Feed) */}
       <Animated.View entering={FadeIn.delay(800)} style={styles.pipWrapper}>
-         {!isVideoOff ? (
-            <View style={styles.pipContent}>
-               <View style={styles.pipPlaceholder}>
-                  <Text style={styles.pipText}>Cure Link Active</Text>
-               </View>
+        {!isVideoOff ? (
+          <View style={styles.pipContent}>
+            <View style={styles.pipPlaceholder}>
+              <Text style={styles.pipText}>Cure Link Active</Text>
             </View>
-         ) : (
-            <View style={[styles.pipContent, { backgroundColor: "#1A1A1A" }]}>
-               <VideoOff size={24} color="#666" />
-            </View>
-         )}
+          </View>
+        ) : (
+          <View style={[styles.pipContent, { backgroundColor: "#1A1A1A" }]}>
+            <VideoOff size={24} color="#666" />
+          </View>
+        )}
       </Animated.View>
 
       {/* 📱 Bottom Control Bar */}
       <Animated.View entering={FadeInDown.delay(400)} style={styles.footer}>
-         <View style={styles.controlBar}>
-            <Pressable 
-              onPress={() => setIsMuted(!isMuted)}
-              style={[styles.controlBtn, isMuted && styles.controlBtnActive]}
-            >
-              {isMuted ? <MicOff size={24} color="#FFF" /> : <Mic size={24} color="#FFF" />}
-            </Pressable>
+        <View style={styles.controlBar}>
+          <Pressable
+            onPress={() => setIsMuted(!isMuted)}
+            style={[styles.controlBtn, isMuted && styles.controlBtnActive]}
+          >
+            {isMuted ? <MicOff size={24} color="#FFF" /> : <Mic size={24} color="#FFF" />}
+          </Pressable>
 
-            <Pressable 
-              onPress={() => setIsVideoOff(!isVideoOff)}
-              style={[styles.controlBtn, isVideoOff && styles.controlBtnActive]}
-            >
-              {isVideoOff ? <VideoOff size={24} color="#FFF" /> : <VideoIcon size={24} color="#FFF" />}
-            </Pressable>
+          <Pressable
+            onPress={() => setIsVideoOff(!isVideoOff)}
+            style={[styles.controlBtn, isVideoOff && styles.controlBtnActive]}
+          >
+            {isVideoOff ? (
+              <VideoOff size={24} color="#FFF" />
+            ) : (
+              <VideoIcon size={24} color="#FFF" />
+            )}
+          </Pressable>
 
-            <Pressable 
-              style={[styles.controlBtn, { backgroundColor: "#FF4D4D", width: 70, borderRadius: 24 }]} 
-              onPress={() => router.back()}
-            >
-              <PhoneOff size={24} color="#FFF" />
-            </Pressable>
+          <Pressable
+            style={[styles.controlBtn, { backgroundColor: "#FF4D4D", width: 70, borderRadius: 24 }]}
+            onPress={() => router.back()}
+          >
+            <PhoneOff size={24} color="#FFF" />
+          </Pressable>
 
-            <Pressable style={styles.controlBtn}>
-               <MoreHorizontal size={24} color="#FFF" />
-            </Pressable>
-         </View>
+          <Pressable style={styles.controlBtn}>
+            <MoreHorizontal size={24} color="#FFF" />
+          </Pressable>
+        </View>
       </Animated.View>
     </View>
   );
@@ -176,12 +180,20 @@ export default function VideoCallScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000" },
   fullScreenFeed: {
-    position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     width: width,
     height: height,
   },
   overlay: {
-    position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: "rgba(0,0,0,0.15)",
   },
   topBar: {
@@ -260,7 +272,13 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.3)",
   },
   pipContent: { flex: 1, backgroundColor: "#333", justifyContent: "center", alignItems: "center" },
-  pipPlaceholder: { flex: 1, backgroundColor: "#222", width: "100%", justifyContent: "flex-end", padding: 8 },
+  pipPlaceholder: {
+    flex: 1,
+    backgroundColor: "#222",
+    width: "100%",
+    justifyContent: "flex-end",
+    padding: 8,
+  },
   pipText: { color: "#FFF", fontSize: 8, fontFamily: "Outfit-Bold", opacity: 0.6 },
   footer: {
     position: "absolute",

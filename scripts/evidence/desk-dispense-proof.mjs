@@ -39,8 +39,12 @@ async function runRest(label) {
     console.log(error);
     return null;
   }
-  console.log(" desk          | record_key                      | updated_at                      | pg_column_size");
-  console.log("---------------+---------------------------------+---------------------------------+---------------");
+  console.log(
+    " desk          | record_key                      | updated_at                      | pg_column_size",
+  );
+  console.log(
+    "---------------+---------------------------------+---------------------------------+---------------",
+  );
   for (const r of data ?? []) {
     const bytes = Buffer.byteLength(JSON.stringify(r.payload ?? {}), "utf8");
     console.log(
@@ -63,7 +67,7 @@ async function dispense() {
   await page.goto(`${BASE}/pharmacy/dispense`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(1500);
 
-  const rxBtn = page.locator('button:has(span.font-mono)').filter({ hasText: /RX-/ }).first();
+  const rxBtn = page.locator("button:has(span.font-mono)").filter({ hasText: /RX-/ }).first();
   const rxText = (await rxBtn.count()) ? await rxBtn.innerText() : "";
   if (await rxBtn.count()) await rxBtn.click();
   await page.waitForTimeout(500);
@@ -92,7 +96,11 @@ async function dispense() {
   const statusText = await page.locator("body").innerText();
   console.log("selected_rx:", rxText.split("\n")[0] || "none");
   console.log("final_url:", page.url());
-  console.log("status_snippet:", statusText.match(/ready pickup|dispensed|collected|dispensing|ready to dispense/i)?.[0] || "unknown");
+  console.log(
+    "status_snippet:",
+    statusText.match(/ready pickup|dispensed|collected|dispensing|ready to dispense/i)?.[0] ||
+      "unknown",
+  );
   await browser.close();
 }
 
@@ -100,9 +108,7 @@ console.log("=== BEFORE ===");
 const pgBefore = runPgSql();
 console.log("$ node --env-file=.env.local scripts/desk-records-sql.mjs");
 console.log(pgBefore.trim());
-const before = pgBefore.includes("ERROR: SUPABASE_DB_PASSWORD")
-  ? await runRest("BEFORE")
-  : null;
+const before = pgBefore.includes("ERROR: SUPABASE_DB_PASSWORD") ? await runRest("BEFORE") : null;
 
 await dispense();
 await new Promise((r) => setTimeout(r, 4000));
@@ -111,18 +117,11 @@ console.log("\n=== AFTER ===");
 const pgAfter = runPgSql();
 console.log("$ node --env-file=.env.local scripts/desk-records-sql.mjs");
 console.log(pgAfter.trim());
-const after = pgAfter.includes("ERROR: SUPABASE_DB_PASSWORD")
-  ? await runRest("AFTER")
-  : null;
+const after = pgAfter.includes("ERROR: SUPABASE_DB_PASSWORD") ? await runRest("AFTER") : null;
 
 if (before && after) {
   console.log("\n=== DELTA ===");
-  console.log(
-    "updated_at:",
-    before[0]?.updated_at,
-    "->",
-    after[0]?.updated_at,
-  );
+  console.log("updated_at:", before[0]?.updated_at, "->", after[0]?.updated_at);
   console.log(
     "payload_bytes:",
     Buffer.byteLength(JSON.stringify(before[0]?.payload ?? {}), "utf8"),

@@ -37,7 +37,10 @@ async function main() {
       "x-medora-persist-demo": "1",
     },
   });
-  assert(docs.status === 200 && docs.json?.ok && (docs.json.data?.length ?? 0) >= 1, "demo doctors failed");
+  assert(
+    docs.status === 200 && docs.json?.ok && (docs.json.data?.length ?? 0) >= 1,
+    "demo doctors failed",
+  );
 
   const chartKey = `SCH-http-${Date.now().toString(36)}`;
   const chart = await call("/api/hospital/persist", {
@@ -86,7 +89,10 @@ async function main() {
     }),
   });
   assert(onboard.status === 200 && onboard.json?.ok === true, "onboard lead failed");
-  assert(onboard.json.provisioned === false && !onboard.json.hospital, "must not auto-provision without canProvision");
+  assert(
+    onboard.json.provisioned === false && !onboard.json.hospital,
+    "must not auto-provision without canProvision",
+  );
 
   const evil = await call("/api/hospital/persist?resource=doctors", {
     headers: {
@@ -102,7 +108,14 @@ async function main() {
       {
         ok: true,
         base: BASE,
-        checks: ["status", "deny", "demo-doctors", "chart-hospital-lock", "onboard-lead-only", "cross-site-deny"],
+        checks: [
+          "status",
+          "deny",
+          "demo-doctors",
+          "chart-hospital-lock",
+          "onboard-lead-only",
+          "cross-site-deny",
+        ],
       },
       null,
       2,

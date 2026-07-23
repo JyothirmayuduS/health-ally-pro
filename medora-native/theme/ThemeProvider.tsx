@@ -18,11 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const isDark = false;
   const colors = lightColors;
 
-  return (
-    <ThemeContext.Provider value={{ colors, isDark }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ colors, isDark }}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

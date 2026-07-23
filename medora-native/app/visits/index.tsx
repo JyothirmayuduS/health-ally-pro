@@ -20,19 +20,12 @@ export default function VisitsScreen() {
   const today = new Date();
 
   const sorted = useMemo(
-    () =>
-      [...appointments].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      ),
+    () => [...appointments].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     [],
   );
 
-  const upcoming = sorted.filter(
-    (a) => a.status === "upcoming" || a.status === "in-queue",
-  );
-  const past = sorted.filter(
-    (a) => a.status === "completed" || a.status === "cancelled",
-  );
+  const upcoming = sorted.filter((a) => a.status === "upcoming" || a.status === "in-queue");
+  const past = sorted.filter((a) => a.status === "completed" || a.status === "cancelled");
 
   const renderVisit = (appt: (typeof appointments)[0]) => {
     const doc = doctors.find((d) => d.id === appt.doctorId);
@@ -84,10 +77,14 @@ export default function VisitsScreen() {
           </>
         ) : null}
 
-        <Text style={[s.section, { color: colors.foreground, marginTop: upcoming.length ? 20 : 0 }]}>
+        <Text
+          style={[s.section, { color: colors.foreground, marginTop: upcoming.length ? 20 : 0 }]}
+        >
           Completed
         </Text>
-        {past.length ? past.map(renderVisit) : (
+        {past.length ? (
+          past.map(renderVisit)
+        ) : (
           <Text style={[s.empty, { color: colors.inkMuted }]}>No completed visits yet.</Text>
         )}
       </ScrollView>

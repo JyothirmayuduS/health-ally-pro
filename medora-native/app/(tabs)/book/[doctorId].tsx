@@ -43,7 +43,7 @@ import {
 import { doctors, medications } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { useTheme } from "@/theme/ThemeProvider";
-import * as LocalAuthentication from 'expo-local-authentication';
+import * as LocalAuthentication from "expo-local-authentication";
 
 // ── Data ──────────────────────────────────────────────────────────
 const SLOTS = [
@@ -65,8 +65,8 @@ const DAYS = Array.from({ length: 7 }).map((_, i) => {
 
 const VISIT_TYPES = [
   { id: "in_person", label: "In Person", icon: Briefcase },
-  { id: "video",     label: "Video Call", icon: Video },
-  { id: "follow_up", label: "Follow-up",  icon: Activity },
+  { id: "video", label: "Video Call", icon: Video },
+  { id: "follow_up", label: "Follow-up", icon: Activity },
 ];
 
 // ── Animated slot tile ────────────────────────────────────────────
@@ -91,7 +91,7 @@ function SlotTile({
     if (!slot.available) return;
     scale.value = withSequence(
       withTiming(0.92, { duration: 80 }),
-      withSpring(1, { damping: 10, stiffness: 200 })
+      withSpring(1, { damping: 10, stiffness: 200 }),
     );
     onPress();
   }, [slot.available, onPress]);
@@ -102,8 +102,14 @@ function SlotTile({
 
   let bg = slot.available ? colors.surface : colors.background;
   let borderColor = colors.border;
-  if (selected && slotState === "idle") { bg = colors.ink; borderColor = colors.ink; }
-  if (isLoadingSlot)                   { bg = colors.ink; borderColor = colors.ink; }
+  if (selected && slotState === "idle") {
+    bg = colors.ink;
+    borderColor = colors.ink;
+  }
+  if (isLoadingSlot) {
+    bg = colors.ink;
+    borderColor = colors.ink;
+  }
 
   return (
     <Animated.View style={[animStyle, st.tileFlex]}>
@@ -115,21 +121,31 @@ function SlotTile({
           { backgroundColor: bg, borderColor, opacity: slot.available ? 1 : 0.38 },
         ]}
       >
-            {/* Loading spinner only (no confirmed state needed here) */}
-            {isLoadingSlot && (
-              <Animated.View entering={FadeIn.duration(200)} style={st.slotOverlay}>
-                <ActivityIndicator size="small" color="#fff" />
-              </Animated.View>
-            )}
+        {/* Loading spinner only (no confirmed state needed here) */}
+        {isLoadingSlot && (
+          <Animated.View entering={FadeIn.duration(200)} style={st.slotOverlay}>
+            <ActivityIndicator size="small" color="#fff" />
+          </Animated.View>
+        )}
 
-            {/* Normal content — hidden when loading */}
-            {!isLoadingSlot && (
+        {/* Normal content — hidden when loading */}
+        {!isLoadingSlot && (
           <>
-            <Text style={[st.slotTime, { color: selected ? colors.primaryForeground : colors.foreground }]}>
+            <Text
+              style={[
+                st.slotTime,
+                { color: selected ? colors.primaryForeground : colors.foreground },
+              ]}
+            >
               {slot.time}
             </Text>
             <View style={st.slotBottomRow}>
-              <Text style={[st.slotPeriod, { color: selected ? "rgba(255,255,255,0.65)" : colors.inkMuted }]}>
+              <Text
+                style={[
+                  st.slotPeriod,
+                  { color: selected ? "rgba(255,255,255,0.65)" : colors.inkMuted },
+                ]}
+              >
                 {slot.period}
               </Text>
               {!slot.available && (
@@ -148,28 +164,39 @@ function SlotTile({
 // ─── Biometric Success Overlay ──────────────────────────────────────
 function AuthSuccessOverlay({ colors }: { colors: any }) {
   return (
-    <Animated.View 
+    <Animated.View
       entering={FadeIn.duration(400)}
       exiting={FadeOut.duration(400)}
-      style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(255,255,255,0.92)', zIndex: 9991, alignItems: 'center', justifyContent: 'center' }]}
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          backgroundColor: "rgba(255,255,255,0.92)",
+          zIndex: 9991,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      ]}
     >
-       <Animated.View 
-         entering={ZoomIn.duration(500)}
-         style={as.container}
-       >
-          <View style={[as.iconBox, { backgroundColor: colors.ink }]}>
-             <ShieldCheck size={40} color={colors.primaryForeground} strokeWidth={1.5} />
-          </View>
-          <Text style={[as.title, { color: colors.foreground }]}>Identity Verified</Text>
-          <Text style={[as.sub, { color: colors.inkMuted }]}>Encrypted tunnel established</Text>
-       </Animated.View>
+      <Animated.View entering={ZoomIn.duration(500)} style={as.container}>
+        <View style={[as.iconBox, { backgroundColor: colors.ink }]}>
+          <ShieldCheck size={40} color={colors.primaryForeground} strokeWidth={1.5} />
+        </View>
+        <Text style={[as.title, { color: colors.foreground }]}>Identity Verified</Text>
+        <Text style={[as.sub, { color: colors.inkMuted }]}>Encrypted tunnel established</Text>
+      </Animated.View>
     </Animated.View>
   );
 }
 
 const as = StyleSheet.create({
-  container: { alignItems: 'center', gap: 16 },
-  iconBox: { width: 80, height: 80, borderRadius: 30, alignItems: 'center', justifyContent: 'center' },
+  container: { alignItems: "center", gap: 16 },
+  iconBox: {
+    width: 80,
+    height: 80,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   title: { fontSize: 24, fontFamily: "Fraunces_500Medium", letterSpacing: -0.5 },
   sub: { fontSize: 14, fontFamily: "DMSans_400Regular" },
 });
@@ -181,23 +208,23 @@ export default function BookDoctorScreen() {
   const { colors } = useTheme();
   const doctor = doctors.find((d) => d.id === doctorId);
 
-  const [selectedDay,  setSelectedDay]  = useState(0);
+  const [selectedDay, setSelectedDay] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [visitType,    setVisitType]    = useState("in_person");
-  const [reason,       setReason]       = useState("");
-  const [slotState,    setSlotState]    = useState<SlotState>("idle");
-  const [authSuccess,  setAuthSuccess]  = useState(false);
+  const [visitType, setVisitType] = useState("in_person");
+  const [reason, setReason] = useState("");
+  const [slotState, setSlotState] = useState<SlotState>("idle");
+  const [authSuccess, setAuthSuccess] = useState(false);
 
-  // Psychology-Led RX Filter: 
+  // Psychology-Led RX Filter:
   // Anchor on trust by showing previous successful interventions with this specific doctor.
   const pastPrescriptions = medications.filter(
-    (m) => m.prescribedBy === doctor.name && m.status === "past"
+    (m) => m.prescribedBy === doctor.name && m.status === "past",
   );
 
   // Biometric Auth Gate for Booking
   const handleSecureConfirm = async () => {
     if (!selectedSlot) return;
-    
+
     try {
       const hasHardware = await LocalAuthentication.hasHardwareAsync();
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
@@ -212,8 +239,8 @@ export default function BookDoctorScreen() {
       }
 
       const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Authenticate to confirm appointment',
-        fallbackLabel: 'Use Passcode',
+        promptMessage: "Authenticate to confirm appointment",
+        fallbackLabel: "Use Passcode",
       });
 
       if (result.success) {
@@ -262,7 +289,10 @@ export default function BookDoctorScreen() {
     <SafeAreaView style={[s.safe, { backgroundColor: colors.background }]} edges={["top"]}>
       {authSuccess && <AuthSuccessOverlay colors={colors} />}
       {/* Nav bar */}
-      <Animated.View entering={FadeInDown.duration(300)} style={[s.navBar, { borderBottomColor: colors.border }]}>
+      <Animated.View
+        entering={FadeInDown.duration(300)}
+        style={[s.navBar, { borderBottomColor: colors.border }]}
+      >
         <Pressable onPress={() => router.back()} style={s.backBtn} disabled={isConfirming}>
           <ArrowLeft size={20} color={colors.ink} strokeWidth={1.75} />
         </Pressable>
@@ -285,9 +315,7 @@ export default function BookDoctorScreen() {
                 <Text style={[s.docSpecialty, { color: "rgba(255,255,255,0.55)" }]}>
                   {doctor.specialty.toUpperCase()}
                 </Text>
-                <Text style={[s.docName, { color: colors.primaryForeground }]}>
-                  {doctor.name}
-                </Text>
+                <Text style={[s.docName, { color: colors.primaryForeground }]}>{doctor.name}</Text>
                 <Text style={[s.docBio, { color: "rgba(255,255,255,0.5)" }]} numberOfLines={2}>
                   {doctor.bio}
                 </Text>
@@ -297,12 +325,27 @@ export default function BookDoctorScreen() {
             {/* Stats row */}
             <View style={s.docStats}>
               {[
-                { icon: Star,     value: String(doctor.rating),       label: "Rating",     fill: true },
-                { icon: Calendar, value: `${doctor.experience}y`,     label: "Experience", fill: false },
-                { icon: MapPin,   value: doctor.hospital.split(" ")[0], label: "Hospital",  fill: false },
+                { icon: Star, value: String(doctor.rating), label: "Rating", fill: true },
+                {
+                  icon: Calendar,
+                  value: `${doctor.experience}y`,
+                  label: "Experience",
+                  fill: false,
+                },
+                {
+                  icon: MapPin,
+                  value: doctor.hospital.split(" ")[0],
+                  label: "Hospital",
+                  fill: false,
+                },
               ].map(({ icon: Icon, value, label, fill }) => (
                 <View key={label} style={s.docStat}>
-                  <Icon size={13} color={colors.clay} strokeWidth={1.75} fill={fill ? colors.clay : "none"} />
+                  <Icon
+                    size={13}
+                    color={colors.clay}
+                    strokeWidth={1.75}
+                    fill={fill ? colors.clay : "none"}
+                  />
                   <Text style={[s.docStatVal, { color: colors.primaryForeground }]}>{value}</Text>
                   <Text style={[s.docStatLabel, { color: "rgba(255,255,255,0.4)" }]}>{label}</Text>
                 </View>
@@ -310,8 +353,18 @@ export default function BookDoctorScreen() {
             </View>
 
             {/* Fee */}
-            <View style={[s.feeBadge, { borderTopColor: "rgba(255,255,255,0.1)", borderTopWidth: StyleSheet.hairlineWidth }]}>
-              <Text style={[s.feeLabel, { color: "rgba(255,255,255,0.45)" }]}>Consultation fee</Text>
+            <View
+              style={[
+                s.feeBadge,
+                {
+                  borderTopColor: "rgba(255,255,255,0.1)",
+                  borderTopWidth: StyleSheet.hairlineWidth,
+                },
+              ]}
+            >
+              <Text style={[s.feeLabel, { color: "rgba(255,255,255,0.45)" }]}>
+                Consultation fee
+              </Text>
               <Text style={[s.feeVal, { color: colors.primaryForeground }]}>${doctor.fee}</Text>
             </View>
           </View>
@@ -320,33 +373,52 @@ export default function BookDoctorScreen() {
         {/* ── Clinical History (Psychological Anchor: Trust & Continuity) ── */}
         {pastPrescriptions.length > 0 && (
           <Animated.View entering={FadeInDown.duration(400).delay(100)} style={s.section}>
-             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={[s.sectionTitle, { color: colors.foreground }]}>Clinical History</Text>
-                <Pressable onPress={() => router.push({ pathname: "/prescriptions", params: { doctor: doctor.name } })}>
-                   <Text style={{ fontSize: 13, color: colors.clay, fontFamily: 'DMSans_600SemiBold' }}>View all history →</Text>
-                </Pressable>
-             </View>
-             
-             <View style={s.rxGrid}>
-                {pastPrescriptions.slice(0, 2).map((rx) => (
-                   <View key={rx.id} style={[s.rxMiniCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                      <View style={[s.rxIconWrap, { backgroundColor: colors.clay + '10' }]}>
-                         <Pill size={16} color={colors.clay} />
-                      </View>
-                      <View style={{ flex: 1 }}>
-                         <Text style={[s.rxName, { color: colors.foreground }]}>{rx.name}</Text>
-                         {rx.reason && (
-                           <Text style={[s.rxReason, { color: colors.inkMuted }]} numberOfLines={1}>
-                             {rx.reason}
-                           </Text>
-                         )}
-                      </View>
-                   </View>
-                ))}
-             </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text style={[s.sectionTitle, { color: colors.foreground }]}>Clinical History</Text>
+              <Pressable
+                onPress={() =>
+                  router.push({ pathname: "/prescriptions", params: { doctor: doctor.name } })
+                }
+              >
+                <Text
+                  style={{ fontSize: 13, color: colors.clay, fontFamily: "DMSans_600SemiBold" }}
+                >
+                  View all history →
+                </Text>
+              </Pressable>
+            </View>
+
+            <View style={s.rxGrid}>
+              {pastPrescriptions.slice(0, 2).map((rx) => (
+                <View
+                  key={rx.id}
+                  style={[
+                    s.rxMiniCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border },
+                  ]}
+                >
+                  <View style={[s.rxIconWrap, { backgroundColor: colors.clay + "10" }]}>
+                    <Pill size={16} color={colors.clay} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[s.rxName, { color: colors.foreground }]}>{rx.name}</Text>
+                    {rx.reason && (
+                      <Text style={[s.rxReason, { color: colors.inkMuted }]} numberOfLines={1}>
+                        {rx.reason}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              ))}
+            </View>
           </Animated.View>
         )}
-
 
         {/* ── Visit type ──────────────────────────────────────── */}
         <Animated.View entering={FadeInDown.duration(400).delay(120)} style={s.section}>
@@ -361,12 +433,21 @@ export default function BookDoctorScreen() {
                   s.visitTypeTile,
                   {
                     backgroundColor: visitType === id ? colors.ink : colors.surface,
-                    borderColor:     visitType === id ? colors.ink : colors.border,
+                    borderColor: visitType === id ? colors.ink : colors.border,
                   },
                 ]}
               >
-                <Icon size={17} color={visitType === id ? colors.primaryForeground : colors.inkMuted} strokeWidth={1.75} />
-                <Text style={[s.visitTypeLabel, { color: visitType === id ? colors.primaryForeground : colors.inkMuted }]}>
+                <Icon
+                  size={17}
+                  color={visitType === id ? colors.primaryForeground : colors.inkMuted}
+                  strokeWidth={1.75}
+                />
+                <Text
+                  style={[
+                    s.visitTypeLabel,
+                    { color: visitType === id ? colors.primaryForeground : colors.inkMuted },
+                  ]}
+                >
                   {label}
                 </Text>
               </Pressable>
@@ -377,7 +458,11 @@ export default function BookDoctorScreen() {
         {/* ── Date picker ──────────────────────────────────────── */}
         <Animated.View entering={FadeInDown.duration(400).delay(180)} style={s.section}>
           <Text style={[s.sectionTitle, { color: colors.foreground }]}>Select date</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 10 }}
+          >
             {DAYS.map((d, i) => {
               const sel = selectedDay === i;
               return (
@@ -387,21 +472,31 @@ export default function BookDoctorScreen() {
                   disabled={isConfirming}
                   style={[
                     s.dateTile,
-                    { backgroundColor: sel ? colors.ink : colors.surface, borderColor: sel ? colors.ink : colors.border },
+                    {
+                      backgroundColor: sel ? colors.ink : colors.surface,
+                      borderColor: sel ? colors.ink : colors.border,
+                    },
                   ]}
                 >
-                  <Text style={[s.dateDow, { color: sel ? "rgba(255,255,255,0.6)" : colors.inkMuted }]}>
+                  <Text
+                    style={[s.dateDow, { color: sel ? "rgba(255,255,255,0.6)" : colors.inkMuted }]}
+                  >
                     {d.toLocaleDateString("en-US", { weekday: "short" })}
                   </Text>
-                  <Text style={[s.dateNum, { color: sel ? colors.primaryForeground : colors.foreground }]}>
+                  <Text
+                    style={[
+                      s.dateNum,
+                      { color: sel ? colors.primaryForeground : colors.foreground },
+                    ]}
+                  >
                     {d.getDate()}
                   </Text>
-                  <Text style={[s.dateMon, { color: sel ? "rgba(255,255,255,0.5)" : colors.inkMuted }]}>
+                  <Text
+                    style={[s.dateMon, { color: sel ? "rgba(255,255,255,0.5)" : colors.inkMuted }]}
+                  >
                     {d.toLocaleDateString("en-US", { month: "short" })}
                   </Text>
-                  {i === 0 && (
-                    <View style={[s.todayDot, { backgroundColor: colors.clay }]} />
-                  )}
+                  {i === 0 && <View style={[s.todayDot, { backgroundColor: colors.clay }]} />}
                 </Pressable>
               );
             })}
@@ -454,7 +549,11 @@ export default function BookDoctorScreen() {
             editable={!isConfirming}
             style={[
               s.reasonInput,
-              { backgroundColor: colors.surface, borderColor: colors.border, color: colors.foreground },
+              {
+                backgroundColor: colors.surface,
+                borderColor: colors.border,
+                color: colors.foreground,
+              },
             ]}
             textAlignVertical="top"
           />
@@ -468,7 +567,11 @@ export default function BookDoctorScreen() {
               <Text style={[s.totalVal, { color: colors.foreground }]}>${doctor.fee}.00</Text>
               {selectedSlot && (
                 <Text style={[s.slotSummary, { color: colors.clay }]}>
-                  {DAYS[selectedDay].toLocaleDateString("en-US", { month: "short", day: "numeric" })} at {selectedSlot}
+                  {DAYS[selectedDay].toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}{" "}
+                  at {selectedSlot}
                 </Text>
               )}
             </View>
@@ -485,19 +588,22 @@ export default function BookDoctorScreen() {
                 },
               ]}
             >
-            {slotState === "loading" ? (
-              <Animated.View entering={FadeIn.duration(200)} style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                <ActivityIndicator size="small" color="#fff" />
-                <Text style={[s.confirmBtnText, { color: "#fff" }]}>Booking…</Text>
-              </Animated.View>
-            ) : (
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                <Text style={[s.confirmBtnText, { color: colors.primaryForeground }]}>
-                  Confirm appointment
-                </Text>
-                <ChevronRight size={16} color={colors.primaryForeground} strokeWidth={2} />
-              </View>
-            )}
+              {slotState === "loading" ? (
+                <Animated.View
+                  entering={FadeIn.duration(200)}
+                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                >
+                  <ActivityIndicator size="small" color="#fff" />
+                  <Text style={[s.confirmBtnText, { color: "#fff" }]}>Booking…</Text>
+                </Animated.View>
+              ) : (
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                  <Text style={[s.confirmBtnText, { color: colors.primaryForeground }]}>
+                    Confirm appointment
+                  </Text>
+                  <ChevronRight size={16} color={colors.primaryForeground} strokeWidth={2} />
+                </View>
+              )}
             </Pressable>
           </View>
         </Animated.View>
@@ -540,14 +646,19 @@ const s = StyleSheet.create({
   docBio: { fontSize: 12, fontFamily: "DMSans_400Regular", lineHeight: 17, marginTop: 6 },
   docStats: { flexDirection: "row", gap: 6 },
   docStat: {
-    flex: 1, alignItems: "center", gap: 4,
+    flex: 1,
+    alignItems: "center",
+    gap: 4,
     backgroundColor: "rgba(255,255,255,0.06)",
-    borderRadius: 14, paddingVertical: 10,
+    borderRadius: 14,
+    paddingVertical: 10,
   },
   docStatVal: { fontSize: 14, fontFamily: "DMSans_600SemiBold" },
   docStatLabel: { fontSize: 9, fontFamily: "DMSans_400Regular", letterSpacing: 0.4 },
   feeBadge: {
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingTop: 14,
   },
   feeLabel: { fontSize: 12, fontFamily: "DMSans_400Regular" },
@@ -556,8 +667,8 @@ const s = StyleSheet.create({
   // Clinical History
   rxGrid: { gap: 10 },
   rxMiniCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 20,
     borderWidth: 1,
@@ -567,8 +678,8 @@ const s = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   rxName: { fontSize: 15, fontFamily: "DMSans_600SemiBold" },
   rxReason: { fontSize: 12, fontFamily: "DMSans_400Regular", marginTop: 2 },
@@ -587,32 +698,69 @@ const s = StyleSheet.create({
 
   // Visit type
   visitTypeRow: { flexDirection: "row", gap: 10 },
-  visitTypeTile: { flex: 1, alignItems: "center", gap: 7, borderRadius: 16, borderWidth: 1, paddingVertical: 14 },
+  visitTypeTile: {
+    flex: 1,
+    alignItems: "center",
+    gap: 7,
+    borderRadius: 16,
+    borderWidth: 1,
+    paddingVertical: 14,
+  },
   visitTypeLabel: { fontSize: 11, fontFamily: "DMSans_500Medium", letterSpacing: 0.2 },
 
   // Date
-  dateTile: { width: 68, alignItems: "center", gap: 3, borderRadius: 18, borderWidth: 1, paddingVertical: 14 },
-  dateDow: { fontSize: 10, fontFamily: "DMSans_500Medium", letterSpacing: 1, textTransform: "uppercase" },
+  dateTile: {
+    width: 68,
+    alignItems: "center",
+    gap: 3,
+    borderRadius: 18,
+    borderWidth: 1,
+    paddingVertical: 14,
+  },
+  dateDow: {
+    fontSize: 10,
+    fontFamily: "DMSans_500Medium",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
   dateNum: { fontSize: 24, fontFamily: "Fraunces_400Regular", letterSpacing: -0.5 },
-  dateMon: { fontSize: 10, fontFamily: "DMSans_400Regular", letterSpacing: 0.5, textTransform: "uppercase" },
+  dateMon: {
+    fontSize: 10,
+    fontFamily: "DMSans_400Regular",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
   todayDot: { width: 5, height: 5, borderRadius: 2.5 },
 
   // Slots — 2 columns
-  periodLabel: { fontSize: 10, fontFamily: "DMSans_600SemiBold", letterSpacing: 2, textTransform: "uppercase" },
+  periodLabel: {
+    fontSize: 10,
+    fontFamily: "DMSans_600SemiBold",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
   slotGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
 
   // Confirm
   confirmStrip: {
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-    borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingTop: 20,
   },
   totalLabel: { fontSize: 9, fontFamily: "DMSans_600SemiBold", letterSpacing: 1.5 },
   totalVal: { fontSize: 24, fontFamily: "Fraunces_400Regular", letterSpacing: -0.5, marginTop: 3 },
   slotSummary: { fontSize: 12, fontFamily: "DMSans_500Medium", marginTop: 3 },
   confirmBtn: {
-    flexDirection: "row", alignItems: "center", gap: 8,
-    borderRadius: 16, paddingHorizontal: 20, paddingVertical: 14,
-    minWidth: 180, justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    minWidth: 180,
+    justifyContent: "center",
   },
   confirmBtnText: { fontSize: 14, fontFamily: "DMSans_600SemiBold" },
 });
@@ -638,13 +786,20 @@ const st = StyleSheet.create({
 
   // Overlay (spinner or tick) shown in centre of tile
   slotOverlay: {
-    position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
     justifyContent: "center",
   },
   tickCircle: {
-    width: 36, height: 36, borderRadius: 18,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: "rgba(255,255,255,0.2)",
-    alignItems: "center", justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -15,8 +15,12 @@ const PASS = "MedoraDemo!2026Doc";
 const H = "a0000001-0001-4001-8001-000000000001";
 const N = 30;
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 function pct(sorted, p) {
   if (!sorted.length) return null;
@@ -83,15 +87,20 @@ const tAuthChain = [];
 for (let i = 0; i < 10; i++) {
   const t0 = performance.now();
   await Promise.all([
-    admin.from("hospital_memberships").select("role, hospital_id").eq("profile_id", user.id).eq("is_active", true),
+    admin
+      .from("hospital_memberships")
+      .select("role, hospital_id")
+      .eq("profile_id", user.id)
+      .eq("is_active", true),
     admin.from("patients").select("id, hospital_id").eq("profile_id", user.id).maybeSingle(),
   ]);
   tAuthChain.push(performance.now() - t0);
 }
 
 const sampleIds =
-  (await admin.from("appointments").select("id").eq("hospital_id", H).limit(200)).data?.map((r) => r.id) ??
-  [];
+  (await admin.from("appointments").select("id").eq("hospital_id", H).limit(200)).data?.map(
+    (r) => r.id,
+  ) ?? [];
 const tAudit = [];
 for (let i = 0; i < 8; i++) {
   const t0 = performance.now();
@@ -182,7 +191,8 @@ const report = {
         "Different sample size (30 vs fewer), possible Worker/CPU contention, and full response body consumption timing — not a PostgREST-only number",
     },
     postgrest_119_ms: {
-      meaning: "Direct PostgREST/service_role select median WITHOUT Worker auth/framework — not comparable % to Worker e2e",
+      meaning:
+        "Direct PostgREST/service_role select median WITHOUT Worker auth/framework — not comparable % to Worker e2e",
     },
   },
   stages_ms: {
@@ -252,6 +262,9 @@ const report = {
     warmStats.p95 < 800,
 };
 
-writeFileSync("docs/evidence/appointments-latency-post-index.json", JSON.stringify(report, null, 2));
+writeFileSync(
+  "docs/evidence/appointments-latency-post-index.json",
+  JSON.stringify(report, null, 2),
+);
 console.log(JSON.stringify(report, null, 2));
 process.exit(report.pass ? 0 : 1);

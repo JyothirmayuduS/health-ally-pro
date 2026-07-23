@@ -18,7 +18,10 @@ function assert(cond, msg) {
 }
 
 async function countForeign(client, table, hospitalId, extraEq = {}) {
-  let q = client.from(table).select("id", { count: "exact", head: true }).eq("hospital_id", hospitalId);
+  let q = client
+    .from(table)
+    .select("id", { count: "exact", head: true })
+    .eq("hospital_id", hospitalId);
   for (const [k, v] of Object.entries(extraEq)) q = q.eq(k, v);
   const { count, error } = await q;
   if (error) return { ok: false, error: error.message, count: null };
@@ -26,14 +29,23 @@ async function countForeign(client, table, hospitalId, extraEq = {}) {
 }
 
 async function main() {
-  assert(url && anon && service, "Need SUPABASE_URL, VITE_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY");
-  const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-
-  await admin.from("hospitals").upsert({ id: B, name: "Dual Tenant Hospital B", slug: "dual-tenant-hospital-b" });
-  await admin.from("patients").upsert(
-    { id: "d0000001-0001-4001-8001-0000000000aa", hospital_id: B, mrn: "DUAL-B-MRN" },
-    { onConflict: "id" },
+  assert(
+    url && anon && service,
+    "Need SUPABASE_URL, VITE_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY",
   );
+  const admin = createClient(url, service, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+
+  await admin
+    .from("hospitals")
+    .upsert({ id: B, name: "Dual Tenant Hospital B", slug: "dual-tenant-hospital-b" });
+  await admin
+    .from("patients")
+    .upsert(
+      { id: "d0000001-0001-4001-8001-0000000000aa", hospital_id: B, mrn: "DUAL-B-MRN" },
+      { onConflict: "id" },
+    );
 
   // Seed PHI-shaped rows for each desk/table under Hospital B
   await admin.from("specialty_chart_notes").upsert({
@@ -101,16 +113,20 @@ async function main() {
   } else {
     await admin.auth.admin.updateUserById(bUser.id, { password: PASS });
   }
-  await admin.from("hospital_memberships").upsert(
-    { profile_id: bUser.id, hospital_id: B, role: "doctor", is_active: true },
-    { onConflict: "profile_id,hospital_id,role" },
-  );
+  await admin
+    .from("hospital_memberships")
+    .upsert(
+      { profile_id: bUser.id, hospital_id: B, role: "doctor", is_active: true },
+      { onConflict: "profile_id,hospital_id,role" },
+    );
 
   // Also need hospital_admin on B for audit_logs select policy
-  await admin.from("hospital_memberships").upsert(
-    { profile_id: bUser.id, hospital_id: B, role: "hospital_admin", is_active: true },
-    { onConflict: "profile_id,hospital_id,role" },
-  );
+  await admin
+    .from("hospital_memberships")
+    .upsert(
+      { profile_id: bUser.id, hospital_id: B, role: "hospital_admin", is_active: true },
+      { onConflict: "profile_id,hospital_id,role" },
+    );
 
   const oakClient = createClient(url, anon, { auth: { persistSession: false } });
   const oakAuth = await oakClient.auth.signInWithPassword({ email: oakEmail, password: PASS });
@@ -156,7 +172,8 @@ async function main() {
 
   // Persist API 403
   let persist = { skipped: true };
-  const persistUrl = process.env.DUAL_TENANT_PERSIST_URL || "http://127.0.0.1:8787/api/hospital/persist";
+  const persistUrl =
+    process.env.DUAL_TENANT_PERSIST_URL || "http://127.0.0.1:8787/api/hospital/persist";
   try {
     const res = await fetch(persistUrl, {
       method: "POST",

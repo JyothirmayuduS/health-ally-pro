@@ -1,7 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
-import Animated, { FadeInDown, FadeOutDown, SlideInDown, SlideOutDown } from "react-native-reanimated";
+import Animated, {
+  FadeInDown,
+  FadeOutDown,
+  SlideInDown,
+  SlideOutDown,
+} from "react-native-reanimated";
 import { X, UserPlus, CheckCircle2, ChevronRight } from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,11 +24,11 @@ export default function AddFamilyMemberModal() {
   const router = useRouter();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  
+
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [relation, setRelation] = useState("Child");
-  
+
   const relations = ["Child", "Parent", "Spouse", "Other"];
 
   const handleCreate = () => {
@@ -25,22 +39,25 @@ export default function AddFamilyMemberModal() {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={s.overlay} 
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    <KeyboardAvoidingView
+      style={s.overlay}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Animated.View 
-        entering={FadeInDown.duration(300)} 
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         exiting={FadeOutDown.duration(300)}
-        style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} 
+        style={[StyleSheet.absoluteFill, { backgroundColor: "rgba(0,0,0,0.4)" }]}
       >
         <Pressable style={StyleSheet.absoluteFill} onPress={() => router.back()} />
       </Animated.View>
 
-      <Animated.View 
+      <Animated.View
         entering={SlideInDown.duration(350)}
         exiting={SlideOutDown.duration(250)}
-        style={[s.sheet, { backgroundColor: colors.background, paddingBottom: Math.max(insets.bottom, 24) }]}
+        style={[
+          s.sheet,
+          { backgroundColor: colors.background, paddingBottom: Math.max(insets.bottom, 24) },
+        ]}
       >
         <View style={s.handleWrap}>
           <View style={[s.handle, { backgroundColor: colors.border }]} />
@@ -48,14 +65,14 @@ export default function AddFamilyMemberModal() {
 
         <View style={s.header}>
           <View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 6 }}>
               <UserPlus size={14} color={colors.inkMuted} strokeWidth={2} />
               <Text style={[s.eyebrow, { color: colors.inkMuted }]}>FAMILY NETWORK</Text>
             </View>
             <Text style={[s.title, { color: colors.foreground }]}>Add Dependent</Text>
           </View>
-          <Pressable 
-            style={[s.closeBtn, { backgroundColor: colors.surface }]} 
+          <Pressable
+            style={[s.closeBtn, { backgroundColor: colors.surface }]}
             onPress={() => router.back()}
           >
             <X size={20} color={colors.foreground} />
@@ -63,11 +80,17 @@ export default function AddFamilyMemberModal() {
         </View>
 
         {step === 1 ? (
-          <Animated.View entering={FadeInDown} style={{ width: '100%' }}>
-            
+          <Animated.View entering={FadeInDown} style={{ width: "100%" }}>
             <Text style={[s.label, { color: colors.foreground }]}>Full Name</Text>
-            <TextInput 
-              style={[s.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.foreground }]}
+            <TextInput
+              style={[
+                s.input,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                  color: colors.foreground,
+                },
+              ]}
               placeholder="e.g. Eleanor Thorne"
               placeholderTextColor={colors.inkMuted}
               value={name}
@@ -75,22 +98,31 @@ export default function AddFamilyMemberModal() {
             />
 
             <Text style={[s.label, { color: colors.foreground, marginTop: 16 }]}>Relationship</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.chipRow}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={s.chipRow}
+            >
               {relations.map((rel) => {
                 const isActive = relation === rel;
                 return (
-                  <Pressable 
+                  <Pressable
                     key={rel}
                     onPress={() => setRelation(rel)}
                     style={[
-                      s.chip, 
-                      { 
-                        backgroundColor: isActive ? colors.ink : colors.surface, 
-                        borderColor: isActive ? colors.ink : colors.border 
-                      }
+                      s.chip,
+                      {
+                        backgroundColor: isActive ? colors.ink : colors.surface,
+                        borderColor: isActive ? colors.ink : colors.border,
+                      },
                     ]}
                   >
-                    <Text style={[s.chipText, { color: isActive ? colors.primaryForeground : colors.foreground }]}>
+                    <Text
+                      style={[
+                        s.chipText,
+                        { color: isActive ? colors.primaryForeground : colors.foreground },
+                      ]}
+                    >
                       {rel}
                     </Text>
                   </Pressable>
@@ -98,26 +130,33 @@ export default function AddFamilyMemberModal() {
               })}
             </ScrollView>
 
-            <Pressable 
+            <Pressable
               style={[s.submitBtn, { backgroundColor: name ? colors.clay : colors.surface }]}
               onPress={handleCreate}
               disabled={!name}
             >
-              <Text style={[s.submitText, { color: name ? '#FFF' : colors.inkMuted }]}>Create Medical Profile</Text>
-              <ChevronRight size={18} color={name ? '#FFF' : colors.inkMuted} strokeWidth={2} />
+              <Text style={[s.submitText, { color: name ? "#FFF" : colors.inkMuted }]}>
+                Create Medical Profile
+              </Text>
+              <ChevronRight size={18} color={name ? "#FFF" : colors.inkMuted} strokeWidth={2} />
             </Pressable>
-
           </Animated.View>
         ) : (
           <Animated.View entering={FadeInDown} style={s.successBox}>
-            <CheckCircle2 size={48} color={colors.clay} strokeWidth={1.5} style={{ marginBottom: 16 }} />
-            <Text style={[s.title, { color: colors.foreground, textAlign: 'center' }]}>Profile Linked</Text>
+            <CheckCircle2
+              size={48}
+              color={colors.clay}
+              strokeWidth={1.5}
+              style={{ marginBottom: 16 }}
+            />
+            <Text style={[s.title, { color: colors.foreground, textAlign: "center" }]}>
+              Profile Linked
+            </Text>
             <Text style={[s.successDesc, { color: colors.inkMuted }]}>
               {name}'s secure health profile has been successfully mapped to your proxy network.
             </Text>
           </Animated.View>
         )}
-
       </Animated.View>
     </KeyboardAvoidingView>
   );
@@ -129,11 +168,11 @@ const s = StyleSheet.create({
     justifyContent: "flex-end",
   },
   sheet: {
-    width: '100%',
+    width: "100%",
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingHorizontal: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 20,
@@ -170,8 +209,8 @@ const s = StyleSheet.create({
     marginLeft: 4,
   },
   input: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     height: 56,
     borderRadius: 16,
@@ -194,9 +233,9 @@ const s = StyleSheet.create({
     fontFamily: "DMSans_500Medium",
   },
   submitBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 8,
     height: 56,
     borderRadius: 16,
@@ -207,16 +246,16 @@ const s = StyleSheet.create({
     fontFamily: "DMSans_600SemiBold",
   },
   successBox: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 40,
   },
   successDesc: {
     fontSize: 15,
     fontFamily: "DMSans_400Regular",
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 8,
     lineHeight: 22,
     paddingHorizontal: 20,
-  }
+  },
 });

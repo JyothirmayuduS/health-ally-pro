@@ -76,8 +76,12 @@ async function timeSelect(client, table, limit) {
 
 async function main() {
   assert(url && anon && service, "missing env");
-  const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-  const client = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+  const admin = createClient(url, service, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const client = createClient(url, anon, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 
   const seedInfo = await seed(admin);
 
@@ -163,9 +167,7 @@ async function main() {
       health_check: health,
       cron_check_proof: cronProof,
       classification:
-        !broken.error &&
-        broken.rows > 0 &&
-        (dlq?.length ?? 0) > 0
+        !broken.error && broken.rows > 0 && (dlq?.length ?? 0) > 0
           ? "READ_OK_PRIMARY_FAILED_DLQ_CAPTURED"
           : !broken.error &&
               broken.rows > 0 &&
@@ -178,10 +180,7 @@ async function main() {
     },
   };
 
-  writeFileSync(
-    "docs/evidence/phi-read-audit-load-test.json",
-    JSON.stringify(report, null, 2),
-  );
+  writeFileSync("docs/evidence/phi-read-audit-load-test.json", JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
 }
 

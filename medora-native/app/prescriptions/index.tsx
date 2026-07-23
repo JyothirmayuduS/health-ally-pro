@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import {
-  ArrowLeft,
-  Pill,
-  User,
-  Info,
-  ChevronRight,
-  X,
-  FileText,
-} from "lucide-react-native";
+import { ArrowLeft, Pill, User, Info, ChevronRight, X, FileText } from "lucide-react-native";
 import { medications, doctors } from "@/lib/mock-data";
 import {
   formatRxRelative,
@@ -43,16 +29,15 @@ export default function PrescriptionsScreen() {
     return subscribePatientRx(() => setERxList(listPatientPrescriptions()));
   }, []);
 
-  const pastMedications = medications.filter(
-    (m) => !doctorParam || m.prescribedBy === doctorParam,
-  );
+  const pastMedications = medications.filter((m) => !doctorParam || m.prescribedBy === doctorParam);
 
-  const filteredRx = doctorParam
-    ? eRxList.filter((r) => r.doctor_name === doctorParam)
-    : eRxList;
+  const filteredRx = doctorParam ? eRxList.filter((r) => r.doctor_name === doctorParam) : eRxList;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top"]}
+    >
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <ArrowLeft size={22} color={colors.ink} />
@@ -72,7 +57,12 @@ export default function PrescriptionsScreen() {
 
         {doctorParam ? (
           <Animated.View entering={FadeInDown.duration(400)}>
-            <View style={[styles.filterBar, { backgroundColor: colors.clay + "10", borderColor: colors.clay + "30" }]}>
+            <View
+              style={[
+                styles.filterBar,
+                { backgroundColor: colors.clay + "10", borderColor: colors.clay + "30" },
+              ]}
+            >
               <View style={styles.filterLeft}>
                 <User size={14} color={colors.clay} />
                 <Text style={[styles.filterText, { color: colors.foreground }]}>
@@ -91,9 +81,16 @@ export default function PrescriptionsScreen() {
 
         <View style={styles.list}>
           {filteredRx.length === 0 ? (
-            <View style={[styles.emptyCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View
+              style={[
+                styles.emptyCard,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <FileText size={28} color={colors.inkMuted} />
-              <Text style={[styles.emptyTitle, { color: colors.foreground }]}>No e-prescriptions yet</Text>
+              <Text style={[styles.emptyTitle, { color: colors.foreground }]}>
+                No e-prescriptions yet
+              </Text>
               <Text style={[styles.emptySub, { color: colors.inkMuted }]}>
                 When your doctor sends a prescription, it appears here automatically.
               </Text>
@@ -103,7 +100,10 @@ export default function PrescriptionsScreen() {
               <Animated.View key={rx.id} entering={FadeInDown.duration(400).delay(80 + index * 40)}>
                 <Pressable
                   onPress={() => router.push(`/prescriptions/${rx.rx_number}`)}
-                  style={[styles.erxCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                  style={[
+                    styles.erxCard,
+                    { backgroundColor: colors.surface, borderColor: colors.border },
+                  ]}
                 >
                   <View style={styles.erxTop}>
                     <View style={[styles.iconWrap, { backgroundColor: colors.clay + "15" }]}>
@@ -111,14 +111,29 @@ export default function PrescriptionsScreen() {
                     </View>
                     <View style={{ flex: 1 }}>
                       <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                        <Text style={[styles.rxNum, { color: colors.foreground }]}>{rx.rx_number}</Text>
-                        <View style={[styles.statusPill, { backgroundColor: statusColor(rx.status, colors.clay) + "20" }]}>
-                          <Text style={[styles.statusText, { color: statusColor(rx.status, colors.clay) }]}>
+                        <Text style={[styles.rxNum, { color: colors.foreground }]}>
+                          {rx.rx_number}
+                        </Text>
+                        <View
+                          style={[
+                            styles.statusPill,
+                            { backgroundColor: statusColor(rx.status, colors.clay) + "20" },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.statusText,
+                              { color: statusColor(rx.status, colors.clay) },
+                            ]}
+                          >
                             {rx.status}
                           </Text>
                         </View>
                       </View>
-                      <Text style={[styles.erxDiagnosis, { color: colors.foreground }]} numberOfLines={1}>
+                      <Text
+                        style={[styles.erxDiagnosis, { color: colors.foreground }]}
+                        numberOfLines={1}
+                      >
                         {rx.diagnosis}
                       </Text>
                       <Text style={[styles.erxMeta, { color: colors.inkMuted }]}>
@@ -135,7 +150,9 @@ export default function PrescriptionsScreen() {
         </View>
 
         <Animated.View entering={FadeInDown.duration(500).delay(200)} style={{ marginTop: 32 }}>
-          <Text style={[styles.sectionLabel, { color: colors.foreground }]}>Medication history</Text>
+          <Text style={[styles.sectionLabel, { color: colors.foreground }]}>
+            Medication history
+          </Text>
           <Text style={[styles.sectionSub, { color: colors.inkMuted }]}>
             Historical dosages and clinical rationale from your chart.
           </Text>
@@ -143,11 +160,13 @@ export default function PrescriptionsScreen() {
 
         <View style={styles.list}>
           {pastMedications.map((med, index) => (
-            <Animated.View
-              key={med.id}
-              entering={FadeInDown.duration(400).delay(240 + index * 50)}
-            >
-              <View style={[styles.medCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Animated.View key={med.id} entering={FadeInDown.duration(400).delay(240 + index * 50)}>
+              <View
+                style={[
+                  styles.medCard,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                ]}
+              >
                 <View style={styles.medHeader}>
                   <View style={[styles.iconWrap, { backgroundColor: colors.ink + "10" }]}>
                     <Pill size={20} color={colors.ink} />
@@ -163,14 +182,18 @@ export default function PrescriptionsScreen() {
                 <View style={[styles.infoRow, { borderTopColor: colors.border }]}>
                   <View style={styles.infoItem}>
                     <User size={14} color={colors.clay} />
-                    <Text style={[styles.infoText, { color: colors.foreground }]}>{med.prescribedBy}</Text>
+                    <Text style={[styles.infoText, { color: colors.foreground }]}>
+                      {med.prescribedBy}
+                    </Text>
                   </View>
                 </View>
 
                 <View style={[styles.reasonCard, { backgroundColor: colors.background }]}>
                   <View style={styles.reasonHeader}>
                     <Info size={14} color={colors.clay} />
-                    <Text style={[styles.reasonTitle, { color: colors.clay }]}>Clinical rationale</Text>
+                    <Text style={[styles.reasonTitle, { color: colors.clay }]}>
+                      Clinical rationale
+                    </Text>
                   </View>
                   <Text style={[styles.reasonText, { color: colors.inkMuted }]}>{med.reason}</Text>
                 </View>

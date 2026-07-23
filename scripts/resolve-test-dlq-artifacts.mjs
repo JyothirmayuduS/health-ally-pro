@@ -7,7 +7,9 @@ import { writeFileSync } from "node:fs";
 
 const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 const KNOWN_TEST_IDS = [
   "27be26a6-a418-4828-974a-66970cb78a64", // audit-write-dlq-proof simulated
@@ -35,8 +37,7 @@ for (const id of KNOWN_TEST_IDS) {
     status: "test_artifact",
     resolved_at: now,
     resolved_by: "scripts/resolve-test-dlq-artifacts.mjs",
-    reason:
-      "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident",
+    reason: "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident",
     previous_status: existing.resolved_at ? "resolved" : "open",
     original_error_message: existing.error_message,
     original_created_at: existing.created_at,

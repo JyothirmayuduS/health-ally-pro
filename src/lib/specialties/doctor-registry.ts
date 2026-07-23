@@ -130,7 +130,7 @@ function emit() {
 export function loadHospitalDoctors(): HospitalDoctorRecord[] {
   if (typeof window === "undefined") return seedDoctors();
   try {
-    let raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       // migrate / ignore legacy key and reseed with specialty links
       localStorage.removeItem(LEGACY_KEY);

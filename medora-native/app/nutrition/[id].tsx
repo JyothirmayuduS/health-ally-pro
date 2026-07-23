@@ -30,13 +30,13 @@ import {
 import { useTheme } from "../../theme/ThemeProvider";
 import { dietMeals } from "../../lib/mock-data";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated, { 
-  FadeInDown, 
-  useAnimatedScrollHandler, 
-  useAnimatedStyle, 
-  useSharedValue, 
-  interpolate, 
-  Extrapolate 
+import Animated, {
+  FadeInDown,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  interpolate,
+  Extrapolate,
 } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
@@ -61,28 +61,23 @@ export default function MealDetailScreen() {
       scrollY.value,
       [HERO_HEIGHT - 100, HERO_HEIGHT - 60],
       [0, 1],
-      Extrapolate.CLAMP
+      Extrapolate.CLAMP,
     );
-    return { 
+    return {
       opacity,
       backgroundColor: colors.surface,
       borderBottomWidth: opacity > 0.5 ? 1 : 0,
-      borderBottomColor: colors.border
+      borderBottomColor: colors.border,
     };
   });
 
   const heroStyle = useAnimatedStyle(() => {
-    const scale = interpolate(
-      scrollY.value,
-      [-HERO_HEIGHT, 0],
-      [2, 1],
-      Extrapolate.CLAMP
-    );
+    const scale = interpolate(scrollY.value, [-HERO_HEIGHT, 0], [2, 1], Extrapolate.CLAMP);
     const translateY = interpolate(
       scrollY.value,
       [0, HERO_HEIGHT],
       [0, -HERO_HEIGHT / 2],
-      Extrapolate.CLAMP
+      Extrapolate.CLAMP,
     );
     return {
       transform: [{ scale }, { translateY }],
@@ -91,7 +86,12 @@ export default function MealDetailScreen() {
 
   if (!meal) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background, justifyContent: "center", alignItems: "center" }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: colors.background, justifyContent: "center", alignItems: "center" },
+        ]}
+      >
         <Text style={{ color: colors.inkMuted }}>Meal profile not found</Text>
         <Pressable onPress={() => router.back()} style={{ marginTop: 20 }}>
           <Text style={{ color: colors.clay }}>Go Back</Text>
@@ -103,56 +103,61 @@ export default function MealDetailScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-      
+
       {/* 🚀 Sticky Navigation Bar (Fades in on scroll) */}
       <Animated.View style={[styles.stickyHeader, headerStyle]}>
-         <SafeAreaView edges={["top"]}>
-            <View style={styles.headerInner}>
-               <Pressable onPress={() => router.back()} style={styles.backBtnSmall}>
-                  <ArrowLeft size={20} color={colors.foreground} />
-               </Pressable>
-               <Text style={[styles.stickyTitle, { color: colors.foreground }]} numberOfLines={1}>
-                  {meal.name}
-               </Text>
-               <View style={{ width: 36 }} />
-            </View>
-         </SafeAreaView>
+        <SafeAreaView edges={["top"]}>
+          <View style={styles.headerInner}>
+            <Pressable onPress={() => router.back()} style={styles.backBtnSmall}>
+              <ArrowLeft size={20} color={colors.foreground} />
+            </Pressable>
+            <Text style={[styles.stickyTitle, { color: colors.foreground }]} numberOfLines={1}>
+              {meal.name}
+            </Text>
+            <View style={{ width: 36 }} />
+          </View>
+        </SafeAreaView>
       </Animated.View>
 
-      <Animated.ScrollView 
+      <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
-        style={styles.container} 
+        style={styles.container}
         contentContainerStyle={styles.scrollContentOuter}
         showsVerticalScrollIndicator={false}
       >
         {/* 📸 Parallax Hero Image */}
         <Animated.View style={[styles.heroContainer, heroStyle]}>
           {meal.imageUrl ? (
-             <Image 
-              source={{ uri: meal.imageUrl }} 
-              style={styles.heroImage} 
-              resizeMode="cover"
-             />
+            <Image source={{ uri: meal.imageUrl }} style={styles.heroImage} resizeMode="cover" />
           ) : (
-             <View style={[styles.heroImage, { backgroundColor: colors.clay + "20", justifyContent: "center", alignItems: "center" }]}>
-                <Utensils size={40} color={colors.clay} />
-             </View>
+            <View
+              style={[
+                styles.heroImage,
+                {
+                  backgroundColor: colors.clay + "20",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Utensils size={40} color={colors.clay} />
+            </View>
           )}
           <LinearGradient
             colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0.2)", "transparent"]}
             style={StyleSheet.absoluteFill}
           />
-          
+
           <SafeAreaView edges={["top"]}>
-             <View style={styles.headerFloating}>
-                <Pressable onPress={() => router.back()} style={styles.backBtn}>
-                   <ArrowLeft size={24} color="#FFF" />
-                </Pressable>
-                <View style={[styles.headerBadge, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
-                   <Text style={styles.headerBadgeText}>{meal.mealType.toUpperCase()}</Text>
-                </View>
-             </View>
+            <View style={styles.headerFloating}>
+              <Pressable onPress={() => router.back()} style={styles.backBtn}>
+                <ArrowLeft size={24} color="#FFF" />
+              </Pressable>
+              <View style={[styles.headerBadge, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
+                <Text style={styles.headerBadgeText}>{meal.mealType.toUpperCase()}</Text>
+              </View>
+            </View>
           </SafeAreaView>
         </Animated.View>
 
@@ -160,83 +165,108 @@ export default function MealDetailScreen() {
         <View style={[styles.contentCard, { backgroundColor: colors.background }]}>
           <View style={styles.dragHandle} />
           <Animated.View entering={FadeInDown.duration(600)}>
-             {/* Title & Metadata */}
-             <View style={styles.titleRow}>
-                <View style={{ flex: 1 }}>
-                   <Text style={[styles.mealName, { color: colors.foreground }]}>{meal.name}</Text>
-                   {meal.aiIntelligence && (
-                      <View style={styles.aiBadge}>
-                         <Cpu size={12} color={colors.clay} />
-                         <Text style={[styles.aiBadgeText, { color: colors.clay }]}>
-                            {Math.round(meal.aiIntelligence.confidence * 100)}% Clinical Confidence · {meal.aiIntelligence.model}
-                         </Text>
+            {/* Title & Metadata */}
+            <View style={styles.titleRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.mealName, { color: colors.foreground }]}>{meal.name}</Text>
+                {meal.aiIntelligence && (
+                  <View style={styles.aiBadge}>
+                    <Cpu size={12} color={colors.clay} />
+                    <Text style={[styles.aiBadgeText, { color: colors.clay }]}>
+                      {Math.round(meal.aiIntelligence.confidence * 100)}% Clinical Confidence ·{" "}
+                      {meal.aiIntelligence.model}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <View style={[styles.budgetBadge, { backgroundColor: colors.clay + "15" }]}>
+                <Text style={[styles.budgetText, { color: colors.clay }]}>
+                  {meal.budget.toUpperCase()}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.metaStrip}>
+              <View style={styles.metaItem}>
+                <View style={[styles.metaIcon, { backgroundColor: colors.ink + "05" }]}>
+                  <Flame size={14} color={colors.inkMuted} />
+                </View>
+                <Text style={[styles.metaVal, { color: colors.foreground }]}>
+                  {meal.calories} kcal
+                </Text>
+              </View>
+              <View style={styles.metaItem}>
+                <View style={[styles.metaIcon, { backgroundColor: colors.ink + "05" }]}>
+                  <Clock size={14} color={colors.inkMuted} />
+                </View>
+                <Text style={[styles.metaVal, { color: colors.foreground }]}>20 min</Text>
+              </View>
+              <View style={styles.metaItem}>
+                <View style={[styles.metaIcon, { backgroundColor: colors.clay + "10" }]}>
+                  <Zap size={14} color={colors.clay} />
+                </View>
+                <Text style={[styles.metaVal, { color: colors.foreground }]}>Protein Rich</Text>
+              </View>
+            </View>
+
+            {/* 🧪 Metabolic Impact Timeline */}
+            {meal.metabolicImpact && (
+              <View style={[styles.timelineContainer, { borderLeftColor: colors.border }]}>
+                <Text style={[styles.sectionSubtitle, { color: colors.inkMuted }]}>
+                  Metabolic Activation Timeline
+                </Text>
+                {meal.metabolicImpact.map((impact, i) => (
+                  <View key={i} style={styles.timelineItem}>
+                    <View style={[styles.timelineDot, { backgroundColor: colors.clay }]} />
+                    <View style={styles.timelineContent}>
+                      <View style={styles.timelineHeader}>
+                        <Text style={[styles.timelineTime, { color: colors.clay }]}>
+                          {impact.time}
+                        </Text>
+                        <Text style={[styles.timelineEffect, { color: colors.foreground }]}>
+                          {impact.effect}
+                        </Text>
                       </View>
-                   )}
-                </View>
-                <View style={[styles.budgetBadge, { backgroundColor: colors.clay + "15" }]}>
-                   <Text style={[styles.budgetText, { color: colors.clay }]}>{meal.budget.toUpperCase()}</Text>
-                </View>
-             </View>
-
-             <View style={styles.metaStrip}>
-                <View style={styles.metaItem}>
-                   <View style={[styles.metaIcon, { backgroundColor: colors.ink + "05" }]}>
-                     <Flame size={14} color={colors.inkMuted} />
-                   </View>
-                   <Text style={[styles.metaVal, { color: colors.foreground }]}>{meal.calories} kcal</Text>
-                </View>
-                <View style={styles.metaItem}>
-                   <View style={[styles.metaIcon, { backgroundColor: colors.ink + "05" }]}>
-                     <Clock size={14} color={colors.inkMuted} />
-                   </View>
-                   <Text style={[styles.metaVal, { color: colors.foreground }]}>20 min</Text>
-                </View>
-                <View style={styles.metaItem}>
-                   <View style={[styles.metaIcon, { backgroundColor: colors.clay + "10" }]}>
-                     <Zap size={14} color={colors.clay} />
-                   </View>
-                   <Text style={[styles.metaVal, { color: colors.foreground }]}>Protein Rich</Text>
-                </View>
-             </View>
-
-             {/* 🧪 Metabolic Impact Timeline */}
-             {meal.metabolicImpact && (
-                <View style={[styles.timelineContainer, { borderLeftColor: colors.border }]}>
-                   <Text style={[styles.sectionSubtitle, { color: colors.inkMuted }]}>Metabolic Activation Timeline</Text>
-                   {meal.metabolicImpact.map((impact, i) => (
-                     <View key={i} style={styles.timelineItem}>
-                        <View style={[styles.timelineDot, { backgroundColor: colors.clay }]} />
-                        <View style={styles.timelineContent}>
-                           <View style={styles.timelineHeader}>
-                              <Text style={[styles.timelineTime, { color: colors.clay }]}>{impact.time}</Text>
-                              <Text style={[styles.timelineEffect, { color: colors.foreground }]}>{impact.effect}</Text>
-                           </View>
-                           <Text style={[styles.timelineDesc, { color: colors.inkMuted }]}>{impact.description}</Text>
-                        </View>
-                     </View>
-                   ))}
-                </View>
-             )}
+                      <Text style={[styles.timelineDesc, { color: colors.inkMuted }]}>
+                        {impact.description}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
           </Animated.View>
 
           {/* 🧠 Clinical Rationale */}
           <Animated.View entering={FadeInDown.delay(200)} style={styles.section}>
-             <View style={styles.sectionHeader}>
-                <Info size={18} color={colors.clay} />
-                <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Why this meal?</Text>
-             </View>
-             <View style={[styles.rationaleCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                <Text style={[styles.rationaleText, { color: colors.inkMuted }]}>{meal.clinicalRationale}</Text>
-             </View>
+            <View style={styles.sectionHeader}>
+              <Info size={18} color={colors.clay} />
+              <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
+                Why this meal?
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.rationaleCard,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
+              <Text style={[styles.rationaleText, { color: colors.inkMuted }]}>
+                {meal.clinicalRationale}
+              </Text>
+            </View>
           </Animated.View>
 
           {/* 🥙 Systemic Clinical Benefits */}
           {meal.clinicalBenefits && (
             <Animated.View entering={FadeInDown.delay(300)} style={styles.section}>
-               <Text style={[styles.sectionTitle, { color: colors.foreground, marginBottom: 16 }]}>Systemic Biological Optimization</Text>
-               <View style={styles.benefitsGrid}>
-                  {meal.clinicalBenefits.map((benefit, i) => {
-                    const BenefitIcon = {
+              <Text style={[styles.sectionTitle, { color: colors.foreground, marginBottom: 16 }]}>
+                Systemic Biological Optimization
+              </Text>
+              <View style={styles.benefitsGrid}>
+                {meal.clinicalBenefits.map((benefit, i) => {
+                  const BenefitIcon =
+                    {
                       Activity: Activity,
                       Droplets: Droplets,
                       Shield: Shield,
@@ -246,86 +276,117 @@ export default function MealDetailScreen() {
                       Flash: Zap,
                     }[benefit.icon] || Sparkles;
 
-                    return (
-                      <View key={i} style={[styles.benefitCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                         <View style={[styles.benefitIconWrap, { backgroundColor: colors.clay + "10" }]}>
-                            <BenefitIcon size={16} color={colors.clay} />
-                         </View>
-                         <Text style={[styles.benefitTitle, { color: colors.foreground }]}>{benefit.title}</Text>
-                         <Text style={[styles.benefitDesc, { color: colors.inkMuted }]}>{benefit.description}</Text>
+                  return (
+                    <View
+                      key={i}
+                      style={[
+                        styles.benefitCard,
+                        { backgroundColor: colors.surface, borderColor: colors.border },
+                      ]}
+                    >
+                      <View
+                        style={[styles.benefitIconWrap, { backgroundColor: colors.clay + "10" }]}
+                      >
+                        <BenefitIcon size={16} color={colors.clay} />
                       </View>
-                    );
-                  })}
-               </View>
+                      <Text style={[styles.benefitTitle, { color: colors.foreground }]}>
+                        {benefit.title}
+                      </Text>
+                      <Text style={[styles.benefitDesc, { color: colors.inkMuted }]}>
+                        {benefit.description}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
             </Animated.View>
           )}
 
           {/* 🥙 Ingredients */}
           <Animated.View entering={FadeInDown.delay(300)} style={styles.section}>
-             <Text style={[styles.sectionTitle, { color: colors.foreground, marginBottom: 16 }]}>Essential Ingredients</Text>
-             <View style={styles.ingredientsGrid}>
-                {meal.ingredients.map((ing, i) => (
-                  <View key={i} style={[styles.ingredientChip, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                     <View style={[styles.ingDot, { backgroundColor: colors.clay }]} />
-                     <Text style={[styles.ingredientText, { color: colors.foreground }]}>{ing}</Text>
-                  </View>
-                ))}
-             </View>
+            <Text style={[styles.sectionTitle, { color: colors.foreground, marginBottom: 16 }]}>
+              Essential Ingredients
+            </Text>
+            <View style={styles.ingredientsGrid}>
+              {meal.ingredients.map((ing, i) => (
+                <View
+                  key={i}
+                  style={[
+                    styles.ingredientChip,
+                    { backgroundColor: colors.surface, borderColor: colors.border },
+                  ]}
+                >
+                  <View style={[styles.ingDot, { backgroundColor: colors.clay }]} />
+                  <Text style={[styles.ingredientText, { color: colors.foreground }]}>{ing}</Text>
+                </View>
+              ))}
+            </View>
           </Animated.View>
 
           {/* 📚 Instructions */}
           <Animated.View entering={FadeInDown.delay(400)} style={styles.section}>
-             <Text style={[styles.sectionTitle, { color: colors.foreground, marginBottom: 20 }]}>Preparation strategy</Text>
-             {meal.instructions && meal.instructions.map((step, i) => (
-               <View key={i} style={styles.stepRow}>
+            <Text style={[styles.sectionTitle, { color: colors.foreground, marginBottom: 20 }]}>
+              Preparation strategy
+            </Text>
+            {meal.instructions &&
+              meal.instructions.map((step, i) => (
+                <View key={i} style={styles.stepRow}>
                   <View style={[styles.stepNumber, { backgroundColor: colors.ink }]}>
-                     <Text style={styles.stepNumberText}>{i + 1}</Text>
+                    <Text style={styles.stepNumberText}>{i + 1}</Text>
                   </View>
                   <Text style={[styles.stepText, { color: colors.inkMuted }]}>{step}</Text>
-               </View>
-             ))}
+                </View>
+              ))}
           </Animated.View>
 
           {/* 💡 Absorption Guard Protocol */}
           {meal.protocol && (
             <Animated.View entering={FadeInDown.delay(500)} style={styles.section}>
-               <LinearGradient
-                 colors={[colors.clay, "#8D5D48"]}
-                 start={{ x: 0, y: 0 }}
-                 end={{ x: 1, y: 1 }}
-                 style={styles.protocolCardGradient}
-               >
-                  <View style={styles.protocolHeader}>
-                     <View style={[styles.shieldBox, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
-                        <ShieldCheck size={20} color="#FFF" />
-                     </View>
-                     <Text style={[styles.protocolTitle, { color: "#FFF" }]}>Absorption Guard Protocol</Text>
+              <LinearGradient
+                colors={[colors.clay, "#8D5D48"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.protocolCardGradient}
+              >
+                <View style={styles.protocolHeader}>
+                  <View style={[styles.shieldBox, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
+                    <ShieldCheck size={20} color="#FFF" />
                   </View>
+                  <Text style={[styles.protocolTitle, { color: "#FFF" }]}>
+                    Absorption Guard Protocol
+                  </Text>
+                </View>
 
-                  <View style={styles.gapStrip}>
-                     <View style={[styles.gapBadge, { backgroundColor: "rgba(255,255,255,0.9)" }]}>
-                        <Clock size={16} color={colors.clay} />
-                        <Text style={[styles.gapText, { color: colors.clay }]}>{meal.protocol.medGap} Gap</Text>
-                     </View>
-                     <Text style={[styles.gapLabel, { color: "rgba(255,255,255,0.8)" }]}>Required after taking Levothyroxine</Text>
+                <View style={styles.gapStrip}>
+                  <View style={[styles.gapBadge, { backgroundColor: "rgba(255,255,255,0.9)" }]}>
+                    <Clock size={16} color={colors.clay} />
+                    <Text style={[styles.gapText, { color: colors.clay }]}>
+                      {meal.protocol.medGap} Gap
+                    </Text>
                   </View>
-               <View style={styles.cautionList}>
-                     {meal.protocol.caution.map((c, i) => (
-                       <View key={i} style={styles.cautionItem}>
-                          <View style={[styles.cautionDot, { backgroundColor: "rgba(255,255,255,0.6)" }]} />
-                          <Text style={[styles.cautionText, { color: "#FFF" }]}>{c}</Text>
-                       </View>
-                     ))}
-                  </View>
+                  <Text style={[styles.gapLabel, { color: "rgba(255,255,255,0.8)" }]}>
+                    Required after taking Levothyroxine
+                  </Text>
+                </View>
+                <View style={styles.cautionList}>
+                  {meal.protocol.caution.map((c, i) => (
+                    <View key={i} style={styles.cautionItem}>
+                      <View
+                        style={[styles.cautionDot, { backgroundColor: "rgba(255,255,255,0.6)" }]}
+                      />
+                      <Text style={[styles.cautionText, { color: "#FFF" }]}>{c}</Text>
+                    </View>
+                  ))}
+                </View>
 
-                  <Pressable 
-                    onPress={() => router.push(`/clinical-rules/${meal.id}`)}
-                    style={[styles.viewRulesBtn, { backgroundColor: "rgba(255,255,255,0.2)" }]}
-                  >
-                     <Text style={styles.viewRulesText}>View clinical rules</Text>
-                     <ChevronRight size={14} color="#FFF" />
-                  </Pressable>
-               </LinearGradient>
+                <Pressable
+                  onPress={() => router.push(`/clinical-rules/${meal.id}`)}
+                  style={[styles.viewRulesBtn, { backgroundColor: "rgba(255,255,255,0.2)" }]}
+                >
+                  <Text style={styles.viewRulesText}>View clinical rules</Text>
+                  <ChevronRight size={14} color="#FFF" />
+                </Pressable>
+              </LinearGradient>
             </Animated.View>
           )}
 
@@ -394,11 +455,11 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 8,
   },
-  headerBadgeText: { 
-    color: "#FFF", 
-    fontSize: 10, 
-    fontFamily: "Outfit-Bold", 
-    letterSpacing: 2 
+  headerBadgeText: {
+    color: "#FFF",
+    fontSize: 10,
+    fontFamily: "Outfit-Bold",
+    letterSpacing: 2,
   },
   scrollContentOuter: {
     paddingTop: 0,
@@ -490,47 +551,91 @@ const styles = StyleSheet.create({
   },
   stepNumberText: { color: "#FFF", fontSize: 13, fontFamily: "Outfit-Bold" },
   stepText: { flex: 1, fontSize: 15, fontFamily: "Outfit-Regular", lineHeight: 24 },
-  aiBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
-  aiBadgeText: { fontSize: 11, fontFamily: "Outfit-Bold", textTransform: 'uppercase', letterSpacing: 0.5 },
-  sectionSubtitle: { fontSize: 13, fontFamily: 'Outfit-Bold', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 },
-  timelineContainer: { marginLeft: 10, borderLeftWidth: 2, paddingLeft: 24, gap: 24, marginBottom: 32 },
-  timelineItem: { position: 'relative' },
-  timelineDot: { position: 'absolute', left: -29, top: 0, width: 8, height: 8, borderRadius: 4 },
-  timelineHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 4 },
-  timelineTime: { fontSize: 13, fontFamily: 'Outfit-Bold' },
-  timelineEffect: { fontSize: 15, fontFamily: 'Outfit-Bold' },
-  timelineDesc: { fontSize: 14, fontFamily: 'Outfit-Regular', lineHeight: 20 },
-  benefitsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  aiBadge: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 4 },
+  aiBadgeText: {
+    fontSize: 11,
+    fontFamily: "Outfit-Bold",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  sectionSubtitle: {
+    fontSize: 13,
+    fontFamily: "Outfit-Bold",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 16,
+  },
+  timelineContainer: {
+    marginLeft: 10,
+    borderLeftWidth: 2,
+    paddingLeft: 24,
+    gap: 24,
+    marginBottom: 32,
+  },
+  timelineItem: { position: "relative" },
+  timelineDot: { position: "absolute", left: -29, top: 0, width: 8, height: 8, borderRadius: 4 },
+  timelineHeader: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 4 },
+  timelineTime: { fontSize: 13, fontFamily: "Outfit-Bold" },
+  timelineEffect: { fontSize: 15, fontFamily: "Outfit-Bold" },
+  timelineDesc: { fontSize: 14, fontFamily: "Outfit-Regular", lineHeight: 20 },
+  benefitsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   benefitCard: { flex: 1, minWidth: 160, padding: 16, borderRadius: 20, borderWidth: 1, gap: 8 },
-  benefitIconWrap: { width: 32, height: 32, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  benefitTitle: { fontSize: 15, fontFamily: 'Outfit-Bold' },
-  benefitDesc: { fontSize: 12, fontFamily: 'Outfit-Regular', lineHeight: 18 },
-  protocolCardGradient: { padding: 24, borderRadius: 28, overflow: 'hidden' },
+  benefitIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  benefitTitle: { fontSize: 15, fontFamily: "Outfit-Bold" },
+  benefitDesc: { fontSize: 12, fontFamily: "Outfit-Regular", lineHeight: 18 },
+  protocolCardGradient: { padding: 24, borderRadius: 28, overflow: "hidden" },
   protocolHeader: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 20 },
-  shieldBox: { width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  shieldBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   protocolTitle: { fontSize: 17, fontFamily: "Outfit-Bold" },
-  gapStrip: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 20, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.15)" },
-  gapBadge: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 },
+  gapStrip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.15)",
+  },
+  gapBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
   gapText: { fontSize: 13, fontFamily: "Outfit-Bold" },
   gapLabel: { fontSize: 13, fontFamily: "Outfit-Medium", flex: 1 },
   cautionList: { gap: 12 },
   cautionItem: { flexDirection: "row", alignItems: "center", gap: 10 },
-  cautionDot: { width: 5, height: 5, borderRadius: 2.5, backgroundColor: 'rgba(255,255,255,0.6)' },
+  cautionDot: { width: 5, height: 5, borderRadius: 2.5, backgroundColor: "rgba(255,255,255,0.6)" },
   cautionText: { fontSize: 13, fontFamily: "Outfit-Regular" },
   viewRulesBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 8,
     marginTop: 24,
     paddingVertical: 12,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    borderColor: "rgba(255,255,255,0.3)",
   },
   viewRulesText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: "Outfit-Bold",
   },
 });

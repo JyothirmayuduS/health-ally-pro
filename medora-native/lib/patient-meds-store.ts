@@ -49,9 +49,7 @@ async function writeStored(data: StoredMeds): Promise<void> {
 }
 
 function seedTakenIds(): string[] {
-  return medications
-    .filter((m) => m.status !== "past" && m.taken)
-    .map((m) => m.id);
+  return medications.filter((m) => m.status !== "past" && m.taken).map((m) => m.id);
 }
 
 function activeCatalog(): Medication[] {
@@ -60,9 +58,7 @@ function activeCatalog(): Medication[] {
 
 export async function listActiveMedications(): Promise<Medication[]> {
   const stored = await readStored();
-  const takenSet = new Set(
-    stored.takenIds.length ? stored.takenIds : seedTakenIds(),
-  );
+  const takenSet = new Set(stored.takenIds.length ? stored.takenIds : seedTakenIds());
   return activeCatalog().map((m) => ({ ...m, taken: takenSet.has(m.id) }));
 }
 

@@ -1,11 +1,23 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, Platform, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import Animated, { FadeInDown, FadeOutDown, SlideInDown, SlideOutDown } from "react-native-reanimated";
-import { X, FileUp, Camera, Image as ImageIcon, FolderArchive, ShieldCheck } from "lucide-react-native";
+import Animated, {
+  FadeInDown,
+  FadeOutDown,
+  SlideInDown,
+  SlideOutDown,
+} from "react-native-reanimated";
+import {
+  X,
+  FileUp,
+  Camera,
+  Image as ImageIcon,
+  FolderArchive,
+  ShieldCheck,
+} from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
-import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function UploadActionSheet() {
@@ -18,7 +30,7 @@ export default function UploadActionSheet() {
   const simulateSecureUpload = (fileName: string) => {
     setSelectedFileName(fileName);
     setIsUploading(true);
-    
+
     // Simulate real network/encryption latency
     setTimeout(() => {
       setIsUploading(false);
@@ -29,8 +41,8 @@ export default function UploadActionSheet() {
 
   const handleCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Medora needs camera access to scan documents.');
+    if (status !== "granted") {
+      Alert.alert("Permission needed", "Medora needs camera access to scan documents.");
       return;
     }
 
@@ -40,7 +52,7 @@ export default function UploadActionSheet() {
     });
 
     if (!result.canceled) {
-      const fileName = result.assets[0].uri.split('/').pop() || 'scanned_document.jpg';
+      const fileName = result.assets[0].uri.split("/").pop() || "scanned_document.jpg";
       simulateSecureUpload(fileName);
     }
   };
@@ -52,14 +64,14 @@ export default function UploadActionSheet() {
     });
 
     if (!result.canceled) {
-      const fileName = result.assets[0].uri.split('/').pop() || 'selected_image.jpg';
+      const fileName = result.assets[0].uri.split("/").pop() || "selected_image.jpg";
       simulateSecureUpload(fileName);
     }
   };
 
   const handleFiles = async () => {
     const result = await DocumentPicker.getDocumentAsync({
-      type: ['application/pdf', 'image/*', 'application/zip', 'text/plain'],
+      type: ["application/pdf", "image/*", "application/zip", "text/plain"],
       copyToCacheDirectory: true,
     });
 
@@ -71,24 +83,24 @@ export default function UploadActionSheet() {
   return (
     <View style={s.overlay}>
       {/* Background Dim */}
-      <Animated.View 
-        entering={FadeInDown.duration(300)} 
+      <Animated.View
+        entering={FadeInDown.duration(300)}
         exiting={FadeOutDown.duration(300)}
-        style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} 
+        style={[StyleSheet.absoluteFill, { backgroundColor: "rgba(0,0,0,0.4)" }]}
       >
         <Pressable style={StyleSheet.absoluteFill} onPress={() => router.back()} />
       </Animated.View>
 
       {/* Action Sheet */}
-      <Animated.View 
+      <Animated.View
         entering={SlideInDown.duration(300)}
         exiting={SlideOutDown.duration(250)}
         style={[
-          s.sheet, 
-          { 
-            backgroundColor: colors.background, 
-            paddingBottom: Math.max(insets.bottom, 24) 
-          }
+          s.sheet,
+          {
+            backgroundColor: colors.background,
+            paddingBottom: Math.max(insets.bottom, 24),
+          },
         ]}
       >
         {/* Drag Handle */}
@@ -99,14 +111,16 @@ export default function UploadActionSheet() {
         {/* HEADER */}
         <View style={s.header}>
           <View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 6 }}>
               <ShieldCheck size={14} color={colors.inkMuted} strokeWidth={2} />
-              <Text style={[s.encryptionText, { color: colors.inkMuted }]}>SECURE CLINICAL VAULT</Text>
+              <Text style={[s.encryptionText, { color: colors.inkMuted }]}>
+                SECURE CLINICAL VAULT
+              </Text>
             </View>
             <Text style={[s.title, { color: colors.foreground }]}>Vault Medical Record</Text>
           </View>
-          <Pressable 
-            style={[s.closeBtn, { backgroundColor: colors.surface }]} 
+          <Pressable
+            style={[s.closeBtn, { backgroundColor: colors.surface }]}
             onPress={() => router.back()}
           >
             <X size={20} color={colors.foreground} />
@@ -115,11 +129,19 @@ export default function UploadActionSheet() {
 
         {/* OPTIONS (APPLE STYLE) */}
         <View style={s.optionsWrapper}>
-          <Pressable 
-            style={({ pressed }) => [s.actionItem, pressed && { backgroundColor: "rgba(0,0,0,0.02)" }]} 
+          <Pressable
+            style={({ pressed }) => [
+              s.actionItem,
+              pressed && { backgroundColor: "rgba(0,0,0,0.02)" },
+            ]}
             onPress={handleFiles}
           >
-            <View style={[s.actionIconBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View
+              style={[
+                s.actionIconBox,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <FolderArchive size={20} color={colors.foreground} strokeWidth={1.5} />
             </View>
             <View style={s.actionTextWrap}>
@@ -130,11 +152,19 @@ export default function UploadActionSheet() {
 
           <View style={[s.divider, { backgroundColor: colors.border }]} />
 
-          <Pressable 
-            style={({ pressed }) => [s.actionItem, pressed && { backgroundColor: "rgba(0,0,0,0.02)" }]} 
+          <Pressable
+            style={({ pressed }) => [
+              s.actionItem,
+              pressed && { backgroundColor: "rgba(0,0,0,0.02)" },
+            ]}
             onPress={handleCamera}
           >
-            <View style={[s.actionIconBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View
+              style={[
+                s.actionIconBox,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <Camera size={20} color={colors.foreground} strokeWidth={1.5} />
             </View>
             <View style={s.actionTextWrap}>
@@ -145,11 +175,19 @@ export default function UploadActionSheet() {
 
           <View style={[s.divider, { backgroundColor: colors.border }]} />
 
-          <Pressable 
-            style={({ pressed }) => [s.actionItem, pressed && { backgroundColor: "rgba(0,0,0,0.02)" }]} 
+          <Pressable
+            style={({ pressed }) => [
+              s.actionItem,
+              pressed && { backgroundColor: "rgba(0,0,0,0.02)" },
+            ]}
             onPress={handleGallery}
           >
-            <View style={[s.actionIconBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View
+              style={[
+                s.actionIconBox,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <ImageIcon size={20} color={colors.foreground} strokeWidth={1.5} />
             </View>
             <View style={s.actionTextWrap}>
@@ -162,23 +200,38 @@ export default function UploadActionSheet() {
 
       {/* FULL SCREEN ENCRYPTION LOAD */}
       {isUploading && (
-        <Animated.View 
-          entering={FadeInDown.duration(300)} 
-          exiting={FadeOutDown.duration(300)} 
-          style={[StyleSheet.absoluteFill, s.loadingOverlay, { backgroundColor: 'rgba(255,255,255,0.96)' }]}
+        <Animated.View
+          entering={FadeInDown.duration(300)}
+          exiting={FadeOutDown.duration(300)}
+          style={[
+            StyleSheet.absoluteFill,
+            s.loadingOverlay,
+            { backgroundColor: "rgba(255,255,255,0.96)" },
+          ]}
         >
-          <View style={[s.loadingBox, { backgroundColor: '#FFF', borderColor: '#E5E5E5' }]}>
+          <View style={[s.loadingBox, { backgroundColor: "#FFF", borderColor: "#E5E5E5" }]}>
             <Animated.View entering={FadeInDown.duration(400)}>
-              <ShieldCheck size={36} color={colors.foreground} strokeWidth={1.5} style={{ marginBottom: 20 }} />
+              <ShieldCheck
+                size={36}
+                color={colors.foreground}
+                strokeWidth={1.5}
+                style={{ marginBottom: 20 }}
+              />
             </Animated.View>
-            <Text style={[s.loadingTitle, { color: '#1A1A1A' }]}>Securing Payload</Text>
-            <Text style={[s.loadingSub, { color: '#666', textAlign: 'center', paddingHorizontal: 20 }]} numberOfLines={2}>
-              Encrypting <Text style={{ fontFamily: "DMSans_600SemiBold", color: '#1A1A1A'}}>{selectedFileName}</Text>...
+            <Text style={[s.loadingTitle, { color: "#1A1A1A" }]}>Securing Payload</Text>
+            <Text
+              style={[s.loadingSub, { color: "#666", textAlign: "center", paddingHorizontal: 20 }]}
+              numberOfLines={2}
+            >
+              Encrypting{" "}
+              <Text style={{ fontFamily: "DMSans_600SemiBold", color: "#1A1A1A" }}>
+                {selectedFileName}
+              </Text>
+              ...
             </Text>
           </View>
         </Animated.View>
       )}
-
     </View>
   );
 }
@@ -189,11 +242,11 @@ const s = StyleSheet.create({
     justifyContent: "flex-end",
   },
   sheet: {
-    width: '100%',
+    width: "100%",
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingHorizontal: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: -5 },
@@ -233,8 +286,8 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   optionsWrapper: {
-    width: '100%',
-    alignItems: 'stretch',
+    width: "100%",
+    alignItems: "stretch",
     paddingBottom: 8,
   },
   actionItem: {
@@ -243,8 +296,8 @@ const s = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 8,
     borderRadius: 16,
-    width: '100%',
-    alignSelf: 'stretch',
+    width: "100%",
+    alignSelf: "stretch",
   },
   actionIconBox: {
     width: 44,
@@ -257,7 +310,7 @@ const s = StyleSheet.create({
   actionTextWrap: {
     marginLeft: 16,
     flexShrink: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   actionTitle: {
     fontSize: 16,
@@ -270,23 +323,23 @@ const s = StyleSheet.create({
   },
   divider: {
     height: StyleSheet.hairlineWidth,
-    marginLeft: 68, 
+    marginLeft: 68,
     marginRight: 8,
     marginVertical: 4,
   },
   loadingOverlay: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     zIndex: 999,
   },
   loadingBox: {
     padding: 32,
     borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
-    width: '85%',
-    shadowColor: '#000',
+    width: "85%",
+    shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 30,
     shadowOffset: { width: 0, height: 10 },
@@ -299,5 +352,5 @@ const s = StyleSheet.create({
   loadingSub: {
     fontSize: 14,
     fontFamily: "DMSans_400Regular",
-  }
+  },
 });

@@ -1,21 +1,7 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  StatusBar,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, StatusBar, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  ArrowLeft,
-  Calendar,
-  Clock,
-  ChevronRight,
-  CheckCircle2,
-} from "lucide-react-native";
+import { ArrowLeft, Calendar, Clock, ChevronRight, CheckCircle2 } from "lucide-react-native";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { doctors } from "../../../lib/mock-data";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
@@ -43,8 +29,14 @@ export default function ScheduleDetailScreen() {
   ];
 
   const slots = [
-    "09:00 AM", "09:30 AM", "10:15 AM", "11:00 AM",
-    "02:30 PM", "03:15 PM", "04:00 PM", "04:45 PM"
+    "09:00 AM",
+    "09:30 AM",
+    "10:15 AM",
+    "11:00 AM",
+    "02:30 PM",
+    "03:15 PM",
+    "04:00 PM",
+    "04:45 PM",
   ];
 
   return (
@@ -52,7 +44,10 @@ export default function ScheduleDetailScreen() {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView edges={["top"]}>
         <View style={styles.header}>
-          <Pressable onPress={() => router.back()} style={[styles.backBtn, { borderColor: colors.border }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={[styles.backBtn, { borderColor: colors.border }]}
+          >
             <ArrowLeft size={24} color={colors.foreground} />
           </Pressable>
           <Text style={[styles.headerTitle, { color: colors.foreground }]}>Select Schedule</Text>
@@ -62,7 +57,10 @@ export default function ScheduleDetailScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Clinician Summary */}
-        <Animated.View entering={FadeInDown.duration(400)} style={[styles.docBrief, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+        <Animated.View
+          entering={FadeInDown.duration(400)}
+          style={[styles.docBrief, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
           <View style={[styles.initialsBox, { backgroundColor: colors.clay + "15" }]}>
             <Text style={[styles.initialsText, { color: colors.clay }]}>{doc.initials}</Text>
           </View>
@@ -75,18 +73,36 @@ export default function ScheduleDetailScreen() {
         {/* Date Selector */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.foreground }]}>Available Dates</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dateList}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.dateList}
+          >
             {dates.map((d, i) => (
-              <Pressable 
-                key={i} 
+              <Pressable
+                key={i}
                 onPress={() => setSelectedDate(i)}
                 style={[
-                  styles.dateCard, 
-                  { backgroundColor: selectedDate === i ? colors.ink : colors.surface, borderColor: colors.border }
+                  styles.dateCard,
+                  {
+                    backgroundColor: selectedDate === i ? colors.ink : colors.surface,
+                    borderColor: colors.border,
+                  },
                 ]}
               >
-                <Text style={[styles.dateDay, { color: selectedDate === i ? "#FFF" : colors.inkMuted }]}>{d.day}</Text>
-                <Text style={[styles.dateNum, { color: selectedDate === i ? "#FFF" : colors.foreground }]}>{d.date}</Text>
+                <Text
+                  style={[styles.dateDay, { color: selectedDate === i ? "#FFF" : colors.inkMuted }]}
+                >
+                  {d.day}
+                </Text>
+                <Text
+                  style={[
+                    styles.dateNum,
+                    { color: selectedDate === i ? "#FFF" : colors.foreground },
+                  ]}
+                >
+                  {d.date}
+                </Text>
               </Pressable>
             ))}
           </ScrollView>
@@ -102,39 +118,50 @@ export default function ScheduleDetailScreen() {
           </View>
           <View style={styles.slotGrid}>
             {slots.map((s, i) => (
-              <Pressable 
-                key={i} 
+              <Pressable
+                key={i}
                 onPress={() => setSelectedSlot(s)}
                 style={[
-                  styles.slotCard, 
-                  { 
-                    backgroundColor: selectedSlot === s ? colors.clay + "15" : colors.surface, 
-                    borderColor: selectedSlot === s ? colors.clay : colors.border 
-                  }
+                  styles.slotCard,
+                  {
+                    backgroundColor: selectedSlot === s ? colors.clay + "15" : colors.surface,
+                    borderColor: selectedSlot === s ? colors.clay : colors.border,
+                  },
                 ]}
               >
                 <Clock size={16} color={selectedSlot === s ? colors.clay : colors.inkMuted} />
-                <Text style={[styles.slotText, { color: selectedSlot === s ? colors.clay : colors.foreground }]}>{s}</Text>
+                <Text
+                  style={[
+                    styles.slotText,
+                    { color: selectedSlot === s ? colors.clay : colors.foreground },
+                  ]}
+                >
+                  {s}
+                </Text>
               </Pressable>
             ))}
           </View>
         </View>
 
         {/* Professional Note */}
-        <Animated.View entering={FadeIn.delay(300)} style={[styles.noteBox, { backgroundColor: colors.ink + "05" }]}>
+        <Animated.View
+          entering={FadeIn.delay(300)}
+          style={[styles.noteBox, { backgroundColor: colors.ink + "05" }]}
+        >
           <Calendar size={18} color={colors.inkMuted} />
           <Text style={[styles.noteText, { color: colors.inkMuted }]}>
-            Appointments booked here are confirmed instantly. You can cancel or reschedule up to 12 hours before the start time.
+            Appointments booked here are confirmed instantly. You can cancel or reschedule up to 12
+            hours before the start time.
           </Text>
         </Animated.View>
       </ScrollView>
 
       {/* Action Footer */}
       <SafeAreaView edges={["bottom"]} style={[styles.footer, { borderTopColor: colors.border }]}>
-        <Pressable 
+        <Pressable
           style={[
-            styles.confirmBtn, 
-            { backgroundColor: selectedSlot ? colors.ink : colors.border }
+            styles.confirmBtn,
+            { backgroundColor: selectedSlot ? colors.ink : colors.border },
           ]}
           disabled={!selectedSlot}
         >
@@ -185,9 +212,19 @@ const styles = StyleSheet.create({
   docName: { fontSize: 18, fontFamily: "Outfit-Bold" },
   docSpec: { fontSize: 14, fontFamily: "Outfit-Medium" },
   section: { marginBottom: 32 },
-  sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
   sectionTitle: { fontSize: 16, fontFamily: "Outfit-Bold" },
-  tzBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, backgroundColor: "rgba(0,0,0,0.03)" },
+  tzBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    backgroundColor: "rgba(0,0,0,0.03)",
+  },
   tzText: { fontSize: 11, fontFamily: "Outfit-Medium" },
   dateList: { gap: 12, paddingRight: 20 },
   dateCard: {

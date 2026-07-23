@@ -57,12 +57,8 @@ function ActionButton({
       }}
       style={{ position: "relative" }}
     >
-      <Animated.View style={[styles.actionBtn, pressStyle]}>
-        {children}
-      </Animated.View>
-      {hasUnread && (
-        <View style={styles.unreadDot} />
-      )}
+      <Animated.View style={[styles.actionBtn, pressStyle]}>{children}</Animated.View>
+      {hasUnread && <View style={styles.unreadDot} />}
     </Pressable>
   );
 }
@@ -89,7 +85,7 @@ export function DashboardHeader({
         withTiming(-8, { duration: 60 }),
         withTiming(8, { duration: 60 }),
         withTiming(-4, { duration: 50 }),
-        withTiming(0, { duration: 50 })
+        withTiming(0, { duration: 50 }),
       );
     };
     const id = setInterval(shake, 5000);
@@ -109,52 +105,28 @@ export function DashboardHeader({
         styles.container,
         {
           // Subtle frosted-glass bottom separator
-          borderBottomColor: isDark
-            ? "rgba(255,255,255,0.07)"
-            : "rgba(30,58,50,0.07)",
+          borderBottomColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(30,58,50,0.07)",
         },
       ]}
     >
       {/* ── LEFT: Avatar + Text ─────────────────────────────── */}
-      <Pressable
-        onPress={onAvatarPress}
-        style={styles.left}
-        hitSlop={8}
-      >
+      <Pressable onPress={onAvatarPress} style={styles.left} hitSlop={8}>
         {/* Avatar */}
         <View style={styles.avatarWrapper}>
           {/* Avatar circle */}
-          <View
-            style={[
-              styles.avatarCircle,
-              { backgroundColor: colors.claySoft },
-            ]}
-          >
-            <Text style={[styles.avatarInitials, { color: colors.ink }]}>
-              {initials}
-            </Text>
+          <View style={[styles.avatarCircle, { backgroundColor: colors.claySoft }]}>
+            <Text style={[styles.avatarInitials, { color: colors.ink }]}>{initials}</Text>
           </View>
           {/* Online status dot */}
-          <View
-            style={[
-              styles.onlineDot,
-              { borderColor: colors.background },
-            ]}
-          />
+          <View style={[styles.onlineDot, { borderColor: colors.background }]} />
         </View>
 
         {/* Text block */}
         <View style={styles.textBlock}>
-          <Text
-            style={[styles.greetingText, { color: colors.inkMuted }]}
-            numberOfLines={1}
-          >
+          <Text style={[styles.greetingText, { color: colors.inkMuted }]} numberOfLines={1}>
             {displayGreeting}!
           </Text>
-          <Text
-            style={[styles.nameText, { color: colors.foreground }]}
-            numberOfLines={1}
-          >
+          <Text style={[styles.nameText, { color: colors.foreground }]} numberOfLines={1}>
             {name}
           </Text>
         </View>
@@ -163,26 +135,15 @@ export function DashboardHeader({
       {/* ── RIGHT: Action Buttons ────────────────────────────── */}
       <View style={styles.right}>
         {/* Bell */}
-        <ActionButton
-          onPress={onNotificationPress}
-          hasUnread={notificationCount > 0}
-        >
+        <ActionButton onPress={onNotificationPress} hasUnread={notificationCount > 0}>
           <Animated.View style={bellStyle}>
-            <Bell
-              size={20}
-              color={colors.ink}
-              strokeWidth={1.75}
-            />
+            <Bell size={20} color={colors.ink} strokeWidth={1.75} />
           </Animated.View>
         </ActionButton>
 
         {/* Settings */}
         <ActionButton onPress={onSettingsPress}>
-          <Settings
-            size={20}
-            color={colors.ink}
-            strokeWidth={1.75}
-          />
+          <Settings size={20} color={colors.ink} strokeWidth={1.75} />
         </ActionButton>
       </View>
     </Animated.View>

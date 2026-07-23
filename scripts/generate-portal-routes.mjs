@@ -11,7 +11,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const routesDir = join(__dirname, "../src/routes");
 
 const portals = {
-  admin: ["hospital", "branches", "departments", "staff", "doctors", "services", "lab-catalog", "settings", "analytics"],
+  admin: [
+    "hospital",
+    "branches",
+    "departments",
+    "staff",
+    "doctors",
+    "services",
+    "lab-catalog",
+    "settings",
+    "analytics",
+  ],
   reception: ["register", "patients", "appointments", "check-in", "queue", "token-display"],
   doctor: ["schedule", "queue", "patients", "encounters", "orders", "prescriptions", "results"],
   lab: ["orders", "collection", "processing", "validation"],

@@ -1,9 +1,27 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, TextInput, ScrollView, Platform, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
-import { X, Camera, Check, User, Mail, Phone, ShieldCheck, ChevronRight } from "lucide-react-native";
+import {
+  X,
+  Camera,
+  Check,
+  User,
+  Mail,
+  Phone,
+  ShieldCheck,
+  ChevronRight,
+} from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
 import { patient } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
@@ -11,7 +29,7 @@ import { Avatar } from "@/components/ui/Avatar";
 export default function EditProfileScreen() {
   const router = useRouter();
   const { colors } = useTheme();
-  
+
   const [name, setName] = useState(patient.name);
   const [email, setEmail] = useState(patient.email);
   const [phone, setPhone] = useState("+1 (555) 0123");
@@ -26,9 +44,12 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: colors.background }]} edges={["top", "bottom"]}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    <SafeAreaView
+      style={[s.safe, { backgroundColor: colors.background }]}
+      edges={["top", "bottom"]}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <View style={s.header}>
@@ -36,8 +57,8 @@ export default function EditProfileScreen() {
             <X size={24} color={colors.foreground} />
           </Pressable>
           <Text style={[s.headerTitle, { color: colors.foreground }]}>Identity Profile</Text>
-          <Pressable 
-            onPress={handleSave} 
+          <Pressable
+            onPress={handleSave}
             disabled={!name || !email || isSaving}
             style={[s.saveBtn, { backgroundColor: colors.ink }]}
           >
@@ -54,7 +75,12 @@ export default function EditProfileScreen() {
           <Animated.View entering={FadeIn.duration(600)} style={s.identityHeader}>
             <View style={s.avatarWrapper}>
               <Avatar initials={patient.initials} size="xl" variant="clay" />
-              <Pressable style={[s.cameraOverlay, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <Pressable
+                style={[
+                  s.cameraOverlay,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                ]}
+              >
                 <Camera size={14} color={colors.foreground} strokeWidth={2} />
               </Pressable>
             </View>
@@ -65,19 +91,39 @@ export default function EditProfileScreen() {
           </Animated.View>
 
           {/* Verification Badge */}
-          <View style={[s.verifiedBlock, { backgroundColor: colors.clay + '0A', borderColor: colors.clay + '20' }]}>
+          <View
+            style={[
+              s.verifiedBlock,
+              { backgroundColor: colors.clay + "0A", borderColor: colors.clay + "20" },
+            ]}
+          >
             <ShieldCheck size={16} color={colors.clay} strokeWidth={2} />
-            <Text style={[s.verifiedText, { color: colors.clay }]}>Securely linked to Primary Care Provider</Text>
+            <Text style={[s.verifiedText, { color: colors.clay }]}>
+              Securely linked to Primary Care Provider
+            </Text>
           </View>
 
           {/* Form Groups */}
           <View style={s.formGroups}>
             <Animated.View entering={FadeInDown.duration(400).delay(200)}>
               <Text style={[s.groupLabel, { color: colors.inkMuted }]}>PERSONAL IDENTITY</Text>
-              <View style={[s.groupedCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                <View style={[s.inputRow, { borderBottomColor: colors.border, borderBottomWidth: StyleSheet.hairlineWidth }]}>
+              <View
+                style={[
+                  s.groupedCard,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                ]}
+              >
+                <View
+                  style={[
+                    s.inputRow,
+                    {
+                      borderBottomColor: colors.border,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                    },
+                  ]}
+                >
                   <User size={18} color={colors.inkMuted} style={s.inputIcon} />
-                  <TextInput 
+                  <TextInput
                     style={[s.input, { color: colors.foreground }]}
                     value={name}
                     onChangeText={setName}
@@ -87,7 +133,7 @@ export default function EditProfileScreen() {
                 </View>
                 <View style={s.inputRow}>
                   <Mail size={18} color={colors.inkMuted} style={s.inputIcon} />
-                  <TextInput 
+                  <TextInput
                     style={[s.input, { color: colors.foreground }]}
                     value={email}
                     onChangeText={setEmail}
@@ -102,10 +148,15 @@ export default function EditProfileScreen() {
 
             <Animated.View entering={FadeInDown.duration(400).delay(300)}>
               <Text style={[s.groupLabel, { color: colors.inkMuted }]}>CONTACT INFORMATION</Text>
-              <View style={[s.groupedCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <View
+                style={[
+                  s.groupedCard,
+                  { backgroundColor: colors.surface, borderColor: colors.border },
+                ]}
+              >
                 <View style={s.inputRow}>
                   <Phone size={18} color={colors.inkMuted} style={s.inputIcon} />
-                  <TextInput 
+                  <TextInput
                     style={[s.input, { color: colors.foreground }]}
                     value={phone}
                     onChangeText={setPhone}
@@ -118,7 +169,8 @@ export default function EditProfileScreen() {
             </Animated.View>
 
             <Text style={[s.disclaimer, { color: colors.inkMuted }]}>
-              Medora uses end-to-end encryption. Changing your identity profile requires re-verification by your care team.
+              Medora uses end-to-end encryption. Changing your identity profile requires
+              re-verification by your care team.
             </Text>
           </View>
         </ScrollView>
@@ -162,24 +214,24 @@ const s = StyleSheet.create({
     paddingBottom: 40,
   },
   identityHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 20,
     marginBottom: 24,
   },
   avatarWrapper: {
-    position: 'relative',
+    position: "relative",
   },
   cameraOverlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: -2,
     right: -2,
     width: 30,
     height: 30,
     borderRadius: 15,
     borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   identityMeta: {
     flex: 1,
@@ -195,8 +247,8 @@ const s = StyleSheet.create({
     fontFamily: "DMSans_600SemiBold",
   },
   verifiedBlock: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
     padding: 12,
     borderRadius: 12,
@@ -221,7 +273,7 @@ const s = StyleSheet.create({
   groupedCard: {
     borderRadius: 20,
     borderWidth: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   inputRow: {
     flexDirection: "row",
@@ -247,5 +299,5 @@ const s = StyleSheet.create({
     lineHeight: 18,
     paddingHorizontal: 20,
     opacity: 0.7,
-  }
+  },
 });

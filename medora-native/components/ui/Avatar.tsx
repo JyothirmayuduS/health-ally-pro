@@ -22,14 +22,13 @@ const textSizes = {
 };
 
 export function Avatar({ initials, size = "md", variant = "clay" }: AvatarProps) {
-  const bgClass = variant === "clay" ? "bg-clay-soft" : variant === "ink" ? "bg-ink" : "bg-surface-2";
+  const bgClass =
+    variant === "clay" ? "bg-clay-soft" : variant === "ink" ? "bg-ink" : "bg-surface-2";
   const textClass = variant === "ink" ? "text-primary-foreground" : "text-ink";
 
   return (
     <View className={`${sizes[size]} ${bgClass} rounded-full items-center justify-center`}>
-      <Text className={`font-serif ${textSizes[size]} ${textClass}`}>
-        {initials}
-      </Text>
+      <Text className={`font-serif ${textSizes[size]} ${textClass}`}>{initials}</Text>
     </View>
   );
 }

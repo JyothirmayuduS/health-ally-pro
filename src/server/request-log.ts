@@ -41,7 +41,6 @@ export function newRequestId(request?: Request): string {
 
 /** Log a completed request. Never pass PHI (names, MRN, record payloads). */
 export function logRequest(fields: RequestLogFields): void {
-  // eslint-disable-next-line no-console
   console.log(JSON.stringify({ ...fields, service: "medora" }));
   recent.push({
     ts: Date.now(),

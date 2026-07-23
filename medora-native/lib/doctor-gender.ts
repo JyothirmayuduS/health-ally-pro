@@ -17,6 +17,10 @@ const FEMALE_FIRST_NAMES = new Set([
 
 export function doctorGenderFor(doctor: Pick<Doctor, "name" | "gender">): DoctorGender {
   if (doctor.gender) return doctor.gender;
-  const first = doctor.name.replace(/^Dr\.?\s*/i, "").split(/\s+/)[0]?.toLowerCase() ?? "";
+  const first =
+    doctor.name
+      .replace(/^Dr\.?\s*/i, "")
+      .split(/\s+/)[0]
+      ?.toLowerCase() ?? "";
   return FEMALE_FIRST_NAMES.has(first) ? "female" : "male";
 }

@@ -13,5 +13,7 @@ export const queryHuggingFace = async (
   onStep: (step: string) => void,
 ): Promise<HFResponse> => {
   onStep("Direct HF client disabled — use Medora secure API");
-  throw new Error("Use medoraApiChat via brain.ts — client-side HF is disabled for HIPAA compliance");
+  throw new Error(
+    "Use medoraApiChat via brain.ts — client-side HF is disabled for HIPAA compliance",
+  );
 };

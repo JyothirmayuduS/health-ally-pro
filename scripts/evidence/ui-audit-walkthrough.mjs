@@ -131,7 +131,10 @@ async function shot(page, roleId, name, notes) {
   await page.screenshot({ path: file, fullPage: true });
   const url = page.url();
   const title = await page.title();
-  const bodyText = await page.locator("body").innerText().catch(() => "");
+  const bodyText = await page
+    .locator("body")
+    .innerText()
+    .catch(() => "");
   const stubSignals = [];
   const lower = bodyText.toLowerCase();
   for (const s of [
@@ -237,7 +240,10 @@ async function main() {
   await browser.close();
 
   const outFile = path.join(OUT, "walkthrough-raw.json");
-  fs.writeFileSync(outFile, JSON.stringify({ generatedAt: new Date().toISOString(), base: BASE, results }, null, 2));
+  fs.writeFileSync(
+    outFile,
+    JSON.stringify({ generatedAt: new Date().toISOString(), base: BASE, results }, null, 2),
+  );
   console.log(outFile);
 }
 

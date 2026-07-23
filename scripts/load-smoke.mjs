@@ -14,15 +14,20 @@ import { performance } from "node:perf_hooks";
 const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const anon = process.env.VITE_SUPABASE_ANON_KEY;
 const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const BASE = process.env.MEDORA_BASE_URL || process.env.MEDORA_DOCKER_URL || "http://127.0.0.1:8787";
+const BASE =
+  process.env.MEDORA_BASE_URL || process.env.MEDORA_DOCKER_URL || "http://127.0.0.1:8787";
 const H = "a0000001-0001-4001-8001-000000000001";
 const EMAIL = "doctor@oakhaven.demo";
 const PASS = "MedoraDemo!2026Doc";
 const USERS = Math.min(Number(process.env.USERS || 100), 250); // cap for local safety
 const CONCURRENCY = Math.min(Number(process.env.CONCURRENCY || 20), 50);
 
-const admin = createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } });
-const authClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = createClient(url, service, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+const authClient = createClient(url, anon, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 function stats(arr) {
   const s = [...arr].sort((a, b) => a - b);
@@ -46,8 +51,8 @@ function stats(arr) {
 const { data: listed } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
 const user = listed.users.find((u) => u.email === EMAIL);
 await admin.auth.admin.updateUserById(user.id, { password: PASS });
-const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data.session
-  .access_token;
+const token = (await authClient.auth.signInWithPassword({ email: EMAIL, password: PASS })).data
+  .session.access_token;
 
 const resources = ["appointments", "patients", "lab_results"];
 async function hit(resource) {
@@ -94,7 +99,10 @@ const errors = results.filter((r) => r.status !== 200 || !r.ok).length;
 const byRes = {};
 for (const r of resources) {
   const subset = results.filter((x) => x.resource === r);
-  byRes[r] = { ...stats(subset.map((x) => x.ms)), errors: subset.filter((x) => x.status !== 200 || !x.ok).length };
+  byRes[r] = {
+    ...stats(subset.map((x) => x.ms)),
+    errors: subset.filter((x) => x.status !== 200 || !x.ok).length,
+  };
 }
 
 const report = {
@@ -108,7 +116,11 @@ const report = {
   },
   wall_ms: Math.round(wallMs),
   throughput_rps: Math.round((results.length / (wallMs / 1000)) * 100) / 100,
-  overall: { ...stats(results.map((r) => r.ms)), errors, error_rate: errors / Math.max(results.length, 1) },
+  overall: {
+    ...stats(results.map((r) => r.ms)),
+    errors,
+    error_rate: errors / Math.max(results.length, 1),
+  },
   by_resource: byRes,
   pending_full_load: {
     "100_users": USERS >= 100 ? "covered_by_this_run_or_higher" : "not_run",
