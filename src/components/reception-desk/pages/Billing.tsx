@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
-import { useStore, WARD_CATEGORIES } from "@/lib/reception-desk/store";
+import type { LucideIcon } from "lucide-react";
+import { useStore, WARD_CATEGORIES, type AdmissionRecord, type Bed, type Invoice, type InvoiceItem } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { PAYMENT_METHODS, computeTotals } from "@/lib/reception-desk/billingData";
 import { toast } from "sonner";
@@ -21,18 +22,18 @@ import {
 } from "lucide-react";
 import RefundModal from "@/components/reception-desk/RefundModal";
 
-const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | null | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 const STATUS_FILTERS = ["All", "Unpaid", "Paid"];
 
-const METHOD_ICON = {
+const METHOD_ICON: Record<string, LucideIcon> = {
   cash: Banknote,
   card: CreditCard,
   upi: Smartphone,
   insurance: ShieldCheck,
 };
 
-function StatusChip({ status }) {
+function StatusChip({ status }: { status: string }) {
   if (status === "paid") {
     return (
       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide border rounded-sm bg-money/10 text-money border-money/30">
@@ -61,7 +62,25 @@ function StatusChip({ status }) {
   );
 }
 
-function PayDialog({ invoice, totals, onClose, onPay }) {
+interface BillingTotals {
+  subtotal: number;
+  discount: number;
+  tax: number;
+  total: number;
+  processedItems?: InvoiceItem[];
+}
+
+function PayDialog({
+  invoice,
+  totals,
+  onClose,
+  onPay,
+}: {
+  invoice: Invoice | null | undefined;
+  totals: BillingTotals;
+  onClose: () => void;
+  onPay: (method: string) => void;
+}) {
   const [method, setMethod] = useState("cash");
   if (!invoice) return null;
   return (
@@ -238,14 +257,14 @@ export default function Billing() {
 
   const patientAdmission = useMemo(() => {
     if (!selected) return null;
-    return admissions.find((a: any) => a.patientId === selected.patientId && a.status !== "discharged");
+    return admissions.find((a: AdmissionRecord) => a.patientId === selected.patientId && a.status !== "discharged");
   }, [selected, admissions]);
 
   const itemsWithBedStay = useMemo(() => {
     if (!selected) return [];
     const base = [...selected.items];
     if (patientAdmission) {
-      const bed = beds.find((b: any) => b.id === patientAdmission.bedId);
+      const bed = beds.find((b: Bed) => b.id === patientAdmission.bedId);
       const rate = WARD_CATEGORIES.find((w) => w.id === bed?.wardCategory)?.ratePerDay || 0;
       
       const start = new Date(patientAdmission.admittedAt);
@@ -366,7 +385,8 @@ export default function Billing() {
     toast.success("Added pharmacy line item");
   };
 
-  const updateItem = (idx, patch) => {
+  const updateItem = (idx: number, patch: Partial<InvoiceItem>) => {
+    if (!selected) return;
     const items = selected.items.map((it, i) =>
       i === idx
         ? {
@@ -379,13 +399,15 @@ export default function Billing() {
     updateInvoice(selected.id, { items });
   };
 
-  const removeItem = (idx) => {
+  const removeItem = (idx: number) => {
+    if (!selected) return;
     updateInvoice(selected.id, {
       items: selected.items.filter((_, i) => i !== idx),
     });
   };
 
-  const onPay = (method) => {
+  const onPay = (method: string) => {
+    if (!selected) return;
     collectPayment(selected.id, method);
     toast.success(`Paid via ${method.toUpperCase()}`, {
       description: `${selPatient?.name} · ${fmt(selTotals.total)}`,
@@ -722,7 +744,7 @@ export default function Billing() {
                       </div>
                       <div className="text-[13px] text-ink-900 inline-flex items-center gap-1.5">
                         {(() => {
-                          const M = METHOD_ICON[selected.method] || Receipt;
+                          const M = (selected.method ? METHOD_ICON[selected.method] : undefined) || Receipt;
                           return <M className="w-3.5 h-3.5 text-money" />;
                         })()}
                         {selected.method?.toUpperCase()}
@@ -783,7 +805,7 @@ export default function Billing() {
                     Refund History
                   </div>
                   <div className="space-y-2">
-                    {selected.refunds.map((ref: any, idx: number) => (
+                    {selected.refunds.map((ref, idx) => (
                       <div key={idx} className="flex justify-between items-start text-[12.5px] text-ink-600 bg-white p-2.5 rounded-sm border border-ink-200 shadow-xs">
                         <div>
                           <div className="font-medium text-ink-900 capitalize">

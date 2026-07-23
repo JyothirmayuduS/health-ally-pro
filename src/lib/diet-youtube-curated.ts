@@ -35,7 +35,7 @@ function v(
 /** Per-meal verified tutorials — each meal gets unique videos (not shared defaults). */
 export const DIET_CURATED_BY_MEAL_ID: Record<
   string,
-  Partial<Record<DietLanguage, DietYoutubeVideo[]>>
+  Partial<Record<DietLanguage, CuratedVideo[]>>
 > = {
   eb1: {
     en: [

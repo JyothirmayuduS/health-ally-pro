@@ -1,5 +1,5 @@
 import { supabase, isSupabaseConfigured } from "./client";
-import type { AppointmentRow, LabResultRow, StaffProfile } from "./types";
+import type { AppointmentRow, AppointmentStatus, LabResultRow, StaffProfile } from "./types";
 import {
   appointments as mockAppointments,
   doctors as mockDoctors,
@@ -37,6 +37,14 @@ export async function fetchDoctors(): Promise<Doctor[]> {
   }));
 }
 
+const APPOINTMENT_STATUS_MAP: Record<AppointmentStatus, Appointment["status"]> = {
+  upcoming: "upcoming",
+  in_queue: "in-queue",
+  completed: "completed",
+  cancelled: "cancelled",
+  no_show: "cancelled",
+};
+
 function doctorNameFromInitials(initials: string | null, specialty: string | null) {
   const map: Record<string, string> = {
     ET: "Dr. Eleanor Thorne",
@@ -65,7 +73,7 @@ export async function fetchAppointmentsForPatient(): Promise<Appointment[]> {
     date: a.scheduled_at,
     time: a.time_label ?? "",
     reason: a.reason ?? "",
-    status: a.status,
+    status: APPOINTMENT_STATUS_MAP[a.status] ?? "upcoming",
     queuePosition: a.queue_entries?.[0]?.position ?? undefined,
     estimatedWait: a.queue_entries?.[0]?.estimated_wait_minutes ?? undefined,
   }));

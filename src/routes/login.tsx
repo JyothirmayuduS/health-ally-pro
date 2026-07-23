@@ -5,8 +5,11 @@ import { allowDemoAuth } from "@/lib/production";
 import { redirectPathForRoles } from "@/lib/supabase/rbac";
 import { DEMO_STAFF_TABLE } from "@/lib/supabase/demo-credentials";
 
+type LoginSearch = { redirect?: string; error?: string };
+
+
 export const Route = createFileRoute("/login")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): LoginSearch => ({
     redirect: (search.redirect as string) || undefined,
     error: (search.error as string) || undefined,
   }),

@@ -27,7 +27,7 @@ import {
   Filter,
 } from "lucide-react";
 
-const fmt = (n: any) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | null | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 /* ─── Status meta ──────────────────────────────────────────────────── */
 const CLAIM_DOT: Record<string, string> = {
@@ -91,7 +91,7 @@ function Field({ label, children, mono = false }: { label: string; children: Rea
 }
 
 /* ─── Section head ──────────────────────────────────────────────────── */
-function SectionHead({ icon: Icon, title, action }: { icon: React.ElementType; title: string; action?: React.ReactNode }) {
+function SectionHead({ icon: Icon, title, action }: { icon: React.ComponentType<{ className?: string }>; title: string; action?: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between mb-1">
       <div className="flex items-center gap-1.5 text-[10.5px] font-mono uppercase tracking-[0.15em] text-ink-400 font-medium">

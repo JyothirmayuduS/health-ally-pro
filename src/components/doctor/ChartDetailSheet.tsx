@@ -78,16 +78,16 @@ function MedicationSheet({
     ...(med.interactions ? [{ title: "DRUG INTERACTIONS", body: med.interactions }] : []),
   ];
 
-  const specs = [
+  const specs: Array<readonly [string, string, boolean]> = [
     ["STRENGTH", med.strength, true],
     ["FREQUENCY", med.frequency, false],
     ["ROUTE", med.route, false],
     ["DURATION", med.duration, false],
-    ...(med.prescribedBy ? [["PRESCRIBED BY", `${med.prescribedBy}${med.prescribedOn ? ` · ${med.prescribedOn}` : ""}`, false]] : []),
-    ...(med.pharmacy ? [["PHARMACY", med.pharmacy, false]] : []),
-    ...(med.lastFilled ? [["LAST FILLED", med.lastFilled, false]] : []),
-    ...(med.refillsRemaining ? [["REFILLS", med.refillsRemaining, false]] : []),
-  ] as const;
+    ...(med.prescribedBy ? [["PRESCRIBED BY", `${med.prescribedBy}${med.prescribedOn ? ` · ${med.prescribedOn}` : ""}`, false] as const] : []),
+    ...(med.pharmacy ? [["PHARMACY", med.pharmacy, false] as const] : []),
+    ...(med.lastFilled ? [["LAST FILLED", med.lastFilled, false] as const] : []),
+    ...(med.refillsRemaining ? [["REFILLS", med.refillsRemaining, false] as const] : []),
+  ];
 
   return (
     <div className="space-y-4">

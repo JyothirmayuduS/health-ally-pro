@@ -1,4 +1,5 @@
 import { deskForKey, loadPersistedJson, savePersistedJson } from "@/lib/shared/persisted-store";
+import { apkDoctor } from "@/lib/doctor-apk-data";
 import { PANEL_PATIENTS } from "@/lib/doctor-patients-apk-data";
 import type { PrescriptionDraft, RxFrequency } from "@/lib/doctor-prescription-workflow";
 import {

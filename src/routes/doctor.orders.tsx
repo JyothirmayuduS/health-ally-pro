@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DoctorLabsWorkspace } from "@/components/doctor/clinical/DoctorLabsWorkspace";
 
+type DoctorOrdersSearch = { patientId?: string };
+
+
 export const Route = createFileRoute("/doctor/orders")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): DoctorOrdersSearch => ({
     patientId: typeof search.patientId === "string" ? search.patientId : undefined,
   }),
   component: DoctorOrdersRoute,

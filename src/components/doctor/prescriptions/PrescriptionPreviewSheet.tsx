@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 type Props = {
   patient: PanelPatient;
   draft: PrescriptionDraft;
+  rxId?: string;
   onClose: () => void;
 };
 
@@ -280,9 +281,9 @@ export function PrescriptionPreviewDocument({
   );
 }
 
-export function PrescriptionPreviewSheet({ patient, draft, onClose }: Props) {
+export function PrescriptionPreviewSheet({ patient, draft, rxId, onClose }: Props) {
   const handlePrint = () => {
-    printPrescriptionDocument();
+    printPrescriptionDocument(rxId);
   };
 
   useEffect(() => {

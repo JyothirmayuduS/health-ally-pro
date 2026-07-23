@@ -108,7 +108,6 @@ function TimelineRow({
           persona={persona}
           kind={kind}
           size="sm"
-          surface="light"
           plain={done}
         />
       )}

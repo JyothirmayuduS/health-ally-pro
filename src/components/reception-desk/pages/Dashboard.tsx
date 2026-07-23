@@ -19,7 +19,15 @@ import {
 import WalkInModal from "@/components/reception-desk/WalkInModal";
 import { getAnnouncements, ANNOUNCEMENTS_EVENT, type Announcement } from "@/lib/shared/announcements";
 
-const Kpi = ({ label, value, sub, accent, testId }) => (
+type KpiProps = {
+  label: string;
+  value: number | string;
+  sub?: string;
+  accent?: string;
+  testId: string;
+};
+
+const Kpi = ({ label, value, sub, accent, testId }: KpiProps) => (
   <div data-testid={testId} className="surface px-5 py-4">
     <div className="text-[10.5px] uppercase tracking-[0.14em] text-ink-400 font-mono font-medium">
       {label}
@@ -33,7 +41,14 @@ const Kpi = ({ label, value, sub, accent, testId }) => (
   </div>
 );
 
-const QuickAction = ({ to, icon: Icon, label, testId }) => (
+type QuickActionProps = {
+  to: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  label: string;
+  testId: string;
+};
+
+const QuickAction = ({ to, icon: Icon, label, testId }: QuickActionProps) => (
   <Link
     to={to}
     data-testid={testId}

@@ -306,8 +306,8 @@ export default function QualityControl() {
                   <XAxis dataKey="name" tick={{ fontSize: 10 }} />
                   <YAxis
                     domain={[
-                      (dataMin) => Math.min(dataMin, currentTarget.defaultMean - currentTarget.defaultSD * 3.5),
-                      (dataMax) => Math.max(dataMax, currentTarget.defaultMean + currentTarget.defaultSD * 3.5),
+                      (dataMin: number) => Math.min(dataMin, currentTarget.defaultMean - currentTarget.defaultSD * 3.5),
+                      (dataMax: number) => Math.max(dataMax, currentTarget.defaultMean + currentTarget.defaultSD * 3.5),
                     ]}
                     tick={{ fontSize: 10 }}
                   />

@@ -30,7 +30,7 @@ import {
   Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Reagent } from "@/lib/reagentData";
+import type { Reagent } from "@/lib/lab-desk/reagentData";
 
 export default function ReagentInventory() {
   const { reagents, addReagentLot } = useLabStore();

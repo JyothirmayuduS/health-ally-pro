@@ -2,7 +2,7 @@
 // All times are local (no TZ math) since this is a mock UI.
 
 const today = new Date();
-const pad = (n) => String(n).padStart(2, "0");
+const pad = (n: number) => String(n).padStart(2, "0");
 const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(
   today.getDate(),
 )}`;
@@ -55,7 +55,7 @@ import { SHARED_PATIENTS } from "@/lib/shared/patients";
 export const PATIENTS = SHARED_PATIENTS;
 
 // Helper to build appointment times today
-const at = (h, m) => `${pad(h)}:${pad(m)}`;
+const at = (h: number, m: number) => `${pad(h)}:${pad(m)}`;
 
 export const APPOINTMENTS = [
   {

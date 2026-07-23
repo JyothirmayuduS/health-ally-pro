@@ -90,7 +90,7 @@ export default function ShiftReportModal({ open, onOpenChange }: ShiftReportModa
     const shiftRejectionsList: Array<{ orderId: string; patientName: string; test: string; reason: string }> = [];
     orders.forEach((o) => {
       o.history.forEach((h) => {
-        const hours = (Date.now() - new Date(h.timestamp).getTime()) / 3_600_000;
+        const hours = (Date.now() - new Date(h.at).getTime()) / 3_600_000;
         if (hours <= 12 && (h.action.includes("Rejected") || h.action.includes("Cancel") || h.action.includes("Reject"))) {
           const p = getPatient(o, patients);
           if (!shiftRejectionsList.some((r) => r.orderId === o.id)) {
@@ -98,7 +98,7 @@ export default function ShiftReportModal({ open, onOpenChange }: ShiftReportModa
               orderId: o.id,
               patientName: p?.name || "Unknown Patient",
               test: o.test_code,
-              reason: h.comment || "No reason recorded"
+              reason: h.note || "No reason recorded"
             });
           }
         }

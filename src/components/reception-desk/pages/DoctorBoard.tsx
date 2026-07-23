@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
-const STATUS = {
+const STATUS: Record<string, { chip: string; dot: string; text: string; bar: string }> = {
   consulting: {
     chip: "chip-teal",
     dot: "bg-teal animate-pulse-dot",

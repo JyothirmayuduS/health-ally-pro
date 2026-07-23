@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { X, Calendar, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, type Appointment } from "@/lib/reception-desk/store";
 import { TODAY_STR, TIME_SLOTS } from "@/lib/reception-desk/mockData";
 
 const REASONS = [
@@ -12,7 +12,25 @@ const REASONS = [
   "Other",
 ];
 
-export default function CancelAppointmentModal({ open, onClose, appointment, onConfirm }) {
+export type CancelAppointmentReschedule = {
+  doctorId: string;
+  date: string;
+  time: string;
+};
+
+type CancelAppointmentModalProps = {
+  open: boolean;
+  onClose: () => void;
+  appointment: Appointment | null;
+  onConfirm: (
+    appointmentId: string,
+    reason: string,
+    notes: string,
+    reschedule?: CancelAppointmentReschedule,
+  ) => void;
+};
+
+export default function CancelAppointmentModal({ open, onClose, appointment, onConfirm }: CancelAppointmentModalProps) {
   const { doctors, appointments } = useStore();
   const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");

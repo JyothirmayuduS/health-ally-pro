@@ -12,7 +12,8 @@ dist
 .wrangler
 test-results
 playwright-report
-docs/evidence
+blob-report
+docs
 *.md
 !README.md
 medora-native
@@ -25,3 +26,17 @@ coverage
 *.key
 credentials.json
 secrets.json
+
+# Test/dev-only assets never needed inside the runtime image
+e2e
+scripts
+playwright.config.ts
+docker-compose.yml
+docker-compose.*.yml
+bun.lockb
+bunfig.toml
+.expo
+.tanstack
+.idea
+.vscode
+*.log

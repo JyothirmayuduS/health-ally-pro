@@ -560,6 +560,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const now = new Date().toISOString();
     const cat = findCatalog(orderToValidate.test_code);
     const criticalAlerts = checkCriticalValues(orderToValidate.results, cat?.parameters);
+    const validatedOrder = orderToValidate;
 
     setOrders((list) => {
       const next = list.map((o) =>
@@ -574,19 +575,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           : o,
       );
-      if (orderToValidate) {
-        const pat = patients.find((p) => p.id === orderToValidate.patient_id);
+      if (validatedOrder) {
+        const pat = patients.find((p) => p.id === validatedOrder.patient_id);
         publishLabResult({
-          orderId: orderToValidate.id,
-          patientId: orderToValidate.patient_id,
-          testName: orderToValidate.test_name,
-          testCode: orderToValidate.test_code,
-          results: orderToValidate.results,
-          abnormal: Object.values(orderToValidate.results ?? {}).some((v) =>
+          orderId: validatedOrder.id,
+          patientId: validatedOrder.patient_id,
+          testName: validatedOrder.test_name,
+          testCode: validatedOrder.test_code,
+          results: validatedOrder.results,
+          abnormal: Object.values(validatedOrder.results ?? {}).some((v) =>
             String(v).toLowerCase().includes("high") || String(v).toLowerCase().includes("low"),
           ),
-          doctorName: orderToValidate.doctor_name,
-          doctorId: orderToValidate.doctor_id,
+          doctorName: validatedOrder.doctor_name,
+          doctorId: validatedOrder.doctor_id,
           patientName: pat?.name,
         });
       }

@@ -15,7 +15,7 @@ export type WorkQueueItem = {
   subtitle?: string;
   to: string;
   search?: Record<string, string | undefined>;
-  params?: Record<string, string>;
+  params?: { patientId: string };
 };
 
 function pushUnique(items: WorkQueueItem[], item: WorkQueueItem) {

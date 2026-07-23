@@ -64,7 +64,7 @@ export async function computeStripeSignatureHex(
 ): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw",
-    keyBytes,
+    Uint8Array.from(keyBytes),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"],

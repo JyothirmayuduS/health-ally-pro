@@ -35,12 +35,23 @@ export const Route = createFileRoute("/api/hospital/audit-dlq")({
 
         const admin = getSupabaseAdmin();
         if (!admin) return jsonResponse({ error: "admin_unavailable" }, { status: 503 });
-        let { data, error } = await admin
+        type AuditFailureRow = {
+          id: string;
+          created_at: string;
+          error_message: string;
+          payload: unknown;
+          resolved_at: string | null;
+          status?: string;
+          resolution?: unknown;
+        };
+        let data: AuditFailureRow[] | null;
+        let error: { message: string } | null;
+        ({ data, error } = await admin
           .from("audit_write_failures")
           .select("id, created_at, error_message, payload, resolved_at, status, resolution")
           .is("resolved_at", null)
           .order("created_at", { ascending: true })
-          .limit(200);
+          .limit(200));
         if (error && /column|schema cache/i.test(error.message)) {
           ({ data, error } = await admin
             .from("audit_write_failures")
@@ -98,7 +109,7 @@ export const Route = createFileRoute("/api/hospital/audit-dlq")({
             request,
           });
           const health = await getAuditWriteFailuresHealth();
-          return jsonResponse({ ok: result.ok, ...result, health });
+          return jsonResponse({ ...result, health });
         }
 
         if (body.action === "ack" || body.action === "resolve") {

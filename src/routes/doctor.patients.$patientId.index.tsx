@@ -35,8 +35,10 @@ import { useLiveQueue } from "@/lib/doctor-live-queue-store";
 import { listVitalsForPatient } from "@/lib/shared/vitals-store";
 import { cn } from "@/lib/utils";
 
+type PatientChartSearch = { section?: string };
+
 export const Route = createFileRoute("/doctor/patients/$patientId/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): PatientChartSearch => ({
     section: typeof search.section === "string" ? search.section : undefined,
   }),
   component: PatientChart,

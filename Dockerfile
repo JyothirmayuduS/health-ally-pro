@@ -1,13 +1,18 @@
 # Digest-pinned Node 22 bookworm-slim (glibc — required for Cloudflare workerd).
-ARG NODE_DIGEST=sha256:ef03a3d0e663b3c9d38c95be3fd31a100514d41df2599562b68a58a57f979adf
+ARG NODE_DIGEST=sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3
 
-# ---------- deps (cached) ----------
+# ---------- deps (prod-only, cached) ----------
+# npm ci --omit=dev installs only "dependencies" (vite/wrangler/@cloudflare/*/miniflare/workerd
+# are true runtime deps here because `vite preview` boots the Workers runtime for SSR).
+# `npm run build` does not require any devDependency (typecheck/lint/test tooling), so we never
+# need to install, then prune, a separate dev tree — this avoids the extra ~120MB of devDeps
+# ever touching a layer.
 FROM node:22-bookworm-slim@${NODE_DIGEST} AS deps
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm ci --omit=dev
 
 # ---------- build ----------
 FROM deps AS build
@@ -15,8 +20,7 @@ WORKDIR /app
 COPY . .
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max-old-space-size=8192
-RUN npm run build \
-  && npm prune --omit=dev
+RUN npm run build
 
 # ---------- production runtime ----------
 FROM node:22-bookworm-slim@${NODE_DIGEST} AS production
@@ -45,19 +49,35 @@ RUN groupadd -r medora && useradd -r -g medora -d /app -s /usr/sbin/nologin medo
        ca-certificates wget tini \
   && rm -rf /var/lib/apt/lists/*
 
-# Production node_modules only (vite/wrangler are runtime deps for preview/workerd)
-COPY --from=build /app/package.json /app/package-lock.json ./
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/public ./public
-COPY --from=build /app/src ./src
-COPY --from=build /app/.wrangler/deploy ./.wrangler/deploy
-COPY --from=build /app/vite.config.ts /app/wrangler.jsonc /app/tsconfig.json ./
-COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+# The base image's bundled npm CLI (used only to `npx vite preview` at runtime) ships its own
+# vendored tar/sigstore/picomatch/brace-expansion/ip-address versions with known CVEs. Upgrading
+# npm itself (not our app's dependency tree, which stays pinned to package-lock.json) resolves
+# those without touching application behavior.
+RUN npm install -g npm@latest && npm cache clean --force
 
+# Production node_modules only (vite/wrangler are runtime deps for preview/workerd).
+# --chown at COPY time (instead of a later `RUN chown -R`) avoids overlayfs copy-up
+# duplicating the entire tree into a new layer, which previously ~doubled image size.
+# `src/` IS required at runtime: `vite preview` re-resolves the TanStack Start plugin
+# config on boot, which reads the file-based router entry straight from src/ (confirmed by
+# smoke-testing — omitting src/ makes `vite preview` fail with
+# "Could not resolve entry for router entry: router in /app/src").
+COPY --from=build --chown=medora:medora /app/package.json /app/package-lock.json ./
+COPY --from=build --chown=medora:medora /app/node_modules ./node_modules
+COPY --from=build --chown=medora:medora /app/dist ./dist
+COPY --from=build --chown=medora:medora /app/public ./public
+COPY --from=build --chown=medora:medora /app/src ./src
+COPY --from=build --chown=medora:medora /app/.wrangler/deploy ./.wrangler/deploy
+COPY --from=build --chown=medora:medora /app/vite.config.ts /app/wrangler.jsonc /app/tsconfig.json ./
+COPY --chown=medora:medora docker-entrypoint.sh /app/docker-entrypoint.sh
+
+# musl-libc native addon variants are dead weight on glibc bookworm-slim; drop them
+# (npm's optionalDependencies mechanism installs both when it can't be certain of libc
+# at install time — neither is ever loaded on this base image).
 RUN chmod +x /app/docker-entrypoint.sh \
   && mkdir -p /app/tmp /tmp \
-  && chown -R medora:medora /app
+  && chown medora:medora /app /app/tmp \
+  && find /app/node_modules -mindepth 1 -maxdepth 2 -type d -iname '*-linux-*musl*' -exec rm -rf {} +
 
 USER medora
 EXPOSE 3000

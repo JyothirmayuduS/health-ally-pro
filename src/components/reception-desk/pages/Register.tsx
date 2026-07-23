@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useStore } from "@/lib/reception-desk/store";
 import { BLOOD_GROUPS, GENDERS } from "@/lib/reception-desk/mockData";
 import { toast } from "sonner";
 import { UserPlus, Upload, AlertTriangle, Check } from "lucide-react";
+import type { SharedPatient } from "@/lib/shared/patients";
 
-const Field = ({ label, required, children, hint }) => (
+interface FieldProps {
+  label: string;
+  required?: boolean;
+  children: ReactNode;
+  hint?: string;
+}
+
+const Field = ({ label, required, children, hint }: FieldProps) => (
   <label className="block">
     <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-ink-600 font-mono mb-1.5">
       {label} {required && <span className="text-status-noshowText">*</span>}
@@ -37,9 +45,9 @@ export default function Register() {
     insuranceProvider: "",
     policyId: "",
   });
-  const [duplicate, setDuplicate] = useState(null);
+  const [duplicate, setDuplicate] = useState<SharedPatient | null>(null);
 
-  const set = (k) => (e) => {
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const v = e.target.value;
     setForm((f) => ({ ...f, [k]: v }));
     if (k === "phone" || k === "name" || k === "dob") {
@@ -52,7 +60,7 @@ export default function Register() {
     }
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.name || !form.phone || !form.dob) {
       toast.error("Name, DOB and phone are required");
@@ -65,20 +73,16 @@ export default function Register() {
       phone: form.phone,
       email: form.email || "—",
       address: form.address,
-      emergency: {
-        name: form.emergencyName,
-        phone: form.emergencyPhone,
-        relation: form.emergencyRelation,
-      },
+      emergencyName: form.emergencyName,
+      emergencyPhone: form.emergencyPhone,
+      emergencyRelation: form.emergencyRelation,
       bloodGroup: form.bloodGroup,
       allergies: form.allergies || "—",
-      insurance: {
-        provider: form.insuranceProvider || "Self-pay",
-        policyId: form.policyId || "—",
-      },
+      insuranceProvider: form.insuranceProvider || "Self-pay",
+      policyId: form.policyId || "—",
     });
     toast.success(`${newP.name} registered`, { description: `MRN ${newP.id}` });
-    nav("/reception/patients");
+    nav({ to: "/reception/patients" });
   };
 
   return (
@@ -334,7 +338,7 @@ export default function Register() {
           <button
             type="button"
             data-testid="reg-cancel"
-            onClick={() => nav(-1)}
+            onClick={() => window.history.back()}
             className="mt-2 w-full btn-ghost"
           >
             Cancel

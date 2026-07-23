@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NODE_DIGEST: sha256:ef03a3d0e663b3c9d38c95be3fd31a100514d41df2599562b68a58a57f979adf
+        NODE_DIGEST: sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3
         GIT_COMMIT: ${GIT_COMMIT:-unknown}
         BUILD_VERSION: ${BUILD_VERSION:-unknown}
         BUILT_AT: ${BUILT_AT:-unknown}

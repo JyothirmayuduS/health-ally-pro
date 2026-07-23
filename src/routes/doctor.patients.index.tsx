@@ -30,6 +30,11 @@ import { patientTelHref } from "@/lib/doctor-patient-contact";
 import { useLiveQueue } from "@/lib/doctor-live-queue-store";
 import { cn } from "@/lib/utils";
 
+type PatientsIndexSearch = {
+  view?: PanelView;
+  category?: "all" | "follow-up" | "upcoming";
+};
+
 function flagPillLink(
   pill: string,
   patientId: string,
@@ -60,7 +65,7 @@ function patientMatchesVisit(patient: PanelPatient, visitFilter: string) {
 type SortOption = "priority" | "last-visit" | "name" | "condition";
 
 export const Route = createFileRoute("/doctor/patients/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): PatientsIndexSearch => ({
     view: (["panel", "today", "urgent"].includes(String(search.view))
       ? String(search.view)
       : "panel") as PanelView,
@@ -131,12 +136,13 @@ function DoctorPatientsList() {
 
   const counts = panelCounts();
   const patients = useMemo(() => {
-    let list = patientsForView(view).filter((p) => {
+    const activeCategory = category ?? "all";
+    let list = patientsForView(view ?? "panel").filter((p) => {
       const q = search.trim().toLowerCase();
       if (q && !p.name.toLowerCase().includes(q) && !p.condition.toLowerCase().includes(q) && !p.patientRef.toLowerCase().includes(q)) {
         return false;
       }
-      if (category !== "all" && !p.categories.includes(category)) return false;
+      if (activeCategory !== "all" && !p.categories.includes(activeCategory)) return false;
 
       if (filterValues.condition !== "All" && p.condition !== filterValues.condition) return false;
       if (filterValues.gender !== "All") {

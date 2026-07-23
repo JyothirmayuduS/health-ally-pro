@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, type Shift } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { computeTotals } from "@/lib/reception-desk/billingData";
 import { printDayReport } from "@/lib/reception-desk/print";
@@ -17,16 +17,59 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const fmt = (n) =>
+interface StaffMember {
+  id: string;
+  name: string;
+  initials: string;
+}
+
+interface ServiceSummary {
+  name: string;
+  count: number;
+  revenue: number;
+}
+
+interface ShiftReportData extends Shift {
+  staffName: string;
+  collections: Record<string, number>;
+  refunds: number;
+  topServices: ServiceSummary[];
+  cancellations: Record<string, number>;
+  actualCash?: number;
+}
+
+interface CloseShiftPatch {
+  closingDenom: Record<number, number>;
+  variance: number;
+  handover: string;
+}
+
+interface OpenShiftData {
+  staffId: string | undefined;
+  label: string;
+  openingFloat: number;
+}
+
+const fmt = (n: number | string | null | undefined) =>
   `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
-function timeStr(iso) {
+function timeStr(iso: string | null | undefined) {
   if (!iso) return "—";
   return iso.slice(11, 16);
 }
 
-function CloseShiftDialog({ shift, expected, onClose, onConfirm }) {
-  const [denom, setDenom] = useState(
+function CloseShiftDialog({
+  shift,
+  expected,
+  onClose,
+  onConfirm,
+}: {
+  shift: Shift;
+  expected: number;
+  onClose: () => void;
+  onConfirm: (patch: CloseShiftPatch) => void;
+}) {
+  const [denom, setDenom] = useState<Record<number, number>>(
     Object.fromEntries(DENOMS.map((d) => [d, 0])),
   );
   const [note, setNote] = useState("");
@@ -107,7 +150,7 @@ function CloseShiftDialog({ shift, expected, onClose, onConfirm }) {
               </div>
               <div className="text-[11px] text-ink-400 mt-1">
                 Opening float {fmt(shift.openingFloat)} + cash collected{" "}
-                {fmt(expected - shift.openingFloat)}
+                {fmt(expected - (shift.openingFloat ?? 0))}
               </div>
             </div>
             <div
@@ -178,7 +221,15 @@ function CloseShiftDialog({ shift, expected, onClose, onConfirm }) {
   );
 }
 
-function OpenShiftDialog({ staff, onClose, onConfirm }) {
+function OpenShiftDialog({
+  staff,
+  onClose,
+  onConfirm,
+}: {
+  staff: StaffMember[];
+  onClose: () => void;
+  onConfirm: (data: OpenShiftData) => void;
+}) {
   const [staffId, setStaffId] = useState(staff[0]?.id);
   const [label, setLabel] = useState("Evening");
   const [float, setFloat] = useState(3000);
@@ -271,7 +322,25 @@ function OpenShiftDialog({ staff, onClose, onConfirm }) {
   );
 }
 
-export function DayEndReportModal({ shift, collections, refunds, variance, topServices, cancellations, onClose, onPrint }) {
+export function DayEndReportModal({
+  shift,
+  collections,
+  refunds,
+  variance,
+  topServices,
+  cancellations,
+  onClose,
+  onPrint,
+}: {
+  shift: ShiftReportData;
+  collections: Record<string, number>;
+  refunds: number;
+  variance: number;
+  topServices: ServiceSummary[];
+  cancellations: Record<string, number>;
+  onClose: () => void;
+  onPrint: () => void;
+}) {
   return (
     <div className="fixed inset-0 z-30 bg-black/40 grid place-items-center p-4">
       <div className="bg-white border border-ink-200 rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-xl">
@@ -319,7 +388,7 @@ export function DayEndReportModal({ shift, collections, refunds, variance, topSe
                 </div>
                 <div className="flex justify-between font-mono">
                   <span>Expected Cash</span>
-                  <span>{fmt(shift.openingFloat + (shift.cashCollected || 0))}</span>
+                  <span>{fmt((shift.openingFloat ?? 0) + (shift.cashCollected || 0))}</span>
                 </div>
                 <div className="flex justify-between font-mono">
                   <span>Actual Cash</span>
@@ -350,7 +419,7 @@ export function DayEndReportModal({ shift, collections, refunds, variance, topSe
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink-100">
-                {topServices.map((s: any, idx: number) => (
+                {topServices.map((s, idx) => (
                   <tr key={s.name}>
                     <td className="py-1.5 font-medium text-ink-900">{idx + 1}. {s.name}</td>
                     <td className="py-1.5 text-right font-mono">{s.count}</td>
@@ -403,10 +472,10 @@ export function DayEndReportModal({ shift, collections, refunds, variance, topSe
 export default function CashDrawer() {
   const { shifts, staff, invoices, appointments, openShift, closeShift } = useStore();
   const [openDialog, setOpenDialog] = useState(false);
-  const [closeDialog, setCloseDialog] = useState(null);
-  const [reportShift, setReportShift] = useState<any>(null);
+  const [closeDialog, setCloseDialog] = useState<{ shift: Shift; expected: number } | null>(null);
+  const [reportShift, setReportShift] = useState<ShiftReportData | null>(null);
 
-  const getCollectionsForShift = (s: any) => {
+  const getCollectionsForShift = (s: Shift): Record<string, number> => {
     const shiftInvoices = invoices.filter(
       (i) =>
         (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
@@ -416,16 +485,18 @@ export default function CashDrawer() {
     );
     const methodTotals: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
     shiftInvoices.forEach((i) => {
+      const method = i.method;
+      if (!method) return;
       const t = computeTotals(i.items, i.discount).total;
       const invoiceRefundsShift = (i.refunds || [])
         .filter((r) => r.processedAt >= s.openedAt && (!s.closedAt || r.processedAt <= s.closedAt))
         .reduce((sum, r) => sum + r.amount, 0);
-      methodTotals[i.method] = (methodTotals[i.method] || 0) + (t - invoiceRefundsShift);
+      methodTotals[method] = (methodTotals[method] || 0) + (t - invoiceRefundsShift);
     });
     return methodTotals;
   };
 
-  const getRefundsForShift = (s: any) => {
+  const getRefundsForShift = (s: Shift): number => {
     return invoices.reduce((sum, i) => {
       const shiftRefunds = (i.refunds || []).filter(
         (r) =>
@@ -436,7 +507,7 @@ export default function CashDrawer() {
     }, 0);
   };
 
-  const getTopServicesForShift = (s: any) => {
+  const getTopServicesForShift = (s: Shift): ServiceSummary[] => {
     const shiftInvoices = invoices.filter(
       (i) =>
         (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") &&
@@ -444,7 +515,7 @@ export default function CashDrawer() {
         i.paidAt >= s.openedAt &&
         (!s.closedAt || i.paidAt <= s.closedAt)
     );
-    const serviceMap: Record<string, { name: string; count: number; revenue: number }> = {};
+    const serviceMap: Record<string, ServiceSummary> = {};
     shiftInvoices.forEach((i) => {
       i.items.forEach((item) => {
         if (!serviceMap[item.label]) {
@@ -455,11 +526,11 @@ export default function CashDrawer() {
       });
     });
     return Object.values(serviceMap)
-      .sort((a: any, b: any) => b.revenue - a.revenue)
+      .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
   };
 
-  const getCancellationsForShift = (s: any) => {
+  const getCancellationsForShift = (): Record<string, number> => {
     const cancelledToday = appointments.filter(
       (a) => a.status === "cancelled" && a.date === TODAY_STR
     );
@@ -471,12 +542,12 @@ export default function CashDrawer() {
     return counts;
   };
 
-  const handleOpenReport = (s: any) => {
+  const handleOpenReport = (s: Shift) => {
     const st = staff.find((x) => x.id === s.staffId);
     const collections = getCollectionsForShift(s);
     const refunds = getRefundsForShift(s);
     const topServices = getTopServicesForShift(s);
-    const cancellations = getCancellationsForShift(s);
+    const cancellations = getCancellationsForShift();
     setReportShift({
       ...s,
       staffName: st?.name || "Medical Officer",
@@ -493,7 +564,7 @@ export default function CashDrawer() {
 
   // Derive cash collected for open shifts from invoices paid since shift opened
   const cashByOpenShift = useMemo(() => {
-    const out = {};
+    const out: Record<string, number> = {};
     openShifts.forEach((s) => {
       const grossCash = invoices
         .filter(
@@ -521,8 +592,9 @@ export default function CashDrawer() {
   const todayPaid = invoices.filter(
     (i) => (i.status === "paid" || i.status === "refunded" || i.status === "partial-refund") && i.date === TODAY_STR,
   );
-  const totalByMethod = todayPaid.reduce(
+  const totalByMethod = todayPaid.reduce<Record<string, number>>(
     (acc, i) => {
+      if (!i.method) return acc;
       const t = computeTotals(i.items, i.discount).total;
       const invoiceRefundsToday = (i.refunds || [])
         .filter((r) => r.processedAt.startsWith(TODAY_STR))
@@ -536,7 +608,7 @@ export default function CashDrawer() {
 
   // Refunds column computation for shifts table
   const refundsByShift = useMemo(() => {
-    const out = {};
+    const out: Record<string, number> = {};
     todayShifts.forEach((s) => {
       const cashRefunds = invoices.reduce((sum, i) => {
         const shiftRefunds = (i.refunds || []).filter(
@@ -618,7 +690,7 @@ export default function CashDrawer() {
             {openShifts.map((s) => {
               const st = staff.find((x) => x.id === s.staffId);
               const cash = cashByOpenShift[s.id] || 0;
-              const expected = s.openingFloat + cash;
+              const expected = (s.openingFloat ?? 0) + cash;
               return (
                 <div key={s.id} data-testid={`open-shift-${s.id}`} className="overflow-hidden">
                   <div className="h-1 bg-mustard" />
@@ -767,12 +839,12 @@ export default function CashDrawer() {
                       className={`px-3 py-3 text-right font-mono ${
                         s.variance === 0
                           ? "text-money"
-                          : s.variance > 0
+                          : (s.variance ?? 0) > 0
                             ? "text-mustard"
                             : "text-clay"
                       }`}
                     >
-                      {s.variance > 0 ? "+" : ""}
+                      {(s.variance ?? 0) > 0 ? "+" : ""}
                       {fmt(s.variance || 0)}
                     </td>
                     <td className="px-5 py-3 text-right flex justify-end gap-2.5 items-center">
@@ -836,7 +908,7 @@ export default function CashDrawer() {
               ...patch,
               status: "closed",
               closedAt: new Date().toISOString(),
-              cashCollected: closeDialog.expected - closeDialog.shift.openingFloat,
+              cashCollected: closeDialog.expected - (closeDialog.shift.openingFloat ?? 0),
             };
             closeShift(closeDialog.shift.id, {
               ...patch,
@@ -856,7 +928,7 @@ export default function CashDrawer() {
           shift={reportShift}
           collections={reportShift.collections}
           refunds={reportShift.refunds}
-          variance={reportShift.variance}
+          variance={reportShift.variance ?? 0}
           topServices={reportShift.topServices}
           cancellations={reportShift.cancellations}
           onClose={() => setReportShift(null)}
@@ -865,7 +937,7 @@ export default function CashDrawer() {
               shift: reportShift,
               collections: reportShift.collections,
               refunds: reportShift.refunds,
-              variance: reportShift.variance,
+              variance: reportShift.variance ?? 0,
               topServices: reportShift.topServices,
               cancellations: reportShift.cancellations,
             });

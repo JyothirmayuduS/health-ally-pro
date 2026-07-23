@@ -81,13 +81,11 @@ export function AppShell() {
           {nav.map((item) => {
             const Icon = item.icon;
             const active =
-              item.to === "/"
-                ? location.pathname === "/"
-                : item.to === "/care"
-                  ? isCareRoute(location.pathname)
-                  : item.to === "/health"
-                    ? isHealthRoute(location.pathname)
-                    : location.pathname.startsWith(item.to);
+              item.to === "/care"
+                ? isCareRoute(location.pathname)
+                : item.to === "/health"
+                  ? isHealthRoute(location.pathname)
+                  : location.pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}
@@ -137,13 +135,11 @@ export function AppShell() {
               {nav.map((item) => {
                 const Icon = item.icon;
                 const active =
-                  item.to === "/"
-                    ? location.pathname === "/"
-                    : item.to === "/care"
-                      ? isCareRoute(location.pathname)
-                      : item.to === "/health"
-                        ? isHealthRoute(location.pathname)
-                        : location.pathname.startsWith(item.to);
+                  item.to === "/care"
+                    ? isCareRoute(location.pathname)
+                    : item.to === "/health"
+                      ? isHealthRoute(location.pathname)
+                      : location.pathname.startsWith(item.to);
                 return (
               <Link
                 key={item.to}

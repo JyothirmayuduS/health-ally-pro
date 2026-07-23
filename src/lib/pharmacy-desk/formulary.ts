@@ -99,7 +99,7 @@ export function pricePerTablet(drug: Drug) {
 }
 
 export function fmtMargin(drug: Drug) {
-  return `${marginPercent(drug.unit_price, drug.purchase_cost)}%`;
+  return `${marginPercent(drug.unit_price, drug.purchase_cost ?? 0)}%`;
 }
 
 export function weightedAvgCost(

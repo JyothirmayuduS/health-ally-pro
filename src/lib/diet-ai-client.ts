@@ -18,6 +18,7 @@ import { getCuratedYoutubeVideos, mealNeedsVideoRepair } from "@/lib/diet-youtub
 export type { PatientDietContext } from "@/lib/patient-diet-profile";
 export { getPatientDietContext } from "@/lib/patient-diet-profile";
 
+import { getPatientDietContext } from "@/lib/patient-diet-profile";
 import type { PatientDietContext } from "@/lib/patient-diet-profile";
 
 export function getMedicationAwareSuggestions(ctx: PatientDietContext): string[] {

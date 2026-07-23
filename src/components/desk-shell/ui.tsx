@@ -67,11 +67,13 @@ export function DeskQuickAction({
 
 export function DeskPanel({
   title,
+  subtitle,
   action,
   children,
   className,
 }: {
   title: string;
+  subtitle?: React.ReactNode;
   action?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
@@ -79,7 +81,12 @@ export function DeskPanel({
   return (
     <div className={cn("surface overflow-hidden", className)}>
       <div className="flex items-center justify-between border-b border-ink-200 px-5 py-4">
-        <h2 className="font-heading text-[15px] font-semibold text-ink-900">{title}</h2>
+        <div>
+          <h2 className="font-heading text-[15px] font-semibold text-ink-900">{title}</h2>
+          {subtitle ? (
+            <div className="mt-0.5 text-[12px] text-ink-400">{subtitle}</div>
+          ) : null}
+        </div>
         {action}
       </div>
       {children}
@@ -112,12 +119,22 @@ export function DeskThead({ children }: { children: React.ReactNode }) {
 export function DeskTh({
   children,
   align = "left",
+  className,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   align?: "left" | "right";
+  className?: string;
 }) {
   return (
-    <th className={cn("px-4 py-3", align === "right" ? "text-right" : "text-left")}>{children}</th>
+    <th
+      className={cn(
+        "px-4 py-3",
+        align === "right" ? "text-right" : "text-left",
+        className,
+      )}
+    >
+      {children}
+    </th>
   );
 }
 

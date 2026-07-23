@@ -8,6 +8,7 @@ import {
 import { getCuratedYoutubeForMeal, videoMatchesMeal } from "@/lib/diet-youtube-curated";
 import { VERIFIED_MEAL_MEDIA } from "@/lib/diet-meal-media";
 import { simplifyMealSearchName } from "@/lib/diet-meal-search";
+import { mealMediaFingerprint } from "@/lib/diet-meal-fingerprint";
 import { getCachedVideos, setCachedVideos } from "@/server/diet/media-cache";
 import { searchDynamicMealMedia } from "@/server/diet/meal-media-dynamic";
 

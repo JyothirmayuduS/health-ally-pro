@@ -42,7 +42,7 @@ export default function AdminAnnouncements() {
     if (target === "all") {
       setTargets(["all"]);
     } else {
-      let next = targets.filter((t) => t !== "all");
+      let next: AnnouncementTarget[] = targets.filter((t) => t !== "all");
       if (next.includes(target)) {
         next = next.filter((t) => t !== target);
         if (next.length === 0) next = ["all"];

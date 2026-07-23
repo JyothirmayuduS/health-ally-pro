@@ -144,7 +144,7 @@ export function ProfileHubPage() {
       <ProfileSectionTitle
         action={
           <Link
-            to="/profile/dependents/"
+            to="/profile/dependents"
             className="text-[13px] font-semibold text-[#A67C66] sm:text-sm"
           >
             View all

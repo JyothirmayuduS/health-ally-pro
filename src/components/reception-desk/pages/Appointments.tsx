@@ -1,16 +1,18 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, type Appointment } from "@/lib/reception-desk/store";
 import StatusPill from "@/components/reception-desk/StatusPill";
 import { Plus, CalendarDays, ChevronLeft, ChevronRight, List, Calendar as CalendarIcon, Check } from "lucide-react";
-import CancelAppointmentModal from "@/components/reception-desk/CancelAppointmentModal";
+import CancelAppointmentModal, {
+  type CancelAppointmentReschedule,
+} from "@/components/reception-desk/CancelAppointmentModal";
 
-const pad = (n) => String(n).padStart(2, "0");
-const toISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const pad = (n: number) => String(n).padStart(2, "0");
+const toISO = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
 const FILTERS = ["All", "Scheduled", "Checked-in", "In consult", "Completed", "No-show", "Cancelled"];
 
-const filterMatch = (status, f) => {
+const filterMatch = (status: string, f: string) => {
   if (f === "All") return true;
   if (f === "Scheduled") return status === "scheduled";
   if (f === "Checked-in") return status === "checked-in";
@@ -29,7 +31,7 @@ export default function Appointments() {
   const [date, setDate] = useState(new Date());
   const [filter, setFilter] = useState("All");
   const [doctorId, setDoctorId] = useState("ALL");
-  const [cancelTarget, setCancelTarget] = useState<any>(null);
+  const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
   
   // View mode: list vs calendar
   const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
@@ -50,7 +52,7 @@ export default function Appointments() {
     [appointments, iso, doctorId, filter],
   );
 
-  const shiftDay = (n) => {
+  const shiftDay = (n: number) => {
     const d = new Date(date);
     d.setDate(d.getDate() + n);
     setDate(d);
@@ -58,7 +60,7 @@ export default function Appointments() {
     setCurrentMonth(d);
   };
 
-  const shiftMonth = (n) => {
+  const shiftMonth = (n: number) => {
     const d = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + n, 1);
     setCurrentMonth(d);
   };
@@ -505,7 +507,7 @@ export default function Appointments() {
         open={cancelTarget !== null}
         appointment={cancelTarget}
         onClose={() => setCancelTarget(null)}
-        onConfirm={(apptId, reason, notes, rescheduleObj) => {
+        onConfirm={(apptId: string, reason: string, notes: string, rescheduleObj?: CancelAppointmentReschedule) => {
           cancelAppointment(apptId, { reason, notes, reschedule: rescheduleObj });
           setCancelTarget(null);
         }}

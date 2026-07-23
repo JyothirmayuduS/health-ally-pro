@@ -208,6 +208,8 @@ export const HOSPITAL = {
   id: "a0000001-0001-4001-8001-000000000001",
   name: "Oak Haven Medical",
   pharmacy: "Oak Haven Outpatient Pharmacy",
+  address: "44 Linking Road, Bandra West, Mumbai 400050",
+  phone: "+91 22 4455 1100",
 };
 
 export const PHARMACIST = { name: "Riley Chen", email: "pharmacy@oakhaven.demo" };

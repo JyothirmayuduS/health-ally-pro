@@ -1,7 +1,10 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+type DoctorMessagingSearch = { patientId?: string };
+
+
 export const Route = createFileRoute("/doctor/messaging")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): DoctorMessagingSearch => ({
     patientId: typeof search.patientId === "string" ? search.patientId : undefined,
   }),
   beforeLoad: () => {

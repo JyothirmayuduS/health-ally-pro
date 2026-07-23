@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useLabStore, formatDateTime, getPatient } from "@/lib/lab-desk/store";
+import { useLabStore, formatDateTime, getPatient, type LabOrder } from "@/lib/lab-desk/store";
 import { SectionLabel, EmptyState } from "@/components/lab-desk/Pills";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

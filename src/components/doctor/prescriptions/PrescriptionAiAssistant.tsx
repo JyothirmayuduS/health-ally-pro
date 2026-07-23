@@ -18,6 +18,7 @@ import {
 } from "@/lib/doctor-prescription-ai";
 import type { PanelPatient } from "@/lib/doctor-patients-apk-data";
 import { MedoraAiComplianceBadge } from "@/components/ai/MedoraAiComplianceBadge";
+import { cn } from "@/lib/utils";
 
 type Props = {
   patient: PanelPatient;

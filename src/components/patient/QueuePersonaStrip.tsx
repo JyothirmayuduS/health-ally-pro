@@ -25,7 +25,6 @@ export function QueuePersonaStrip({ position, total, className }: StripProps) {
                 persona={node.persona}
                 kind={node.kind}
                 size="sm"
-                surface="dark"
                 plain={node.kind === "in-room" || node.kind === "completed"}
               />
             {node.kind === "you" ? (

@@ -9,8 +9,11 @@ import { getLiveQueueContext } from "@/lib/patient-queue";
 import { pushPatientNotification } from "@/lib/patient-notifications-store";
 import { clinicPhoneHref } from "@/lib/patient-care-actions";
 
+type QueueSearch = { doctor?: string };
+
+
 export const Route = createFileRoute("/queue")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): QueueSearch => ({
     doctor: typeof search.doctor === "string" ? search.doctor : undefined,
   }),
   head: () => ({

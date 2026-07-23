@@ -125,7 +125,7 @@ const STATUS_CONFIG = {
   },
 };
 
-function SensorPill({ icon: Icon, value, label, ok }: { icon: React.ElementType; value: string; label: string; ok: boolean }) {
+function SensorPill({ icon: Icon, value, label, ok }: { icon: React.ComponentType<{ className?: string }>; value: string; label: string; ok: boolean }) {
   return (
     <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border ${ok ? "bg-white border-stone-200 text-ink-700" : "bg-red-50 border-red-200 text-red-700"}`}>
       <Icon className={`h-3.5 w-3.5 shrink-0 ${ok ? "text-ink-400" : "text-red-500"}`} />

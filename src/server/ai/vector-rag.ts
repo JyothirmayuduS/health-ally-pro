@@ -45,7 +45,7 @@ export async function syncKnowledgeToVectorStore(): Promise<{ synced: number; sk
           updated_at: new Date().toISOString(),
         };
       })
-      .filter(Boolean);
+      .filter((row): row is NonNullable<typeof row> => row !== null);
 
     if (rows.length === 0) return;
 

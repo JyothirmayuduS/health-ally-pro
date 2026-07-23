@@ -6,7 +6,7 @@ import { Route } from "@/routes/reception.appointments.new";
 import { toast } from "sonner";
 import { Search, AlertCircle, Check, Stethoscope } from "lucide-react";
 
-const pad = (n) => String(n).padStart(2, "0");
+const pad = (n: number) => String(n).padStart(2, "0");
 
 export default function NewAppointment() {
   const { patient: patientParam } = Route.useSearch();
@@ -56,7 +56,7 @@ export default function NewAppointment() {
     [appointments, doctorId, date],
   );
 
-  const submit = (e) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!patientId) {
       toast.error("Select a patient");
@@ -76,7 +76,7 @@ export default function NewAppointment() {
       notes,
     });
     toast.success("Appointment booked", {
-      description: `${selectedPatient.name} → ${selectedDoctor.name} · ${date} ${time}`,
+      description: `${selectedPatient?.name} → ${selectedDoctor?.name} · ${date} ${time}`,
     });
     nav({ to: "/reception/appointments" });
     return apt;
@@ -219,7 +219,7 @@ export default function NewAppointment() {
               <select
                 data-testid="newappt-duration"
                 value={duration}
-                onChange={(e) => setDuration(e.target.value)}
+                onChange={(e) => setDuration(Number(e.target.value))}
                 className="w-full h-9 px-3 text-[13px] bg-white border border-ink-200 rounded-sm focus:outline-none focus:border-sage"
               >
                 {[10, 15, 20, 30, 45, 60].map((m) => (

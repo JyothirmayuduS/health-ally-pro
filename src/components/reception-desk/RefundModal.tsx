@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { X, IndianRupee, CheckCircle2, AlertCircle } from "lucide-react";
 import { computeTotals } from "@/lib/reception-desk/billingData";
+import type { Invoice } from "@/lib/reception-desk/store";
 
 const REASONS = [
   "Patient request",
@@ -10,7 +11,16 @@ const REASONS = [
   "Other",
 ];
 
-export default function RefundModal({ open, onClose, invoice, onRefund }) {
+type RefundType = "full" | "partial" | "credit";
+
+interface RefundModalProps {
+  open: boolean;
+  onClose: () => void;
+  invoice: Invoice | null | undefined;
+  onRefund: (amount: number, type: RefundType, reason: string, notes: string) => void;
+}
+
+export default function RefundModal({ open, onClose, invoice, onRefund }: RefundModalProps) {
   const [type, setType] = useState<"full" | "partial" | "credit">("full");
   const [amount, setAmount] = useState<string>("");
   const [reason, setReason] = useState("");

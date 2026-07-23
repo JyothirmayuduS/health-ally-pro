@@ -92,8 +92,12 @@ export const PAYMENT_METHODS = [
   { id: "insurance", label: "Insurance" },
 ];
 
-export const computeTotals = (items, discount = 0) => {
-  const subtotal = items.reduce((s, it) => s + Number(it.amount || 0), 0);
+interface BillingLineItem {
+  amount: number;
+}
+
+export const computeTotals = (items: BillingLineItem[], discount = 0) => {
+  const subtotal = items.reduce((s: number, it: BillingLineItem) => s + Number(it.amount || 0), 0);
   const taxable = Math.max(0, subtotal - Number(discount || 0));
   const tax = Math.round(taxable * TAX_RATE);
   const total = taxable + tax;

@@ -12,7 +12,7 @@ export type NavItem = {
 
 type Props = {
   homeTo: string;
-  items: NavItem[];
+  items: readonly NavItem[];
   user: { name: string; role: string; photoUrl: string };
 };
 

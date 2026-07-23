@@ -128,7 +128,7 @@ export function DependentDetailPage({ dependentId }: { dependentId: string }) {
     return (
       <div className="py-16 text-center">
         <p className="text-ink-muted">Dependent not found.</p>
-        <Link to="/profile/dependents/" className="mt-4 inline-block text-clay">
+        <Link to="/profile/dependents" className="mt-4 inline-block text-clay">
           Back to family profiles
         </Link>
       </div>
@@ -163,7 +163,7 @@ function DependentDetailContent({
     <div className="mx-auto w-full max-w-3xl pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:max-w-5xl lg:pb-12">
       <header className="mb-4 flex items-center gap-2 sm:mb-6 sm:gap-3">
         <Link
-          to="/profile/dependents/"
+          to="/profile/dependents"
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full sm:h-11 sm:w-11"
           aria-label="Back"
         >

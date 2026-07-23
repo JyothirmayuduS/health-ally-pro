@@ -99,8 +99,8 @@ export function buildKnowledgeIndex(): KnowledgeChunk[] {
       id: `enc-${e.id}`,
       category: "encounter",
       title: e.id,
-      body: `${e.patientName} · MRN ${e.mrn} · ${e.type}`,
-      keywords: [e.id, e.patientName, e.mrn, e.type],
+      body: `${e.patientName} · MRN ${e.mrn} · ${e.chiefComplaint ?? e.status}`,
+      keywords: [e.id, e.patientName, e.mrn, e.chiefComplaint ?? e.status],
       to: `/billing/encounters?encounter=${encodeURIComponent(e.id)}`,
     });
   }

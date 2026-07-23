@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useStore } from "@/lib/reception-desk/store";
-import { TODAY_STR } from "@/lib/reception-desk/mockData";
+import { useStore, type Appointment } from "@/lib/reception-desk/store";
+import type { SharedPatient } from "@/lib/shared/patients";
+import { TODAY_STR, DOCTORS } from "@/lib/reception-desk/mockData";
 import { toast } from "sonner";
 import { printToken } from "@/lib/reception-desk/print";
 import StatusPill from "@/components/reception-desk/StatusPill";
@@ -46,6 +47,16 @@ function StatChip({
 }
 
 /* ─── Token display card ─────────────────────────────────────────────── */
+type TokenCardProps = {
+  token: number | null;
+  patient: SharedPatient | undefined;
+  doctor: (typeof DOCTORS)[number] | undefined;
+  time: string;
+  findOpenEncounterForPatient: (patientId: string) => { id: string } | undefined;
+  labCatalog: { code: string; name: string }[];
+  orderLabForPatient: (patientId: string, testCode: string, notes?: string) => boolean;
+};
+
 function TokenCard({
   token,
   patient,
@@ -54,7 +65,7 @@ function TokenCard({
   findOpenEncounterForPatient,
   labCatalog,
   orderLabForPatient,
-}: any) {
+}: TokenCardProps) {
   const [labTest, setLabTest] = useState("CBC");
   return (
     <div className="relative overflow-hidden rounded-2xl border-2 border-sage bg-white shadow-[0_8px_32px_-8px_rgba(44,94,78,0.25)]">
@@ -105,7 +116,7 @@ function TokenCard({
             data-testid="print-token-btn"
             onClick={() =>
               printToken({
-                token,
+                token: token ?? "",
                 patient,
                 doctor,
                 appointment: { time, type: "Token" },
@@ -149,7 +160,8 @@ function TokenCard({
               className="btn-outline h-8 px-3 shrink-0 text-[12px]"
               data-testid="checkin-order-lab"
               onClick={() => {
-                const ok = orderLabForPatient(patient?.id, labTest);
+                if (!patient?.id) return;
+                const ok = orderLabForPatient(patient.id, labTest);
                 if (ok) {
                   toast.success("Lab order sent", {
                     description: `${labTest} queued for ${patient?.name}`,
@@ -203,9 +215,9 @@ export default function CheckIn() {
   } = useStore();
   const [q, setQ] = useState("");
   const [lastToken, setLastToken] = useState<{
-    token: number;
-    patient: any;
-    doctor: any;
+    token: number | null;
+    patient: SharedPatient | undefined;
+    doctor: (typeof DOCTORS)[number] | undefined;
     time: string;
   } | null>(null);
 
@@ -244,7 +256,7 @@ export default function CheckIn() {
   const completed = today.filter((a) => a.status === "completed").length;
   const noShows = today.filter((a) => a.status === "no-show").length;
 
-  const doCheckIn = (apt: any) => {
+  const doCheckIn = (apt: Appointment) => {
     const tok = checkInAppointment(apt.id);
     const p = patients.find((x) => x.id === apt.patientId);
     const d = doctors.find((x) => x.id === apt.doctorId);
@@ -377,13 +389,13 @@ export default function CheckIn() {
                       <span className="text-[13.5px] font-medium text-ink-900 truncate">
                         {p?.name}
                       </span>
-                      {p?.balance > 0 && (
+                      {p && (p.balance ?? 0) > 0 && (
                         <span
                           data-testid={`checkin-due-${a.id}`}
                           className="chip-clay inline-flex items-center gap-1 text-[10.5px]"
                         >
                           <IndianRupee className="w-3 h-3" />
-                          Due ₹{p.balance.toLocaleString("en-IN")}
+                          Due ₹{(p.balance ?? 0).toLocaleString("en-IN")}
                         </span>
                       )}
                     </div>

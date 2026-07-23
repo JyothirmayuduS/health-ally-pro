@@ -13,10 +13,10 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { to: "/reception", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/reception/patients", label: "Patients", icon: Users },
-  { to: "/reception/appointments", label: "Schedule", icon: CalendarDays },
-  { to: "/reception/queue", label: "Queue", icon: ListOrdered },
-  { to: "/reception/check-in", label: "Check-in", icon: UserCheck },
+  { to: "/reception/patients", label: "Patients", icon: Users, exact: false },
+  { to: "/reception/appointments", label: "Schedule", icon: CalendarDays, exact: false },
+  { to: "/reception/queue", label: "Queue", icon: ListOrdered, exact: false },
+  { to: "/reception/check-in", label: "Check-in", icon: UserCheck, exact: false },
 ] as const;
 
 function MedoraLogo() {

@@ -16,7 +16,7 @@ import {
   Shield,
 } from "lucide-react";
 
-const age = (dob) => {
+const age = (dob: string | undefined) => {
   if (!dob) return "—";
   const d = new Date(dob);
   const ms = Date.now() - d.getTime();
@@ -103,7 +103,7 @@ export default function Patients() {
                       <div className="text-[13px] font-medium text-ink-900 truncate">
                         {p.name}
                       </div>
-                      {p.balance > 0 && (
+                      {(p.balance ?? 0) > 0 && (
                         <span className="text-[10px] font-mono uppercase tracking-wider bg-status-noshowBg text-status-noshowText border border-status-noshowBorder px-1.5 py-0.5 rounded-sm">
                           Due ₹{p.balance}
                         </span>
@@ -212,7 +212,7 @@ export default function Patients() {
                   </div>
                   <div className="text-[13px] mt-1 text-ink-900 inline-flex items-center gap-1.5">
                     <Shield className="w-3.5 h-3.5 text-sage" />
-                    {selected.insurance.provider}
+                    {selected.insurance?.provider ?? "—"}
                   </div>
                 </div>
                 <div>
@@ -221,11 +221,11 @@ export default function Patients() {
                   </div>
                   <div
                     className={`text-[14px] mt-1 font-mono inline-flex items-center ${
-                      selected.balance > 0 ? "text-status-noshowText" : "text-ink-900"
+                      (selected.balance ?? 0) > 0 ? "text-status-noshowText" : "text-ink-900"
                     }`}
                   >
                     <IndianRupee className="w-3.5 h-3.5" />
-                    {selected.balance.toLocaleString("en-IN")}
+                    {(selected.balance ?? 0).toLocaleString("en-IN")}
                   </div>
                 </div>
               </div>
@@ -298,9 +298,9 @@ export default function Patients() {
                   <div className="text-[10.5px] uppercase tracking-wider text-ink-400 font-mono">
                     Emergency contact
                   </div>
-                  <div className="text-[13px] text-ink-900 mt-1">{selected.emergency.name}</div>
+                  <div className="text-[13px] text-ink-900 mt-1">{selected.emergency?.name ?? "—"}</div>
                   <div className="text-[11px] text-ink-400 mt-0.5">
-                    {selected.emergency.relation} · {selected.emergency.phone}
+                    {selected.emergency?.relation} · {selected.emergency?.phone}
                   </div>
                 </div>
                 <div>
@@ -308,7 +308,7 @@ export default function Patients() {
                     Policy ID
                   </div>
                   <div className="text-[13px] font-mono text-ink-900 mt-1">
-                    {selected.insurance.policyId}
+                    {selected.insurance?.policyId ?? "—"}
                   </div>
                 </div>
                 <div>

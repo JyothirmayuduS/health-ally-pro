@@ -59,7 +59,7 @@ export default function WalkIn() {
   const paySale = walkInSales.find((s) => s.id === paySaleId);
   const payDrug = paySale ? drugs.find((d) => d.id === paySale.drug_id) : null;
 
-  const payInvoice: PharmacyInvoice | null = paySale ? walkInInvoice(paySale, payDrug) : null;
+  const payInvoice: PharmacyInvoice | null = paySale ? walkInInvoice(paySale, payDrug ?? undefined) : null;
   if (payInvoice && paySale?.payment === "unpaid") {
     payInvoice.amount_paid = 0;
     payInvoice.status = "unpaid";

@@ -32,6 +32,7 @@ import {
   type PharmacyAlert,
   type WalkInItem,
   type WardReturn,
+  type PaymentStatus,
 } from "./mockData";
 import {
   type PurchaseOrder,
@@ -42,8 +43,7 @@ import {
   SEED_GRNS,
 } from "./purchaseOrdersData";
 import { pushPatientNotification } from "@/lib/patient-notifications-store";
-import { resolvePatientId } from "@/lib/reception-desk/store";
-import { getSharedPatient } from "@/lib/shared/patient-registry";
+import { resolvePatientId, getSharedPatient } from "@/lib/shared/patients";
 import { checkDDI } from "./ddiUtils";
 import { DDI_RULES } from "./ddiData";
 import { availableQty, fefoBatch } from "./location";
@@ -526,7 +526,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!inv) return list;
       const payAmount = amount ?? balanceDue(inv);
       const newPaid = Math.min(inv.total, Math.round((inv.amount_paid + payAmount) * 100) / 100);
-      const status = newPaid >= inv.total ? "paid" : newPaid > 0 ? "partial" : "unpaid";
+      const status: PaymentStatus = newPaid >= inv.total ? "paid" : newPaid > 0 ? "partial" : "unpaid";
 
       setPrescriptions((rxList) =>
         rxList.map((rx) =>

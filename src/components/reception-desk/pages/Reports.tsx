@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { useStore } from "@/lib/reception-desk/store";
+import React, { useMemo, useState, type ReactNode } from "react";
+import { useStore, type Shift } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { computeTotals } from "@/lib/reception-desk/billingData";
 import { STATUS_META } from "@/lib/reception-desk/opsData";
@@ -34,9 +34,12 @@ import {
   ShieldCheck,
   Layers,
   FileText,
+  type LucideIcon,
 } from "lucide-react";
 
-const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | null | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+// recharts Tooltip `formatter` may hand back an array (stacked series); flatten to the first value.
+const fmtTooltip = (v: number | string | Array<number | string>) => fmt(Array.isArray(v) ? v[0] : v);
 const RANGES = ["Today", "Week", "Month"];
 const TABS = [
   { id: "overview", label: "Overview", icon: Activity, dot: "bg-sage" },
@@ -46,14 +49,34 @@ const TABS = [
   { id: "shifts", label: "Shift Reports", icon: FileText, dot: "bg-plum" },
 ];
 
-const ACCENTS = {
+interface Accent {
+  borderL: string;
+  text: string;
+  soft: string;
+  color: string;
+}
+
+const ACCENTS: Record<string, Accent> = {
   footfall: { borderL: "border-l-sage", text: "text-sage", soft: "bg-sage-soft", color: "#2C5E4E" },
   noshow:   { borderL: "border-l-clay", text: "text-clay", soft: "bg-clay-soft", color: "#B85C38" },
   wait:     { borderL: "border-l-mustard", text: "text-mustard", soft: "bg-mustard-soft", color: "#A87826" },
   rev:      { borderL: "border-l-money", text: "text-money", soft: "bg-money-soft", color: "#15803D" },
 };
 
-const STATUS_COLOR = {
+// recharts@2.15's generated RadialBar prop types omit `minAngle`/`clockWise`
+// depending on the `data` shape, even though the component supports both at
+// runtime. Re-type it locally instead of loosening the call site to `any`.
+interface RadialBarComponentProps {
+  minAngle?: number;
+  background?: boolean;
+  clockWise?: boolean;
+  dataKey: string;
+  cornerRadius?: number;
+  fill?: string;
+}
+const SafeRadialBar = RadialBar as unknown as React.ComponentType<RadialBarComponentProps>;
+
+const STATUS_COLOR: Record<string, string> = {
   scheduled: "#8A8A86",
   "checked-in": "#A87826",
   "in-progress": "#2C7873",
@@ -62,7 +85,16 @@ const STATUS_COLOR = {
   cancelled: "#7A4A6B",
 };
 
-function KpiCard({ label, value, delta, accent, icon: Icon, testId }) {
+interface KpiCardProps {
+  label: string;
+  value: string | number;
+  delta?: string;
+  accent: Accent;
+  icon: LucideIcon;
+  testId: string;
+}
+
+function KpiCard({ label, value, delta, accent, icon: Icon, testId }: KpiCardProps) {
   return (
     <div
       data-testid={testId}
@@ -98,7 +130,14 @@ const tooltipStyle = {
   fontFamily: "IBM Plex Sans",
 };
 
-function SectionHeader({ dot, title, eyebrow, right }) {
+interface SectionHeaderProps {
+  dot: string;
+  title: string;
+  eyebrow: string;
+  right?: ReactNode;
+}
+
+function SectionHeader({ dot, title, eyebrow, right }: SectionHeaderProps) {
   return (
     <div className="px-5 py-3 border-b border-ink-200 flex items-center justify-between">
       <div className="flex items-center gap-2.5">
@@ -144,7 +183,7 @@ export default function Reports() {
 
   // -------- Datasets --------
   const hourly = useMemo(() => {
-    const buckets = {};
+    const buckets: Record<number, number> = {};
     for (let h = 8; h < 20; h++) buckets[h] = 0;
     today.forEach((a) => {
       const h = Number(a.time.split(":")[0]);
@@ -161,9 +200,10 @@ export default function Reports() {
     const paid = invoices.filter(
       (i) => i.status === "paid" && i.date === TODAY_STR && i.paidAt,
     );
-    const buckets = {};
+    const buckets: Record<number, number> = {};
     for (let h = 8; h < 20; h++) buckets[h] = 0;
     paid.forEach((i) => {
+      if (!i.paidAt) return;
       const h = Number(i.paidAt.slice(11, 13));
       if (buckets[h] !== undefined)
         buckets[h] += computeTotals(i.items, i.discount).total;
@@ -176,7 +216,7 @@ export default function Reports() {
   }, [invoices]);
 
   const statusMix = useMemo(() => {
-    const buckets = {};
+    const buckets: Record<string, number> = {};
     today.forEach((a) => {
       buckets[a.status] = (buckets[a.status] || 0) + 1;
     });
@@ -218,7 +258,7 @@ export default function Reports() {
   );
 
   const waitDist = useMemo(() => {
-    const bins = { "0–10": 0, "10–20": 0, "20–30": 0, "30+": 0 };
+    const bins: Record<string, number> = { "0–10": 0, "10–20": 0, "20–30": 0, "30+": 0 };
     const seedTotal = footfall;
     // synth distribution shaped around avgWait
     if (seedTotal > 0) {
@@ -232,12 +272,12 @@ export default function Reports() {
 
   const revByMethod = useMemo(() => {
     const paid = invoices.filter((i) => i.status === "paid" && i.date === TODAY_STR);
-    const map = { cash: 0, card: 0, upi: 0, insurance: 0 };
+    const map: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
     paid.forEach((i) => {
       const t = computeTotals(i.items, i.discount).total;
       if (i.method && map[i.method] !== undefined) map[i.method] += t;
     });
-    const colors = { cash: "#A87826", card: "#2C7873", upi: "#7A4A6B", insurance: "#2C5E4E" };
+    const colors: Record<string, string> = { cash: "#A87826", card: "#2C7873", upi: "#7A4A6B", insurance: "#2C5E4E" };
     return Object.entries(map).map(([k, v]) => ({
       method: k.toUpperCase(),
       value: v,
@@ -283,7 +323,7 @@ export default function Reports() {
   }, [claims]);
 
   const claimsByProvider = useMemo(() => {
-    const map = {};
+    const map: Record<string, number> = {};
     claims.forEach((c) => {
       const amt = c.approvedAmount || c.requestedAmount || 0;
       map[c.provider] = (map[c.provider] || 0) + amt;
@@ -328,7 +368,18 @@ export default function Reports() {
   };
 
   // Derived shift calculations for Shift Reports tab
-  const currentReportShift = useMemo(() => {
+  interface ServiceSummary {
+    name: string;
+    count: number;
+    revenue: number;
+  }
+
+  interface ReportShift extends Shift {
+    staffName: string;
+    actualCash?: number;
+  }
+
+  const currentReportShift: ReportShift | null = useMemo(() => {
     const s = shifts.find((x) => x.id === selectedShiftId);
     if (!s) return null;
     const st = staff.find((x) => x.id === s.staffId);
@@ -350,6 +401,7 @@ export default function Reports() {
     );
     const methodTotals: Record<string, number> = { cash: 0, card: 0, upi: 0, insurance: 0 };
     shiftInvoices.forEach((i) => {
+      if (!i.method) return;
       const t = computeTotals(i.items, i.discount).total;
       const invoiceRefundsShift = (i.refunds || [])
         .filter((r) => r.processedAt >= s.openedAt && (!s.closedAt || r.processedAt <= s.closedAt))
@@ -372,7 +424,7 @@ export default function Reports() {
     }, 0);
   }, [currentReportShift, invoices]);
 
-  const reportServices = useMemo(() => {
+  const reportServices = useMemo<ServiceSummary[]>(() => {
     if (!currentReportShift) return [];
     const s = currentReportShift;
     const shiftInvoices = invoices.filter(
@@ -382,7 +434,7 @@ export default function Reports() {
         i.paidAt >= s.openedAt &&
         (!s.closedAt || i.paidAt <= s.closedAt)
     );
-    const serviceMap: Record<string, { name: string; count: number; revenue: number }> = {};
+    const serviceMap: Record<string, ServiceSummary> = {};
     shiftInvoices.forEach((i) => {
       i.items.forEach((item) => {
         if (!serviceMap[item.label]) {
@@ -393,11 +445,11 @@ export default function Reports() {
       });
     });
     return Object.values(serviceMap)
-      .sort((a: any, b: any) => b.revenue - a.revenue)
+      .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
   }, [currentReportShift, invoices]);
 
-  const reportCancellations = useMemo(() => {
+  const reportCancellations = useMemo<Record<string, number>>(() => {
     if (!currentReportShift) return {};
     const cancelled = appointments.filter(
       (a) => a.status === "cancelled" && a.date === selectedDate
@@ -624,7 +676,7 @@ export default function Reports() {
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
                     <XAxis dataKey="hour" tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
                     <YAxis tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={60} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmt(v)} contentStyle={tooltipStyle} />
+                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
                     <Area type="monotone" dataKey="cumulative" stroke="#15803D" strokeWidth={2} fill="url(#g-money)" />
                     <Bar dataKey="revenue" fill="#A87826" radius={[4, 4, 0, 0]} barSize={14} />
                   </ComposedChart>
@@ -640,7 +692,7 @@ export default function Reports() {
                     <CartesianGrid stroke="#E5E5E0" horizontal={false} />
                     <XAxis type="number" tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
                     <YAxis type="category" dataKey="method" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={80} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmt(v)} contentStyle={tooltipStyle} />
+                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
                     <Bar dataKey="value" radius={[0, 8, 8, 0]}>
                       {revByMethod.map((d, i) => (
                         <Cell key={i} fill={d.fill} />
@@ -659,7 +711,7 @@ export default function Reports() {
                     <CartesianGrid stroke="#E5E5E0" vertical={false} />
                     <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Mono" }} axisLine={{ stroke: "#E5E5E0" }} tickLine={false} />
                     <YAxis tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={60} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmt(v)} contentStyle={tooltipStyle} />
+                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
                     <Bar dataKey="revenue" fill="#2C5E4E" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -708,7 +760,7 @@ export default function Reports() {
                 <ResponsiveContainer width="100%" height="100%">
                   <RadialBarChart innerRadius="20%" outerRadius="100%" data={docUtilization} startAngle={90} endAngle={-270}>
                     <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                    <RadialBar minAngle={6} background clockWise dataKey="utilization" cornerRadius={6} fill="#2C5E4E" />
+                    <SafeRadialBar minAngle={6} background clockWise dataKey="utilization" cornerRadius={6} fill="#2C5E4E" />
                     <Tooltip contentStyle={tooltipStyle} formatter={(v, _n, p) => [`${v}% (${p.payload.booked} appts)`, p.payload.name]} />
                   </RadialBarChart>
                 </ResponsiveContainer>
@@ -790,7 +842,7 @@ export default function Reports() {
                     <CartesianGrid stroke="#E5E5E0" horizontal={false} />
                     <XAxis type="number" tickFormatter={(v) => (v ? `₹${v}` : "0")} tick={{ fontSize: 11, fill: "#8A8A86", fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} />
                     <YAxis type="category" dataKey="provider" tick={{ fontSize: 11, fill: "#1C1C19", fontFamily: "IBM Plex Sans" }} axisLine={false} tickLine={false} width={110} />
-                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmt(v)} contentStyle={tooltipStyle} />
+                    <Tooltip cursor={{ fill: "#F9F9F6" }} formatter={(v) => fmtTooltip(v)} contentStyle={tooltipStyle} />
                     <Bar dataKey="amount" fill="#2C7873" radius={[0, 8, 8, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -904,7 +956,7 @@ export default function Reports() {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-ink-600">Opening Float</span>
-                        <span className="font-mono text-ink-900">{fmt(currentReportShift.openingFloat)}</span>
+                        <span className="font-mono text-ink-900">{fmt(currentReportShift.openingFloat ?? 0)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-ink-600">Cash Collected</span>
@@ -915,7 +967,7 @@ export default function Reports() {
                           <div className="flex justify-between">
                             <span className="text-ink-600">Expected Total</span>
                             <span className="font-mono text-ink-900">
-                              {fmt(currentReportShift.openingFloat + (currentReportShift.cashCollected || 0))}
+                              {fmt((currentReportShift.openingFloat ?? 0) + (currentReportShift.cashCollected || 0))}
                             </span>
                           </div>
                           <div className="flex justify-between">
@@ -928,8 +980,8 @@ export default function Reports() {
                           </div>
                           <div className="flex justify-between border-t border-ink-200 pt-2 font-semibold">
                             <span className="text-ink-900">Variance</span>
-                            <span className={currentReportShift.variance === 0 ? "text-money" : currentReportShift.variance > 0 ? "text-mustard" : "text-clay"}>
-                              {currentReportShift.variance >= 0 ? "+" : ""}{fmt(currentReportShift.variance || 0)}
+                            <span className={(currentReportShift.variance ?? 0) === 0 ? "text-money" : (currentReportShift.variance ?? 0) > 0 ? "text-mustard" : "text-clay"}>
+                              {(currentReportShift.variance ?? 0) >= 0 ? "+" : ""}{fmt(currentReportShift.variance || 0)}
                             </span>
                           </div>
                         </>

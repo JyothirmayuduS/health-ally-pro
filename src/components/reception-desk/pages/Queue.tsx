@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, type Appointment } from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { toast } from "sonner";
 import StatusPill from "@/components/reception-desk/StatusPill";
@@ -14,7 +14,7 @@ import {
   MonitorPlay,
 } from "lucide-react";
 
-const mins = (t) => {
+const mins = (t: string) => {
   const [h, m] = t.split(":").map(Number);
   return h * 60 + m;
 };
@@ -31,7 +31,7 @@ export default function Queue() {
     updateAppointmentStatus,
     transferAppointment,
   } = useStore();
-  const [transferFor, setTransferFor] = useState(null);
+  const [transferFor, setTransferFor] = useState<Appointment | null>(null);
 
   const queuesByDoctor = useMemo(() => {
     return doctors
@@ -51,7 +51,7 @@ export default function Queue() {
       });
   }, [doctors, appointments]);
 
-  const callNext = (doctorId) => {
+  const callNext = (doctorId: string) => {
     const q = queuesByDoctor.find((x) => x.doctor.id === doctorId);
     if (!q) return;
     if (q.current) {
@@ -69,7 +69,7 @@ export default function Queue() {
     }
   };
 
-  const recall = (apt) => {
+  const recall = (apt: Appointment) => {
     toast(`Re-calling #${apt.tokenNumber}`);
   };
 
