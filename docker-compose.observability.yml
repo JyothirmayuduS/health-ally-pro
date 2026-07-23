@@ -36,6 +36,6 @@ services:
       - ./ops/observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./ops/observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
     ports:
-      - "3002:3000"
+      - "3010:3000"
     depends_on:
       - prometheus

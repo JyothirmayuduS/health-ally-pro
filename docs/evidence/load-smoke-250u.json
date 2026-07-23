@@ -1,0 +1,66 @@
+{
+  "at": "2026-07-23T21:09:19.601Z",
+  "base": "http://127.0.0.1:3001",
+  "methodology": {
+    "note": "In-process Node concurrency against localhost Worker/Docker — not distributed k6/Locust. Caps: USERS<=250, CONCURRENCY<=50 for safety.",
+    "users_simulated": 250,
+    "concurrency": 25,
+    "resources": [
+      "appointments",
+      "patients",
+      "lab_results"
+    ]
+  },
+  "wall_ms": 19153,
+  "throughput_rps": 13.05,
+  "overall": {
+    "n": 250,
+    "min": 121.22,
+    "avg": 1889.94,
+    "p50": 1455.56,
+    "p95": 5773.98,
+    "p99": 8207.73,
+    "max": 8757.07,
+    "errors": 0,
+    "error_rate": 0
+  },
+  "by_resource": {
+    "appointments": {
+      "n": 84,
+      "min": 153.61,
+      "avg": 1922.62,
+      "p50": 1521.13,
+      "p95": 5591.15,
+      "p99": 8757.07,
+      "max": 8757.07,
+      "errors": 0
+    },
+    "patients": {
+      "n": 83,
+      "min": 121.22,
+      "avg": 1896.21,
+      "p50": 1423.88,
+      "p95": 5516.82,
+      "p99": 8735.53,
+      "max": 8735.53,
+      "errors": 0
+    },
+    "lab_results": {
+      "n": 83,
+      "min": 139.47,
+      "avg": 1850.6,
+      "p50": 1411.59,
+      "p95": 5773.98,
+      "p99": 7652.63,
+      "max": 7652.63,
+      "errors": 0
+    }
+  },
+  "pending_full_load": {
+    "100_users": "covered_by_this_run_or_higher",
+    "250_users": "covered",
+    "500_users": "pending_or_partial",
+    "1000_users": "pending_or_partial"
+  },
+  "pass": true
+}

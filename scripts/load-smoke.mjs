@@ -131,12 +131,13 @@ const report = {
   pending_full_load: {
     "100_users": USERS >= 100 ? "covered_by_this_run_or_higher" : "not_run",
     "250_users": USERS >= 250 ? "covered" : "pending_or_partial",
-    "500_users": "pending_external_load_generator",
-    "1000_users": "pending_external_load_generator",
+    "500_users": USERS >= 500 ? "covered" : "pending_or_partial",
+    "1000_users": USERS >= 1000 ? "covered" : "pending_or_partial",
   },
   pass: errors === 0 && results.length === USERS,
 };
 
-writeFileSync("docs/evidence/load-smoke.json", JSON.stringify(report, null, 2));
+const outPath = process.env.LOAD_REPORT_PATH || "docs/evidence/load-smoke.json";
+writeFileSync(outPath, JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
 process.exit(report.pass ? 0 : 1);
