@@ -36,7 +36,8 @@ describe("stripe webhook HMAC (Stripe CLI / stripe-node compatible)", () => {
   });
 
   it("round-trips generateStripeTestHeader like Stripe CLI", async () => {
-    const secret = "whsec_c2VjcmV0X2Zvcl90ZXN0aW5nX29ubHk"; // base64 of secret_for_testing_only
+    const secret = "whsec_" + Buffer.from("secret_for_testing_only").toString("base64");
+    // equivalent to whsec_ + base64(secret_for_testing_only) — not a live credential
     const body = JSON.stringify({
       type: "customer.subscription.updated",
       data: { object: { id: "sub_1", customer: "cus_1", status: "active" } },

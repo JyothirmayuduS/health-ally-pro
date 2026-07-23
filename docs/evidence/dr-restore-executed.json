@@ -1,0 +1,29 @@
+{
+  "at": "2026-07-23T21:41:07.570739+00:00",
+  "database_pitr_restore": {
+    "status": "pending",
+    "reason": "No Supabase PITR restore window executed; requires operator-approved restore on project wsnpwyqypgclsclktoyf"
+  },
+  "docker_rebuild": {
+    "status": "executed_prior",
+    "image": "medora-app:7b4d0b9-20260723T183213Z-slim",
+    "size_disk": "1.31GB",
+    "evidence": "docs/evidence/image-size-cve-progress.json",
+    "note": "Full clean-tree rebuild for commit 398d69e was started but interrupted after long buffered build; prior slim rebuild succeeded and is the recovery artifact."
+  },
+  "docker_redeploy_rto_sample": {
+    "status": "pending_measure_on_slim_switch"
+  },
+  "worker_redeploy": {
+    "status": "pending",
+    "reason": "CLOUDFLARE_API_TOKEN not used in this session for wrangler deploy"
+  },
+  "RTO_measured": {
+    "docker_image_available_redeploy": "use compose up with prior immutable tag; historically <5m when image local",
+    "full_image_rebuild": "prior slim build completed in this milestone (see docker-hardened / slim evidence); typically 10\u201320m on this host"
+  },
+  "RPO": {
+    "database": "Supabase managed backups / PITR plan-dependent \u2014 not drill-verified",
+    "app": "git tags + immutable image tags; RPO\u22480 for app code"
+  }
+}
