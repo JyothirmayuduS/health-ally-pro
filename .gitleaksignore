@@ -19,3 +19,5 @@ c42d5776f36387c80aaaf75cf2d2ea0472a50f98:src/lib/reception-desk/store.tsx:generi
 c42d5776f36387c80aaaf75cf2d2ea0472a50f98:src/lib/reception-desk/store.tsx:generic-api-key:203
 c4c9c6886e5cc1a72cc3ee90cacbd3195947ad14:src/lib/shared/announcements.ts:generic-api-key:19
 9c13d86c8b0df13dbb06c344c58cb591d8e336f2:src/server/stripe-webhook.test.ts:generic-api-key:41
+# Historical CI placeholder that looked JWT-shaped (replaced by ci-placeholder-anon-key)
+9b235deeb5ee2d3daec4e80bdc5cc1e26f690354:.github/workflows/ci.yml:generic-api-key:112
