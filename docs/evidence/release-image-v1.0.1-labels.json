@@ -1,0 +1,18 @@
+{
+  "Id": "sha256:0817735f4d7adae7e7947a1a34ff8ec4761ee476a20c9db230485f029bcd56ec",
+  "Size": 246127162,
+  "RepoTags": [
+    "medora-app:a66a85e1197c",
+    "medora-app:sha-a66a85e1197c",
+    "medora-app:v1.0.1"
+  ],
+  "Labels": {
+    "org.opencontainers.image.created": "2026-07-24T06:15:10Z",
+    "org.opencontainers.image.description": "Medora hospital OS \u2014 Cloudflare Workers preview runtime",
+    "org.opencontainers.image.revision": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+    "org.opencontainers.image.source": "https://github.com/JyothirmayuduS/health-ally-pro",
+    "org.opencontainers.image.title": "medora",
+    "org.opencontainers.image.version": "v1.0.1"
+  },
+  "Created": "2026-07-24T06:20:34.93696351Z"
+}

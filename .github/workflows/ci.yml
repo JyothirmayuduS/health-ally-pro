@@ -105,10 +105,11 @@ jobs:
           ALLOW_DEMO_PERSIST: "true"
           VITE_APP_ENV: development
           VITE_MEDORA_LICENSE_KEY: "ci-evaluation-license"
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          # Prefer live secrets; fall back to non-empty placeholders so createClient does not crash the webServer.
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL != '' && secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-role' }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL != '' && secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY != '' && secrets.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder' }}
         run: npm run test:e2e
       - name: Upload Playwright report
         if: failure()
@@ -243,10 +244,12 @@ jobs:
           cosign attest --yes --predicate medora-sbom.cdx.json --type cyclonedx "${IMAGE}@${DIGEST}" || \
             cosign attest --yes --predicate medora-sbom.cdx.json --type spdxjson "${IMAGE}@${DIGEST}" || true
           cosign verify \
-            --certificate-identity-regexp "https://github.com/.+/-/.github/workflows/ci.yml@.*" \
+            --certificate-identity-regexp "https://github.com/.*/health-ally-pro/.github/workflows/ci.yml@.*" \
             --certificate-oidc-issuer https://token.actions.githubusercontent.com \
             "${IMAGE}@${DIGEST}" | tee cosign-verify.txt
           cosign tree "${IMAGE}@${DIGEST}" | tee cosign-tree.txt
+          echo "IMAGE_DIGEST=${DIGEST}" | tee -a cosign-verify.txt
+          echo "OIDC_ISSUER=https://token.actions.githubusercontent.com" | tee -a cosign-verify.txt
       - uses: actions/upload-artifact@v4
         if: always() && github.event_name == 'push'
         with:

@@ -1,0 +1,47 @@
+{
+  "at": "2026-07-24T06:40:00Z",
+  "prometheus_target": {
+    "job": "medora-app",
+    "health": "up",
+    "scrapeUrl": "http://app:3000/api/metrics",
+    "root_cause_fixed": "Vite preview Host header validation rejected Docker DNS Host (app:3000 / host.docker.internal); allowedHosts=true + scrape app:3000 + METRICS_BEARER_TOKEN"
+  },
+  "metrics_access_control": {
+    "unauthenticated": 401,
+    "bearer": 200,
+    "token_injection": "runtime env / credentials_file (not baked into image)"
+  },
+  "ingested_metrics_sample": [
+    "medora_up",
+    "up{job=medora-app}",
+    "medora_http_requests_total",
+    "medora_http_latency_ms",
+    "medora_http_responses_5m",
+    "medora_auth_failures_total",
+    "medora_cross_tenant_denials_total",
+    "medora_audit_dlq_open_failures",
+    "medora_resource_latency_ms"
+  ],
+  "alerts": {
+    "MedoraAppDown": {
+      "introduced_at": "2026-07-24T06:36:37Z",
+      "pending_inferred": "2026-07-24T06:37:11Z",
+      "firing_at": "2026-07-24T06:37:11Z",
+      "notified_at": "2026-07-24T06:38:29.216071Z",
+      "receiver": "webhook-test",
+      "cleared_at": "2026-07-24T06:40:03Z",
+      "result": "fire_and_notify_proven; resolve wait in progress"
+    }
+  },
+  "signing": {
+    "image": "ghcr.io/jyothirmayudus/medora-app",
+    "digest": "sha256:60c1480f4a9eb78da4e5c60a90f06520c0f5966380537f6c2f8f36efa40c4407",
+    "git_commit": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+    "verify": "docs/evidence/cosign-verify-a66a85e.txt",
+    "tree": "docs/evidence/cosign-tree-a66a85e.txt",
+    "certificate_identity": "https://github.com/JyothirmayuduS/health-ally-pro/.github/workflows/ci.yml@refs/heads/cursor/specialty-doctor-workspaces",
+    "oidc_issuer": "https://token.actions.githubusercontent.com",
+    "attestation_digest": "sha256:15c088740d6475eedab4ebc2c04f6390100698dc1e3af675ad9fb94a81a6378f",
+    "signature_digest": "sha256:3d728a44484101ca18f6386191526760318ba8961abd02f4b0843ce5d07a209a"
+  }
+}
