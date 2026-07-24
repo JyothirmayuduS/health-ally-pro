@@ -10,7 +10,10 @@ import { test, expect } from "@playwright/test";
 
 const HOSPITAL = "a0000001-0001-4001-8001-000000000001";
 const OTHER_HOSPITAL = "b0000002-0002-4002-8002-000000000002";
-const HAS_LIVE_DB = Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+const HAS_LIVE_DB =
+  Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) &&
+  !/placeholder/i.test(process.env.SUPABASE_URL || "") &&
+  !/placeholder/i.test(process.env.SUPABASE_SERVICE_ROLE_KEY || "");
 
 const DEMO_HEADERS = {
   "x-medora-persist-demo": "1",

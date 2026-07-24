@@ -33,8 +33,7 @@ export default defineConfig({
             process.env.VITE_SUPABASE_URL ||
             "https://placeholder.supabase.co",
           VITE_SUPABASE_ANON_KEY:
-            process.env.VITE_SUPABASE_ANON_KEY ||
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder",
+            process.env.VITE_SUPABASE_ANON_KEY || "ci-placeholder-anon-key",
           VITE_ALLOW_DEMO_AUTH: process.env.VITE_ALLOW_DEMO_AUTH || "true",
           ALLOW_DEMO_PERSIST: process.env.ALLOW_DEMO_PERSIST || "true",
         },
