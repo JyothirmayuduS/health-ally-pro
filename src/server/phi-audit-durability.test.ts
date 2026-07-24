@@ -226,5 +226,5 @@ describe("integration: real audit row (optional)", () => {
     expect(error).toBeNull();
     expect(data?.length).toBe(1);
     expect((data?.[0]?.metadata as { record_ids?: string[] })?.record_ids?.length).toBe(1);
-  });
+  }, 20_000);
 });

@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { verifyPatientWebAiRequest } from "@/server/ai/api-auth";
 import { DEFAULT_HOSPITAL_ID } from "@/server/hospital-persistence";
+import { verifySupabaseAccessToken } from "@/server/supabase-jwt";
 
 export type PhiReadAuth = {
   userId: string;
@@ -41,14 +42,23 @@ function demoPhiAllowed(): boolean {
   return process.env.NODE_ENV !== "production";
 }
 
-/** Short-lived auth memo for JWT + membership chain (Workers isolate memory). */
+/**
+ * Short-lived auth memo for JWT + membership chain.
+ * - Isolate memory: fastest repeat within one Worker isolate
+ * - Cache API: shared across isolates in the same colo (cuts Supabase subrequest stampede)
+ * - In-flight coalesce: one membership lookup per key under concurrent miss
+ * Same TTL / security posture as before — does not weaken RLS, audit, or tenant checks.
+ */
 const PHI_AUTH_TTL_MS = 20_000;
+const PHI_AUTH_TTL_SEC = 20;
 const PHI_AUTH_CACHE_MAX = 200;
+type PhiAuthResult = { ok: true; auth: PhiReadAuth } | { ok: false; status: number; error: string };
 type PhiAuthCacheEntry = {
   exp: number;
-  result: { ok: true; auth: PhiReadAuth } | { ok: false; status: number; error: string };
+  result: PhiAuthResult;
 };
 const phiAuthCache = new Map<string, PhiAuthCacheEntry>();
+const phiAuthInflight = new Map<string, Promise<PhiAuthResult>>();
 
 function tokenFingerprint(token: string): string {
   // FNV-1a 32-bit — enough to key cache without retaining the bearer string
@@ -64,7 +74,7 @@ function phiAuthCacheKey(token: string, requestedHospitalId?: string | null): st
   return `${tokenFingerprint(token)}|${requestedHospitalId ?? ""}`;
 }
 
-function getCachedPhiAuth(key: string): PhiAuthCacheEntry["result"] | null {
+function getCachedPhiAuth(key: string): PhiAuthResult | null {
   const hit = phiAuthCache.get(key);
   if (!hit) return null;
   if (Date.now() > hit.exp) {
@@ -74,7 +84,7 @@ function getCachedPhiAuth(key: string): PhiAuthCacheEntry["result"] | null {
   return hit.result;
 }
 
-function setCachedPhiAuth(key: string, result: PhiAuthCacheEntry["result"]) {
+function setCachedPhiAuth(key: string, result: PhiAuthResult) {
   if (phiAuthCache.size >= PHI_AUTH_CACHE_MAX) {
     const oldest = phiAuthCache.keys().next().value;
     if (oldest) phiAuthCache.delete(oldest);
@@ -82,9 +92,151 @@ function setCachedPhiAuth(key: string, result: PhiAuthCacheEntry["result"]) {
   phiAuthCache.set(key, { exp: Date.now() + PHI_AUTH_TTL_MS, result });
 }
 
+function sharedAuthRequest(key: string): Request {
+  return new Request(`https://medora-phi-auth.internal/v1/${encodeURIComponent(key)}`);
+}
+
+async function getSharedPhiAuth(key: string): Promise<PhiAuthResult | null> {
+  try {
+    if (typeof caches === "undefined" || !caches.default) return null;
+    const hit = await caches.default.match(sharedAuthRequest(key));
+    if (!hit) return null;
+    const body = (await hit.json()) as PhiAuthResult;
+    if (!body || typeof body !== "object" || !("ok" in body)) return null;
+    return body;
+  } catch {
+    return null;
+  }
+}
+
+function setSharedPhiAuth(key: string, result: PhiAuthResult): void {
+  try {
+    if (typeof caches === "undefined" || !caches.default) return;
+    const res = new Response(JSON.stringify(result), {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": `public, max-age=${PHI_AUTH_TTL_SEC}`,
+      },
+    });
+    void caches.default.put(sharedAuthRequest(key), res).catch(() => {});
+  } catch {
+    /* Cache API unavailable outside Workers — ignore */
+  }
+}
+
 /** Test-only */
 export function __resetPhiAuthCacheForTests() {
   phiAuthCache.clear();
+  phiAuthInflight.clear();
+}
+
+async function resolvePhiAuthFromBackend(
+  token: string,
+  requestedHospitalId: string | null | undefined,
+  cacheKey: string,
+): Promise<PhiAuthResult> {
+  const admin = getSupabaseAdmin();
+  if (!admin) return { ok: false, status: 503, error: "Auth backend unavailable" };
+
+  // Prefer local JWKS verify (no Auth API RTT). Fall back to getUser if JWKS unavailable.
+  const local = await verifySupabaseAccessToken(token);
+  let userId: string;
+  let email: string | null;
+  if (local) {
+    userId = local.userId;
+    email = local.email;
+  } else {
+    const { data, error } = await admin.auth.getUser(token);
+    if (error || !data.user) return { ok: false, status: 401, error: "Invalid session" };
+    userId = data.user.id;
+    email = data.user.email ?? null;
+  }
+
+  // Parallelize post-JWT lookups (was sequential ~2 round-trips)
+  const [membershipsRes, patientRes] = await Promise.all([
+    admin
+      .from("hospital_memberships")
+      .select("role, hospital_id")
+      .eq("profile_id", userId)
+      .eq("is_active", true),
+    admin.from("patients").select("id, hospital_id").eq("profile_id", userId).maybeSingle(),
+  ]);
+
+  const memberships = membershipsRes.data;
+  const patient = patientRes.data;
+
+  const staffMemberships = (memberships ?? []).filter((m) => STAFF_ROLES.has(String(m.role)));
+  const hospitalIds = [
+    ...new Set((memberships ?? []).map((m) => String(m.hospital_id)).filter(Boolean)),
+  ];
+
+  const isStaff = staffMemberships.length > 0;
+  const isPatient = !!patient;
+  if (!isStaff && !isPatient) {
+    const denied: PhiAuthResult = {
+      ok: false,
+      status: 403,
+      error: "No hospital membership or patient profile",
+    };
+    setCachedPhiAuth(cacheKey, denied);
+    setSharedPhiAuth(cacheKey, denied);
+    return denied;
+  }
+
+  if (isStaff) {
+    const staffHospitals = new Set(
+      staffMemberships.map((m) => String(m.hospital_id)).filter(Boolean),
+    );
+    if (requestedHospitalId && !staffHospitals.has(requestedHospitalId)) {
+      const denied: PhiAuthResult = { ok: false, status: 403, error: "Hospital out of scope" };
+      setCachedPhiAuth(cacheKey, denied);
+      setSharedPhiAuth(cacheKey, denied);
+      return denied;
+    }
+    const hospitalId =
+      requestedHospitalId && staffHospitals.has(requestedHospitalId)
+        ? requestedHospitalId
+        : String(staffMemberships[0].hospital_id);
+    const ok: PhiAuthResult = {
+      ok: true,
+      auth: {
+        userId,
+        email,
+        hospitalIds: [...staffHospitals],
+        hospitalId,
+        isStaff: true,
+        isPatient,
+        patientId: patient?.id ?? null,
+      },
+    };
+    setCachedPhiAuth(cacheKey, ok);
+    setSharedPhiAuth(cacheKey, ok);
+    return ok;
+  }
+
+  // Patient-only
+  const patientHospital = String(patient!.hospital_id);
+  if (requestedHospitalId && requestedHospitalId !== patientHospital) {
+    const denied: PhiAuthResult = { ok: false, status: 403, error: "Hospital out of scope" };
+    setCachedPhiAuth(cacheKey, denied);
+    setSharedPhiAuth(cacheKey, denied);
+    return denied;
+  }
+  const ok: PhiAuthResult = {
+    ok: true,
+    auth: {
+      userId,
+      email,
+      hospitalIds: hospitalIds.length ? hospitalIds : [patientHospital],
+      hospitalId: patientHospital || DEFAULT_HOSPITAL_ID,
+      isStaff: false,
+      isPatient: true,
+      patientId: patient!.id,
+    },
+  };
+  setCachedPhiAuth(cacheKey, ok);
+  setSharedPhiAuth(cacheKey, ok);
+  return ok;
 }
 
 /**
@@ -94,7 +246,7 @@ export function __resetPhiAuthCacheForTests() {
 export async function authorizePhiRead(
   request: Request,
   requestedHospitalId?: string | null,
-): Promise<{ ok: true; auth: PhiReadAuth } | { ok: false; status: number; error: string }> {
+): Promise<PhiAuthResult> {
   const token = bearerToken(request);
   if (!token) {
     if (
@@ -117,96 +269,23 @@ export async function authorizePhiRead(
   }
 
   const cacheKey = phiAuthCacheKey(token, requestedHospitalId);
-  const cached = getCachedPhiAuth(cacheKey);
-  if (cached) return cached;
+  const memHit = getCachedPhiAuth(cacheKey);
+  if (memHit) return memHit;
 
-  const admin = getSupabaseAdmin();
-  if (!admin) return { ok: false, status: 503, error: "Auth backend unavailable" };
-
-  const { data, error } = await admin.auth.getUser(token);
-  if (error || !data.user) return { ok: false, status: 401, error: "Invalid session" };
-
-  // Parallelize post-JWT lookups (was sequential ~2 round-trips)
-  const [membershipsRes, patientRes] = await Promise.all([
-    admin
-      .from("hospital_memberships")
-      .select("role, hospital_id")
-      .eq("profile_id", data.user.id)
-      .eq("is_active", true),
-    admin.from("patients").select("id, hospital_id").eq("profile_id", data.user.id).maybeSingle(),
-  ]);
-
-  const memberships = membershipsRes.data;
-  const patient = patientRes.data;
-
-  const staffMemberships = (memberships ?? []).filter((m) => STAFF_ROLES.has(String(m.role)));
-  const hospitalIds = [
-    ...new Set((memberships ?? []).map((m) => String(m.hospital_id)).filter(Boolean)),
-  ];
-
-  const isStaff = staffMemberships.length > 0;
-  const isPatient = !!patient;
-  if (!isStaff && !isPatient) {
-    const denied = {
-      ok: false as const,
-      status: 403,
-      error: "No hospital membership or patient profile",
-    };
-    setCachedPhiAuth(cacheKey, denied);
-    return denied;
+  const sharedHit = await getSharedPhiAuth(cacheKey);
+  if (sharedHit) {
+    setCachedPhiAuth(cacheKey, sharedHit);
+    return sharedHit;
   }
 
-  if (isStaff) {
-    const staffHospitals = new Set(
-      staffMemberships.map((m) => String(m.hospital_id)).filter(Boolean),
-    );
-    if (requestedHospitalId && !staffHospitals.has(requestedHospitalId)) {
-      // Do not cache scope denials tied to a bad client hospitalId for long — still short TTL ok
-      const denied = { ok: false as const, status: 403, error: "Hospital out of scope" };
-      setCachedPhiAuth(cacheKey, denied);
-      return denied;
-    }
-    const hospitalId =
-      requestedHospitalId && staffHospitals.has(requestedHospitalId)
-        ? requestedHospitalId
-        : String(staffMemberships[0].hospital_id);
-    const ok = {
-      ok: true as const,
-      auth: {
-        userId: data.user.id,
-        email: data.user.email ?? null,
-        hospitalIds: [...staffHospitals],
-        hospitalId,
-        isStaff: true,
-        isPatient,
-        patientId: patient?.id ?? null,
-      },
-    };
-    setCachedPhiAuth(cacheKey, ok);
-    return ok;
-  }
+  const inflight = phiAuthInflight.get(cacheKey);
+  if (inflight) return inflight;
 
-  // Patient-only
-  const patientHospital = String(patient!.hospital_id);
-  if (requestedHospitalId && requestedHospitalId !== patientHospital) {
-    const denied = { ok: false as const, status: 403, error: "Hospital out of scope" };
-    setCachedPhiAuth(cacheKey, denied);
-    return denied;
-  }
-  const ok = {
-    ok: true as const,
-    auth: {
-      userId: data.user.id,
-      email: data.user.email ?? null,
-      hospitalIds: hospitalIds.length ? hospitalIds : [patientHospital],
-      hospitalId: patientHospital || DEFAULT_HOSPITAL_ID,
-      isStaff: false,
-      isPatient: true,
-      patientId: patient!.id,
-    },
-  };
-  setCachedPhiAuth(cacheKey, ok);
-  return ok;
+  const pending = resolvePhiAuthFromBackend(token, requestedHospitalId, cacheKey).finally(() => {
+    phiAuthInflight.delete(cacheKey);
+  });
+  phiAuthInflight.set(cacheKey, pending);
+  return pending;
 }
 
 function assertHospital(auth: PhiReadAuth, rowHospitalId: string | null | undefined): boolean {

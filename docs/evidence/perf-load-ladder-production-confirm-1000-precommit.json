@@ -1,0 +1,156 @@
+{
+  "at": "2026-07-24T17:40:22.240Z",
+  "base": "https://medora-health-ally.jyothirmayudu03.workers.dev",
+  "host": {
+    "cpus": 8,
+    "total_mem_mb": 8192,
+    "free_mem_mb_start": 116
+  },
+  "methodology": {
+    "note": "In-process Node concurrency ladder — not distributed k6. Same JWT reused (auth cache warm path). Warm-up precedes first scenario. Direct PostgREST samples run after each API burst.",
+    "warmup_n": 40,
+    "scenarios": [
+      1000
+    ],
+    "resources": [
+      "appointments",
+      "patients",
+      "lab_results"
+    ]
+  },
+  "scenarios": [
+    {
+      "users": 1000,
+      "concurrency": 100,
+      "wall_ms": 4624,
+      "throughput_rps": 216.27,
+      "overall": {
+        "n": 1000,
+        "min": 179.92,
+        "avg": 405.39,
+        "p50": 326.82,
+        "p95": 934.21,
+        "p99": 1256.88,
+        "max": 1797.34,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 334,
+          "min": 179.92,
+          "avg": 399.75,
+          "p50": 328.51,
+          "p95": 930.66,
+          "p99": 1185.27,
+          "max": 1374.89,
+          "errors": 0
+        },
+        "patients": {
+          "n": 333,
+          "min": 181.93,
+          "avg": 405.73,
+          "p50": 324.05,
+          "p95": 972.65,
+          "p99": 1247.53,
+          "max": 1634.51,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 333,
+          "min": 190.99,
+          "avg": 410.7,
+          "p50": 327.02,
+          "p95": 925.6,
+          "p99": 1330.57,
+          "max": 1797.34,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 72.41,
+          "avg": 220.36,
+          "p50": 194.37,
+          "p95": 467.19,
+          "p99": 601.06,
+          "max": 601.06
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 77.86,
+            "avg": 209.23,
+            "p50": 194.37,
+            "p95": 346.06,
+            "p99": 468.12,
+            "max": 468.12,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 72.41,
+            "avg": 222.31,
+            "p50": 183.66,
+            "p95": 465.27,
+            "p99": 601.06,
+            "max": 601.06,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 80.52,
+            "avg": 229.55,
+            "p50": 173.83,
+            "p95": 467.19,
+            "p99": 600.57,
+            "max": 600.57,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 92,
+        "rss_mb_after": 130,
+        "heap_used_mb_after": 40
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 1,
+        "alert": true
+      },
+      "pass": true
+    }
+  ],
+  "slowest_endpoints": [
+    {
+      "users": 1000,
+      "endpoint": "patients",
+      "p95": 972.65,
+      "p99": 1247.53,
+      "avg": 405.73
+    },
+    {
+      "users": 1000,
+      "endpoint": "appointments",
+      "p95": 930.66,
+      "p99": 1185.27,
+      "avg": 399.75
+    },
+    {
+      "users": 1000,
+      "endpoint": "lab_results",
+      "p95": 925.6,
+      "p99": 1330.57,
+      "avg": 410.7
+    }
+  ],
+  "enterprise_budget": {
+    "p50_ms": 500,
+    "p95_ms": 2000,
+    "p99_ms": 4000,
+    "error_rate_max": 0.005
+  }
+}

@@ -1,0 +1,500 @@
+{
+  "title": "Medora production-scale performance report",
+  "at": "2026-07-24T17:26:31.362718Z",
+  "target": {
+    "worker": "medora-health-ally",
+    "url": "https://medora-health-ally.jyothirmayudu03.workers.dev",
+    "version_id_after_opt": "c58a8101-87f2-4e1e-a8af-86935981a5c4"
+  },
+  "enterprise_budget_ms": {
+    "p50_ms": 500,
+    "p95_ms": 2000,
+    "p99_ms": 4000,
+    "error_rate_max": 0.005
+  },
+  "bottleneck_analysis": {
+    "not_bottlenecks": [
+      "PostgreSQL index scans for appointments/patients (~5\u20137ms EXPLAIN ANALYZE)",
+      "Worker CPU (cpuTimeP50 \u2248 2.7\u20133.1ms; cpuTimeP99 \u2248 26\u201335ms)",
+      "HTTP error rate (0 across all ladder steps before and after)",
+      "Audit/DLQ path (async waitUntil; open_failures=0 during runs)"
+    ],
+    "real_bottlenecks": [
+      {
+        "id": "auth_subrequest_stampede",
+        "evidence": "CF workersInvocationsAdaptive showed ~2.18 subrequests/request and wallTime >> cpuTime during load; same JWT reused across concurrency fans out membership lookups across isolates",
+        "fix": "In-flight authorizePhiRead coalescing + 20s Cache API share across isolates (same TTL/security as prior isolate memory cache). No RLS/audit/tenant changes."
+      },
+      {
+        "id": "cold_start_first_step",
+        "evidence": "Before ladder: users=100 p95 2269ms with free host RAM ~158MB and no warm-up; after warm-up+opt confirm users=100 p95 296ms",
+        "fix": "LOAD_WARMUP_N=40 before measuring (methodology). Not a product logic change."
+      },
+      {
+        "id": "supabase_data_rtt_floor",
+        "evidence": "After opt, p50 remains ~220\u2013340ms while SQL EXPLAIN is ~5ms; matches one PostgREST RTT for PHI data (intentionally uncached)",
+        "fix": "None \u2014 further cuts would require caching PHI responses or moving compute closer to DB (architecture), out of safe scope for this pass."
+      }
+    ]
+  },
+  "optimization_applied": {
+    "commit_files": [
+      "src/server/phi-reads.ts",
+      "scripts/perf-load-ladder.mjs"
+    ],
+    "changes": [
+      "authorizePhiRead: in-flight promise coalesce per token fingerprint + hospitalId",
+      "authorizePhiRead: Cloudflare Cache API shared memo (max-age=20s), populate isolate memory on hit",
+      "perf-load-ladder: warm-up requests before first scenario"
+    ],
+    "explicitly_unchanged": [
+      "business response shapes",
+      "RLS policies",
+      "tenant isolation checks",
+      "PHI audit / waitUntil durability",
+      "authz decision rules"
+    ]
+  },
+  "before": {
+    "evidence": "docs/evidence/perf-load-ladder-production-before.json",
+    "scenarios": [
+      {
+        "users": 100,
+        "concurrency": 25,
+        "p50_ms": 268.14,
+        "p95_ms": 2269.71,
+        "p99_ms": 2317.76,
+        "throughput_rps": 31.02,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 5730.68,
+        "client_rss_mb_after": 76,
+        "budget_pass": false
+      },
+      {
+        "users": 250,
+        "concurrency": 40,
+        "p50_ms": 285.85,
+        "p95_ms": 1334.85,
+        "p99_ms": 1712.62,
+        "throughput_rps": 92.87,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 621.19,
+        "client_rss_mb_after": 101,
+        "budget_pass": true
+      },
+      {
+        "users": 500,
+        "concurrency": 60,
+        "p50_ms": 341.88,
+        "p95_ms": 690.11,
+        "p99_ms": 1180.9,
+        "throughput_rps": 153.82,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 1212.14,
+        "client_rss_mb_after": 105,
+        "budget_pass": true
+      },
+      {
+        "users": 750,
+        "concurrency": 80,
+        "p50_ms": 523.71,
+        "p95_ms": 1397.65,
+        "p99_ms": 1606.19,
+        "throughput_rps": 120.76,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 1177.93,
+        "client_rss_mb_after": 89,
+        "budget_pass": false
+      },
+      {
+        "users": 1000,
+        "concurrency": 100,
+        "p50_ms": 398.17,
+        "p95_ms": 2206.35,
+        "p99_ms": 2487.58,
+        "throughput_rps": 141.74,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 831.76,
+        "client_rss_mb_after": 110,
+        "budget_pass": false
+      }
+    ],
+    "slowest_endpoints": [
+      {
+        "users": 100,
+        "endpoint": "appointments",
+        "p95": 2300.71,
+        "p99": 2474.41,
+        "avg": 742.77
+      },
+      {
+        "users": 100,
+        "endpoint": "lab_results",
+        "p95": 2292.98,
+        "p99": 2317.76,
+        "avg": 755.66
+      },
+      {
+        "users": 100,
+        "endpoint": "patients",
+        "p95": 2252.81,
+        "p99": 2257.72,
+        "avg": 737.57
+      },
+      {
+        "users": 1000,
+        "endpoint": "lab_results",
+        "p95": 2245.01,
+        "p99": 2731.51,
+        "avg": 727.18
+      },
+      {
+        "users": 1000,
+        "endpoint": "appointments",
+        "p95": 2212.6,
+        "p99": 2443.39,
+        "avg": 687.82
+      }
+    ]
+  },
+  "after": {
+    "evidence": "docs/evidence/perf-load-ladder-production-after-auth-share.json",
+    "scenarios": [
+      {
+        "users": 100,
+        "concurrency": 25,
+        "p50_ms": 239.56,
+        "p95_ms": 810.95,
+        "p99_ms": 826.51,
+        "throughput_rps": 49.94,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 432.22,
+        "client_rss_mb_after": 81,
+        "budget_pass": true
+      },
+      {
+        "users": 250,
+        "concurrency": 40,
+        "p50_ms": 223.82,
+        "p95_ms": 544.37,
+        "p99_ms": 975.85,
+        "throughput_rps": 109.34,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 408.02,
+        "client_rss_mb_after": 104,
+        "budget_pass": true
+      },
+      {
+        "users": 500,
+        "concurrency": 60,
+        "p50_ms": 239.48,
+        "p95_ms": 490.14,
+        "p99_ms": 916.29,
+        "throughput_rps": 178.74,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 460.28,
+        "client_rss_mb_after": 116,
+        "budget_pass": true
+      },
+      {
+        "users": 750,
+        "concurrency": 80,
+        "p50_ms": 305.47,
+        "p95_ms": 580.83,
+        "p99_ms": 921.18,
+        "throughput_rps": 207.2,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 388.63,
+        "client_rss_mb_after": 119,
+        "budget_pass": true
+      },
+      {
+        "users": 1000,
+        "concurrency": 100,
+        "p50_ms": 335.78,
+        "p95_ms": 745.64,
+        "p99_ms": 936.64,
+        "throughput_rps": 235.16,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 328.67,
+        "client_rss_mb_after": 103,
+        "budget_pass": true
+      }
+    ],
+    "slowest_endpoints": [
+      {
+        "users": 100,
+        "endpoint": "appointments",
+        "p95": 826.51,
+        "p99": 828.01,
+        "avg": 376.99
+      },
+      {
+        "users": 100,
+        "endpoint": "lab_results",
+        "p95": 813.94,
+        "p99": 817.55,
+        "avg": 400.56
+      },
+      {
+        "users": 100,
+        "endpoint": "patients",
+        "p95": 807.36,
+        "p99": 822.45,
+        "avg": 383.17
+      },
+      {
+        "users": 1000,
+        "endpoint": "appointments",
+        "p95": 793.07,
+        "p99": 1000.06,
+        "avg": 402.16
+      },
+      {
+        "users": 1000,
+        "endpoint": "lab_results",
+        "p95": 741.26,
+        "p99": 895.59,
+        "avg": 389.07
+      }
+    ]
+  },
+  "confirmation": {
+    "evidence": "docs/evidence/perf-load-ladder-production-confirm-100-1000.json",
+    "scenarios": [
+      {
+        "users": 100,
+        "concurrency": 25,
+        "p50_ms": 225.92,
+        "p95_ms": 295.63,
+        "p99_ms": 756.97,
+        "throughput_rps": 80.08,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 491.16,
+        "client_rss_mb_after": 84,
+        "budget_pass": true
+      },
+      {
+        "users": 1000,
+        "concurrency": 100,
+        "p50_ms": 327.98,
+        "p95_ms": 752.88,
+        "p99_ms": 1328.72,
+        "throughput_rps": 235.78,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 344.14,
+        "client_rss_mb_after": 134,
+        "budget_pass": true
+      }
+    ],
+    "note": "Re-ran previously failing steps (100, 1000); both remain under budget."
+  },
+  "before_after_comparison": [
+    {
+      "users": 100,
+      "before": {
+        "users": 100,
+        "concurrency": 25,
+        "p50_ms": 268.14,
+        "p95_ms": 2269.71,
+        "p99_ms": 2317.76,
+        "throughput_rps": 31.02,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 5730.68,
+        "client_rss_mb_after": 76,
+        "budget_pass": false
+      },
+      "after": {
+        "users": 100,
+        "concurrency": 25,
+        "p50_ms": 239.56,
+        "p95_ms": 810.95,
+        "p99_ms": 826.51,
+        "throughput_rps": 49.94,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 432.22,
+        "client_rss_mb_after": 81,
+        "budget_pass": true
+      },
+      "p95_improvement_pct": 64.3,
+      "rps_improvement_pct": 61.0
+    },
+    {
+      "users": 250,
+      "before": {
+        "users": 250,
+        "concurrency": 40,
+        "p50_ms": 285.85,
+        "p95_ms": 1334.85,
+        "p99_ms": 1712.62,
+        "throughput_rps": 92.87,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 621.19,
+        "client_rss_mb_after": 101,
+        "budget_pass": true
+      },
+      "after": {
+        "users": 250,
+        "concurrency": 40,
+        "p50_ms": 223.82,
+        "p95_ms": 544.37,
+        "p99_ms": 975.85,
+        "throughput_rps": 109.34,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 408.02,
+        "client_rss_mb_after": 104,
+        "budget_pass": true
+      },
+      "p95_improvement_pct": 59.2,
+      "rps_improvement_pct": 17.7
+    },
+    {
+      "users": 500,
+      "before": {
+        "users": 500,
+        "concurrency": 60,
+        "p50_ms": 341.88,
+        "p95_ms": 690.11,
+        "p99_ms": 1180.9,
+        "throughput_rps": 153.82,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 1212.14,
+        "client_rss_mb_after": 105,
+        "budget_pass": true
+      },
+      "after": {
+        "users": 500,
+        "concurrency": 60,
+        "p50_ms": 239.48,
+        "p95_ms": 490.14,
+        "p99_ms": 916.29,
+        "throughput_rps": 178.74,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 460.28,
+        "client_rss_mb_after": 116,
+        "budget_pass": true
+      },
+      "p95_improvement_pct": 29.0,
+      "rps_improvement_pct": 16.2
+    },
+    {
+      "users": 750,
+      "before": {
+        "users": 750,
+        "concurrency": 80,
+        "p50_ms": 523.71,
+        "p95_ms": 1397.65,
+        "p99_ms": 1606.19,
+        "throughput_rps": 120.76,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 1177.93,
+        "client_rss_mb_after": 89,
+        "budget_pass": false
+      },
+      "after": {
+        "users": 750,
+        "concurrency": 80,
+        "p50_ms": 305.47,
+        "p95_ms": 580.83,
+        "p99_ms": 921.18,
+        "throughput_rps": 207.2,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 388.63,
+        "client_rss_mb_after": 119,
+        "budget_pass": true
+      },
+      "p95_improvement_pct": 58.4,
+      "rps_improvement_pct": 71.6
+    },
+    {
+      "users": 1000,
+      "before": {
+        "users": 1000,
+        "concurrency": 100,
+        "p50_ms": 398.17,
+        "p95_ms": 2206.35,
+        "p99_ms": 2487.58,
+        "throughput_rps": 141.74,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 831.76,
+        "client_rss_mb_after": 110,
+        "budget_pass": false
+      },
+      "after": {
+        "users": 1000,
+        "concurrency": 100,
+        "p50_ms": 335.78,
+        "p95_ms": 745.64,
+        "p99_ms": 936.64,
+        "throughput_rps": 235.16,
+        "error_rate": 0,
+        "errors": 0,
+        "db_direct_p95_ms": 328.67,
+        "client_rss_mb_after": 103,
+        "budget_pass": true
+      },
+      "p95_improvement_pct": 66.2,
+      "rps_improvement_pct": 65.9
+    }
+  ],
+  "cloudflare_worker_metrics_after": {
+    "evidence": "docs/evidence/perf-worker-analytics-after-auth-share.json",
+    "requests": 1995,
+    "errors": 0,
+    "subrequests": 4334,
+    "subrequests_per_request": 2.172,
+    "cpu_time_us": {
+      "p50": 2742,
+      "p99": 26048
+    },
+    "wall_time_us": {
+      "p50": 260539,
+      "p99": 823728
+    },
+    "interpretation": "CPU remains negligible vs wall time \u2014 latency is I/O wait on Supabase subrequests, not Worker compute."
+  },
+  "memory": {
+    "note": "Worker isolate memory is not exposed as a per-request gauge in this GraphQL sample. Client (load generator) RSS captured per scenario in ladder evidence.",
+    "client_rss_mb_after_by_users": {
+      "100": 81,
+      "250": 104,
+      "500": 116,
+      "750": 119,
+      "1000": 103
+    }
+  },
+  "verdict": {
+    "all_scenarios_under_enterprise_budget": true,
+    "further_significant_app_level_gains": false,
+    "reason_stop": "p95 improved 29\u201366% and all steps pass budget; residual p50\u2248RTT to Supabase for uncached PHI reads. Next gains are architectural (region/placement, connection pooling strategy, optional read models) not safe micro-opts in the hot path."
+  },
+  "recommendations": [
+    "Keep 20s auth memo + coalesce; do not lengthen TTL without security review.",
+    "Prefer staging Worker ladders with warm-up for release gates; treat first-request cold start separately from steady-state p95.",
+    "If p50 must drop below ~150ms: evaluate Smart Placement / DB-proximate region and/or pooled PostgREST path \u2014 measure before changing.",
+    "Do not cache PHI list payloads at the edge without an explicit invalidation + HIPAA review.",
+    "Continue monitoring workersInvocationsAdaptive wallTime vs cpuTime and subrequests/request after deploys.",
+    "Host load-generator on a machine with adequate free RAM; low free RAM inflates client-side tail latency."
+  ]
+}

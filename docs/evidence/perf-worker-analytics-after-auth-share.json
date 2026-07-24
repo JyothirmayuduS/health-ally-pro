@@ -1,0 +1,1 @@
+{"data":{"viewer":{"accounts":[{"workersInvocationsAdaptive":[{"dimensions":{"datetimeMinute":"2026-07-24T17:24:00Z","scriptName":"medora-health-ally"},"quantiles":{"cpuTimeP50":2742,"cpuTimeP99":26048,"wallTimeP50":260539,"wallTimeP99":823728},"sum":{"errors":0,"requests":1995,"subrequests":4334}}]}]}},"errors":null}
