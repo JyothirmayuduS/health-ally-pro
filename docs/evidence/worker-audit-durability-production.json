@@ -1,0 +1,69 @@
+{
+  "completed_at": "2026-07-24T11:40:28.222Z",
+  "commit": "137ac0b4001c3d3d0050931a0cd51e37f4c6fdaa",
+  "environment": "production",
+  "worker_name": "medora-health-ally",
+  "worker_url": "https://medora-health-ally.jyothirmayudu03.workers.dev",
+  "deployment_id": "7578602f-04f8-4ff6-8ab9-cc0efb492273",
+  "version_id": "4f64905d-e89f-4f4a-ad0f-adaba5191196",
+  "forced_failure_state": "disabled_absent",
+  "diagnostic_state": "disabled_absent",
+  "durability": [
+    {
+      "endpoint": "appointments",
+      "request_id": "prod-durability-appointments-1784893222677",
+      "response": 200,
+      "response_ms": 1667,
+      "audit_id": "263a7791-2111-4066-b319-24ee6fbcc7d2",
+      "audit_event_id": "28acc928-2673-4d50-9488-476ce0e42f61",
+      "records": 83,
+      "audit_latency_ms": 633,
+      "result": "PASS"
+    },
+    {
+      "endpoint": "patients",
+      "request_id": "prod-durability-patients-1784893225023",
+      "response": 200,
+      "response_ms": 196,
+      "audit_id": "29899422-6e2d-4c83-a364-084527b141ea",
+      "audit_event_id": "45068496-a89e-4a80-b482-221e5f92de0a",
+      "records": 81,
+      "audit_latency_ms": 661,
+      "result": "PASS"
+    },
+    {
+      "endpoint": "lab_results",
+      "request_id": "prod-durability-lab_results-1784893225883",
+      "response": 200,
+      "response_ms": 200,
+      "audit_id": "1a34db46-c2dd-41d3-a61e-06739c92981f",
+      "audit_event_id": "5cc92023-18fe-4027-b086-b00cd39fb4eb",
+      "records": 85,
+      "audit_latency_ms": 97,
+      "result": "PASS"
+    }
+  ],
+  "authz": {
+    "missing_auth": 401,
+    "invalid_auth": 401,
+    "cross_tenant": 403
+  },
+  "audit_dlq": {
+    "source": "database_rpc",
+    "open_failures": 0,
+    "alert": false
+  },
+  "audit_scheduler": {
+    "ok": true,
+    "wait_until_present": true,
+    "wait_until_type": "cloudflare",
+    "no_op_fallback": false,
+    "production_runtime": true
+  },
+  "rpc_health": {
+    "source": "database_rpc",
+    "open_failures": 0,
+    "alert": false
+  },
+  "pass": true
+}
