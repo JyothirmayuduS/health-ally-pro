@@ -1,21 +1,124 @@
-import { waitUntil } from "cloudflare:workers";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { DEFAULT_HOSPITAL_ID } from "@/server/hospital-persistence";
+import {
+  diagnosticModeEnabled,
+  getPhiAuditSchedulerHealth,
+  inspectWaitUntil,
+  isProductionAuditRuntime,
+} from "@/server/phi-audit-scheduler";
+import { incrementAuditTerminalFailure, newRequestId } from "@/server/request-log";
+
+export type AuditPersistState =
+  | "AUDIT_PERSISTED"
+  | "AUDIT_DLQ_PERSISTED"
+  | "AUDIT_TERMINAL_FAILURE_REPORTED";
+
+export type SchedulePhiAuditMeta = {
+  requestId?: string | null;
+  auditEventId?: string | null;
+};
 
 /**
  * Schedule work after the HTTP response is sent (Cloudflare waitUntil).
- * Without waitUntil, Workers may kill fire-and-forget audit inserts mid-flight
- * (especially larger metadata.record_ids payloads). Latency stays non-blocking.
+ * Production MUST use a real waitUntil — the Vitest no-op stub is forbidden
+ * (silent loss of audit + DLQ is a release blocker).
  */
-export function schedulePhiAudit(task: Promise<unknown>): void {
+export function schedulePhiAudit(
+  task: Promise<unknown>,
+  meta: SchedulePhiAuditMeta = {},
+): "scheduled" | "scheduler_unavailable_terminal" {
+  const inspected = inspectWaitUntil();
+  const requestId = meta.requestId ?? null;
+  const auditEventId = meta.auditEventId ?? null;
+
+  if (diagnosticModeEnabled()) {
+    console.log(
+      JSON.stringify({
+        msg: "phi_audit_diag",
+        audit_context_present: true,
+        wait_until_present: inspected.present,
+        wait_until_type: inspected.implementation,
+        audit_schedule_attempted: true,
+        request_id: requestId,
+        audit_event_id: auditEventId,
+      }),
+    );
+  }
+
+  const safeTask = Promise.resolve(task).catch((e) => {
+    reportTerminalAuditFailure({
+      reason: "unhandled_audit_rejection",
+      requestId,
+      auditEventId,
+      error: String(e instanceof Error ? e.message : e).slice(0, 500),
+    });
+  });
+
+  if (inspected.implementation === "cloudflare" && inspected.waitUntil) {
+    inspected.waitUntil(safeTask);
+    return "scheduled";
+  }
+
+  if (isProductionAuditRuntime()) {
+    reportTerminalAuditFailure({
+      reason: "waituntil_unavailable",
+      requestId,
+      auditEventId,
+      wait_until_type: inspected.implementation,
+    });
+    void enqueueSchedulerUnavailableFailure({
+      requestId,
+      auditEventId,
+      waitUntilType: inspected.implementation,
+    });
+    return "scheduler_unavailable_terminal";
+  }
+
+  // Node / Vitest / Docker preview: process stays alive; allow microtask completion.
+  void safeTask;
+  return "scheduled";
+}
+
+export function newAuditEventId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
+  return `audit_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function reportTerminalAuditFailure(payload: Record<string, unknown>): void {
+  incrementAuditTerminalFailure();
+  console.error(
+    JSON.stringify({
+      level: "critical",
+      msg: "phi_audit_terminal_failure",
+      service: "medora",
+      ...payload,
+    }),
+  );
+}
+
+async function enqueueSchedulerUnavailableFailure(opts: {
+  requestId: string | null;
+  auditEventId: string | null;
+  waitUntilType: string;
+}): Promise<void> {
   try {
-    waitUntil(task);
-  } catch {
-    void task.catch((e) => {
-      console.error("[Medora PHI Audit] background task error:", e);
+    await enqueueAuditFailure("waituntil_unavailable", {
+      audit_event_id: opts.auditEventId,
+      request_id: opts.requestId,
+      wait_until_type: opts.waitUntilType,
+      path: "schedulePhiAudit",
+    });
+  } catch (e) {
+    reportTerminalAuditFailure({
+      reason: "scheduler_dlq_failed",
+      requestId: opts.requestId,
+      auditEventId: opts.auditEventId,
+      error: String(e instanceof Error ? e.message : e).slice(0, 500),
     });
   }
 }
+
+export { getPhiAuditSchedulerHealth, diagnosticModeEnabled, inspectWaitUntil };
 
 export type PhiAuditEntry = {
   hospitalId?: string | null;
@@ -45,11 +148,14 @@ function forceFailEnabled(): boolean {
   return v === "1" || v === "true";
 }
 
-async function enqueueAuditFailure(errorMessage: string, payload: Record<string, unknown>) {
+async function enqueueAuditFailure(
+  errorMessage: string,
+  payload: Record<string, unknown>,
+): Promise<{ ok: boolean; error?: string }> {
   const admin = getSupabaseAdmin();
   if (!admin) {
     console.error("[Medora PHI Audit] DLQ unavailable; original error:", errorMessage);
-    return;
+    return { ok: false, error: "admin_unavailable" };
   }
   const { error } = await admin.from("audit_write_failures").insert({
     error_message: errorMessage.slice(0, 2000),
@@ -62,7 +168,9 @@ async function enqueueAuditFailure(errorMessage: string, payload: Record<string,
       "original:",
       errorMessage,
     );
+    return { ok: false, error: error.message };
   }
+  return { ok: true };
 }
 
 /** Core clinical PHI tables that require per-record read IDs in audit metadata. */
@@ -92,7 +200,7 @@ export function extractPhiRecordIds(data: unknown): string[] {
 /**
  * Async record-level read audit for core PHI tables.
  * Logs every returned record id in metadata.record_ids (not count-only).
- * Same fire-and-forget + DLQ path as writePhiAudit — caller must `void` this.
+ * Same fire-and-forget + DLQ path as writePhiAudit — caller must schedule via schedulePhiAudit.
  */
 export async function writeRecordLevelPhiReadAudit(opts: {
   table: CorePhiRecordTable;
@@ -102,9 +210,13 @@ export async function writeRecordLevelPhiReadAudit(opts: {
   actorEmail: string | null;
   actorRole: "staff" | "patient";
   request?: Request;
+  requestId?: string | null;
+  auditEventId?: string | null;
   extraMetadata?: Record<string, unknown>;
-}): Promise<{ ok: boolean; error?: string }> {
+}): Promise<{ ok: boolean; error?: string; state: AuditPersistState; auditEventId: string }> {
   const ids = opts.recordIds.filter((id) => /^[0-9a-f-]{36}$/i.test(id));
+  const requestId = opts.requestId ?? (opts.request ? newRequestId(opts.request) : null);
+  const auditEventId = opts.auditEventId ?? newAuditEventId();
   return writePhiAudit({
     hospitalId: opts.hospitalId,
     actorId: opts.actorId,
@@ -118,21 +230,49 @@ export async function writeRecordLevelPhiReadAudit(opts: {
       record_ids: ids,
       count: ids.length,
       actor_role: opts.actorRole,
+      request_id: requestId,
+      audit_event_id: auditEventId,
       ...opts.extraMetadata,
     },
     request: opts.request,
+    auditEventId,
+    requestId,
   });
 }
 
 /** Fire-and-forget PHI / clinical access audit (service role). Failures go to audit_write_failures. */
 export async function writePhiAudit(
-  entry: PhiAuditEntry,
-): Promise<{ ok: boolean; error?: string }> {
-  const admin = getSupabaseAdmin();
-  if (!admin) {
-    await enqueueAuditFailure("admin_unavailable", { entry });
-    return { ok: false, error: "admin_unavailable" };
+  entry: PhiAuditEntry & { auditEventId?: string | null; requestId?: string | null },
+): Promise<{ ok: boolean; error?: string; state: AuditPersistState; auditEventId: string }> {
+  const auditEventId = entry.auditEventId ?? newAuditEventId();
+  const requestId =
+    entry.requestId ??
+    (entry.metadata && typeof entry.metadata.request_id === "string"
+      ? entry.metadata.request_id
+      : entry.request
+        ? newRequestId(entry.request)
+        : null);
+
+  if (diagnosticModeEnabled()) {
+    console.log(
+      JSON.stringify({
+        msg: "phi_audit_diag",
+        audit_write_started: true,
+        request_id: requestId,
+        audit_event_id: auditEventId,
+        resource: entry.resource,
+        action: entry.action,
+      }),
+    );
   }
+
+  const admin = getSupabaseAdmin();
+  const metadata = {
+    ...(entry.metadata ?? {}),
+    audit_event_id: auditEventId,
+    request_id:
+      requestId ?? (entry.metadata as { request_id?: string } | undefined)?.request_id ?? null,
+  };
 
   const row = {
     hospital_id: entry.hospitalId || DEFAULT_HOSPITAL_ID,
@@ -143,10 +283,50 @@ export async function writePhiAudit(
     entity_type: entry.entityType ?? null,
     entity_id: entry.entityId && /^[0-9a-f-]{36}$/i.test(entry.entityId) ? entry.entityId : null,
     outcome: entry.outcome ?? "success",
-    metadata: entry.metadata ?? {},
+    metadata,
     ip: clientIp(entry.request),
     user_agent: entry.request?.headers.get("user-agent")?.slice(0, 500) ?? null,
   };
+
+  const dlqPayload = {
+    audit_event_id: auditEventId,
+    request_id: requestId,
+    path: "writePhiAudit",
+    row_fingerprint: {
+      hospital_id: row.hospital_id,
+      actor_id: row.actor_id,
+      action: row.action,
+      resource: row.resource,
+      outcome: row.outcome,
+      record_count:
+        metadata && typeof metadata === "object" && "count" in metadata
+          ? Number((metadata as { count?: number }).count ?? 0)
+          : undefined,
+    },
+  };
+
+  if (!admin) {
+    const dlq = await enqueueAuditFailure("admin_unavailable", {
+      ...dlqPayload,
+      entry_keys: Object.keys(entry),
+    });
+    if (dlq.ok) {
+      return { ok: false, error: "admin_unavailable", state: "AUDIT_DLQ_PERSISTED", auditEventId };
+    }
+    reportTerminalAuditFailure({
+      reason: "primary_and_dlq_failed",
+      requestId,
+      auditEventId,
+      primary_error: "admin_unavailable",
+      dlq_error: dlq.error,
+    });
+    return {
+      ok: false,
+      error: "admin_unavailable",
+      state: "AUDIT_TERMINAL_FAILURE_REPORTED",
+      auditEventId,
+    };
+  }
 
   try {
     if (forceFailEnabled()) {
@@ -154,14 +334,52 @@ export async function writePhiAudit(
     }
     const { error } = await admin.from("audit_logs").insert(row);
     if (error) {
-      await enqueueAuditFailure(error.message, { row });
-      return { ok: false, error: error.message };
+      const dlq = await enqueueAuditFailure(error.message, {
+        ...dlqPayload,
+        supabase_error: error.message,
+      });
+      if (dlq.ok) {
+        return { ok: false, error: error.message, state: "AUDIT_DLQ_PERSISTED", auditEventId };
+      }
+      reportTerminalAuditFailure({
+        reason: "primary_and_dlq_failed",
+        requestId,
+        auditEventId,
+        primary_error: error.message,
+        dlq_error: dlq.error,
+      });
+      return {
+        ok: false,
+        error: error.message,
+        state: "AUDIT_TERMINAL_FAILURE_REPORTED",
+        auditEventId,
+      };
     }
-    return { ok: true };
+    if (diagnosticModeEnabled()) {
+      console.log(
+        JSON.stringify({
+          msg: "phi_audit_diag",
+          audit_write_completed: true,
+          request_id: requestId,
+          audit_event_id: auditEventId,
+        }),
+      );
+    }
+    return { ok: true, state: "AUDIT_PERSISTED", auditEventId };
   } catch (e) {
     const msg = String(e instanceof Error ? e.message : e);
-    await enqueueAuditFailure(msg, { row });
-    return { ok: false, error: msg };
+    const dlq = await enqueueAuditFailure(msg, { ...dlqPayload, caught: true });
+    if (dlq.ok) {
+      return { ok: false, error: msg, state: "AUDIT_DLQ_PERSISTED", auditEventId };
+    }
+    reportTerminalAuditFailure({
+      reason: "primary_and_dlq_failed",
+      requestId,
+      auditEventId,
+      primary_error: msg,
+      dlq_error: dlq.error,
+    });
+    return { ok: false, error: msg, state: "AUDIT_TERMINAL_FAILURE_REPORTED", auditEventId };
   }
 }
 

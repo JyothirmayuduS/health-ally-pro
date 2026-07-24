@@ -39,7 +39,18 @@ const counters = {
   auth_failures: 0,
   cross_tenant_denials: 0,
   audit_persist_failures_reported: 0,
+  audit_terminal_failures: 0,
 };
+
+/** Increment when both primary audit and DLQ persistence fail (no PHI). */
+export function incrementAuditTerminalFailure(): void {
+  counters.audit_terminal_failures += 1;
+  counters.audit_persist_failures_reported += 1;
+}
+
+export function getAuditTerminalFailureCount(): number {
+  return counters.audit_terminal_failures;
+}
 
 export function newRequestId(request?: Request): string {
   const hdr =
@@ -103,6 +114,7 @@ export function getRecentRequestStats(windowMs = 5 * 60 * 1000): {
   auth_failures_total: number;
   cross_tenant_denials_total: number;
   http_total: number;
+  audit_terminal_failures_total: number;
 } {
   const cutoff = Date.now() - windowMs;
   const rows = recent.filter((r) => r.ts >= cutoff);
@@ -149,6 +161,7 @@ export function getRecentRequestStats(windowMs = 5 * 60 * 1000): {
     auth_failures_total: counters.auth_failures,
     cross_tenant_denials_total: counters.cross_tenant_denials,
     http_total: counters.http_total,
+    audit_terminal_failures_total: counters.audit_terminal_failures,
   };
 }
 

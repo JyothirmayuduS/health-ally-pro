@@ -1,0 +1,42 @@
+{
+  "investigation_started_at": "2026-07-24T10:45:00Z",
+  "release_commit": "b721917f11e42448f5bbfca205c9eae0e7df461b",
+  "worker_name": "medora-health-ally",
+  "worker_deployment_id": "f861b622-616d-44ad-bf87-c72945606b5c",
+  "worker_version_id": "038ea689-152a-4fd7-9b6a-e226b9122f38",
+  "failing_evidence_preserved": "docs/evidence/cloudflare-worker-release-drill.json",
+  "request_id": "worker-durability-1784888529787",
+  "clinical_response_status": 200,
+  "clinical_response_duration_ms": 1566,
+  "audit_poll_duration_ms": 46092,
+  "audit_count": 0,
+  "dlq_count_before": 0,
+  "dlq_count_after": 0,
+  "audit_health_source": "database_rpc",
+  "open_failures": 0,
+  "credential_rotation": {
+    "old_token_revoked": "yes",
+    "replacement_token_available": "yes",
+    "replacement_name": "medora-worker-leastpriv-2026-07-24",
+    "secret_source": ".secrets/cloudflare.env"
+  },
+  "proven_root_cause_hypothesis": {
+    "summary": "Production Worker bundle includes Vitest no-op waitUntil stub via tsconfig paths + vite-tsconfig-paths",
+    "evidence": [
+      "tsconfig.json paths maps cloudflare:workers -> src/test/stubs/cloudflare-workers.ts",
+      "vite.config.ts uses vite-tsconfig-paths()",
+      "dist/server/assets/router-*.js contains: function waitUntil(promise) { void promise.catch(() => {",
+      "Stub does not extend Worker isolate lifetime; fire-and-forget audit dies after response",
+      "schedulePhiAudit catch fallback also uses void task without waitUntil (silent loss)"
+    ]
+  },
+  "call_path_map": {
+    "clinical_handler": "src/routes/api/hospital/phi.ts auditCorePhiRead/auditAfter",
+    "audit_event_creation": "writeRecordLevelPhiReadAudit / writePhiAudit",
+    "audit_scheduling": "schedulePhiAudit",
+    "waitUntil": "import { waitUntil } from cloudflare:workers — RESOLVED TO TEST STUB IN PRODUCTION BUNDLE",
+    "supabase_write": "not reached (promise cancelled after response)",
+    "dlq": "not reached"
+  },
+  "phi_or_credentials_stored": false
+}

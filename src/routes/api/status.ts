@@ -3,7 +3,7 @@ import { jsonResponse, optionsResponse } from "@/server/ai/api-auth";
 import { persistenceAvailable } from "@/server/hospital-persistence";
 import { getServerLicense } from "@/server/license";
 import { checkProductionBoot, productionBootHttpResponse } from "@/server/production-boot";
-import { getAuditWriteFailuresHealth } from "@/server/phi-audit";
+import { getAuditWriteFailuresHealth, getPhiAuditSchedulerHealth } from "@/server/phi-audit";
 import { getRecentRequestStats, newRequestId, withRequestLog } from "@/server/request-log";
 
 /**
@@ -26,8 +26,11 @@ export const Route = createFileRoute("/api/status")({
         const demoAuthOff =
           process.env.VITE_ALLOW_DEMO_AUTH !== "true" && process.env.ALLOW_DEMO_PERSIST !== "true";
         const dlq = await getAuditWriteFailuresHealth();
+        const auditScheduler = getPhiAuditSchedulerHealth();
         const forceFailRaw = process.env.PHI_AUDIT_FORCE_FAIL;
         const forceFailEnabled = forceFailRaw === "1" || forceFailRaw === "true";
+        const diagnosticRaw = process.env.PHI_AUDIT_DIAGNOSTIC_MODE;
+        const diagnosticEnabled = diagnosticRaw === "1" || diagnosticRaw === "true";
         const reqStats = getRecentRequestStats();
 
         const build = {
@@ -60,6 +63,18 @@ export const Route = createFileRoute("/api/status")({
             label: "PHI audit force-fail disabled",
             ok: !forceFailEnabled,
           },
+          {
+            id: "audit_scheduler",
+            label: "PHI audit waitUntil scheduler",
+            ok: auditScheduler.ok,
+            wait_until_type: auditScheduler.wait_until_type,
+            no_op_fallback: auditScheduler.no_op_fallback,
+          },
+          {
+            id: "audit_diagnostic_off",
+            label: "PHI audit diagnostic mode disabled in production",
+            ok: !(auditScheduler.production_runtime && diagnosticEnabled),
+          },
           { id: "billing", label: "Stripe billing", ok: stripe, optional: true },
           { id: "bot_guard", label: "Turnstile", ok: turnstile, optional: true },
         ];
@@ -75,6 +90,7 @@ export const Route = createFileRoute("/api/status")({
           build,
           checks,
           audit_dlq: dlq,
+          audit_scheduler: auditScheduler,
           request_stats_5m: reqStats,
           latency_budgets: {
             appointments_worker_p95_warn_ms: 400,

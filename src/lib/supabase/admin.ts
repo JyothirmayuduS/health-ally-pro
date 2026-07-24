@@ -26,6 +26,11 @@ export function getSupabaseAdmin(): SupabaseClient | null {
   return adminClient;
 }
 
+/** Test-only: replace or clear the cached admin client. */
+export function __setSupabaseAdminForTests(client: SupabaseClient | null): void {
+  adminClient = client;
+}
+
 export function isSupabaseAdminConfigured(): boolean {
   return getSupabaseAdmin() !== null;
 }

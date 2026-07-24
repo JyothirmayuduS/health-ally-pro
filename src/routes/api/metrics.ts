@@ -60,6 +60,9 @@ export const Route = createFileRoute("/api/metrics")({
           "# HELP medora_audit_persist_failures_total Alias of open DLQ for alert compatibility",
           "# TYPE medora_audit_persist_failures_total gauge",
           `medora_audit_persist_failures_total ${dlq.open_failures}`,
+          "# HELP medora_audit_terminal_failures_total Primary+DLQ double failures reported",
+          "# TYPE medora_audit_terminal_failures_total counter",
+          `medora_audit_terminal_failures_total ${stats.audit_terminal_failures_total}`,
         ];
         for (const [code, count] of Object.entries(stats.by_status)) {
           lines.push(

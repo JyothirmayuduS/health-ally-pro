@@ -35,8 +35,10 @@ function auditAfter(
   auth: { hospitalId: string; userId: string; email: string | null },
   action: string,
   resource: string,
+  requestId: string,
   metadata?: Record<string, unknown>,
 ) {
+  const auditEventId = crypto.randomUUID();
   schedulePhiAudit(
     writePhiAudit({
       hospitalId: auth.hospitalId,
@@ -44,9 +46,12 @@ function auditAfter(
       actorEmail: auth.email,
       action,
       resource,
-      metadata,
+      metadata: { ...metadata, request_id: requestId, audit_event_id: auditEventId },
       request,
+      requestId,
+      auditEventId,
     }),
+    { requestId, auditEventId },
   );
 }
 
@@ -56,8 +61,10 @@ function auditCorePhiRead(
   auth: PhiReadAuth,
   table: CorePhiRecordTable,
   data: unknown,
+  requestId: string,
   extraMetadata?: Record<string, unknown>,
 ) {
+  const auditEventId = crypto.randomUUID();
   schedulePhiAudit(
     writeRecordLevelPhiReadAudit({
       table,
@@ -67,8 +74,11 @@ function auditCorePhiRead(
       actorEmail: auth.email,
       actorRole: auth.isStaff ? "staff" : "patient",
       request,
+      requestId,
+      auditEventId,
       extraMetadata,
     }),
+    { requestId, auditEventId },
   );
 }
 
@@ -137,7 +147,9 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditAfter(request, auth, "read", "staff_profiles", { count: res.data.length });
+            auditAfter(request, auth, "read", "staff_profiles", requestId, {
+              count: res.data.length,
+            });
             return finish(response, authMeta);
           }
           case "patients": {
@@ -145,7 +157,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditCorePhiRead(request, auth, "patients", res.data);
+            auditCorePhiRead(request, auth, "patients", res.data, requestId);
             return finish(response, authMeta);
           }
           case "patient_profile": {
@@ -153,7 +165,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             const profile = await getProfileBasics(auth.userId);
             const row = Array.isArray(patient.data) ? patient.data[0] : patient.data;
             const response = ok({ profile, patient: row });
-            auditCorePhiRead(request, auth, "patients", row, { view: "profile" });
+            auditCorePhiRead(request, auth, "patients", row, requestId, { view: "profile" });
             return finish(response, authMeta);
           }
           case "appointments": {
@@ -161,7 +173,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditCorePhiRead(request, auth, "appointments", res.data);
+            auditCorePhiRead(request, auth, "appointments", res.data, requestId);
             return finish(response, authMeta);
           }
           case "lab_results": {
@@ -169,7 +181,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditCorePhiRead(request, auth, "lab_results", res.data);
+            auditCorePhiRead(request, auth, "lab_results", res.data, requestId);
             return finish(response, authMeta);
           }
           case "lab_findings": {
@@ -177,7 +189,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditAfter(request, auth, "read", "lab_results", {
+            auditAfter(request, auth, "read", "lab_results", requestId, {
               view: "findings",
               count: res.data.length,
             });
@@ -194,7 +206,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditAfter(request, auth, "read", "lab_results", {
+            auditAfter(request, auth, "read", "lab_results", requestId, {
               view: "items",
               reportLegacyId,
               count: res.data.length,
@@ -206,7 +218,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditCorePhiRead(request, auth, "patient_medications", res.data);
+            auditCorePhiRead(request, auth, "patient_medications", res.data, requestId);
             return finish(response, authMeta);
           }
           case "hospital_memberships": {
@@ -214,7 +226,9 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditAfter(request, auth, "read", "hospital_memberships", { count: res.data.length });
+            auditAfter(request, auth, "read", "hospital_memberships", requestId, {
+              count: res.data.length,
+            });
             return finish(response, authMeta);
           }
           case "queue_entries": {
@@ -222,7 +236,9 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditAfter(request, auth, "read", "queue_entries", { count: res.data.length });
+            auditAfter(request, auth, "read", "queue_entries", requestId, {
+              count: res.data.length,
+            });
             return finish(response, authMeta);
           }
           case "encounters":
@@ -241,7 +257,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
             if (res.error)
               return finish(jsonResponse({ error: res.error }, { status: 500 }), authMeta);
             const response = ok(res.data);
-            auditAfter(request, auth, "read", resource, { count: res.data.length });
+            auditAfter(request, auth, "read", resource, requestId, { count: res.data.length });
             return finish(response, authMeta);
           }
           default:
@@ -281,6 +297,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
         }
       },
       POST: async ({ request }) => {
+        const requestId = newRequestId(request);
         const blocked = productionBootHttpResponse();
         if (blocked) return blocked;
 
@@ -306,7 +323,7 @@ export const Route = createFileRoute("/api/hospital/phi")({
 
         const res = await upsertClinicalResource(auth, body.resource, body.rows);
         if (res.error) return jsonResponse({ error: res.error }, { status: 500 });
-        auditAfter(request, auth, "upsert", body.resource, { count: body.rows.length });
+        auditAfter(request, auth, "upsert", body.resource, requestId, { count: body.rows.length });
         return ok(res.data);
       },
     },
