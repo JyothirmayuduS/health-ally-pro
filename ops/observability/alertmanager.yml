@@ -2,13 +2,14 @@ global:
   resolve_timeout: 5m
 
 route:
-  receiver: default
+  receiver: webhook-test
   group_by: [alertname]
-  group_wait: 30s
-  group_interval: 5m
-  repeat_interval: 4h
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 2h
 
 receivers:
-  - name: default
-    # Local/dev: log-only. Wire Slack/PagerDuty webhook URLs via env in production.
-    webhook_configs: []
+  - name: webhook-test
+    webhook_configs:
+      - url: http://alert-sink:8080/webhook
+        send_resolved: true

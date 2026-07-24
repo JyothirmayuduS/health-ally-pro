@@ -11,10 +11,15 @@ rule_files:
   - /etc/prometheus/alerts.yml
 
 scrape_configs:
+  # Scrape via Docker DNS service name (same compose network). Host header is "app:3000";
+  # vite preview allowedHosts must permit this (see vite.config.ts).
   - job_name: medora-app
     metrics_path: /api/metrics
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/metrics_bearer_token
     static_configs:
-      - targets: ["host.docker.internal:3001"]
+      - targets: ["app:3000"]
         labels:
           service: medora
           env: local

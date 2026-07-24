@@ -14,4 +14,13 @@ export default defineConfig({
     tailwindcss(),
     tsConfigPaths(),
   ],
+  // Prometheus scrapes via Docker DNS (Host: app:3000). Vite 7 rejects unknown hosts with 403.
+  preview: {
+    host: "0.0.0.0",
+    port: 3000,
+    allowedHosts: true,
+  },
+  server: {
+    allowedHosts: true,
+  },
 });

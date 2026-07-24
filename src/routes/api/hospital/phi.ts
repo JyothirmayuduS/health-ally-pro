@@ -83,9 +83,21 @@ export const Route = createFileRoute("/api/hospital/phi")({
       GET: async ({ request }) => {
         const started = performance.now();
         const requestId = newRequestId(request);
+        const blocked = productionBootHttpResponse();
+        const url = new URL(request.url);
+        const resource = url.searchParams.get("resource");
+        const requestedHospitalId = url.searchParams.get("hospitalId");
+        const reportLegacyId = url.searchParams.get("reportLegacyId");
+
         const finish = (
           res: Response,
-          extras?: { hospital_id?: string | null; user_id?: string | null; role?: string | null },
+          extras?: {
+            hospital_id?: string | null;
+            user_id?: string | null;
+            role?: string | null;
+            resource?: string | null;
+            error_code?: string | null;
+          },
         ) =>
           withRequestLog(request, started, res, {
             request_id: requestId,
@@ -94,25 +106,29 @@ export const Route = createFileRoute("/api/hospital/phi")({
             tenant_id: extras?.hospital_id ?? null,
             user_id: extras?.user_id ?? null,
             role: extras?.role ?? null,
+            resource: extras?.resource ?? resource ?? null,
+            error_code: extras?.error_code ?? null,
           });
 
-        const blocked = productionBootHttpResponse();
         if (blocked) return finish(blocked);
-
-        const url = new URL(request.url);
-        const resource = url.searchParams.get("resource");
-        const requestedHospitalId = url.searchParams.get("hospitalId");
-        const reportLegacyId = url.searchParams.get("reportLegacyId");
 
         const authz = await authorizePhiRead(request, requestedHospitalId);
         if (!authz.ok) {
-          return finish(jsonResponse({ error: authz.error }, { status: authz.status }));
+          return finish(jsonResponse({ error: authz.error }, { status: authz.status }), {
+            error_code:
+              authz.status === 403
+                ? "cross_tenant"
+                : authz.status === 401
+                  ? "auth_failed"
+                  : authz.error,
+          });
         }
         const { auth } = authz;
         const authMeta = {
           hospital_id: auth.hospitalId,
           user_id: auth.userId,
           role: auth.isStaff ? "staff" : "patient",
+          resource: resource ?? null,
         };
 
         switch (resource) {

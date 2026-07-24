@@ -1,9 +1,14 @@
 # Observability stack for Medora (local/staging)
-# Usage: docker compose -f docker-compose.observability.yml up -d
-# App metrics: scrape http://host.docker.internal:3001/api/metrics
-# Grafana: http://127.0.0.1:3002 (admin/admin — change in prod)
-# Prometheus: http://127.0.0.1:9090
-# Alertmanager: http://127.0.0.1:9093
+# Joins the app compose network so Prometheus scrapes `app:3000` over Docker DNS.
+# Usage (from repo root, with app already defined in docker-compose.yml):
+#   ./scripts/ensure-metrics-token.sh
+#   docker compose -f docker-compose.yml -f docker-compose.observability.yml up -d --build
+# Grafana: http://127.0.0.1:3010  Prometheus: :9090  Alertmanager: :9093
+
+networks:
+  default:
+    name: health-ally-pro-main_default
+    external: true
 
 services:
   prometheus:
@@ -11,13 +16,16 @@ services:
     volumes:
       - ./ops/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./ops/observability/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./ops/observability/metrics_bearer_token:/etc/prometheus/metrics_bearer_token:ro
     ports:
       - "9090:9090"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle
+    depends_on:
+      - alertmanager
+      - alert-sink
 
   alertmanager:
     image: prom/alertmanager:v0.27.0
@@ -25,6 +33,41 @@ services:
       - ./ops/observability/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
     ports:
       - "9093:9093"
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --web.external-url=http://127.0.0.1:9093
+    depends_on:
+      - alert-sink
+
+  alert-sink:
+    image: python:3.12-alpine
+    command:
+      - python
+      - -c
+      - |
+        from http.server import BaseHTTPRequestHandler, HTTPServer
+        import json, datetime, os
+        LOG = "/var/log/alert-sink/notifications.jsonl"
+        os.makedirs(os.path.dirname(LOG), exist_ok=True)
+        class H(BaseHTTPRequestHandler):
+          def do_POST(self):
+            n = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(n)
+            ts = datetime.datetime.utcnow().isoformat() + "Z"
+            try:
+              payload = json.loads(body.decode() or "{}")
+            except Exception:
+              payload = {"raw": body.decode(errors="replace")}
+            with open(LOG, "a") as f:
+              f.write(json.dumps({"received_at": ts, "path": self.path, "body": payload}) + "\n")
+            self.send_response(200); self.end_headers(); self.wfile.write(b'{"ok":true}')
+          def log_message(self, *a): pass
+        HTTPServer(("0.0.0.0", 8080), H).serve_forever()
+    volumes:
+      - ./ops/observability/alert-sink-logs:/var/log/alert-sink
+    expose:
+      - "8080"
 
   grafana:
     image: grafana/grafana:11.2.0

@@ -46,6 +46,10 @@ supabase/.temp/
 
 .env.docker
 
+# Observability secrets / sink logs (never commit tokens)
+ops/observability/metrics_bearer_token
+ops/observability/alert-sink-logs/
+
 # Binary UI evidence (keep JSON proofs)
 docs/evidence/**/*.png
 docs/evidence/**/*.jpg

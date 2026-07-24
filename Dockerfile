@@ -89,6 +89,7 @@ LABEL org.opencontainers.image.title="medora" \
   org.opencontainers.image.revision="${GIT_COMMIT}" \
   org.opencontainers.image.version="${BUILD_VERSION}" \
   org.opencontainers.image.created="${BUILT_AT}" \
+  org.opencontainers.image.source="https://github.com/JyothirmayuduS/health-ally-pro" \
   org.opencontainers.image.description="Medora hospital OS — Cloudflare Workers preview runtime"
 
 STOPSIGNAL SIGTERM

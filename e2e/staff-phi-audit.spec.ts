@@ -19,8 +19,17 @@ const DEMO_SESSION = {
 /**
  * P1.4 — Staff desk flow: login → specialty chart desk → PHI audit row →
  * CSV export → export itself audited.
+ *
+ * QUARANTINED (see e2e/QUARANTINE.md): owner=platform-eng,
+ * issue=GH#e2e-phi-audit-fixtures, expiry=2026-08-24.
+ * Requires live Supabase demo fixtures not present on all CI runners.
  */
 test.describe("Staff specialty chart PHI audit", () => {
+  test.skip(
+    !process.env.E2E_INCLUDE_QUARANTINE,
+    "Quarantined until 2026-08-24 — set E2E_INCLUDE_QUARANTINE=1 to run (e2e/QUARANTINE.md)",
+  );
+
   test("login, specialty desk, chart write audited, CSV export audited", async ({
     page,
     request,

@@ -2,23 +2,42 @@ groups:
   - name: medora
     rules:
       - alert: MedoraAuditDlqOpen
-        expr: medora_audit_dlq_open_failures > 0
-        for: 1m
+        expr: medora_audit_dlq_open_failures >= 1
+        for: 30s
         labels:
           severity: critical
         annotations:
           summary: "Audit DLQ has open failures"
-      - alert: MedoraHttpErrorRateHigh
-        expr: medora_http_error_rate_5m > 0.05
-        for: 5m
+          description: "open_failures={{ $value }}"
+
+      - alert: MedoraAppointmentsLatencyWarn
+        expr: medora_resource_latency_ms{resource="appointments",quantile="0.95"} > 400
+        for: 2m
         labels:
           severity: warning
         annotations:
-          summary: "HTTP error rate > 5% over 5m"
-      - alert: MedoraHighLatencyP95
-        expr: medora_http_latency_ms{quantile="0.95"} > 800
-        for: 10m
+          summary: "Appointments p95 above warn threshold (400ms)"
+
+      - alert: MedoraAppointmentsLatencyCritical
+        expr: medora_resource_latency_ms{resource="appointments",quantile="0.95"} > 800
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Appointments p95 above critical threshold (800ms)"
+
+      - alert: MedoraAppDown
+        expr: up{job="medora-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Medora Prometheus target is down"
+
+      - alert: MedoraAuthAnomaly
+        expr: increase(medora_auth_failures_total[5m]) > 20
+        for: 1m
         labels:
           severity: warning
         annotations:
-          summary: "p95 latency above 800ms"
+          summary: "Elevated authentication failures in 5m window"

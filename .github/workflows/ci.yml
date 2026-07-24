@@ -99,14 +99,20 @@ jobs:
           npm run test:smoke
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps
-      - name: Playwright E2E
-        # Soft-fail until staff-phi-audit e2e has stable CI Supabase fixtures.
-        continue-on-error: true
+      - name: Playwright E2E (blocking)
         env:
           VITE_ALLOW_DEMO_AUTH: "true"
+          ALLOW_DEMO_PERSIST: "true"
           VITE_APP_ENV: development
           VITE_MEDORA_LICENSE_KEY: "ci-evaluation-license"
         run: npm run test:e2e
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
 
   docker:
     name: docker build + scan + sbom
@@ -193,37 +199,57 @@ jobs:
         with:
           name: medora-sbom
           path: medora-sbom.cdx.json
-      - name: Cosign keyless sign (optional)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        continue-on-error: true
+      - name: Cosign keyless install
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/cursor/'))
         uses: sigstore/cosign-installer@v3
       - name: Login GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/cursor/'))
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Build and push immutable digest tags
+        id: push
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/cursor/'))
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
             ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
-            ${{ steps.meta.outputs.image }}:latest
+            ${{ steps.meta.outputs.image }}:sha-${{ steps.meta.outputs.version }}
           build-args: |
             GIT_COMMIT=${{ github.sha }}
             BUILD_VERSION=${{ steps.meta.outputs.version }}
             BUILT_AT=${{ steps.meta.outputs.built_at }}
             BUILD_DIRTY=false
             BUILD_ENVIRONMENT=ci
-      - name: Sign pushed image
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        continue-on-error: true
+      - name: Sign + attest immutable digest
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/cursor/')) && steps.push.outcome == 'success'
+        env:
+          COSIGN_YES: "true"
         run: |
-          cosign sign --yes "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" || true
+          set -euo pipefail
+          DIGEST="${{ steps.push.outputs.digest }}"
+          IMAGE="${{ steps.meta.outputs.image }}"
+          echo "Signing digest ${IMAGE}@${DIGEST}"
+          cosign sign --yes "${IMAGE}@${DIGEST}"
+          cosign attest --yes --predicate medora-sbom.cdx.json --type cyclonedx "${IMAGE}@${DIGEST}" || \
+            cosign attest --yes --predicate medora-sbom.cdx.json --type spdxjson "${IMAGE}@${DIGEST}" || true
+          cosign verify \
+            --certificate-identity-regexp "https://github.com/.+/-/.github/workflows/ci.yml@.*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            "${IMAGE}@${DIGEST}" | tee cosign-verify.txt
+          cosign tree "${IMAGE}@${DIGEST}" | tee cosign-tree.txt
+      - uses: actions/upload-artifact@v4
+        if: always() && github.event_name == 'push'
+        with:
+          name: cosign-verify
+          path: |
+            cosign-verify.txt
+            cosign-tree.txt
+          if-no-files-found: ignore
 
   deploy:
     name: production deploy (manual approval)
