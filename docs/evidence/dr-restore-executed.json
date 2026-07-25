@@ -1,32 +1,104 @@
 {
-  "at": "2026-07-23T21:41:07.570739+00:00",
-  "database_pitr_restore": {
-    "status": "pending",
-    "reason": "No Supabase PITR restore window executed; requires operator-approved restore on project wsnpwyqypgclsclktoyf"
+  "drill_name": "Supabase PITR disaster recovery",
+  "status": "BLOCKED_PENDING_RESTORE_TARGET",
+  "completed_at": "2026-07-24T12:56:00Z",
+  "production_project": {
+    "ref": "wsnpwyqypgclsclktoyf",
+    "name": "health_ally_pro",
+    "region": "ap-south-1",
+    "status": "ACTIVE_HEALTHY",
+    "touched": false,
+    "note": "No in-place restore-pitr and no production overwrite were attempted."
   },
-  "docker_rebuild": {
-    "status": "executed_prior",
-    "image": "medora-app:7b4d0b9-20260723T183213Z-slim",
-    "size_disk": "1.31GB",
-    "evidence": "docs/evidence/image-size-cve-progress.json",
-    "note": "Full clean-tree rebuild for commit 398d69e was started but interrupted after long buffered build; prior slim rebuild succeeded and is the recovery artifact."
+  "recovery_start": "2026-07-24T12:48:00Z",
+  "database_available": null,
+  "application_connected": null,
+  "smoke_complete": null,
+  "restore_duration_ms": null,
+  "rto_target_ms": 14400000,
+  "rto_achieved_ms": null,
+  "rpo_target": "<=1h enterprise goal / <=24h pilot",
+  "rpo_achieved": null,
+  "recovery_point_utc": null,
+  "temporary_environment": null,
+  "blockers": [
+    {
+      "id": "no_supabase_access_token",
+      "detail": "SUPABASE_ACCESS_TOKEN missing; cannot list backups or call Management API."
+    },
+    {
+      "id": "dashboard_login_required",
+      "detail": "Restore to a New Project is dashboard-only and requires authenticated Supabase session; browser landed on sign-in."
+    },
+    {
+      "id": "in_place_pitr_forbidden",
+      "detail": "POST /database/backups/restore-pitr restores the live project and was intentionally not used."
+    },
+    {
+      "id": "branching_not_pitr",
+      "detail": "Supabase branches are data-less (with_data=false); existing preview branch julpgmotykvwtnyqhxvf is not a PITR data restore."
+    }
+  ],
+  "how_to_unblock": [
+    "Create a Personal Access Token at https://supabase.com/dashboard/account/tokens",
+    "Store it only in gitignored .secrets/supabase.env as SUPABASE_ACCESS_TOKEN=... (do not paste into chat)",
+    "Confirm physical backups / PITR on project wsnpwyqypgclsclktoyf (Database → Backups)",
+    "In Dashboard: Database → Backups → Restore to a New Project → choose PITR timestamp (e.g. T-15m UTC)",
+    "Reply with the new temporary project ref only (no secrets)",
+    "Agent will then verify tables/RLS/RPCs/indexes/audit/DLQ and run non-prod app smoke against that ref only"
+  ],
+  "source_baseline_read_only": {
+    "checked_at": "2026-07-24T12:48:35Z",
+    "counts": {
+      "hospitals": 1,
+      "memberships": 8,
+      "patients": 81,
+      "appointments": 83,
+      "lab_results": 85,
+      "audit_logs": 2734,
+      "audit_write_failures": 19,
+      "open_dlq": 0
+    },
+    "rls_enabled": {
+      "hospitals": true,
+      "hospital_memberships": true,
+      "patients": true,
+      "appointments": true,
+      "lab_results": true,
+      "audit_logs": true,
+      "audit_write_failures": true
+    },
+    "rpcs_present": [
+      "audit_write_failures_health",
+      "resolve_audit_write_failure"
+    ],
+    "audit_health": {
+      "source": "database_rpc",
+      "open_failures": 0,
+      "alert": false,
+      "ok": true
+    },
+    "appointments_indexes": [
+      "appointments_pkey",
+      "idx_appointments_doctor",
+      "idx_appointments_hospital_scheduled",
+      "idx_appointments_patient"
+    ],
+    "migration_count": 26,
+    "latest_migration": "20260723132326_audit_dlq_lifecycle_appointments_index"
   },
-  "docker_redeploy_rto_sample": {
-    "status": "executed",
-    "seconds": 85,
-    "image": "medora-app:7b4d0b9-20260723T183213Z-slim",
-    "result": "operational, audit_dlq database_rpc open_failures=0"
+  "verification_results": {
+    "tenant_hospital_row": "NOT_RUN_NO_RESTORE_TARGET",
+    "staff_memberships": "NOT_RUN_NO_RESTORE_TARGET",
+    "clinical_counts": "NOT_RUN_NO_RESTORE_TARGET",
+    "audit_logs_readable": "NOT_RUN_NO_RESTORE_TARGET",
+    "dlq_health_database_rpc": "NOT_RUN_NO_RESTORE_TARGET",
+    "rls_core_phi": "NOT_RUN_NO_RESTORE_TARGET",
+    "rpcs": "NOT_RUN_NO_RESTORE_TARGET",
+    "migration_history": "NOT_RUN_NO_RESTORE_TARGET",
+    "appointments_index": "NOT_RUN_NO_RESTORE_TARGET",
+    "app_smoke_non_prod": "NOT_RUN_NO_RESTORE_TARGET"
   },
-  "worker_redeploy": {
-    "status": "pending",
-    "reason": "CLOUDFLARE_API_TOKEN not used in this session for wrangler deploy"
-  },
-  "RTO_measured": {
-    "docker_image_available_redeploy": "use compose up with prior immutable tag; historically <5m when image local",
-    "full_image_rebuild": "prior slim build completed in this milestone (see docker-hardened / slim evidence); typically 10\u201320m on this host"
-  },
-  "RPO": {
-    "database": "Supabase managed backups / PITR plan-dependent \u2014 not drill-verified",
-    "app": "git tags + immutable image tags; RPO\u22480 for app code"
-  }
+  "secrets_or_phi_in_evidence": false,
+  "classification_impact": "PITR restore drill remains an open production-readiness blocker"
 }

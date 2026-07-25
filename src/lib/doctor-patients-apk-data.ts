@@ -224,6 +224,24 @@ export const PANEL_PATIENTS: PanelPatient[] = [
     rxCount: 1,
     lastSeen: "3 weeks ago",
   },
+  {
+    id: "p6",
+    name: "Ahaan Mehta",
+    initials: "AM",
+    condition: "Well-child · Immunization",
+    age: 1,
+    gender: "M",
+    patientRef: "MRN-100239",
+    status: "Stable",
+    timeline: "Today · Vaccination visit · Mother Priya",
+    accent: "#E8EFE6",
+    categories: ["all", "today", "upcoming"],
+    pills: ["Overview", "Vaccines"],
+    priority: 2,
+    visits: 4,
+    rxCount: 0,
+    lastSeen: "Today",
+  },
 ];
 
 export const PANEL_TASKS: PanelTask[] = [

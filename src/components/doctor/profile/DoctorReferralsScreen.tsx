@@ -141,30 +141,41 @@ function ReferralDetailBody({
         <p className="text-sm leading-relaxed text-[#1B3B2E]">{referral.clinicalReason}</p>
       </ProfileSectionCard>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-[18px] border border-[#EDEAE6] bg-white p-4">
-          <p className="text-[10px] font-semibold tracking-wide text-[#8A8F8C]">TO</p>
-          <p className="mt-1 font-semibold text-[#1B3B2E]">{referral.specialty}</p>
+      {/* Consolidated meta — one clean card instead of three boxes */}
+      <div className="divide-y divide-[#F0EDE8] rounded-[18px] border border-[#EDEAE6] bg-white">
+        <div className="flex items-baseline justify-between gap-3 px-4 py-3">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[#8A8F8C]">To</span>
+          <span className="text-right text-sm font-semibold text-[#1B3B2E]">
+            {referral.specialty}
+          </span>
         </div>
-        <div className="rounded-[18px] border border-[#EDEAE6] bg-white p-4">
-          <p className="text-[10px] font-semibold tracking-wide text-[#8A8F8C]">FROM</p>
-          <p className="mt-1 font-semibold text-[#1B3B2E]">{referral.fromDoctor}</p>
+        <div className="flex items-baseline justify-between gap-3 px-4 py-3">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[#8A8F8C]">
+            From
+          </span>
+          <span className="text-right text-sm font-semibold text-[#1B3B2E]">
+            {referral.fromDoctor}
+          </span>
         </div>
+        <div className="flex items-baseline justify-between gap-3 px-4 py-3">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[#8A8F8C]">
+            Facility
+          </span>
+          <span className="text-right text-sm font-medium text-[#1B3B2E]">{referral.facility}</span>
+        </div>
+        <button
+          type="button"
+          onClick={onOpenDocument}
+          className="flex w-full items-baseline justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-[#FAF9F7]"
+        >
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-[#8A8F8C]">
+            Document
+          </span>
+          <span className="text-right text-sm font-semibold text-[#1B3B2E]">
+            {referral.linkedDocument} →
+          </span>
+        </button>
       </div>
-
-      <div className="rounded-[18px] border border-[#EDEAE6] bg-white p-4">
-        <p className="text-[10px] font-semibold tracking-wide text-[#8A8F8C]">FACILITY</p>
-        <p className="mt-1 text-sm font-medium text-[#1B3B2E]">{referral.facility}</p>
-      </div>
-
-      <button
-        type="button"
-        onClick={onOpenDocument}
-        className="w-full rounded-[18px] border border-[#EDEAE6] bg-white p-4 text-left transition-colors hover:border-[#B8735D]/40 hover:bg-[#FAF9F7]"
-      >
-        <p className="text-[10px] font-semibold tracking-wide text-[#8A8F8C]">LINKED DOCUMENT</p>
-        <p className="mt-1 text-sm font-semibold text-[#B8735D]">{referral.linkedDocument} →</p>
-      </button>
 
       <ProfileSectionCard
         id="referral-history"
@@ -219,64 +230,51 @@ function ReferralCard({
   onReject?: (id: string) => void;
 }) {
   const Icon = referral.direction === "sent" ? Send : Inbox;
-  const iconBg = referral.direction === "sent" ? "#E8EFE6" : "#F0DDD6";
+  const incoming = referral.direction === "received";
   const showActions = canRespondToReferral(referral) && onAccept && onReject;
 
   return (
     <div
       className={cn(
-        "block w-full overflow-hidden rounded-[20px] border bg-white text-left shadow-[0_2px_14px_rgba(27,59,46,0.05)] transition-shadow hover:shadow-md",
-        selected ? "border-[#B8735D] ring-2 ring-[#B8735D]/20" : "border-[#EDEAE6]",
+        "overflow-hidden rounded-[18px] border bg-white shadow-[0_1px_3px_rgba(27,59,46,0.04)] transition",
+        selected
+          ? "border-[#1B3B2E] ring-1 ring-[#1B3B2E]/15"
+          : "border-[#EDEAE6] hover:border-[#C8C2BA]",
       )}
     >
       <button
         type="button"
         onClick={() => onOpen(referral.id)}
-        className="block w-full text-left active:scale-[0.99]"
+        className="block w-full p-4 text-left transition-colors hover:bg-[#FAFAF8]"
       >
-        <div className="p-4">
-          <div className="flex items-start gap-3">
-            <span
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-full"
-              style={{ backgroundColor: iconBg }}
-            >
-              <Icon className="h-[18px] w-[18px] text-[#1B3B2E]" strokeWidth={1.75} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="font-semibold text-[#1B3B2E]">{referral.patientName}</p>
-                  <p className="text-xs text-[#8A8F8C]">{referral.facility}</p>
-                </div>
-                <span
-                  className={cn(
-                    "shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold",
-                    STATUS_STYLE[referral.status],
-                  )}
-                >
-                  {referral.status}
-                </span>
-              </div>
-              <p className="mt-2 line-clamp-2 text-sm text-[#1B3B2E]">{referral.clinicalReason}</p>
-              <p className="mt-1 text-xs text-[#8A8F8C]">
-                {referral.direction === "sent" ? "To" : "From"} {referral.specialty} · From{" "}
-                {referral.fromDoctor}
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 flex items-center gap-1.5 text-xs text-[#8A8F8C]">
-            {referral.status === "Pending" ? (
-              <Clock className="h-3.5 w-3.5" strokeWidth={1.75} />
-            ) : (
-              <Check className="h-3.5 w-3.5 text-[#7A9B7E]" strokeWidth={1.75} />
+        <div className="flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#8A8F8C]">
+            <Icon className="h-3.5 w-3.5" strokeWidth={2} />
+            {incoming ? "Incoming" : "Outgoing"} · {referral.specialty}
+          </span>
+          <span
+            className={cn(
+              "shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold",
+              STATUS_STYLE[referral.status],
             )}
-            <span>{referral.statusDetail}</span>
-          </div>
+          >
+            {referral.status}
+          </span>
+        </div>
+        <p className="mt-2 font-semibold text-[#1B3B2E]">{referral.patientName}</p>
+        <p className="mt-0.5 line-clamp-2 text-sm text-[#5C6B63]">{referral.clinicalReason}</p>
+        <div className="mt-2.5 flex items-center gap-1.5 text-xs text-[#8A8F8C]">
+          {referral.status === "Pending" ? (
+            <Clock className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} />
+          ) : (
+            <Check className="h-3.5 w-3.5 shrink-0 text-[#7A9B7E]" strokeWidth={1.75} />
+          )}
+          <span className="truncate">{referral.statusDetail}</span>
         </div>
       </button>
       {showActions && (
         <div
-          className="border-t border-[#F0EDE8] bg-[#FAFAF8] px-4 py-3"
+          className="border-t border-[#F0EDE8] bg-[#FAFAF8] px-4 py-2.5"
           onClick={(e) => e.stopPropagation()}
         >
           <ReferralAcceptRejectBar
@@ -286,13 +284,6 @@ function ReferralCard({
           />
         </div>
       )}
-      <button
-        type="button"
-        onClick={() => onOpen(referral.id)}
-        className="w-full border-t border-[#F0EDE8] bg-[#FAFAF8] px-4 py-3 text-center text-xs font-semibold text-[#1B3B2E] hover:bg-[#F5F3F0]"
-      >
-        Tap for full referral history
-      </button>
     </div>
   );
 }
@@ -357,6 +348,14 @@ export function DoctorReferralsWorkspace({
 
   const awaiting = referralsAwaitingCount();
   const filtered = useMemo(() => filterReferrals(store.referrals, tab), [store.referrals, tab]);
+  const counts = useMemo(() => {
+    const all = store.referrals;
+    return {
+      awaiting: all.filter((r) => r.direction === "received" && r.status === "Pending").length,
+      sent: all.filter((r) => r.direction === "sent").length,
+      resolved: all.filter((r) => r.status !== "Pending").length,
+    };
+  }, [store.referrals]);
 
   const selectedReferral =
     activeReferralId != null
@@ -463,6 +462,44 @@ export function DoctorReferralsWorkspace({
               "lg:sticky lg:top-4 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto lg:pr-1",
           )}
         >
+          {/* Triage summary — at-a-glance workload */}
+          <div className="mb-3 grid grid-cols-3 gap-2">
+            {(
+              [
+                { key: "pending" as FilterTab, label: "Awaiting you", value: counts.awaiting, accent: true },
+                { key: "sent" as FilterTab, label: "Sent", value: counts.sent, accent: false },
+                { key: "history" as FilterTab, label: "Resolved", value: counts.resolved, accent: false },
+              ]
+            ).map((tile) => {
+              const active = tab === tile.key;
+              return (
+                <button
+                  key={tile.key}
+                  type="button"
+                  onClick={() => setTab(tile.key)}
+                  className={cn(
+                    "rounded-2xl border px-3 py-2.5 text-left transition-colors",
+                    active
+                      ? "border-[#1B3B2E] bg-[#1B3B2E] text-white"
+                      : tile.accent && tile.value > 0
+                        ? "border-[#1B3B2E]/25 bg-white text-[#1B3B2E] hover:border-[#1B3B2E]/50"
+                        : "border-[#EDEAE6] bg-white text-[#5C6B63] hover:border-[#C8C2BA]",
+                  )}
+                >
+                  <p className="text-2xl font-semibold leading-none tabular-nums">{tile.value}</p>
+                  <p
+                    className={cn(
+                      "mt-1 text-[11px] font-medium",
+                      active ? "text-white/80" : "text-[#8A8F8C]",
+                    )}
+                  >
+                    {tile.label}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+
           <div className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {FILTERS.map((f) => (
               <button

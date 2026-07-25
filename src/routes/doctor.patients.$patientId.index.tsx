@@ -15,6 +15,8 @@ import { ChartDetailSheet, type ChartSheetDetail } from "@/components/doctor/Cha
 import { BodyAnatomyMarker } from "@/components/clinical/BodyAnatomyMarker";
 import { DoctorAdherenceInbox } from "@/components/doctor/DoctorAdherenceInbox";
 import { PatientChartActionRail } from "@/components/doctor/PatientChartActionRail";
+import { PatientProfileWorkspace } from "@/components/patient-management/PatientProfileWorkspace";
+import { ChartVaccinesPanel, vaccineDueCount } from "@/components/doctor/immunizations/ChartVaccinesPanel";
 import {
   HistoryDocumentsPanel,
   HistoryTabBar,
@@ -54,6 +56,7 @@ const STATUS_BADGE = {
 const HISTORY_TAB_DEFS = [
   { id: "visits", label: "Visits" },
   { id: "rx", label: "Rx" },
+  { id: "vaccines", label: "Vaccines" },
   { id: "documents", label: "Documents" },
   { id: "vitals", label: "Vitals" },
 ] as const;
@@ -79,6 +82,7 @@ function PatientChart() {
   const historyTabs = [
     { id: "visits" as const, label: "Visits", count: historyVisits.length },
     { id: "rx" as const, label: "Rx", count: historyRx.length },
+    { id: "vaccines" as const, label: "Vaccines", count: vaccineDueCount(patientId) },
     { id: "documents" as const, label: "Documents", count: historyDocuments.length },
     { id: "vitals" as const, label: "Vitals", count: historyVitals.length },
   ];
@@ -86,6 +90,10 @@ function PatientChart() {
   useEffect(() => {
     if (section === "open-items") {
       document.getElementById("open-items")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    if (section === "vaccines") {
+      setHistoryTab("vaccines");
+      document.getElementById("chart-history")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [section]);
 
@@ -237,6 +245,19 @@ function PatientChart() {
 
       <PatientChartActionRail patientId={patientId} />
 
+      <section
+        id="patient-management-profile"
+        className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 shadow-[0_2px_14px_rgba(27,59,46,0.05)]"
+      >
+        <p className="text-sm font-semibold text-[#1B3B2E] mb-3">Registration profile</p>
+        <PatientProfileWorkspace
+          patientId={patientId}
+          mode="staff"
+          embedded
+          defaultTab="allergies"
+        />
+      </section>
+
       <div className="lg:hidden">
         <BodyAnatomyMarker markers={latestVitalsMarkers} readOnly />
         <Link
@@ -383,13 +404,13 @@ function PatientChart() {
             </section>
           )}
 
-          <section className="space-y-3">
+          <section id="chart-history" className="space-y-3">
             <article className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 shadow-[0_2px_14px_rgba(27,59,46,0.05)]">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-semibold text-[#1B3B2E]">History</h2>
                   <p className="mt-0.5 text-xs text-[#8A8F8C]">
-                    Visits, prescriptions, documents &amp; vitals
+                    Visits, Rx, vaccines, documents &amp; vitals
                   </p>
                 </div>
                 <Link
@@ -416,6 +437,8 @@ function PatientChart() {
                   renderHistoryEntries(historyRx, (entry) =>
                     setSheetDetail({ type: "medication", id: entry.medicationId }),
                   )}
+
+                {historyTab === "vaccines" && <ChartVaccinesPanel patientId={patientId} />}
 
                 {historyTab === "documents" && (
                   <HistoryDocumentsPanel

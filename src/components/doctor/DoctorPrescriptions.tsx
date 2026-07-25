@@ -69,7 +69,9 @@ import {
 import { panelPatientToSnapshot, pushPatientPrescription } from "@/lib/patient-prescription-store";
 import { LANGUAGE_OPTIONS } from "@/lib/doctor-prescription-i18n";
 import { resolvePatientId } from "@/lib/shared/patients";
-import { formatAllergieList, parseAllergieSubstances } from "@/lib/patient-allergy";
+import { formatAllergieList, resolveAllergySubstances } from "@/lib/patient-allergy";
+
+
 import {
   discontinueMed,
   durationDaysFromChart,
@@ -111,7 +113,7 @@ function panelToPharmacy(p: PanelPatient): DoctorRxPatient {
     age: p.age,
     sex: p.gender,
     phone: "",
-    allergies: parseAllergieSubstances(p.allergyWarning),
+    allergies: resolveAllergySubstances({ legacyWarning: p.allergyWarning }),
   };
 }
 
@@ -162,6 +164,7 @@ export default function DoctorPrescriptions({
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [medsExpanded, setMedsExpanded] = useState(true);
   const [aiExpanded, setAiExpanded] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const [drugSearch, setDrugSearch] = useState("");
   const [diagnosisSearch, setDiagnosisSearch] = useState("");
   const [sending, setSending] = useState(false);
@@ -532,7 +535,7 @@ export default function DoctorPrescriptions({
   };
 
   return (
-    <div className="mx-auto w-full min-w-0 max-w-3xl overflow-x-hidden pb-4 lg:max-w-4xl lg:pb-8 [scroll-padding-bottom:calc(5.5rem+env(safe-area-inset-bottom))]">
+    <div className="mx-auto w-full min-w-0 max-w-3xl overflow-x-hidden pb-4 lg:max-w-[1400px] lg:pb-8 [scroll-padding-bottom:calc(5.5rem+env(safe-area-inset-bottom))]">
       {/* Preview action — page title lives in workspace tabs */}
       <div className="mb-4 flex items-center justify-end gap-3">
         <h1 className="sr-only">Write prescription</h1>
@@ -590,7 +593,8 @@ export default function DoctorPrescriptions({
         </div>
       )}
 
-      <div className="space-y-4 sm:space-y-5">
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-6">
+        <div className="min-w-0 space-y-4 sm:space-y-5">
         {/* Patient card */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
           <div className="flex items-start justify-between gap-3">
@@ -627,7 +631,7 @@ export default function DoctorPrescriptions({
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span className="break-words">
                 <span className="font-semibold">Known allergy:</span>{" "}
-                {formatAllergieList(parseAllergieSubstances(patient.allergyWarning))}
+                {formatAllergieList(resolveAllergySubstances({ legacyWarning: patient.allergyWarning }))}
               </span>
             </div>
           )}
@@ -944,6 +948,28 @@ export default function DoctorPrescriptions({
           </p>
         </section>
 
+        {/* Dispensing & options — progressive disclosure */}
+        <div>
+          <button
+            type="button"
+            onClick={() => setAdvancedOpen((o) => !o)}
+            className="flex min-h-[48px] w-full items-center justify-between rounded-2xl border border-[#EDEAE6] bg-white px-4 py-3 text-left shadow-sm"
+          >
+            <span className="flex items-center gap-2 text-sm font-semibold text-[#1B3B2E]">
+              <Building2 className="h-4 w-4 text-[#8A8F8C]" />
+              Dispensing &amp; options
+              <span className="text-xs font-normal text-[#ADADAD]">
+                validity · type · pharmacy · language
+              </span>
+            </span>
+            {advancedOpen ? (
+              <ChevronUp className="h-4 w-4 text-[#8A8F8C]" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-[#8A8F8C]" />
+            )}
+          </button>
+          {advancedOpen ? (
+            <div className="mt-3 space-y-4">
         {/* Language */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
           <label className="flex min-h-[44px] items-center justify-between gap-3">
@@ -1069,165 +1095,9 @@ export default function DoctorPrescriptions({
             />
           </label>
         </section>
-
-        {/* Desktop — full checklist */}
-        <section className="hidden rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm lg:block">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
-            Ready to send checklist
-          </p>
-
-          <ul className="mt-3 space-y-2">
-            <li className="flex items-start gap-2 text-sm">
-              {draft.diagnosis.trim() ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
-              ) : (
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
-              )}
-              <span className={draft.diagnosis.trim() ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
-                <span className="font-semibold">Diagnosis</span>
-                {draft.diagnosis.trim()
-                  ? ` — ${draft.diagnosis}`
-                  : " — required. Add diagnosis above."}
-              </span>
-            </li>
-            <li className="flex items-start gap-2 text-sm">
-              {draft.lines.length > 0 ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
-              ) : (
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
-              )}
-              <span className={draft.lines.length > 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
-                <span className="font-semibold">Medication</span>
-                {draft.lines.length > 0
-                  ? ` — ${draft.lines.length} drug(s) on Rx`
-                  : " — required. Search and add at least one drug."}
-              </span>
-            </li>
-            <li className="flex items-start gap-2 text-sm">
-              {criticalAlerts.length === 0 ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
-              ) : (
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
-              )}
-              <span className={criticalAlerts.length === 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
-                <span className="font-semibold">Safety</span>
-                {criticalAlerts.length === 0
-                  ? " — no critical blocks"
-                  : ` — ${criticalAlerts.length} critical alert(s) must be resolved`}
-              </span>
-            </li>
-          </ul>
-
-          {criticalAlerts.length > 0 && (
-            <div className="mt-4 space-y-2 rounded-xl border border-[#C45C4A]/30 bg-[#FDF5F4] p-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-[#C45C4A]">
-                Must fix before sending
-              </p>
-              {criticalAlerts.map((alert) => (
-                <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
-                  <p className="text-sm font-semibold text-[#8B3A32]">{alert.title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
-                  {alert.id.startsWith("allergy-") && alert.id !== "allergy-doc" ? (
-                    <p className="mt-1 text-[11px] font-medium text-[#B8735D]">
-                      → Remove the conflicting drug from the medication list above.
-                    </p>
-                  ) : null}
-                </div>
-              ))}
             </div>
-          )}
-
-          {warningAlerts.length > 0 && (
-            <div className="mt-3 space-y-2 rounded-xl border border-[#E9A820]/30 bg-[#FFFBF0] p-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-[#92400E]">
-                Review (does not block send)
-              </p>
-              {warningAlerts.map((alert) => (
-                <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
-                  <p className="text-sm font-semibold text-[#92400E]">{alert.title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {canDispatch && (
-            <p className="mt-3 flex items-center gap-2 text-sm font-medium text-[#2C7873]">
-              <CheckCircle2 className="h-4 w-4" />
-              Ready to dispatch — use the buttons below.
-            </p>
-          )}
-        </section>
-
-        {/* Dispatch — desktop only (mobile uses sticky bar) */}
-        <section className="hidden rounded-2xl border border-[#1B3B2E]/15 bg-gradient-to-b from-[#F4FAF8] to-white p-4 shadow-sm sm:p-5 lg:block">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
-                Dispatch e-prescription
-              </p>
-              <p className="mt-1 text-sm text-[#5C635F]">
-                Send this signed Rx to the pharmacy desk, the patient app, or both.
-              </p>
-            </div>
-            <span className="mt-2 inline-flex w-fit items-center rounded-full bg-[#E8F4F1] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#1B3B2E] sm:mt-0">
-              {draft.lines.length} med · {draft.rxType}
-            </span>
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <button
-              type="button"
-              disabled={!canDispatch}
-              onClick={() => void dispatchPrescription("pharmacy")}
-              className="flex min-h-[72px] flex-col items-start gap-2 rounded-2xl border border-[#EDEAE6] bg-white p-4 text-left transition-colors hover:border-[#2C7873]/40 hover:bg-[#FAFDFC] disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              <span className="flex items-center gap-2 text-sm font-semibold text-[#1B3B2E]">
-                <Building2 className="h-4 w-4 text-[#2C7873]" />
-                Send to pharmacy
-              </span>
-              <span className="text-xs leading-snug text-[#8A8F8C]">
-                {selectedPharmacy?.name ?? "Pharmacy desk"}
-                {selectedPharmacy?.distance ? ` · ${selectedPharmacy.distance}` : ""}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              disabled={!canDispatch}
-              onClick={() => void dispatchPrescription("patient")}
-              className="flex min-h-[72px] flex-col items-start gap-2 rounded-2xl border border-[#EDEAE6] bg-white p-4 text-left transition-colors hover:border-[#B8735D]/40 hover:bg-[#FDF8F5] disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              <span className="flex items-center gap-2 text-sm font-semibold text-[#1B3B2E]">
-                <Smartphone className="h-4 w-4 text-[#B8735D]" />
-                Send to patient
-              </span>
-              <span className="text-xs leading-snug text-[#8A8F8C]">
-                {patient.name} · visible in patient app under My Prescriptions
-              </span>
-            </button>
-          </div>
-
-          <button
-            type="button"
-            disabled={!canDispatch}
-            onClick={() => void dispatchPrescription("both")}
-            className="mt-3 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[#1B3B2E] text-sm font-semibold text-white transition-colors hover:bg-[#2C7873] disabled:cursor-not-allowed disabled:opacity-45"
-          >
-            <Send className="h-4 w-4" />
-            {sending ? "Sending prescription…" : "Send to pharmacy & patient"}
-          </button>
-
-          {!canDispatch && (
-            <p className="mt-3 text-center text-xs text-[#8A8F8C]">
-              {missingFields.length > 0
-                ? `Complete: ${missingFields.join(", ")}`
-                : criticalAlerts.length > 0
-                  ? "Fix critical safety alerts in the checklist above"
-                  : "Complete the checklist above to enable send"}
-            </p>
-          )}
-        </section>
+          ) : null}
+        </div>
 
         {/* AI — collapsible */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white shadow-sm">
@@ -1264,6 +1134,212 @@ export default function DoctorPrescriptions({
           )}
           aria-hidden
         />
+        </div>
+
+        {/* Sticky Rx summary + dispatch rail — desktop */}
+        <aside className="hidden lg:sticky lg:top-4 lg:block lg:self-start lg:space-y-4">
+          {/* Live Rx summary */}
+          <div className="overflow-hidden rounded-2xl border border-[#1B3B2E]/15 bg-white shadow-sm">
+            <div className="flex items-center gap-2.5 border-b border-[#EDEAE6] bg-gradient-to-r from-[#F4FAF8] to-white px-4 py-3">
+              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#1B3B2E] text-white">
+                <ClipboardList className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-[#1B3B2E]">Prescription</p>
+                <p className="truncate text-[11px] text-[#8A8F8C]">
+                  {patient.name} · {patient.age}y {patient.gender === "M" ? "M" : "F"} ·{" "}
+                  {draft.lines.length} med · {draft.rxType}
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 px-4 py-3.5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">
+                  Diagnosis
+                </p>
+                <p
+                  className={cn(
+                    "mt-0.5 text-sm",
+                    draft.diagnosis.trim()
+                      ? "font-medium text-[#1B3B2E]"
+                      : "italic text-[#C45C4A]",
+                  )}
+                >
+                  {draft.diagnosis.trim() ? draft.diagnosis : "Not set — required"}
+                  {draft.diagnosisIcd ? (
+                    <span className="ml-1 font-mono text-xs text-[#8A8F8C]">
+                      {draft.diagnosisIcd}
+                    </span>
+                  ) : null}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">
+                  Medications ({draft.lines.length})
+                </p>
+                {draft.lines.length === 0 ? (
+                  <p className="mt-0.5 text-sm italic text-[#C45C4A]">None added — required</p>
+                ) : (
+                  <ul className="mt-1 space-y-1.5">
+                    {draft.lines.map((line) => {
+                      const d = DRUGS.find((x) => x.id === line.drug_id);
+                      return (
+                        <li key={line.key} className="text-[13px] leading-snug">
+                          <span className="font-medium text-[#1B3B2E]">
+                            {d ? d.generic_name : line.drug_id}
+                          </span>
+                          <span className="ml-1 text-xs text-[#8A8F8C]">
+                            {d?.strength ? `${d.strength} · ` : ""}
+                            {line.frequency} · {line.durationDays}d
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Ready-to-send checklist */}
+          <div className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Ready to send
+            </p>
+            <ul className="mt-3 space-y-2">
+              <li className="flex items-start gap-2 text-sm">
+                {draft.diagnosis.trim() ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
+                ) : (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
+                )}
+                <span className={draft.diagnosis.trim() ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
+                  <span className="font-semibold">Diagnosis</span>
+                  {draft.diagnosis.trim() ? " added" : " — required"}
+                </span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                {draft.lines.length > 0 ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
+                ) : (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
+                )}
+                <span className={draft.lines.length > 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
+                  <span className="font-semibold">Medication</span>
+                  {draft.lines.length > 0
+                    ? ` — ${draft.lines.length} on Rx`
+                    : " — add at least one"}
+                </span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                {criticalAlerts.length === 0 ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
+                ) : (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
+                )}
+                <span className={criticalAlerts.length === 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
+                  <span className="font-semibold">Safety</span>
+                  {criticalAlerts.length === 0
+                    ? " — no blocks"
+                    : ` — ${criticalAlerts.length} critical`}
+                </span>
+              </li>
+            </ul>
+
+            {criticalAlerts.length > 0 && (
+              <div className="mt-4 space-y-2 rounded-xl border border-[#C45C4A]/30 bg-[#FDF5F4] p-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#C45C4A]">
+                  Must fix before sending
+                </p>
+                {criticalAlerts.map((alert) => (
+                  <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
+                    <p className="text-sm font-semibold text-[#8B3A32]">{alert.title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
+                    {alert.id.startsWith("allergy-") && alert.id !== "allergy-doc" ? (
+                      <p className="mt-1 text-[11px] font-medium text-[#B8735D]">
+                        → Remove the conflicting drug from the list.
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {warningAlerts.length > 0 && (
+              <div className="mt-3 space-y-2 rounded-xl border border-[#E9A820]/30 bg-[#FFFBF0] p-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#92400E]">
+                  Review (does not block)
+                </p>
+                {warningAlerts.map((alert) => (
+                  <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
+                    <p className="text-sm font-semibold text-[#92400E]">{alert.title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Dispatch */}
+          <div className="rounded-2xl border border-[#1B3B2E]/15 bg-gradient-to-b from-[#F4FAF8] to-white p-4 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Dispatch e-prescription
+            </p>
+            <div className="mt-3 grid gap-2">
+              <button
+                type="button"
+                disabled={!canDispatch}
+                onClick={() => void dispatchPrescription("pharmacy")}
+                className="flex items-center gap-2.5 rounded-xl border border-[#EDEAE6] bg-white px-3 py-2.5 text-left transition-colors hover:border-[#2C7873]/40 hover:bg-[#FAFDFC] disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Building2 className="h-4 w-4 shrink-0 text-[#2C7873]" />
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-[#1B3B2E]">
+                    Send to pharmacy
+                  </span>
+                  <span className="block truncate text-xs text-[#8A8F8C]">
+                    {selectedPharmacy?.name ?? "Pharmacy desk"}
+                    {selectedPharmacy?.distance ? ` · ${selectedPharmacy.distance}` : ""}
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
+                disabled={!canDispatch}
+                onClick={() => void dispatchPrescription("patient")}
+                className="flex items-center gap-2.5 rounded-xl border border-[#EDEAE6] bg-white px-3 py-2.5 text-left transition-colors hover:border-[#B8735D]/40 hover:bg-[#FDF8F5] disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Smartphone className="h-4 w-4 shrink-0 text-[#B8735D]" />
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-[#1B3B2E]">Send to patient</span>
+                  <span className="block truncate text-xs text-[#8A8F8C]">
+                    {patient.name} · patient app
+                  </span>
+                </span>
+              </button>
+            </div>
+
+            <button
+              type="button"
+              disabled={!canDispatch}
+              onClick={() => void dispatchPrescription("both")}
+              className="mt-2.5 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#1B3B2E] text-sm font-semibold text-white transition-colors hover:bg-[#2C7873] disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Send className="h-4 w-4" />
+              {sending ? "Sending…" : "Send to pharmacy & patient"}
+            </button>
+
+            {!canDispatch && (
+              <p className="mt-2.5 text-center text-xs text-[#8A8F8C]">
+                {missingFields.length > 0
+                  ? `Complete: ${missingFields.join(", ")}`
+                  : criticalAlerts.length > 0
+                    ? "Fix critical safety alerts above"
+                    : "Complete the checklist to enable send"}
+              </p>
+            )}
+          </div>
+        </aside>
       </div>
 
       {showPreview && (

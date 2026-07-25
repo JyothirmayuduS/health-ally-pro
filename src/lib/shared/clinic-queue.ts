@@ -1,5 +1,7 @@
 import { resolvePatientId } from "./patients";
 import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
+import { listOpdQueue } from "@/lib/opd/client";
+import { opdToClinicQueue } from "@/lib/opd/compat";
 
 export type ClinicQueueEntry = {
   id: string;
@@ -117,6 +119,15 @@ export function updateQueueByAppointment(appointmentId: string, patch: Partial<C
   if (idx < 0) return;
   list[idx] = { ...list[idx], ...patch };
   save(list);
+}
+
+/** Pull the canonical Worker queue into the existing desk/event bridge. */
+export async function syncClinicQueueFromCanonical(doctorId?: string): Promise<boolean> {
+  const result = await listOpdQueue(doctorId);
+  if (!result.ok) return false;
+  const remote = result.data.map(opdToClinicQueue);
+  save(remote);
+  return true;
 }
 
 export function doctorPatientIdFromMrn(mrn: string): string {

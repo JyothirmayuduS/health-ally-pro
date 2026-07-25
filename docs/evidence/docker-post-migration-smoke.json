@@ -1,22 +1,22 @@
 {
-  "at": "2026-07-23T15:51:47.612Z",
+  "at": "2026-07-24T08:25:39.152Z",
   "base": "http://127.0.0.1:3001",
   "status_endpoint": {
     "status": "operational",
     "build": {
-      "git_commit": "7b4d0b9438a5c557f4c45f2ddedb21e551147923",
-      "build_version": "7b4d0b9-20260723T153116Z-hardened",
-      "built_at": "2026-07-23T15:31:16Z",
-      "environment": "docker",
-      "dirty_working_tree": true
+      "git_commit": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+      "build_version": "v1.0.1",
+      "built_at": "2026-07-24T06:15:10Z",
+      "environment": "release",
+      "dirty_working_tree": false
     },
     "audit_dlq": {
       "ok": true,
       "alert": false,
       "open_failures": 0,
       "acknowledged_failures": 0,
-      "resolved_or_artifact": 9,
-      "checked_at": "2026-07-23T15:51:47.570335+00:00",
+      "resolved_or_artifact": 10,
+      "checked_at": "2026-07-24T08:25:39.147855+00:00",
       "source": "database_rpc"
     },
     "optional_degraded": [
@@ -31,7 +31,7 @@
       "expected": "200 ok rows>0",
       "actual": "200 ok=true rows=83",
       "result": "PASS",
-      "ms": 813
+      "ms": 1309
     },
     {
       "test": "patients_auth_200",
@@ -66,18 +66,18 @@
     {
       "test": "audit_durability_waituntil",
       "expected": "200 + audit with record_ids",
-      "actual": "status=200 audit=582a1444-e8a7-47cb-9fab-be74a572e974 ids=83",
-      "result": "PASS",
-      "request_id": "docker-durability-1784821906481",
-      "response_ms": 118.04,
-      "audit_id": "582a1444-e8a7-47cb-9fab-be74a572e974",
-      "record_count": 83,
+      "actual": "status=200 audit=null ids=0",
+      "result": "FAIL",
+      "request_id": "docker-durability-1784881530059",
+      "response_ms": 147.51,
+      "audit_id": null,
+      "record_count": 0,
       "poll_timeout_ms": 8000
     },
     {
       "test": "clinical_not_blocked_on_audit",
       "expected": "response_ms reasonable (<2000) while audit may appear later",
-      "actual": "response_ms=118",
+      "actual": "response_ms=148",
       "result": "PASS"
     },
     {
@@ -94,10 +94,10 @@
     },
     {
       "test": "build_identity_matches",
-      "expected": "7b4d0b9438a5c557f4c45f2ddedb21e551147923",
-      "actual": "7b4d0b9438a5c557f4c45f2ddedb21e551147923",
-      "result": "PASS"
+      "expected": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+      "actual": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+      "result": "FAIL"
     }
   ],
-  "pass": true
+  "pass": false
 }

@@ -57,3 +57,4 @@ docs/evidence/**/*.jpeg
 docs/evidence/**/*.webp
 .secrets/
 .secrets/cloudflare.env
+.gstack/

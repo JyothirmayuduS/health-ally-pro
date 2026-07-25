@@ -1,8 +1,11 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { DoctorAnalyticsScreen } from "@/components/doctor/DoctorAnalyticsScreen";
 
 export const Route = createFileRoute("/doctor/statistics")({
-  beforeLoad: () => {
-    throw redirect({ to: "/doctor" });
-  },
-  component: () => null,
+  component: DoctorStatisticsPage,
+  head: () => ({ meta: [{ title: "Analytics — Medora Doctor" }] }),
 });
+
+function DoctorStatisticsPage() {
+  return <DoctorAnalyticsScreen />;
+}

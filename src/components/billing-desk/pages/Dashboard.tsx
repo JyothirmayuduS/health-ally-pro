@@ -10,14 +10,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useMemo } from "react";
 import { Receipt, CreditCard, Layers, ArrowRight } from "lucide-react";
 import { useBillingStore, fmtLedger } from "@/lib/billing-desk/store";
-import {
-  FINANCE_KPIS,
-  PAYMENT_METHODS,
-  REVENUE_VS_EXPENSES,
-  fmtInr,
-} from "@/lib/hospital-erp-data";
+import { collectionTrend, inr, paymentModeSplit } from "@/lib/admin-desk/reportsData";
 import { MedoraAiChatBar } from "@/components/ai/MedoraAiChatBar";
 import {
   DeskKpi,
@@ -55,6 +51,10 @@ export default function BillingDashboard() {
     ]),
   );
 
+  // Live charts from the shared ledger (last 14 days + payment mode split).
+  const trend = useMemo(() => collectionTrend(invoices, payments).slice(-14), [invoices, payments]);
+  const modeSplit = useMemo(() => paymentModeSplit(payments), [payments]);
+
   return (
     <div className="space-y-6" data-testid="billing-dashboard">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -62,7 +62,7 @@ export default function BillingDashboard() {
           testId="kpi-today-revenue"
           label="Today's collections"
           value={fmtLedger(todayCollected)}
-          sub={`${FINANCE_KPIS.revenueToday.delta} vs last week`}
+          sub={`${todayInvoices.length} invoices today`}
         />
         <DeskKpi
           testId="kpi-outstanding"
@@ -122,32 +122,32 @@ export default function BillingDashboard() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <DeskPanel title="Revenue vs expenses (6 months)">
+        <DeskPanel title="Invoiced vs collected (14 days)">
           <div className="h-56 p-4">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={REVENUE_VS_EXPENSES}>
+              <AreaChart data={trend}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
                 <YAxis
                   tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`}
+                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
                 />
-                <Tooltip formatter={(v: number) => fmtInr(v)} contentStyle={tooltipStyle} />
+                <Tooltip formatter={(v: number) => inr(v)} contentStyle={tooltipStyle} />
                 <Area
                   type="monotone"
-                  dataKey="revenue"
+                  dataKey="invoiced"
+                  stroke="#A87826"
+                  fill="#A8782620"
+                  strokeWidth={2}
+                  name="Invoiced"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="collected"
                   stroke="#2C7873"
                   fill="#2C787320"
                   strokeWidth={2}
-                  name="Revenue"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="expenses"
-                  stroke="#B85C38"
-                  fill="#B85C3820"
-                  strokeWidth={2}
-                  name="Expenses"
+                  name="Collected"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -156,18 +156,24 @@ export default function BillingDashboard() {
 
         <DeskPanel title="Payment methods">
           <div className="h-56 p-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={PAYMENT_METHODS}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" />
-                <XAxis dataKey="method" tick={{ fontSize: 11 }} />
-                <YAxis
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
-                />
-                <Tooltip formatter={(v: number) => fmtInr(v)} contentStyle={tooltipStyle} />
-                <Bar dataKey="amount" fill="#2C7873" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {modeSplit.length === 0 ? (
+              <div className="grid h-full place-items-center text-[12px] text-ink-400">
+                No payments recorded yet.
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={modeSplit}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" />
+                  <XAxis dataKey="label" tick={{ fontSize: 10 }} />
+                  <YAxis
+                    tick={{ fontSize: 11 }}
+                    tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip formatter={(v: number) => inr(v)} contentStyle={tooltipStyle} />
+                  <Bar dataKey="amount" fill="#2C7873" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </DeskPanel>
       </div>

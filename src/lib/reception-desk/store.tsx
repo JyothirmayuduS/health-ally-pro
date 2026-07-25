@@ -27,6 +27,7 @@ import {
 import {
   enqueueFromCheckIn,
   listClinicQueue,
+  syncClinicQueueFromCanonical,
   updateQueueByAppointment,
   CLINIC_QUEUE_EVENT,
 } from "@/lib/shared/clinic-queue";
@@ -45,6 +46,15 @@ import {
 } from "@/lib/billing-desk/store";
 import { LEDGER_EVENT, loadLedgerInvoices, type LedgerInvoice } from "@/lib/shared/billing-ledger";
 import { pushPatientNotification } from "@/lib/patient-notifications-store";
+import { toast } from "sonner";
+import {
+  bookOpdAppointment,
+  cancelOpdAppointment,
+  checkInOpdAppointment,
+  listOpdAppointments,
+  rescheduleOpdAppointment,
+} from "@/lib/opd/client";
+import { opdToReceptionAppointment } from "@/lib/opd/compat";
 
 export interface PreAuthRecord {
   id: string;
@@ -567,6 +577,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    void listOpdAppointments({ date: TODAY_STR }).then((result) => {
+      if (!result.ok || result.data.items.length === 0) return;
+      setAppointments((local) => {
+        const byId = new Map(local.map((appointment) => [appointment.id, appointment]));
+        for (const remote of result.data.items) {
+          const adapted = opdToReceptionAppointment(remote);
+          byId.set(adapted.id, { ...byId.get(adapted.id), ...adapted });
+        }
+        return Array.from(byId.values());
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     const refreshEncounters = () => setEncounters(listEncounters());
     window.addEventListener(ENCOUNTERS_EVENT, refreshEncounters);
     return () => window.removeEventListener(ENCOUNTERS_EVENT, refreshEncounters);
@@ -654,8 +678,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       );
     };
     syncFromQueue();
+    void syncClinicQueueFromCanonical();
+    const poll = window.setInterval(() => {
+      void syncClinicQueueFromCanonical();
+    }, 15_000);
     window.addEventListener(CLINIC_QUEUE_EVENT, syncFromQueue);
-    return () => window.removeEventListener(CLINIC_QUEUE_EVENT, syncFromQueue);
+    return () => {
+      window.clearInterval(poll);
+      window.removeEventListener(CLINIC_QUEUE_EVENT, syncFromQueue);
+    };
   }, []);
 
   useEffect(() => {
@@ -1032,6 +1063,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       ...data,
     };
     setAppointments((a) => [...a, newA]);
+    const scheduledAt = new Date(`${newA.date}T${newA.time}:00`).toISOString();
+    void bookOpdAppointment({
+      patientId: newA.patientId,
+      doctorId: newA.doctorId,
+      legacyId: newA.id,
+      scheduledAt,
+      timeLabel: newA.time,
+      appointmentType: newA.type,
+      notes: newA.notes,
+    }).then((result) => {
+      if (result.ok) return;
+      if (result.status === 409) {
+        setAppointments((appointments) =>
+          appointments.filter((appointment) => appointment.id !== newA.id),
+        );
+        toast.error("That doctor slot was just booked", {
+          description: "Choose another available time.",
+        });
+      }
+    });
     return newA;
   }, []);
 
@@ -1069,6 +1120,21 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         doctorId: apt.doctorId,
         tokenNumber: issuedToken,
         encounterId: enc.id,
+      });
+      void checkInOpdAppointment(apptId).then((result) => {
+        if (!result.ok) return;
+        setAppointments((current) =>
+          current.map((appointment) =>
+            appointment.id === apptId
+              ? {
+                  ...appointment,
+                  status: "checked-in",
+                  tokenNumber: result.data.appointment.tokenNumber,
+                }
+              : appointment,
+          ),
+        );
+        void syncClinicQueueFromCanonical();
       });
 
       return issuedToken;
@@ -1155,6 +1221,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           type: "appointment",
           to: "/book",
         });
+        void rescheduleOpdAppointment({
+          appointmentId: apptId,
+          doctorId: createdRescheduled.doctorId,
+          scheduledAt: new Date(
+            `${createdRescheduled.date}T${createdRescheduled.time}:00`,
+          ).toISOString(),
+          reason: reason || "Reception reschedule",
+        });
+      } else {
+        void cancelOpdAppointment(apptId, reason || "Cancelled", notes);
       }
 
       return createdRescheduled;

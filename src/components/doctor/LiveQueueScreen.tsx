@@ -33,6 +33,7 @@ import {
 } from "@/lib/doctor-live-queue";
 import type { PanelPatient } from "@/lib/doctor-patients-apk-data";
 import { cn } from "@/lib/utils";
+import { bookOpdAppointment } from "@/lib/opd/client";
 
 function avatarBg(patientId: string, accent: string) {
   const soft: Record<string, string> = {
@@ -574,6 +575,31 @@ export function LiveQueueScreen() {
     });
   };
 
+  const handleFollowUp = async (entry: LiveQueueEntry) => {
+    if (!entry.canonicalPatientId || !entry.canonicalDoctorId || !entry.appointmentId) {
+      toast.error("Follow-up requires a synced OPD visit");
+      return;
+    }
+    const scheduled = new Date();
+    scheduled.setDate(scheduled.getDate() + 7);
+    scheduled.setHours(9, 0, 0, 0);
+    const result = await bookOpdAppointment({
+      patientId: entry.canonicalPatientId,
+      doctorId: entry.canonicalDoctorId,
+      scheduledAt: scheduled.toISOString(),
+      appointmentType: "follow-up",
+      reason: "Clinical follow-up",
+      followUpOfId: entry.appointmentId,
+    });
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success("Follow-up scheduled", {
+      description: scheduled.toLocaleString(),
+    });
+  };
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target;
@@ -790,6 +816,13 @@ export function LiveQueueScreen() {
                   >
                     Chart
                   </Link>
+                  <button
+                    type="button"
+                    onClick={() => void handleFollowUp(entry)}
+                    className="shrink-0 text-[11px] font-semibold text-[#1B3B2E] hover:underline"
+                  >
+                    Follow-up
+                  </button>
                 </div>
               );
             })}
@@ -960,6 +993,13 @@ export function LiveQueueScreen() {
                 >
                   Chart
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => void handleFollowUp(entry)}
+                  className="shrink-0 text-xs font-semibold text-[#1B3B2E]"
+                >
+                  Follow-up
+                </button>
               </div>
             );
           })}

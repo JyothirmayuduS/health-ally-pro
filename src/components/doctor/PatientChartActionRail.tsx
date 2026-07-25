@@ -9,6 +9,8 @@ import {
   Phone,
   Pill,
   Stethoscope,
+  Syringe,
+  UserRound,
 } from "lucide-react";
 import { patientTelHref } from "@/lib/doctor-patient-contact";
 import { cn } from "@/lib/utils";
@@ -39,6 +41,13 @@ export function PatientChartActionRail({ patientId }: { patientId: string }) {
       icon: Pill,
       to: "/doctor/prescriptions",
       search: { patientId, view: "write" },
+    },
+    {
+      id: "vax",
+      label: "Vaccines",
+      icon: Syringe,
+      to: "/doctor/immunizations",
+      search: { patientId, view: "due" },
     },
     {
       id: "soap",
@@ -78,6 +87,16 @@ export function PatientChartActionRail({ patientId }: { patientId: string }) {
       search: { patientId },
     },
     {
+      id: "profile",
+      label: "Profile",
+      icon: UserRound,
+      onClick: () => {
+        document
+          .getElementById("patient-management-profile")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      },
+    },
+    {
       id: "history",
       label: "Full history",
       icon: Grid3X3,
@@ -93,6 +112,7 @@ export function PatientChartActionRail({ patientId }: { patientId: string }) {
           className={cn(
             "grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F5F2ED] text-[#1B3B2E]",
             action.id === "rx" && "bg-[#1B3B2E] text-white",
+            action.id === "vax" && "bg-[#E8EFE6] text-[#1B3B2E]",
           )}
         >
           <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
@@ -117,6 +137,20 @@ export function PatientChartActionRail({ patientId }: { patientId: string }) {
     if (action.to === "/doctor/patients/$patientId/history") {
       return (
         <Link key={action.id} to={action.to} params={{ patientId }} className={className}>
+          {inner}
+        </Link>
+      );
+    }
+
+    if (action.to === "/doctor/patients/$patientId") {
+      return (
+        <Link
+          key={action.id}
+          to={action.to}
+          params={{ patientId }}
+          search={action.search}
+          className={className}
+        >
           {inner}
         </Link>
       );

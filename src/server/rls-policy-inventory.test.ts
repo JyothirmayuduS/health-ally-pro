@@ -50,6 +50,51 @@ export const LIVE_POLICY_SCOPE: Array<{
   { table: "notifications", policy: "notifications_update", scoped: "SELF" },
   { table: "patient_medications", policy: "patient_medications_manage", scoped: "Y" },
   { table: "patient_medications", policy: "patient_medications_select", scoped: "Y" },
+  { table: "consent_templates", policy: "consent_templates_select", scoped: "Y" },
+  { table: "consent_templates", policy: "consent_templates_manage", scoped: "Y" },
+  {
+    table: "doctor_availability_rules",
+    policy: "doctor_availability_rules_select",
+    scoped: "Y",
+  },
+  {
+    table: "doctor_availability_rules",
+    policy: "doctor_availability_rules_manage",
+    scoped: "Y",
+  },
+  {
+    table: "doctor_availability_exceptions",
+    policy: "doctor_availability_exceptions_select",
+    scoped: "Y",
+  },
+  {
+    table: "doctor_availability_exceptions",
+    policy: "doctor_availability_exceptions_manage",
+    scoped: "Y",
+  },
+  { table: "patient_access_grants", policy: "patient_access_grants_select", scoped: "Y" },
+  { table: "patient_access_grants", policy: "patient_access_grants_manage", scoped: "Y" },
+  { table: "patient_allergies", policy: "patient_allergies_select", scoped: "Y" },
+  { table: "patient_allergies", policy: "patient_allergies_manage", scoped: "Y" },
+  { table: "patient_consents", policy: "patient_consents_select", scoped: "Y" },
+  { table: "patient_consents", policy: "patient_consents_manage", scoped: "Y" },
+  { table: "patient_documents", policy: "patient_documents_select", scoped: "Y" },
+  { table: "patient_documents", policy: "patient_documents_manage", scoped: "Y" },
+  { table: "patient_emergency_contacts", policy: "patient_emergency_contacts_select", scoped: "Y" },
+  { table: "patient_emergency_contacts", policy: "patient_emergency_contacts_manage", scoped: "Y" },
+  { table: "patient_history_entries", policy: "patient_history_select", scoped: "Y" },
+  { table: "patient_history_entries", policy: "patient_history_manage", scoped: "Y" },
+  { table: "patient_qr_tokens", policy: "patient_qr_tokens_select", scoped: "Y" },
+  { table: "patient_qr_tokens", policy: "patient_qr_tokens_manage", scoped: "Y" },
+  { table: "patient_relationships", policy: "patient_relationships_select", scoped: "Y" },
+  { table: "patient_relationships", policy: "patient_relationships_manage", scoped: "Y" },
+  { table: "hospital_mrn_counters", policy: "hospital_mrn_counters_deny", scoped: "Y" },
+  {
+    table: "hospital_doctor_token_counters",
+    policy: "hospital_doctor_token_counters_deny",
+    scoped: "Y",
+  },
+  { table: "opd_notification_events", policy: "opd_notification_events_deny", scoped: "Y" },
   { table: "patients", policy: "patients_insert", scoped: "Y" },
   { table: "patients", policy: "patients_select", scoped: "Y" },
   { table: "patients", policy: "patients_update", scoped: "Y" },
@@ -65,7 +110,7 @@ export const LIVE_POLICY_SCOPE: Array<{
   { table: "staff_profiles", policy: "staff_select", scoped: "Y" },
 ];
 
-describe("hospital_id RLS policy inventory (22 tables)", () => {
+describe("hospital_id RLS policy inventory (patient management + core)", () => {
   it("covers every hospital_id table in HOSPITAL_SCOPED_TABLES", () => {
     const tablesWithPolicies = new Set(LIVE_POLICY_SCOPE.map((p) => p.table));
     for (const t of HOSPITAL_SCOPED_TABLES) {

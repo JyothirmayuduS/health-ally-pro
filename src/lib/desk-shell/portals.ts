@@ -157,6 +157,7 @@ export const ADMIN_DESK: DeskPortalConfig = {
         },
         { to: "/admin/analytics", label: "Analytics", icon: BarChart3, dot: "bg-teal" },
         { to: "/admin/revenue", label: "Revenue", icon: DollarSign, dot: "bg-money" },
+        { to: "/admin/reports", label: "Reports (MIS)", icon: FileBarChart, dot: "bg-plum" },
         { to: "/admin/occupancy", label: "Occupancy & load", icon: LayoutGrid, dot: "bg-clay" },
       ],
     },
@@ -254,6 +255,8 @@ export const ADMIN_DESK: DeskPortalConfig = {
     if (pathname.startsWith("/admin/audit"))
       return { eyebrow: "Compliance", title: "PHI access audit" };
     if (pathname.startsWith("/admin/analytics")) return { eyebrow: "Insights", title: "Analytics" };
+    if (pathname.startsWith("/admin/reports"))
+      return { eyebrow: "Insights", title: "Reports & MIS" };
     if (pathname.startsWith("/admin/revenue"))
       return { eyebrow: "Finance", title: "Revenue cycle" };
     if (pathname.startsWith("/admin/access-control"))
@@ -329,6 +332,7 @@ export const DOCTOR_DESK: DeskPortalConfig = {
       items: [
         { to: "/doctor/orders", label: "Lab orders", icon: TestTube, dot: "bg-teal" },
         { to: "/doctor/prescriptions", label: "Prescriptions", icon: Pill, dot: "bg-mustard" },
+        { to: "/doctor/immunizations", label: "Vaccinations", icon: Activity, dot: "bg-clay" },
         { to: "/doctor/results", label: "Results", icon: FlaskConical, dot: "bg-clay" },
       ],
     },
@@ -352,6 +356,8 @@ export const DOCTOR_DESK: DeskPortalConfig = {
       return { eyebrow: "Diagnostics", title: "Lab orders" };
     if (pathname.startsWith("/doctor/prescriptions"))
       return { eyebrow: "Pharmacy", title: "E-prescriptions" };
+    if (pathname.startsWith("/doctor/immunizations"))
+      return { eyebrow: "Preventive", title: "Vaccinations" };
     if (pathname.startsWith("/doctor/results"))
       return { eyebrow: "Diagnostics", title: "Lab results" };
     if (pathname.startsWith("/doctor/leave")) return { eyebrow: "HR", title: "My leaves" };

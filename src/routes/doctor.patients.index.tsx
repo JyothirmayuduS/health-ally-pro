@@ -37,6 +37,8 @@ function flagPillLink(
   if (pill === "Overview") return { to: "/doctor/patients/$patientId" };
   if (pill === "Open items")
     return { to: "/doctor/patients/$patientId", search: { section: "open-items" } };
+  if (pill === "Vaccines")
+    return { to: "/doctor/patients/$patientId", search: { section: "vaccines" } };
   return null;
 }
 

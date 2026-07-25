@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
+  BarChart3,
   Calendar,
   ChevronRight,
   ClipboardList,
@@ -108,29 +109,49 @@ export function DoctorHomeDashboard() {
     <div className="space-y-5">
       <DoctorClinicOnboardingBanner />
 
-      <Link
-        to="/doctor/specialty"
-        className="flex items-center gap-4 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5"
-        style={{ borderLeftWidth: 4, borderLeftColor: specialty.accent }}
-      >
-        <span
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl"
-          style={{ background: specialty.accentSoft, color: specialty.accent }}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Link
+          to="/doctor/specialty"
+          className="flex items-center gap-4 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5"
+          style={{ borderLeftWidth: 4, borderLeftColor: specialty.accent }}
         >
-          <Stethoscope className="h-6 w-6" strokeWidth={1.75} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
-            Your specialty workstation
-          </p>
-          <p className="font-semibold text-[#1B3B2E]">{specialty.name}</p>
-          <p className="text-sm text-[#8A8F8C]">
-            {specialty.tagline}
-            {doctor?.room ? ` · ${doctor.room}` : ""}
-          </p>
-        </div>
-        <ChevronRight className="h-5 w-5 shrink-0 text-[#B8735D]" />
-      </Link>
+          <span
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl"
+            style={{ background: specialty.accentSoft, color: specialty.accent }}
+          >
+            <Stethoscope className="h-6 w-6" strokeWidth={1.75} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Your specialty workstation
+            </p>
+            <p className="font-semibold text-[#1B3B2E]">{specialty.name}</p>
+            <p className="text-sm text-[#8A8F8C]">
+              {specialty.tagline}
+              {doctor?.room ? ` · ${doctor.room}` : ""}
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-[#8A8F8C]" />
+        </Link>
+
+        <Link
+          to="/doctor/statistics"
+          className="flex items-center gap-4 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#1B3B2E" }}
+        >
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#F0EEE9] text-[#1B3B2E]">
+            <BarChart3 className="h-6 w-6" strokeWidth={1.75} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Practice insights
+            </p>
+            <p className="font-semibold text-[#1B3B2E]">Analytics</p>
+            <p className="text-sm text-[#8A8F8C]">Fill, revenue, panel &amp; workload</p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-[#8A8F8C]" />
+        </Link>
+      </div>
 
       {/* Now — live triage */}
       <DoctorHomeTriage layout="grid" />

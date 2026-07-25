@@ -17,6 +17,9 @@ export type LiveQueueEntry = {
   calledAt?: string;
   completedLabel?: string;
   completedAt?: string;
+  appointmentId?: string;
+  canonicalPatientId?: string;
+  canonicalDoctorId?: string;
 };
 
 export type BookingRequest = {

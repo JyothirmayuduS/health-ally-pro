@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  BarChart3,
   CalendarDays,
+  CalendarOff,
   ClipboardList,
   FlaskConical,
   Grid3X3,
@@ -13,6 +15,7 @@ import {
   Shield,
   Share2,
   Stethoscope,
+  Syringe,
   TestTube,
   User,
   Users,
@@ -39,9 +42,13 @@ export const DOCTOR_PRIMARY_NAV: DoctorNavItem[] = [
 export const DOCTOR_CLINICAL_TOOLS = [
   { to: "/doctor/specialty", label: "Specialty desk", icon: Stethoscope },
   { to: "/doctor/prescriptions", label: "Prescribe", icon: Pill },
+  { to: "/doctor/immunizations", label: "Vaccinations", icon: Syringe },
   { to: "/doctor/schedule", label: "Schedule", icon: CalendarDays },
+  { to: "/doctor/statistics", label: "Analytics", icon: BarChart3 },
   { to: "/doctor/settings/referrals", label: "Referrals", icon: Send },
   { to: "/doctor/settings/slots", label: "Booking slots", icon: Grid3X3 },
+  { to: "/doctor/settings/emergency", label: "Coverage", icon: Shield },
+  { to: "/doctor/leave", label: "Leave", icon: CalendarOff },
 ] as const;
 
 /** Specialty-aware clinical tools — first item labels with the assigned specialty */
@@ -78,6 +85,18 @@ export const DOCTOR_CLINICAL_MODULES: DoctorModuleLink[] = [
     icon: Pill,
   },
   {
+    to: "/doctor/immunizations",
+    label: "Vaccinations",
+    description: "Schedule, doses, reminders & AEFI",
+    icon: Syringe,
+  },
+  {
+    to: "/doctor/statistics",
+    label: "Analytics",
+    description: "Fill, revenue, panel & workload",
+    icon: BarChart3,
+  },
+  {
     to: "/doctor/orders",
     label: "Lab orders",
     description: "Send orders to lab desk",
@@ -102,10 +121,22 @@ export const DOCTOR_CLINICAL_MODULES: DoctorModuleLink[] = [
     icon: Shield,
   },
   {
+    to: "/doctor/leave",
+    label: "Leave",
+    description: "Apply & track leave",
+    icon: CalendarOff,
+  },
+  {
     to: "/doctor/settings/referrals",
     label: "Referrals",
     description: "Outbound referrals",
     icon: Share2,
+  },
+  {
+    to: "/doctor/settings/slots",
+    label: "Booking slots",
+    description: "OPD times, fees & capacity",
+    icon: Grid3X3,
   },
   {
     to: "/doctor/messaging",

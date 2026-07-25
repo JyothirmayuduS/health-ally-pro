@@ -161,7 +161,10 @@ export function ProfileHubPage() {
 
       <ProfileSectionTitle>Health Profile</ProfileSectionTitle>
       <ProfileCard className="mb-5 sm:mb-6">
-        <ProfileRow icon={User} label="Full name" value={identity.name} />
+        <ProfileLinkRow icon={FileText} label="Hospital health record" to="/profile/health-record" />
+        <div className="border-t border-[#EDEAE6]">
+          <ProfileRow icon={User} label="Full name" value={identity.name} />
+        </div>
         <div className="border-t border-[#EDEAE6]">
           <ProfileRow icon={Mail} label="Email" value={identity.email} />
         </div>
