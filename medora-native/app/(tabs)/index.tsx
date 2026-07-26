@@ -17,6 +17,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  type GestureResponderEvent,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useFocusEffect } from "expo-router";
@@ -54,8 +55,10 @@ import {
   reports,
   patient as mockPatient,
   getNextMealPreview,
+  type Medication,
 } from "@/lib/mock-data";
 import { usePatientMedications } from "@/hooks/usePatientMedications";
+import type { ThemeColors } from "@/theme/colors";
 import {
   formatRxRelative,
   listPatientPrescriptions,
@@ -82,36 +85,52 @@ function statusLabel(status: string) {
   return status;
 }
 
-function statusColor(status: string, colors: any) {
+function statusColor(status: string, colors: ThemeColors) {
   if (status === "in-queue") return colors.clay;
   if (status === "upcoming") return "#4CAF7D";
   return colors.inkMuted;
 }
 
 // ─── Professional Med Card ────────────────────────────────────
-function MedCard({ med, colors, delay, onToggle }: { med: any; colors: any; delay: number; onToggle: (id: string, next: boolean) => void }) {
+function MedCard({
+  med,
+  colors,
+  delay,
+  onToggle,
+}: {
+  med: Medication;
+  colors: ThemeColors;
+  delay: number;
+  onToggle: (id: string, next: boolean) => void;
+}) {
   const router = useRouter();
   const taken = med.taken;
   const cardScale = useSharedValue(1);
   const checkScale = useSharedValue(taken ? 1 : 0);
   const checkProgress = useSharedValue(taken ? 1 : 0);
 
-  const toggle = useCallback((e?: any) => {
-    if (e && e.stopPropagation) e.stopPropagation();
-    const next = !taken;
-    onToggle(med.id, next);
+  const toggle = useCallback(
+    (e?: GestureResponderEvent) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const next = !taken;
+      onToggle(med.id, next);
 
-    cardScale.value = withSequence(
-      withTiming(0.96, { duration: 80 }),
-      withSpring(1, { damping: 14, stiffness: 200 })
-    );
+      cardScale.value = withSequence(
+        withTiming(0.96, { duration: 80 }),
+        withSpring(1, { damping: 14, stiffness: 200 }),
+      );
 
-    checkScale.value = next
-      ? withSequence(withTiming(0, { duration: 60 }), withSpring(1, { damping: 10, stiffness: 240 }))
-      : withTiming(0, { duration: 150 });
+      checkScale.value = next
+        ? withSequence(
+            withTiming(0, { duration: 60 }),
+            withSpring(1, { damping: 10, stiffness: 240 }),
+          )
+        : withTiming(0, { duration: 150 });
 
-    checkProgress.value = withTiming(next ? 1 : 0, { duration: 250 });
-  }, [taken, med.id, onToggle]);
+      checkProgress.value = withTiming(next ? 1 : 0, { duration: 250 });
+    },
+    [taken, med.id, onToggle],
+  );
 
   // Handle external state sync (e.g. when returning from Med Details modal)
   React.useEffect(() => {
@@ -139,15 +158,18 @@ function MedCard({ med, colors, delay, onToggle }: { med: any; colors: any; dela
 
   return (
     <Animated.View entering={FadeInDown.duration(400).delay(delay)}>
-      <Pressable 
+      <Pressable
         onPress={() => router.push(`/medication/${med.id}`)}
-        onPressIn={() => cardScale.value = withTiming(0.98, { duration: 100 })}
-        onPressOut={() => cardScale.value = withSpring(1, { damping: 14, stiffness: 200 })}
+        onPressIn={() => (cardScale.value = withTiming(0.98, { duration: 100 }))}
+        onPressOut={() => (cardScale.value = withSpring(1, { damping: 14, stiffness: 200 }))}
         accessibilityRole="button"
         accessibilityLabel={`${med.name}, ${med.dosage}`}
         accessibilityHint="Opens medication details"
       >
-        <Animated.View style={[mc.card, { backgroundColor: colors.surface }, cardAnimStyle]} pointerEvents="box-none">
+        <Animated.View
+          style={[mc.card, { backgroundColor: colors.surface }, cardAnimStyle]}
+          pointerEvents="box-none"
+        >
           <View style={mc.topRow} pointerEvents="box-none">
             <View style={[mc.badge, { backgroundColor: timeBg }]}>
               <Text style={[mc.badgeText, { color: timeColor }]}>{med.time}</Text>
@@ -156,32 +178,53 @@ function MedCard({ med, colors, delay, onToggle }: { med: any; colors: any; dela
               onPress={toggle}
               hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
               accessibilityRole="checkbox"
-              accessibilityLabel={taken ? `Mark ${med.name} as not taken` : `Mark ${med.name} as taken`}
+              accessibilityLabel={
+                taken ? `Mark ${med.name} as not taken` : `Mark ${med.name} as taken`
+              }
               accessibilityHint="Toggles today's dose adherence"
               accessibilityState={{ checked: taken }}
             >
-              <Animated.View style={[mc.checkWrap, { borderColor: taken ? colors.clay : colors.border }, checkWrapStyle]}>
-                <Animated.View style={[mc.checkFill, { backgroundColor: colors.clay }, checkFillStyle]}>
+              <Animated.View
+                style={[
+                  mc.checkWrap,
+                  { borderColor: taken ? colors.clay : colors.border },
+                  checkWrapStyle,
+                ]}
+              >
+                <Animated.View
+                  style={[mc.checkFill, { backgroundColor: colors.clay }, checkFillStyle]}
+                >
                   <Text style={mc.checkMark}>✓</Text>
                 </Animated.View>
               </Animated.View>
             </Pressable>
           </View>
-          
+
           <View style={mc.infoWrap} pointerEvents="none">
             <View style={mc.iconWrap}>
               <Pill size={18} color={taken ? colors.inkMuted : colors.clay} />
             </View>
-            <Text style={[mc.name, { color: taken ? colors.inkMuted : colors.foreground }, taken && mc.nameStruck]} numberOfLines={1}>
+            <Text
+              style={[
+                mc.name,
+                { color: taken ? colors.inkMuted : colors.foreground },
+                taken && mc.nameStruck,
+              ]}
+              numberOfLines={1}
+            >
               {med.name}
             </Text>
-            <Text style={[mc.dosage, { color: colors.inkMuted }, taken && mc.nameStruck]}>{med.dosage}</Text>
+            <Text style={[mc.dosage, { color: colors.inkMuted }, taken && mc.nameStruck]}>
+              {med.dosage}
+            </Text>
           </View>
 
           <View style={mc.bottomRow} pointerEvents="none">
             <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 6 }}>
               <Clock4 size={12} color={colors.inkMuted} strokeWidth={1.75} />
-              <Text style={[mc.takeAt, { color: colors.inkMuted }, taken && mc.nameStruck]}>Take at {med.time}</Text>
+              <Text style={[mc.takeAt, { color: colors.inkMuted }, taken && mc.nameStruck]}>
+                Take at {med.time}
+              </Text>
             </View>
             {med.instructionTag ? (
               <View style={mc.tagWrap}>
@@ -203,30 +246,48 @@ function MedCard({ med, colors, delay, onToggle }: { med: any; colors: any; dela
 }
 
 const mc = StyleSheet.create({
-  card: { 
-    width: 185, 
-    borderRadius: 28, 
-    padding: 18, 
-    justifyContent: "space-between", 
+  card: {
+    width: 185,
+    borderRadius: 28,
+    padding: 18,
+    justifyContent: "space-between",
     height: 185,
     shadowColor: "#000",
     shadowOpacity: 0.04,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 3
+    elevation: 3,
   },
   topRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
   badge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12 },
   badgeText: { fontSize: 11, fontFamily: "DMSans_600SemiBold", letterSpacing: 0.3 },
-  checkWrap: { width: 28, height: 28, borderRadius: 14, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
-  checkFill: { width: 16, height: 16, borderRadius: 8, alignItems: "center", justifyContent: "center" },
+  checkWrap: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkFill: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   checkMark: { color: "#fff", fontSize: 11, fontFamily: "DMSans_700Bold" },
   infoWrap: { marginTop: 14 },
   iconWrap: { marginBottom: 6 },
   name: { fontSize: 16, fontFamily: "Fraunces_500Medium", letterSpacing: -0.2 },
   nameStruck: { textDecorationLine: "line-through", opacity: 0.4 },
   dosage: { fontSize: 13, fontFamily: "DMSans_400Regular", marginTop: 2, opacity: 0.8 },
-  bottomRow: { marginTop: 12, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "rgba(0,0,0,0.04)" },
+  bottomRow: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "rgba(0,0,0,0.04)",
+  },
   takeAt: { fontSize: 12, fontFamily: "DMSans_500Medium" },
   tagWrap: {
     flexDirection: "row",
@@ -240,7 +301,6 @@ const mc = StyleSheet.create({
   },
   tagText: { fontSize: 11, fontFamily: "DMSans_500Medium", color: "#B8735D" },
 });
-
 
 // ─── component ────────────────────────────────────────────────
 export default function DashboardScreen() {
@@ -262,22 +322,24 @@ export default function DashboardScreen() {
   }, []);
 
   const inQueue = appointments.find((a) => a.status === "in-queue");
-  const queueDoctor = inQueue
-    ? doctors.find((d) => d.id === inQueue.doctorId)
-    : null;
+  const queueDoctor = inQueue ? doctors.find((d) => d.id === inQueue.doctorId) : null;
 
   // Hero: strictly sync with queue source of truth
-  const nextAppt = inQueue ?? appointments.find((a) => a.status === "upcoming" && new Date(a.date) >= today);
-  const nextDoc = nextAppt
-    ? doctors.find((d) => d.id === nextAppt.doctorId)
-    : null;
+  const nextAppt =
+    inQueue ?? appointments.find((a) => a.status === "upcoming" && new Date(a.date) >= today);
+  const nextDoc = nextAppt ? doctors.find((d) => d.id === nextAppt.doctorId) : null;
 
   const recentAppts = appointments.filter((a) => a.status !== "completed").slice(0, 3);
   const recentReports = reports.slice(0, 2);
 
   // Medication state & stats — AsyncStorage-backed patient-meds-store
-  const { meds: medsList, toggle: toggleMedStore, taken: takenMeds, total: totalMeds, pct: medPct } =
-    usePatientMedications();
+  const {
+    meds: medsList,
+    toggle: toggleMedStore,
+    taken: takenMeds,
+    total: totalMeds,
+    pct: medPct,
+  } = usePatientMedications();
   const [hasNotifs, setHasNotifs] = useState(true);
   const [eRxList, setERxList] = useState<PatientRxRecord[]>(() => listPatientPrescriptions());
   const nextMeal = getNextMealPreview();
@@ -296,12 +358,15 @@ export default function DashboardScreen() {
   useFocusEffect(
     useCallback(() => {
       checkNotifs();
-    }, [])
+    }, []),
   );
 
-  const handleMedToggle = useCallback((id: string, next: boolean) => {
-    void toggleMedStore(id);
-  }, [toggleMedStore]);
+  const handleMedToggle = useCallback(
+    (id: string, next: boolean) => {
+      void toggleMedStore(id);
+    },
+    [toggleMedStore],
+  );
 
   return (
     <SafeAreaView style={[s.safe, { backgroundColor: colors.background }]} edges={["top"]}>
@@ -324,16 +389,23 @@ export default function DashboardScreen() {
         {/* 🔔 NOTIFICATION PROMPT (Visible only if not granted) ─── */}
         {!hasNotifs && (
           <Animated.View entering={FadeInDown.duration(400).delay(50)}>
-            <Pressable 
+            <Pressable
               onPress={() => router.push("/notifications/setup")}
-              style={[s.notifBanner, { backgroundColor: colors.clay + "10", borderColor: colors.clay + "30" }]}
+              style={[
+                s.notifBanner,
+                { backgroundColor: colors.clay + "10", borderColor: colors.clay + "30" },
+              ]}
             >
               <View style={[s.notifIconWrap, { backgroundColor: colors.clay }]}>
                 <Bell size={16} color="#FFF" />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[s.notifTitle, { color: colors.foreground }]}>Enable Live Updates</Text>
-                <Text style={[s.notifSub, { color: colors.inkMuted }]}>Stay synchronized with your care team.</Text>
+                <Text style={[s.notifTitle, { color: colors.foreground }]}>
+                  Enable Live Updates
+                </Text>
+                <Text style={[s.notifSub, { color: colors.inkMuted }]}>
+                  Stay synchronized with your care team.
+                </Text>
               </View>
               <ChevronRight size={16} color={colors.clay} />
             </Pressable>
@@ -354,55 +426,82 @@ export default function DashboardScreen() {
             nextAppt.status === "in-queue" ? (
               <LiveQueueHeroCard appointment={nextAppt} doctor={nextDoc} />
             ) : (
-            <Pressable
-              onPress={() => router.push("/(tabs)/queue")}
-              style={[
-                s.heroCard,
-                { backgroundColor: colors.ink },
-              ]}
-            >
+              <Pressable
+                onPress={() => router.push("/(tabs)/queue")}
+                style={[s.heroCard, { backgroundColor: colors.ink }]}
+              >
                 <>
                   <View style={s.heroBadge}>
                     <View style={[s.heroDot, { backgroundColor: "#4CAF7D" }]} />
-                    <Text style={[s.heroBadgeText, { color: colors.primaryForeground }]}>Next appointment</Text>
+                    <Text style={[s.heroBadgeText, { color: colors.primaryForeground }]}>
+                      Next appointment
+                    </Text>
                   </View>
                   <View style={s.heroDocRow}>
                     <Avatar initials={nextDoc.initials} size="xl" variant="ink" />
                     <View style={{ flex: 1 }}>
-                      <Text style={[s.heroDocName, { color: colors.primaryForeground }]}>{nextDoc.name}</Text>
-                      <Text style={[s.heroDocSpec, { color: colors.primaryForeground, opacity: 0.65 }]}>
+                      <Text style={[s.heroDocName, { color: colors.primaryForeground }]}>
+                        {nextDoc.name}
+                      </Text>
+                      <Text
+                        style={[s.heroDocSpec, { color: colors.primaryForeground, opacity: 0.65 }]}
+                      >
                         {nextDoc.specialty} · {nextDoc.hospital}
                       </Text>
                     </View>
                   </View>
                   <View style={s.heroMeta}>
                     <View style={s.heroChip}>
-                      <CalendarDays size={13} color={colors.primaryForeground} strokeWidth={1.75} opacity={0.7} />
+                      <CalendarDays
+                        size={13}
+                        color={colors.primaryForeground}
+                        strokeWidth={1.75}
+                        opacity={0.7}
+                      />
                       <Text style={[s.heroChipText, { color: colors.primaryForeground }]}>
-                        {isSameDay(new Date(nextAppt.date), today) ? "Today" : format(new Date(nextAppt.date), "MMM d")}
+                        {isSameDay(new Date(nextAppt.date), today)
+                          ? "Today"
+                          : format(new Date(nextAppt.date), "MMM d")}
                       </Text>
                     </View>
                     <View style={s.heroChip}>
-                      <Clock4 size={13} color={colors.primaryForeground} strokeWidth={1.75} opacity={0.7} />
-                      <Text style={[s.heroChipText, { color: colors.primaryForeground }]}>{nextAppt.time}</Text>
+                      <Clock4
+                        size={13}
+                        color={colors.primaryForeground}
+                        strokeWidth={1.75}
+                        opacity={0.7}
+                      />
+                      <Text style={[s.heroChipText, { color: colors.primaryForeground }]}>
+                        {nextAppt.time}
+                      </Text>
                     </View>
                   </View>
                   <View style={s.heroCta}>
-                    <Text style={[s.heroCtaText, { color: colors.primaryForeground }]}>View details</Text>
+                    <Text style={[s.heroCtaText, { color: colors.primaryForeground }]}>
+                      View details
+                    </Text>
                     <ArrowRight size={15} color={colors.primaryForeground} strokeWidth={2} />
                   </View>
                 </>
-            </Pressable>
+              </Pressable>
             )
           ) : (
             /* Empty state hero */
             <Pressable
               onPress={() => router.push("/(tabs)/book")}
-              style={[s.heroCard, s.heroEmpty, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              style={[
+                s.heroCard,
+                s.heroEmpty,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
             >
               <Stethoscope size={32} color={colors.inkMuted} strokeWidth={1.3} />
-              <Text style={[s.emptyTitle, { color: colors.foreground }]}>No upcoming appointments</Text>
-              <Text style={[s.emptySubtitle, { color: colors.inkMuted }]}>Book a consultation with 80+ specialists</Text>
+              <Text style={[s.emptyTitle, { color: colors.foreground }]}>
+                No upcoming appointments
+              </Text>
+              <Text style={[s.emptySubtitle, { color: colors.inkMuted }]}>
+                Book a consultation with 80+ specialists
+              </Text>
               <View style={[s.bookBtn, { backgroundColor: colors.ink }]}>
                 <Text style={[s.bookBtnText, { color: colors.primaryForeground }]}>Book Now</Text>
               </View>
@@ -410,25 +509,30 @@ export default function DashboardScreen() {
           )}
         </Animated.View>
 
-
         {/* ③ STAT STRIP ─────────────────────────────────────── */}
         {/* Compact row – horizontal scan anchors */}
         <Animated.View entering={FadeInDown.duration(400).delay(200)}>
           <View style={s.statRow}>
             {/* Medication adherence */}
-            <View style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View
+              style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            >
               <Text style={[s.statValue, { color: colors.foreground }]}>{medPct}%</Text>
               <Text style={[s.statLabel, { color: colors.inkMuted }]}>Adherence</Text>
             </View>
-             {/* Total appointments */}
-            <View style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            {/* Total appointments */}
+            <View
+              style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            >
               <Text style={[s.statValue, { color: colors.foreground }]}>
                 {appointments.filter((a) => a.status === "completed").length}
               </Text>
               <Text style={[s.statLabel, { color: colors.inkMuted }]}>Visits done</Text>
             </View>
             {/* Reports count */}
-            <View style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View
+              style={[s.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            >
               <Text style={[s.statValue, { color: colors.foreground }]}>{reports.length}</Text>
               <Text style={[s.statLabel, { color: colors.inkMuted }]}>Reports</Text>
             </View>
@@ -444,29 +548,55 @@ export default function DashboardScreen() {
             </Pressable>
           </View>
 
-          <View style={[s.medProgressCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <View
+            style={[
+              s.medProgressCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Text style={[s.sectionMeta, { color: colors.inkMuted }]}>
                 {takenMeds} of {totalMeds} taken today
               </Text>
-              <Text style={[s.statValue, { color: colors.foreground, fontSize: 20 }]}>{medPct}%</Text>
+              <Text style={[s.statValue, { color: colors.foreground, fontSize: 20 }]}>
+                {medPct}%
+              </Text>
             </View>
-            <View style={[s.medProgressTrack, { backgroundColor: colors.border, marginTop: 10, marginBottom: 0 }]}>
-              <View style={[s.medProgressFill, { backgroundColor: colors.clay, width: `${medPct}%` }]} />
+            <View
+              style={[
+                s.medProgressTrack,
+                { backgroundColor: colors.border, marginTop: 10, marginBottom: 0 },
+              ]}
+            >
+              <View
+                style={[s.medProgressFill, { backgroundColor: colors.clay, width: `${medPct}%` }]}
+              />
             </View>
           </View>
-          
+
           <View style={{ height: 200, marginTop: 14 }}>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false} 
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 12, gap: 14 }}
               style={{ marginHorizontal: -20 }}
               snapToInterval={199}
               decelerationRate="fast"
             >
               {medsList.map((med, i) => (
-                <MedCard key={med.id} med={med} colors={colors} delay={200 + i * 80} onToggle={handleMedToggle} />
+                <MedCard
+                  key={med.id}
+                  med={med}
+                  colors={colors}
+                  delay={200 + i * 80}
+                  onToggle={handleMedToggle}
+                />
               ))}
             </ScrollView>
           </View>
@@ -474,61 +604,75 @@ export default function DashboardScreen() {
 
         {/* 🥗 NEXT MEAL PREVIEW ─────────────────────────────── */}
         <Animated.View entering={FadeInDown.duration(450).delay(250)}>
-           <View style={s.sectionHeader}>
-              <Text style={[s.sectionTitle, { color: colors.foreground }]}>Your Meal Plan</Text>
-              <Pressable onPress={() => router.push("/(tabs)/nutrition")}>
-                <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
-              </Pressable>
-           </View>
-           
-           <Pressable 
-              onPress={() => router.push("/(tabs)/nutrition")}
-              style={[s.nextMealCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
-           >
-              <View style={[s.mealIconWrap, { backgroundColor: colors.clay + "15" }]}>
-                 <ChefHat size={20} color={colors.clay} />
+          <View style={s.sectionHeader}>
+            <Text style={[s.sectionTitle, { color: colors.foreground }]}>Your Meal Plan</Text>
+            <Pressable onPress={() => router.push("/(tabs)/nutrition")}>
+              <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
+            </Pressable>
+          </View>
+
+          <Pressable
+            onPress={() => router.push("/(tabs)/nutrition")}
+            style={[
+              s.nextMealCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <View style={[s.mealIconWrap, { backgroundColor: colors.clay + "15" }]}>
+              <ChefHat size={20} color={colors.clay} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={[s.mealCategory, { color: colors.inkMuted }]}>
+                  NEXT: {nextMeal?.mealType?.toUpperCase() ?? "LUNCH"}
+                </Text>
+                <Text style={[s.mealKcal, { color: colors.foreground }]}>
+                  {nextMeal?.calories ?? 520} kcal
+                </Text>
               </View>
-              <View style={{ flex: 1 }}>
-                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <Text style={[s.mealCategory, { color: colors.inkMuted }]}>
-                      NEXT: {nextMeal?.mealType?.toUpperCase() ?? "LUNCH"}
-                    </Text>
-                    <Text style={[s.mealKcal, { color: colors.foreground }]}>{nextMeal?.calories ?? 520} kcal</Text>
-                 </View>
-                 <Text style={[s.nextMealName, { color: colors.foreground }]}>
-                   {nextMeal?.name ?? "Roasted Chicken & Quinoa"}
-                 </Text>
-                 <View style={{ flexDirection: "row", gap: 6, marginTop: 4 }}>
-                    {nextMeal?.lactoseFree ? (
-                      <View style={[s.clinicalTag, { backgroundColor: "#4CAF7D20" }]}>
-                         <Text style={[s.clinicalTagText, { color: "#4CAF7D" }]}>Lactose-Free</Text>
-                      </View>
-                    ) : null}
-                    <View style={[s.clinicalTag, { backgroundColor: colors.clay + "20" }]}>
-                       <Text style={[s.clinicalTagText, { color: colors.clay }]}>Thyroid-Sync</Text>
-                    </View>
-                 </View>
-                 <Text style={[s.nextMealSub, { color: colors.inkMuted, marginTop: 6 }]}>
-                   High Protein · Metabolic support
-                 </Text>
+              <Text style={[s.nextMealName, { color: colors.foreground }]}>
+                {nextMeal?.name ?? "Roasted Chicken & Quinoa"}
+              </Text>
+              <View style={{ flexDirection: "row", gap: 6, marginTop: 4 }}>
+                {nextMeal?.lactoseFree ? (
+                  <View style={[s.clinicalTag, { backgroundColor: "#4CAF7D20" }]}>
+                    <Text style={[s.clinicalTagText, { color: "#4CAF7D" }]}>Lactose-Free</Text>
+                  </View>
+                ) : null}
+                <View style={[s.clinicalTag, { backgroundColor: colors.clay + "20" }]}>
+                  <Text style={[s.clinicalTagText, { color: colors.clay }]}>Thyroid-Sync</Text>
+                </View>
               </View>
-              <ArrowRight size={18} color={colors.border} />
-           </Pressable>
+              <Text style={[s.nextMealSub, { color: colors.inkMuted, marginTop: 6 }]}>
+                High Protein · Metabolic support
+              </Text>
+            </View>
+            <ArrowRight size={18} color={colors.border} />
+          </Pressable>
         </Animated.View>
 
         {/* ④ APPOINTMENTS LIST ─────────────────────────────── */}
         <Animated.View entering={FadeInDown.duration(450).delay(260)}>
           {/* Section header */}
           <View style={s.sectionHeader}>
-            <Text style={[s.sectionTitle, { color: colors.foreground }]}>
-              Appointments
-            </Text>
+            <Text style={[s.sectionTitle, { color: colors.foreground }]}>Appointments</Text>
             <Pressable onPress={() => router.push("/visits")}>
               <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
             </Pressable>
           </View>
 
-          <View style={[s.apptList, { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1 }]}>
+          <View
+            style={[
+              s.apptList,
+              { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1 },
+            ]}
+          >
             {recentAppts.map((appt, i) => {
               const doc = doctors.find((d) => d.id === appt.doctorId);
               if (!doc) return null;
@@ -539,18 +683,23 @@ export default function DashboardScreen() {
                   style={[
                     s.apptRow,
                     { flexDirection: "column", alignItems: "stretch", paddingVertical: 12 },
-                    !isLast && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+                    !isLast && {
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                      borderBottomColor: colors.border,
+                    },
                   ]}
                 >
-                  <Pressable onPress={() => router.push(`/visits/${appt.id}`)} style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                  <Pressable
+                    onPress={() => router.push(`/visits/${appt.id}`)}
+                    style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
+                  >
                     <Avatar initials={doc.initials} size="md" />
 
                     <View style={s.apptText}>
-                      <Text style={[s.apptName, { color: colors.foreground }]}>
-                        {doc.name}
-                      </Text>
+                      <Text style={[s.apptName, { color: colors.foreground }]}>{doc.name}</Text>
                       <Text style={[s.apptMeta, { color: colors.inkMuted }]}>
-                        {doc.specialty}{"  ·  "}
+                        {doc.specialty}
+                        {"  ·  "}
                         {isSameDay(new Date(appt.date), today)
                           ? `Today, ${appt.time}`
                           : `${format(new Date(appt.date), "MMM d")}, ${appt.time}`}
@@ -563,29 +712,52 @@ export default function DashboardScreen() {
                         { backgroundColor: statusColor(appt.status, colors) + "1A" },
                       ]}
                     >
-                      <Text
-                        style={[
-                          s.statusText,
-                          { color: statusColor(appt.status, colors) },
-                        ]}
-                      >
+                      <Text style={[s.statusText, { color: statusColor(appt.status, colors) }]}>
                         {statusLabel(appt.status)}
                       </Text>
                     </View>
                   </Pressable>
 
                   {/* Active Actions Row */}
-                  <View style={{ flexDirection: "row", gap: 8, marginTop: 16, paddingTop: 16, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "rgba(0,0,0,0.05)" }}>
-                    <Pressable style={[s.quickBtn, { backgroundColor: colors.surface , borderColor: colors.border, flex: 1 }]} onPress={() => {}}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 8,
+                      marginTop: 16,
+                      paddingTop: 16,
+                      borderTopWidth: StyleSheet.hairlineWidth,
+                      borderTopColor: "rgba(0,0,0,0.05)",
+                    }}
+                  >
+                    <Pressable
+                      style={[
+                        s.quickBtn,
+                        { backgroundColor: colors.surface, borderColor: colors.border, flex: 1 },
+                      ]}
+                      onPress={() => {}}
+                    >
                       <MessageCircle size={15} color={colors.foreground} />
                       <Text style={[s.quickBtnText, { color: colors.foreground }]}>Chat</Text>
                     </Pressable>
-                    <Pressable style={[s.quickBtn, { backgroundColor: colors.surface , borderColor: colors.border, flex: 1 }]} onPress={() => {}}>
+                    <Pressable
+                      style={[
+                        s.quickBtn,
+                        { backgroundColor: colors.surface, borderColor: colors.border, flex: 1 },
+                      ]}
+                      onPress={() => {}}
+                    >
                       <Phone size={15} color={colors.foreground} />
                       <Text style={[s.quickBtnText, { color: colors.foreground }]}>Audio</Text>
                     </Pressable>
-                    <Pressable 
-                      style={[s.quickBtn, { backgroundColor: colors.clay + "1A", borderColor: colors.clay + "33", flex: 1 }]} 
+                    <Pressable
+                      style={[
+                        s.quickBtn,
+                        {
+                          backgroundColor: colors.clay + "1A",
+                          borderColor: colors.clay + "33",
+                          flex: 1,
+                        },
+                      ]}
                       onPress={() => router.push("/care-team/video-call")}
                     >
                       <Video size={15} color={colors.clay} />
@@ -601,19 +773,14 @@ export default function DashboardScreen() {
         {/* ⑥ RECENT REPORTS ───────────────────────────────── */}
         <Animated.View entering={FadeInDown.duration(450).delay(380)}>
           <View style={s.sectionHeader}>
-            <Text style={[s.sectionTitle, { color: colors.foreground }]}>
-              Recent Reports
-            </Text>
+            <Text style={[s.sectionTitle, { color: colors.foreground }]}>Recent Reports</Text>
             <Pressable onPress={() => router.push("/(tabs)/reports")}>
               <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
             </Pressable>
           </View>
 
           <View
-            style={[
-              s.reportCard,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-            ]}
+            style={[s.reportCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
           >
             {recentReports.map((r, i) => (
               <Pressable
@@ -633,7 +800,12 @@ export default function DashboardScreen() {
                 ]}
               >
                 {/* Icon */}
-                <View style={[s.reportIcon, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                <View
+                  style={[
+                    s.reportIcon,
+                    { backgroundColor: colors.background, borderColor: colors.border },
+                  ]}
+                >
                   <FileText size={15} color={colors.inkMuted} strokeWidth={1.75} />
                 </View>
 
@@ -642,7 +814,8 @@ export default function DashboardScreen() {
                     {r.title}
                   </Text>
                   <Text style={[s.reportMeta, { color: colors.inkMuted }]}>
-                    {r.type}{"  ·  "}
+                    {r.type}
+                    {"  ·  "}
                     {new Date(r.date).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -665,7 +838,9 @@ export default function DashboardScreen() {
               <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
             </Pressable>
           </View>
-          <View style={[s.reportCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View
+            style={[s.reportCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          >
             {(eRxList.length > 0 ? eRxList.slice(0, 2) : []).map((rx, i, arr) => (
               <Pressable
                 key={rx.id}
@@ -678,7 +853,12 @@ export default function DashboardScreen() {
                   },
                 ]}
               >
-                <View style={[s.reportIcon, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                <View
+                  style={[
+                    s.reportIcon,
+                    { backgroundColor: colors.background, borderColor: colors.border },
+                  ]}
+                >
                   <Pill size={15} color={colors.clay} strokeWidth={1.75} />
                 </View>
                 <View style={s.reportText}>
@@ -702,13 +882,21 @@ export default function DashboardScreen() {
                 },
               ]}
             >
-              <View style={[s.reportIcon, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <View
+                style={[
+                  s.reportIcon,
+                  { backgroundColor: colors.background, borderColor: colors.border },
+                ]}
+              >
                 <Pill size={15} color={colors.clay} strokeWidth={1.75} />
               </View>
               <View style={s.reportText}>
-                <Text style={[s.reportTitle, { color: colors.foreground }]}>Medication history</Text>
+                <Text style={[s.reportTitle, { color: colors.foreground }]}>
+                  Medication history
+                </Text>
                 <Text style={[s.reportMeta, { color: colors.inkMuted }]}>
-                  {eRxList.length + medsList.length} entries · Last update {formatRxRelative(eRxList[0]?.sent_at ?? new Date().toISOString())}
+                  {eRxList.length + medsList.length} entries · Last update{" "}
+                  {formatRxRelative(eRxList[0]?.sent_at ?? new Date().toISOString())}
                 </Text>
               </View>
               <ChevronRight size={16} color={colors.inkMuted} strokeWidth={1.75} />
@@ -721,50 +909,73 @@ export default function DashboardScreen() {
           <View style={s.sectionHeader}>
             <Text style={[s.sectionTitle, { color: colors.foreground }]}>Your Care Team</Text>
             <Pressable onPress={() => router.push("/visits")}>
-               <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
+              <Text style={[s.sectionLink, { color: colors.clay }]}>View all</Text>
             </Pressable>
           </View>
-          <View style={[s.careTeamCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            {doctors.filter((d) => appointments.some((a) => a.doctorId === d.id)).slice(0, 2).map((doc, idx) => (
-              <Pressable 
-                key={doc.id} 
-                onPress={() => router.push(`/doctor/${doc.id}`)}
-                style={[s.careTeamRow, idx !== 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border }]}
-              >
-                <Avatar initials={doc.initials} size="md" />
-                <View style={{ flex: 1 }}>
-                  <Text style={[s.careTeamName, { color: colors.foreground }]}>{doc.name}</Text>
-                  <Text style={[s.careTeamSpec, { color: colors.inkMuted }]}>{doc.specialty}</Text>
-                </View>
-                <View style={s.careTeamActions}>
-                  <Pressable 
-                    style={[s.careBtn, { backgroundColor: "#4CAF50" + "1A" }]} 
-                    onPress={(e) => { e.stopPropagation(); }}
-                  >
-                    <Phone size={14} color="#4CAF50" />
-                  </Pressable>
-                  <Pressable style={[s.careBtn, { backgroundColor: colors.clay + "1A" }]} onPress={(e) => { e.stopPropagation(); }}>
-                    <MessageCircle size={16} color={colors.clay} />
-                  </Pressable>
-                  <Pressable 
-                    style={[s.careBtn, { backgroundColor: colors.ink + "1A" }]} 
-                    onPress={(e) => { e.stopPropagation(); router.push("/care-team/video-call"); }}
-                  >
-                    <Video size={16} color={colors.ink} />
-                  </Pressable>
-                </View>
-              </Pressable>
-            ))}
-        </View>
-      </Animated.View>
-    </ScrollView>
+          <View
+            style={[
+              s.careTeamCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            {doctors
+              .filter((d) => appointments.some((a) => a.doctorId === d.id))
+              .slice(0, 2)
+              .map((doc, idx) => (
+                <Pressable
+                  key={doc.id}
+                  onPress={() => router.push(`/doctor/${doc.id}`)}
+                  style={[
+                    s.careTeamRow,
+                    idx !== 0 && {
+                      borderTopWidth: StyleSheet.hairlineWidth,
+                      borderTopColor: colors.border,
+                    },
+                  ]}
+                >
+                  <Avatar initials={doc.initials} size="md" />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[s.careTeamName, { color: colors.foreground }]}>{doc.name}</Text>
+                    <Text style={[s.careTeamSpec, { color: colors.inkMuted }]}>
+                      {doc.specialty}
+                    </Text>
+                  </View>
+                  <View style={s.careTeamActions}>
+                    <Pressable
+                      style={[s.careBtn, { backgroundColor: "#4CAF50" + "1A" }]}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <Phone size={14} color="#4CAF50" />
+                    </Pressable>
+                    <Pressable
+                      style={[s.careBtn, { backgroundColor: colors.clay + "1A" }]}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <MessageCircle size={16} color={colors.clay} />
+                    </Pressable>
+                    <Pressable
+                      style={[s.careBtn, { backgroundColor: colors.ink + "1A" }]}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        router.push("/care-team/video-call");
+                      }}
+                    >
+                      <Video size={16} color={colors.ink} />
+                    </Pressable>
+                  </View>
+                </Pressable>
+              ))}
+          </View>
+        </Animated.View>
+      </ScrollView>
 
       {/* 🔮 MEDORA AI FLOATING ACTION BUTTON ────────────────── */}
-      <Animated.View 
-        entering={ZoomIn.duration(500).delay(600)}
-        style={s.fabWrapper}
-      >
-        <Pressable 
+      <Animated.View entering={ZoomIn.duration(500).delay(600)} style={s.fabWrapper}>
+        <Pressable
           onPress={() => router.push("/ai-assistant")}
           style={[s.fab, { backgroundColor: colors.ink }]}
         >
@@ -1195,7 +1406,7 @@ const s = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.03)"
+    backgroundColor: "rgba(0,0,0,0.03)",
   },
   reportText: {
     flex: 1,
@@ -1214,31 +1425,50 @@ const s = StyleSheet.create({
   },
 
   // ── New Data Additions ──────────────────────────────────────
-  insightCard: { 
-    flexDirection: "row", 
-    padding: 20, 
-    borderRadius: 24, 
-    gap: 16, 
-    alignItems: "flex-start", 
+  insightCard: {
+    flexDirection: "row",
+    padding: 20,
+    borderRadius: 24,
+    gap: 16,
+    alignItems: "flex-start",
     marginTop: 6,
     shadowColor: "#B6785C",
     shadowOpacity: 0.08,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 8 },
-    elevation: 4
+    elevation: 4,
   },
-  insightIconWrap: { width: 38, height: 38, borderRadius: 19, backgroundColor: "rgba(182,120,92,0.15)", alignItems: "center", justifyContent: "center" },
+  insightIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "rgba(182,120,92,0.15)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   insightTextWrap: { flex: 1, gap: 6 },
-  insightTitle: { fontSize: 14, fontFamily: "DMSans_700Bold", letterSpacing: 0.5, textTransform: "uppercase" },
+  insightTitle: {
+    fontSize: 14,
+    fontFamily: "DMSans_700Bold",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
   insightBody: { fontSize: 13, fontFamily: "DMSans_400Regular", lineHeight: 22, opacity: 0.8 },
 
   vitalCard: { width: 130, padding: 16, borderRadius: 20, borderWidth: 1, gap: 8 },
-  vitalIcon: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", marginBottom: 4 },
+  vitalIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
+  },
   vitalValue: { fontSize: 18, fontFamily: "Fraunces_600SemiBold" },
   vitalLabel: { fontSize: 11, fontFamily: "DMSans_500Medium" },
 
-  careTeamCard: { 
-    borderRadius: 24, 
+  careTeamCard: {
+    borderRadius: 24,
     overflow: "hidden",
     shadowColor: "#000",
     shadowOpacity: 0.03,
@@ -1250,30 +1480,76 @@ const s = StyleSheet.create({
   careTeamName: { fontSize: 16, fontFamily: "DMSans_600SemiBold", letterSpacing: -0.2 },
   careTeamSpec: { fontSize: 13, fontFamily: "DMSans_400Regular", marginTop: 2, opacity: 0.7 },
   careTeamActions: { flexDirection: "row", gap: 10 },
-  careBtn: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
-  quickBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: 12, borderRadius: 14, backgroundColor: "rgba(0,0,0,0.03)" },
+  careBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quickBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 12,
+    borderRadius: 14,
+    backgroundColor: "rgba(0,0,0,0.03)",
+  },
   quickBtnText: { fontSize: 13, fontFamily: "DMSans_600SemiBold" },
 
-  nextMealCard: { flexDirection: "row", padding: 20, borderRadius: 28, borderWidth: 1, alignItems: "center", gap: 16, shadowColor: "#000", shadowOpacity: 0.02, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
-  mealIconWrap: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center" },
+  nextMealCard: {
+    flexDirection: "row",
+    padding: 20,
+    borderRadius: 28,
+    borderWidth: 1,
+    alignItems: "center",
+    gap: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.02,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  mealIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   mealCategory: { fontSize: 10, fontFamily: "DMSans_700Bold", letterSpacing: 1 },
   nextMealName: { fontSize: 16, fontFamily: "Fraunces_500Medium", marginTop: 2 },
   nextMealSub: { fontSize: 13, fontFamily: "DMSans_400Regular", marginTop: 2 },
   mealKcal: { fontSize: 13, fontFamily: "DMSans_600SemiBold" },
-  
+
   // 📈 Charts & Activity
   chartCard: { borderRadius: 28, padding: 22, borderWidth: 1, marginBottom: 4 },
-  chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  chartTitle: { fontSize: 15, fontFamily: 'Fraunces_500Medium' },
-  chartMeta: { fontSize: 12, fontFamily: 'DMSans_400Regular', marginTop: 2 },
+  chartHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  chartTitle: { fontSize: 15, fontFamily: "Fraunces_500Medium" },
+  chartMeta: { fontSize: 12, fontFamily: "DMSans_400Regular", marginTop: 2 },
   chartBadge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-  chartBadgeTxt: { fontSize: 11, fontFamily: 'DMSans_700Bold' },
+  chartBadgeTxt: { fontSize: 11, fontFamily: "DMSans_700Bold" },
 
-  activityCard: { flexDirection: 'row', alignItems: 'center', padding: 16, borderRadius: 24, borderWidth: 1, gap: 12, minWidth: 140 },
-  activityIcon: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
-  activityVal: { fontSize: 15, fontFamily: 'Fraunces_600SemiBold' },
-  activityLabel: { fontSize: 10, fontFamily: 'DMSans_500Medium', marginTop: 1 },
+  activityCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderRadius: 24,
+    borderWidth: 1,
+    gap: 12,
+    minWidth: 140,
+  },
+  activityIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activityVal: { fontSize: 15, fontFamily: "Fraunces_600SemiBold" },
+  activityLabel: { fontSize: 10, fontFamily: "DMSans_500Medium", marginTop: 1 },
 
   clinicalTag: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
-  clinicalTagText: { fontSize: 9, fontFamily: 'DMSans_700Bold', textTransform: 'uppercase' },
+  clinicalTagText: { fontSize: 9, fontFamily: "DMSans_700Bold", textTransform: "uppercase" },
 });

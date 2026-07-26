@@ -15,6 +15,9 @@ import { ChartDetailSheet, type ChartSheetDetail } from "@/components/doctor/Cha
 import { BodyAnatomyMarker } from "@/components/clinical/BodyAnatomyMarker";
 import { DoctorAdherenceInbox } from "@/components/doctor/DoctorAdherenceInbox";
 import { PatientChartActionRail } from "@/components/doctor/PatientChartActionRail";
+import { PatientProfileWorkspace } from "@/components/patient-management/PatientProfileWorkspace";
+import { EmrWorkspace } from "@/components/emr/EmrWorkspace";
+import { ChartVaccinesPanel, vaccineDueCount } from "@/components/doctor/immunizations/ChartVaccinesPanel";
 import {
   HistoryDocumentsPanel,
   HistoryTabBar,
@@ -35,8 +38,10 @@ import { useLiveQueue } from "@/lib/doctor-live-queue-store";
 import { listVitalsForPatient } from "@/lib/shared/vitals-store";
 import { cn } from "@/lib/utils";
 
+type PatientChartSearch = { section?: string };
+
 export const Route = createFileRoute("/doctor/patients/$patientId/")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): PatientChartSearch => ({
     section: typeof search.section === "string" ? search.section : undefined,
   }),
   component: PatientChart,
@@ -52,10 +57,10 @@ const STATUS_BADGE = {
 const HISTORY_TAB_DEFS = [
   { id: "visits", label: "Visits" },
   { id: "rx", label: "Rx" },
+  { id: "vaccines", label: "Vaccines" },
   { id: "documents", label: "Documents" },
   { id: "vitals", label: "Vitals" },
 ] as const;
-
 
 function PatientChart() {
   const { patientId } = Route.useParams();
@@ -78,6 +83,7 @@ function PatientChart() {
   const historyTabs = [
     { id: "visits" as const, label: "Visits", count: historyVisits.length },
     { id: "rx" as const, label: "Rx", count: historyRx.length },
+    { id: "vaccines" as const, label: "Vaccines", count: vaccineDueCount(patientId) },
     { id: "documents" as const, label: "Documents", count: historyDocuments.length },
     { id: "vitals" as const, label: "Vitals", count: historyVitals.length },
   ];
@@ -86,13 +92,21 @@ function PatientChart() {
     if (section === "open-items") {
       document.getElementById("open-items")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+    if (section === "vaccines") {
+      setHistoryTab("vaccines");
+      document.getElementById("chart-history")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }, [section]);
 
   if (!patient) {
     return (
       <div className="py-16 text-center">
         <p className="text-[#8A8F8C]">Patient not found.</p>
-        <Link to="/doctor/patients" search={{ view: "panel" }} className="mt-3 inline-block text-sm font-semibold text-[#B8735D]">
+        <Link
+          to="/doctor/patients"
+          search={{ view: "panel" }}
+          className="mt-3 inline-block text-sm font-semibold text-[#B8735D]"
+        >
           Back to patients
         </Link>
       </div>
@@ -168,38 +182,43 @@ function PatientChart() {
               {patient.initials}
             </span>
             <div className="min-w-0 flex-1">
-            <p className="text-lg font-semibold text-[#1B3B2E]">{patient.name}</p>
-            <p className="text-sm text-[#8A8F8C]">{patient.condition}</p>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className={cn("rounded-full px-2.5 py-0.5 text-[10px] font-semibold", STATUS_BADGE[patient.status])}>
-                {patient.status}
-              </span>
-              <span className="text-xs text-[#8A8F8C]">
-                {patient.age}y · {patient.gender} · {patient.patientRef}
-              </span>
-              {queueStatus.kind !== "none" ? (
-                <span className="rounded-full bg-[#E8EFE6] px-2.5 py-0.5 text-[10px] font-semibold text-[#1B3B2E]">
-                  {queueStatus.label}
+              <p className="text-lg font-semibold text-[#1B3B2E]">{patient.name}</p>
+              <p className="text-sm text-[#8A8F8C]">{patient.condition}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span
+                  className={cn(
+                    "rounded-full px-2.5 py-0.5 text-[10px] font-semibold",
+                    STATUS_BADGE[patient.status],
+                  )}
+                >
+                  {patient.status}
                 </span>
+                <span className="text-xs text-[#8A8F8C]">
+                  {patient.age}y · {patient.gender} · {patient.patientRef}
+                </span>
+                {queueStatus.kind !== "none" ? (
+                  <span className="rounded-full bg-[#E8EFE6] px-2.5 py-0.5 text-[10px] font-semibold text-[#1B3B2E]">
+                    {queueStatus.label}
+                  </span>
+                ) : null}
+              </div>
+              {patient.alert ? (
+                <p className="mt-2 text-sm font-semibold text-[#C45C4A]">{patient.alert}</p>
+              ) : null}
+              <p className="mt-1 text-xs leading-relaxed text-[#8A8F8C]">{patient.timeline}</p>
+              {patient.pills.length > 0 ? (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {patient.pills.map((pill) => (
+                    <span
+                      key={pill}
+                      className="rounded-lg bg-[#F5F2ED] px-2.5 py-1 text-[11px] font-medium text-[#8A8F8C]"
+                    >
+                      {pill}
+                    </span>
+                  ))}
+                </div>
               ) : null}
             </div>
-            {patient.alert ? (
-              <p className="mt-2 text-sm font-semibold text-[#C45C4A]">{patient.alert}</p>
-            ) : null}
-            <p className="mt-1 text-xs leading-relaxed text-[#8A8F8C]">{patient.timeline}</p>
-            {patient.pills.length > 0 ? (
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {patient.pills.map((pill) => (
-                  <span
-                    key={pill}
-                    className="rounded-lg bg-[#F5F2ED] px-2.5 py-1 text-[11px] font-medium text-[#8A8F8C]"
-                  >
-                    {pill}
-                  </span>
-                ))}
-              </div>
-            ) : null}
-          </div>
           </div>
           <div className="grid grid-cols-3 gap-2 border-t border-[#F0EDE8] pt-3 text-center text-[10px] font-medium tracking-wide text-[#8A8F8C] md:ml-auto md:w-auto md:shrink-0 md:grid-cols-1 md:gap-2 md:border-0 md:pt-0 md:text-right">
             <div className="rounded-xl bg-[#FAFAF8] px-2 py-2 md:bg-transparent md:px-0 md:py-0">
@@ -227,6 +246,31 @@ function PatientChart() {
 
       <PatientChartActionRail patientId={patientId} />
 
+      <section
+        id="patient-emr-workspace"
+        className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 shadow-[0_2px_14px_rgba(27,59,46,0.05)]"
+      >
+        <EmrWorkspace
+          patientId={patientId}
+          patientName={patient?.name}
+          embedded
+          canWrite
+        />
+      </section>
+
+      <section
+        id="patient-management-profile"
+        className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 shadow-[0_2px_14px_rgba(27,59,46,0.05)]"
+      >
+        <p className="text-sm font-semibold text-[#1B3B2E] mb-3">Registration profile</p>
+        <PatientProfileWorkspace
+          patientId={patientId}
+          mode="staff"
+          embedded
+          defaultTab="allergies"
+        />
+      </section>
+
       <div className="lg:hidden">
         <BodyAnatomyMarker markers={latestVitalsMarkers} readOnly />
         <Link
@@ -234,7 +278,9 @@ function PatientChart() {
           search={{ patientId }}
           className="mt-2 block text-center text-xs font-semibold text-[#B8735D] hover:underline"
         >
-          {latestVitalsMarkers.length > 0 ? "Update on record vitals →" : "Mark areas on record vitals →"}
+          {latestVitalsMarkers.length > 0
+            ? "Update on record vitals →"
+            : "Mark areas on record vitals →"}
         </Link>
       </div>
 
@@ -242,42 +288,10 @@ function PatientChart() {
         <div className="min-w-0 space-y-4">
           <DoctorAdherenceInbox patientId={patientId} />
 
-      {therapy ? (
-        <section className="space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-[#1B3B2E]">Before you prescribe</h2>
-            {activeRx ? (
-              <Link
-                to="/doctor/prescriptions"
-                search={{
-                  view: "write",
-                  patientId,
-                  amendFrom: activeRx.rx_number,
-                }}
-                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#B8735D]/30 bg-[#FFF8F5] px-4 text-xs font-semibold text-[#B8735D] hover:bg-[#F0DDD6]/40"
-              >
-                <FilePen className="h-3.5 w-3.5" strokeWidth={2} />
-                Adjust therapy
-              </Link>
-            ) : null}
-          </div>
-          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <div className="relative flex min-h-[148px] flex-col rounded-[18px] border border-[#EDEAE6] bg-white p-3.5 text-left shadow-[0_2px_12px_rgba(27,59,46,0.05)]">
-              <div className="mb-2.5 h-1 w-full rounded-full bg-[#B8735D]" />
-              <p className="text-[10px] font-semibold tracking-[0.1em] text-[#B8735D]">CURRENT THERAPY</p>
-              {therapy.lines.map((line) => (
-                <p key={line} className="mt-2 text-[13px] font-medium leading-snug text-[#1B3B2E]">
-                  {line}
-                </p>
-              ))}
-              <div className="mt-auto flex items-center justify-between gap-2 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setSheetDetail({ type: "therapy" })}
-                  className="text-[11px] text-[#8A8F8C] hover:text-[#1B3B2E]"
-                >
-                  Tap for detail
-                </button>
+          {therapy ? (
+            <section className="space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-sm font-semibold text-[#1B3B2E]">Before you prescribe</h2>
                 {activeRx ? (
                   <Link
                     to="/doctor/prescriptions"
@@ -286,79 +300,131 @@ function PatientChart() {
                       patientId,
                       amendFrom: activeRx.rx_number,
                     }}
-                    className="inline-flex min-h-[36px] items-center gap-1 rounded-full bg-[#1B3B2E] px-3 text-[11px] font-semibold text-white"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#B8735D]/30 bg-[#FFF8F5] px-4 text-xs font-semibold text-[#B8735D] hover:bg-[#F0DDD6]/40"
                   >
-                    <FilePen className="h-3 w-3" />
-                    Adjust
+                    <FilePen className="h-3.5 w-3.5" strokeWidth={2} />
+                    Adjust therapy
                   </Link>
                 ) : null}
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setSheetDetail({ type: "problems" })}
-              className="flex min-h-[148px] flex-col rounded-[18px] border border-[#EDEAE6] bg-white p-3.5 text-left shadow-[0_2px_12px_rgba(27,59,46,0.05)]"
-            >
-              <div className="mb-2.5 h-1 w-full rounded-full bg-[#1B3B2E]" />
-              <p className="text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">PROBLEM LIST</p>
-              {therapy.problems.map((line) => (
-                <p key={line} className="mt-2 text-[13px] font-medium leading-snug text-[#1B3B2E]">
-                  {line}
-                </p>
-              ))}
-              <p className="mt-auto pt-3 text-[11px] text-[#8A8F8C]">Tap for detail</p>
-            </button>
-          </div>
-        </section>
-      ) : null}
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                <div className="relative flex min-h-[148px] flex-col rounded-[18px] border border-[#EDEAE6] bg-white p-3.5 text-left shadow-[0_2px_12px_rgba(27,59,46,0.05)]">
+                  <div className="mb-2.5 h-1 w-full rounded-full bg-[#B8735D]" />
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-[#B8735D]">
+                    CURRENT THERAPY
+                  </p>
+                  {therapy.lines.map((line) => (
+                    <p
+                      key={line}
+                      className="mt-2 text-[13px] font-medium leading-snug text-[#1B3B2E]"
+                    >
+                      {line}
+                    </p>
+                  ))}
+                  <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+                    <button
+                      type="button"
+                      onClick={() => setSheetDetail({ type: "therapy" })}
+                      className="text-[11px] text-[#8A8F8C] hover:text-[#1B3B2E]"
+                    >
+                      Tap for detail
+                    </button>
+                    {activeRx ? (
+                      <Link
+                        to="/doctor/prescriptions"
+                        search={{
+                          view: "write",
+                          patientId,
+                          amendFrom: activeRx.rx_number,
+                        }}
+                        className="inline-flex min-h-[36px] items-center gap-1 rounded-full bg-[#1B3B2E] px-3 text-[11px] font-semibold text-white"
+                      >
+                        <FilePen className="h-3 w-3" />
+                        Adjust
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSheetDetail({ type: "problems" })}
+                  className="flex min-h-[148px] flex-col rounded-[18px] border border-[#EDEAE6] bg-white p-3.5 text-left shadow-[0_2px_12px_rgba(27,59,46,0.05)]"
+                >
+                  <div className="mb-2.5 h-1 w-full rounded-full bg-[#1B3B2E]" />
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">
+                    PROBLEM LIST
+                  </p>
+                  {therapy.problems.map((line) => (
+                    <p
+                      key={line}
+                      className="mt-2 text-[13px] font-medium leading-snug text-[#1B3B2E]"
+                    >
+                      {line}
+                    </p>
+                  ))}
+                  <p className="mt-auto pt-3 text-[11px] text-[#8A8F8C]">Tap for detail</p>
+                </button>
+              </div>
+            </section>
+          ) : null}
 
-      {openItems.length > 0 && (
-        <section id="open-items" className="space-y-3">
+          {openItems.length > 0 && (
+            <section id="open-items" className="space-y-3">
               <h2 className="text-sm font-semibold text-[#1B3B2E]">Open items</h2>
               <div className="divide-y divide-[#F0EDE8] overflow-hidden rounded-[20px] border border-[#EDEAE6] bg-white shadow-[0_2px_14px_rgba(27,59,46,0.05)]">
                 {openItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() =>
-                    setSheetDetail(
-                      item.documentId
-                        ? { type: "document", id: item.documentId }
-                        : { type: "open-item", id: item.id },
-                    )
-                  }
-                  className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-[#FAF8F5]"
-                >
-                  <span
-                    className={cn(
-                      "grid h-10 w-10 shrink-0 place-items-center rounded-full",
-                      item.icon === "message" ? "bg-[#F5F2ED]" : "bg-[#F0DDD6]",
-                    )}
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() =>
+                      setSheetDetail(
+                        item.documentId
+                          ? { type: "document", id: item.documentId }
+                          : { type: "open-item", id: item.id },
+                      )
+                    }
+                    className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-[#FAF8F5]"
                   >
-                    {item.icon === "message" ? (
-                      <MessageCircle className="h-[18px] w-[18px] text-[#8A8F8C]" strokeWidth={1.75} />
-                    ) : (
-                      <FlaskConical className="h-[18px] w-[18px] text-[#8A8F8C]" strokeWidth={1.75} />
-                    )}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">{item.kind}</p>
-                    <p className="text-sm font-semibold text-[#1B3B2E]">{item.title}</p>
-                    <p className="text-xs text-[#8A8F8C]">{item.subtitle}</p>
-                  </div>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-[#D4D0CB]" />
-                </button>
-              ))}
-            </div>
-          </section>
-      )}
+                    <span
+                      className={cn(
+                        "grid h-10 w-10 shrink-0 place-items-center rounded-full",
+                        item.icon === "message" ? "bg-[#F5F2ED]" : "bg-[#F0DDD6]",
+                      )}
+                    >
+                      {item.icon === "message" ? (
+                        <MessageCircle
+                          className="h-[18px] w-[18px] text-[#8A8F8C]"
+                          strokeWidth={1.75}
+                        />
+                      ) : (
+                        <FlaskConical
+                          className="h-[18px] w-[18px] text-[#8A8F8C]"
+                          strokeWidth={1.75}
+                        />
+                      )}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">
+                        {item.kind}
+                      </p>
+                      <p className="text-sm font-semibold text-[#1B3B2E]">{item.title}</p>
+                      <p className="text-xs text-[#8A8F8C]">{item.subtitle}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-[#D4D0CB]" />
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
-      <section className="space-y-3">
+          <section id="chart-history" className="space-y-3">
             <article className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 shadow-[0_2px_14px_rgba(27,59,46,0.05)]">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-sm font-semibold text-[#1B3B2E]">History</h2>
-                  <p className="mt-0.5 text-xs text-[#8A8F8C]">Visits, prescriptions, documents &amp; vitals</p>
+                  <p className="mt-0.5 text-xs text-[#8A8F8C]">
+                    Visits, Rx, vaccines, documents &amp; vitals
+                  </p>
                 </div>
                 <Link
                   to="/doctor/patients/$patientId/history"
@@ -384,6 +450,8 @@ function PatientChart() {
                   renderHistoryEntries(historyRx, (entry) =>
                     setSheetDetail({ type: "medication", id: entry.medicationId }),
                   )}
+
+                {historyTab === "vaccines" && <ChartVaccinesPanel patientId={patientId} />}
 
                 {historyTab === "documents" && (
                   <HistoryDocumentsPanel
@@ -414,7 +482,9 @@ function PatientChart() {
             search={{ patientId }}
             className="mt-2 block text-center text-xs font-semibold text-[#B8735D] hover:underline"
           >
-            {latestVitalsMarkers.length > 0 ? "Update on record vitals →" : "Mark areas on record vitals →"}
+            {latestVitalsMarkers.length > 0
+              ? "Update on record vitals →"
+              : "Mark areas on record vitals →"}
           </Link>
         </aside>
       </section>

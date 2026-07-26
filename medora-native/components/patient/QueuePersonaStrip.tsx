@@ -28,11 +28,7 @@ function PersonaBubble({ persona, kind }: { persona: QueuePersona; kind: QueueNo
       ]}
     >
       {kind === "in-room" ? <View style={s.liveDot} /> : null}
-      <Image
-        source={QUEUE_PERSONA_IMAGES[persona]}
-        style={s.bubbleImg}
-        resizeMode="contain"
-      />
+      <Image source={QUEUE_PERSONA_IMAGES[persona]} style={s.bubbleImg} resizeMode="contain" />
     </View>
   );
 }

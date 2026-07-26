@@ -16,10 +16,7 @@ export function QueueProgress({ position, total, doctorName, className }: Props)
     [position, doctorName],
   );
 
-  const segments = useMemo(
-    () => buildQueueTimelineSegments(position, total),
-    [position, total],
-  );
+  const segments = useMemo(() => buildQueueTimelineSegments(position, total), [position, total]);
 
   return (
     <div

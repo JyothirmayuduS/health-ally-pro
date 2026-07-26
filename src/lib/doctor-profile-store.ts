@@ -193,7 +193,13 @@ export function unreadNotificationCount() {
 
 export function profileAttentionItems() {
   const store = getProfileStore();
-  const items: { id: string; label: string; count: number; to: string; tone: "urgent" | "warn" | "info" }[] = [];
+  const items: {
+    id: string;
+    label: string;
+    count: number;
+    to: string;
+    tone: "urgent" | "warn" | "info";
+  }[] = [];
 
   const pendingRefs = store.referrals.filter((r) => r.status === "Pending").length;
   if (pendingRefs > 0) {

@@ -27,9 +27,7 @@ export function DoctorQueueAvatar({ gender, size = "md", active = false, classNa
       )}
       aria-hidden
     >
-      {active ? (
-        <span className="absolute -inset-1 rounded-2xl bg-[#7A9B7E]/10 blur-sm" />
-      ) : null}
+      {active ? <span className="absolute -inset-1 rounded-2xl bg-[#7A9B7E]/10 blur-sm" /> : null}
       <img
         src={DOCTOR_QUEUE_IMAGES[gender]}
         alt=""

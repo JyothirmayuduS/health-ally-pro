@@ -5,10 +5,7 @@ import {
 } from "@/lib/patient-prescription-store";
 import { appendClinicalEvent } from "@/lib/shared/clinical-event-log";
 
-export function propagateRxCancellation(
-  record: DoctorSentRxRecord,
-  reason?: string,
-): void {
+export function propagateRxCancellation(record: DoctorSentRxRecord, reason?: string): void {
   cancelPatientPrescription(record.rx_number, reason);
   appendClinicalEvent({
     kind: "rx_cancelled",

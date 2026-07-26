@@ -30,7 +30,7 @@ import {
   Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Reagent } from "@/lib/reagentData";
+import type { Reagent } from "@/lib/lab-desk/reagentData";
 
 export default function ReagentInventory() {
   const { reagents, addReagentLot } = useLabStore();
@@ -84,7 +84,10 @@ export default function ReagentInventory() {
     <div className="space-y-6" data-testid="reagents-page">
       <SectionLabel
         action={
-          <Button className="btn-primary !h-8 !px-3 !text-[12px]" onClick={() => setModalOpen(true)}>
+          <Button
+            className="btn-primary !h-8 !px-3 !text-[12px]"
+            onClick={() => setModalOpen(true)}
+          >
             <Plus className="mr-1.5 h-3.5 w-3.5" /> Register Lot
           </Button>
         }
@@ -105,8 +108,15 @@ export default function ReagentInventory() {
         </div>
 
         <div className="surface p-4 flex items-center gap-3">
-          <div className={cn("h-10 w-10 flex items-center justify-center rounded-lg", stats.lowCount > 0 ? "bg-amber-100" : "bg-stone-50")}>
-            <AlertTriangle className={cn("h-5 w-5", stats.lowCount > 0 ? "text-amber-600" : "text-ink-400")} />
+          <div
+            className={cn(
+              "h-10 w-10 flex items-center justify-center rounded-lg",
+              stats.lowCount > 0 ? "bg-amber-100" : "bg-stone-50",
+            )}
+          >
+            <AlertTriangle
+              className={cn("h-5 w-5", stats.lowCount > 0 ? "text-amber-600" : "text-ink-400")}
+            />
           </div>
           <div>
             <div className="font-mono text-xl font-bold text-ink-900">{stats.lowCount}</div>
@@ -115,8 +125,18 @@ export default function ReagentInventory() {
         </div>
 
         <div className="surface p-4 flex items-center gap-3">
-          <div className={cn("h-10 w-10 flex items-center justify-center rounded-lg", stats.expiredCount > 0 ? "bg-red-100" : "bg-stone-50")}>
-            <Flame className={cn("h-5 w-5", stats.expiredCount > 0 ? "text-red-600 animate-pulse" : "text-ink-400")} />
+          <div
+            className={cn(
+              "h-10 w-10 flex items-center justify-center rounded-lg",
+              stats.expiredCount > 0 ? "bg-red-100" : "bg-stone-50",
+            )}
+          >
+            <Flame
+              className={cn(
+                "h-5 w-5",
+                stats.expiredCount > 0 ? "text-red-600 animate-pulse" : "text-ink-400",
+              )}
+            />
           </div>
           <div>
             <div className="font-mono text-xl font-bold text-ink-900">{stats.expiredCount}</div>
@@ -142,13 +162,19 @@ export default function ReagentInventory() {
             {reagents.length === 0 ? (
               <tr>
                 <td colSpan={7} className="py-8">
-                  <EmptyState icon={Beaker} title="No reagents logged" hint="Register your first reagent lot." />
+                  <EmptyState
+                    icon={Beaker}
+                    title="No reagents logged"
+                    hint="Register your first reagent lot."
+                  />
                 </td>
               </tr>
             ) : (
               reagents.map((r) => {
                 const isExpired = new Date(r.expiryDate).getTime() < Date.now();
-                const isExpiringSoon = new Date(r.expiryDate).getTime() < Date.now() + 7 * 24 * 3600 * 1000 && !isExpired;
+                const isExpiringSoon =
+                  new Date(r.expiryDate).getTime() < Date.now() + 7 * 24 * 3600 * 1000 &&
+                  !isExpired;
                 const isLow = r.testsRemaining / r.maxTests < 0.2 && r.testsRemaining > 0;
                 const isOutOfStock = r.testsRemaining <= 0;
 
@@ -178,12 +204,12 @@ export default function ReagentInventory() {
                   );
                 }
 
-                 return (
+                return (
                   <tr
                     key={r.id}
                     className={cn(
                       "border-b border-stone-100 text-[13px] hover:bg-stone-50/70 transition-colors cursor-pointer",
-                      isExpired && "bg-red-50/10"
+                      isExpired && "bg-red-50/10",
                     )}
                     onClick={() => {
                       setSelectedReagent(r);
@@ -192,22 +218,37 @@ export default function ReagentInventory() {
                   >
                     <td className="px-4 py-3">
                       <div className="font-medium text-ink-900">{r.name}</div>
-                      <div className="text-[10px] text-ink-400">Mapped tests: {r.testCodes.map((c) => c.toUpperCase()).join(", ")}</div>
+                      <div className="text-[10px] text-ink-400">
+                        Mapped tests: {r.testCodes.map((c) => c.toUpperCase()).join(", ")}
+                      </div>
                     </td>
                     <td className="px-4 py-3">{r.instrument}</td>
                     <td className="px-4 py-3 font-mono">{r.lotNumber}</td>
                     <td className="px-4 py-3">
-                      <div className={cn("flex items-center gap-1.5", isExpired ? "text-red-600 font-bold" : isExpiringSoon ? "text-amber-600" : "text-ink-900")}>
+                      <div
+                        className={cn(
+                          "flex items-center gap-1.5",
+                          isExpired
+                            ? "text-red-600 font-bold"
+                            : isExpiringSoon
+                              ? "text-amber-600"
+                              : "text-ink-900",
+                        )}
+                      >
                         <Calendar className="h-3.5 w-3.5 shrink-0" />
                         {r.expiryDate}
-                        {isExpiringSoon && <span className="text-[10px] font-semibold">(Expiring soon)</span>}
+                        {isExpiringSoon && (
+                          <span className="text-[10px] font-semibold">(Expiring soon)</span>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="font-mono font-semibold">
                         {r.testsRemaining} / {r.maxTests}
                       </div>
-                      <div className="text-[10px] text-ink-400">{(r.testsRemaining / r.maxTests * 100).toFixed(0)}% remaining</div>
+                      <div className="text-[10px] text-ink-400">
+                        {((r.testsRemaining / r.maxTests) * 100).toFixed(0)}% remaining
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
@@ -230,13 +271,21 @@ export default function ReagentInventory() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <DialogHeader>
               <DialogTitle>Register Reagent Lot</DialogTitle>
-              <DialogDescription>Add a new lot of reagent or consumable material to active stock.</DialogDescription>
+              <DialogDescription>
+                Add a new lot of reagent or consumable material to active stock.
+              </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-3">
               <div>
                 <Label>Reagent Name</Label>
-                <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="e.g. Sysmex Lysercell WDF" className="mt-1 border-ink-200 bg-white" required />
+                <Input
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="e.g. Sysmex Lysercell WDF"
+                  className="mt-1 border-ink-200 bg-white"
+                  required
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -255,36 +304,70 @@ export default function ReagentInventory() {
                 </div>
                 <div>
                   <Label>Lot Number</Label>
-                  <Input value={formLot} onChange={(e) => setFormLot(e.target.value)} placeholder="e.g. LOT-WDF-12" className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    value={formLot}
+                    onChange={(e) => setFormLot(e.target.value)}
+                    placeholder="e.g. LOT-WDF-12"
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Expiration Date</Label>
-                  <Input type="date" value={formExpiry} onChange={(e) => setFormExpiry(e.target.value)} className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    type="date"
+                    value={formExpiry}
+                    onChange={(e) => setFormExpiry(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
                 <div>
                   <Label>Max Test Count</Label>
-                  <Input type="number" value={formMaxTests} onChange={(e) => setFormMaxTests(e.target.value)} className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    type="number"
+                    value={formMaxTests}
+                    onChange={(e) => setFormMaxTests(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Stability Period (Days)</Label>
-                  <Input type="number" value={formStability} onChange={(e) => setFormStability(e.target.value)} className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    type="number"
+                    value={formStability}
+                    onChange={(e) => setFormStability(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
                 <div>
                   <Label>Mapped Test Codes (comma sep)</Label>
-                  <Input value={formTestCodes} onChange={(e) => setFormTestCodes(e.target.value)} placeholder="e.g. cbc, hb" className="mt-1 border-ink-200 bg-white font-mono text-xs" required />
+                  <Input
+                    value={formTestCodes}
+                    onChange={(e) => setFormTestCodes(e.target.value)}
+                    placeholder="e.g. cbc, hb"
+                    className="mt-1 border-ink-200 bg-white font-mono text-xs"
+                    required
+                  />
                 </div>
               </div>
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setModalOpen(false)}>Cancel</Button>
-              <Button type="submit" className="btn-primary">Register Lot</Button>
+              <Button type="button" variant="ghost" onClick={() => setModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="btn-primary">
+                Register Lot
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -306,64 +389,100 @@ export default function ReagentInventory() {
             <div className="space-y-4 my-2 text-sm text-ink-700">
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Reagent Name</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Reagent Name
+                  </span>
                   <span className="font-semibold text-ink-900">{selectedReagent.name}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Instrument</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Instrument
+                  </span>
                   <span>{selectedReagent.instrument}</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Lot Number</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Lot Number
+                  </span>
                   <span className="font-mono text-ink-900">{selectedReagent.lotNumber}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Expiration Date</span>
-                  <span className={cn(
-                    "font-semibold",
-                    new Date(selectedReagent.expiryDate).getTime() < Date.now() ? "text-red-600" : "text-ink-900"
-                  )}>{selectedReagent.expiryDate}</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Expiration Date
+                  </span>
+                  <span
+                    className={cn(
+                      "font-semibold",
+                      new Date(selectedReagent.expiryDate).getTime() < Date.now()
+                        ? "text-red-600"
+                        : "text-ink-900",
+                    )}
+                  >
+                    {selectedReagent.expiryDate}
+                  </span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Opened On</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Opened On
+                  </span>
                   <span>{selectedReagent.openedOn || "Not opened"}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">On-Board Stability</span>
-                  <span>{selectedReagent.stabilityDays ? `${selectedReagent.stabilityDays} days` : "N/A"}</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    On-Board Stability
+                  </span>
+                  <span>
+                    {selectedReagent.stabilityDays
+                      ? `${selectedReagent.stabilityDays} days`
+                      : "N/A"}
+                  </span>
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] uppercase font-bold text-ink-400 block mb-1">Stock Level</span>
+                <span className="text-[10px] uppercase font-bold text-ink-400 block mb-1">
+                  Stock Level
+                </span>
                 <div className="flex items-center justify-between text-xs mb-1 font-mono">
-                  <span>{selectedReagent.testsRemaining} / {selectedReagent.maxTests} tests remaining</span>
-                  <span>{(selectedReagent.testsRemaining / selectedReagent.maxTests * 100).toFixed(0)}%</span>
+                  <span>
+                    {selectedReagent.testsRemaining} / {selectedReagent.maxTests} tests remaining
+                  </span>
+                  <span>
+                    {((selectedReagent.testsRemaining / selectedReagent.maxTests) * 100).toFixed(0)}
+                    %
+                  </span>
                 </div>
                 <div className="w-full bg-stone-100 rounded-full h-2">
                   <div
                     className={cn(
                       "h-2 rounded-full",
-                      (selectedReagent.testsRemaining / selectedReagent.maxTests) < 0.2
+                      selectedReagent.testsRemaining / selectedReagent.maxTests < 0.2
                         ? "bg-red-500"
-                        : "bg-sage"
+                        : "bg-sage",
                     )}
-                    style={{ width: `${Math.min(100, Math.max(0, (selectedReagent.testsRemaining / selectedReagent.maxTests * 100)))}%` }}
+                    style={{
+                      width: `${Math.min(100, Math.max(0, (selectedReagent.testsRemaining / selectedReagent.maxTests) * 100))}%`,
+                    }}
                   />
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] uppercase font-bold text-ink-400 block">Mapped Test Codes</span>
+                <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                  Mapped Test Codes
+                </span>
                 <div className="flex gap-1 mt-1">
                   {selectedReagent.testCodes.map((code) => (
-                    <span key={code} className="bg-stone-100 border text-[10px] uppercase font-mono px-2 py-0.5 rounded text-ink-700">
+                    <span
+                      key={code}
+                      className="bg-stone-100 border text-[10px] uppercase font-mono px-2 py-0.5 rounded text-ink-700"
+                    >
                       {code}
                     </span>
                   ))}
@@ -371,7 +490,9 @@ export default function ReagentInventory() {
               </div>
 
               <div className="p-3 bg-stone-50 rounded-lg border text-xs">
-                <span className="text-[10px] uppercase font-bold text-ink-400 block mb-1">Simulated Consumption Log</span>
+                <span className="text-[10px] uppercase font-bold text-ink-400 block mb-1">
+                  Simulated Consumption Log
+                </span>
                 <div className="space-y-1 font-mono text-[11px] text-ink-600">
                   <div>· Depleted 1 test (Operator: Tech-1) · Just now</div>
                   <div>· Depleted 1 test (Operator: Tech-1) · 2 hours ago</div>
@@ -382,7 +503,9 @@ export default function ReagentInventory() {
           )}
 
           <DialogFooter>
-            <Button onClick={() => setDetailModalOpen(false)} className="btn-primary">Close</Button>
+            <Button onClick={() => setDetailModalOpen(false)} className="btn-primary">
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

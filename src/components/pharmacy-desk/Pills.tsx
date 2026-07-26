@@ -86,7 +86,13 @@ export function PaymentPill({ status }: { status: string }) {
   );
 }
 
-export function LocationChip({ location, size = "sm" }: { location: DrugLocation; size?: "sm" | "md" }) {
+export function LocationChip({
+  location,
+  size = "sm",
+}: {
+  location: DrugLocation;
+  size?: "sm" | "md";
+}) {
   return (
     <span
       className={cn(
@@ -108,7 +114,7 @@ export function LocationChip({ location, size = "sm" }: { location: DrugLocation
 export function SectionLabel({
   children,
   action,
-  eyebrow = "Maple · Pharmacy",
+  eyebrow = "Oak Haven · Pharmacy",
 }: {
   children: React.ReactNode;
   action?: React.ReactNode;
@@ -191,7 +197,9 @@ export function PickPath({ location }: { location: DrugLocation }) {
         <div key={s.label} className="flex items-center gap-2">
           {i > 0 && <span className="text-ink-300">→</span>}
           <div className="rounded-md border border-ink-200 bg-white px-2.5 py-1.5 text-center">
-            <div className="font-mono text-[9px] uppercase tracking-wider text-ink-400">{s.label}</div>
+            <div className="font-mono text-[9px] uppercase tracking-wider text-ink-400">
+              {s.label}
+            </div>
             <div className="font-mono text-[12px] font-semibold text-ink-900">{s.value}</div>
           </div>
         </div>

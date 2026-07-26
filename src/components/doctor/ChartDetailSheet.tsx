@@ -38,7 +38,10 @@ type ChartDetailSheetProps = {
 };
 
 function parseMetaFields(meta: string) {
-  return meta.split("·").map((part) => part.trim()).filter(Boolean);
+  return meta
+    .split("·")
+    .map((part) => part.trim())
+    .filter(Boolean);
 }
 
 function DetailBlock({ title, body }: { title: string; body: string }) {
@@ -57,37 +60,43 @@ function SpecRow({ label, value, accent }: { label: string; value: string; accen
   return (
     <div className="flex items-center justify-between px-4 py-3">
       <span className="text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">{label}</span>
-      <span className={cn("text-sm font-medium", accent ? "text-[#B8735D]" : "text-[#1B3B2E]")}>{value}</span>
+      <span className={cn("text-sm font-medium", accent ? "text-[#B8735D]" : "text-[#1B3B2E]")}>
+        {value}
+      </span>
     </div>
   );
 }
 
-function MedicationSheet({
-  med,
-  patientName,
-}: {
-  med: ChartMedication;
-  patientName: string;
-}) {
+function MedicationSheet({ med, patientName }: { med: ChartMedication; patientName: string }) {
   const blocks = [
     { title: "CONDITION TREATED", body: `${med.condition} · ${med.icd}` },
     { title: "WHY THIS WAS PRESCRIBED", body: med.whyPrescribed },
     ...(med.clinicalNotes ? [{ title: "CLINICAL NOTES", body: med.clinicalNotes }] : []),
-    ...(med.patientInstructions ? [{ title: "PATIENT INSTRUCTIONS", body: med.patientInstructions }] : []),
+    ...(med.patientInstructions
+      ? [{ title: "PATIENT INSTRUCTIONS", body: med.patientInstructions }]
+      : []),
     ...(med.monitoring ? [{ title: "MONITORING", body: med.monitoring }] : []),
     ...(med.interactions ? [{ title: "DRUG INTERACTIONS", body: med.interactions }] : []),
   ];
 
-  const specs = [
+  const specs: Array<readonly [string, string, boolean]> = [
     ["STRENGTH", med.strength, true],
     ["FREQUENCY", med.frequency, false],
     ["ROUTE", med.route, false],
     ["DURATION", med.duration, false],
-    ...(med.prescribedBy ? [["PRESCRIBED BY", `${med.prescribedBy}${med.prescribedOn ? ` · ${med.prescribedOn}` : ""}`, false]] : []),
-    ...(med.pharmacy ? [["PHARMACY", med.pharmacy, false]] : []),
-    ...(med.lastFilled ? [["LAST FILLED", med.lastFilled, false]] : []),
-    ...(med.refillsRemaining ? [["REFILLS", med.refillsRemaining, false]] : []),
-  ] as const;
+    ...(med.prescribedBy
+      ? [
+          [
+            "PRESCRIBED BY",
+            `${med.prescribedBy}${med.prescribedOn ? ` · ${med.prescribedOn}` : ""}`,
+            false,
+          ] as const,
+        ]
+      : []),
+    ...(med.pharmacy ? [["PHARMACY", med.pharmacy, false] as const] : []),
+    ...(med.lastFilled ? [["LAST FILLED", med.lastFilled, false] as const] : []),
+    ...(med.refillsRemaining ? [["REFILLS", med.refillsRemaining, false] as const] : []),
+  ];
 
   return (
     <div className="space-y-4">
@@ -95,7 +104,9 @@ function MedicationSheet({
         <div className="h-1 bg-[#B8735D]" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2">
-            <p className="text-[10px] font-semibold tracking-[0.1em] text-[#B8735D]">ACTIVE MEDICATION</p>
+            <p className="text-[10px] font-semibold tracking-[0.1em] text-[#B8735D]">
+              ACTIVE MEDICATION
+            </p>
             <span className="rounded-full bg-[#E8EFE6] px-2 py-0.5 text-[10px] font-semibold text-[#1B3B2E]">
               {med.status}
             </span>
@@ -129,7 +140,9 @@ function VisitSheet({ visit, patientName }: { visit: HistoryVisitEntry; patientN
         <div className="h-1 bg-[#1B3B2E]" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2">
-            <p className="text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">VISIT SUMMARY</p>
+            <p className="text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">
+              VISIT SUMMARY
+            </p>
             <span className="rounded-full bg-[#E8EFE6] px-2 py-0.5 text-[10px] font-semibold text-[#1B3B2E]">
               COMPLETED
             </span>
@@ -169,13 +182,7 @@ const REPORT_ACCENT: Record<
   amber: { bar: "bg-[#E9A820]", label: "text-[#B8735D]" },
 };
 
-function DocumentSheet({
-  doc,
-  patientName,
-}: {
-  doc: HistoryDocumentEntry;
-  patientName: string;
-}) {
+function DocumentSheet({ doc, patientName }: { doc: HistoryDocumentEntry; patientName: string }) {
   const { report } = doc;
   const accent = REPORT_ACCENT[report.accent];
   const reportDate = `${doc.day} ${doc.monthShort} 2026`;
@@ -221,7 +228,9 @@ function DocumentSheet({
 
       {report.findings && report.findings.length > 0 && (
         <div>
-          <p className="mb-2 text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">KEY FINDINGS</p>
+          <p className="mb-2 text-[10px] font-semibold tracking-[0.08em] text-[#8A8F8C]">
+            KEY FINDINGS
+          </p>
           <article className="divide-y divide-[#F0EDE8] overflow-hidden rounded-[18px] border border-[#EDEAE6] bg-white">
             {report.findings.map((finding) => (
               <SpecRow
@@ -270,7 +279,9 @@ function VitalSheet({ vital, patientName }: { vital: HistoryVitalEntry; patientN
         <div className="h-1 bg-[#1B3B2E]" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2">
-            <p className="text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">VITALS RECORD</p>
+            <p className="text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">
+              VITALS RECORD
+            </p>
             <span className="rounded-full bg-[#E8EFE6] px-2 py-0.5 text-[10px] font-semibold text-[#1B3B2E]">
               RECORDED
             </span>
@@ -311,7 +322,9 @@ function TherapySheet({
     <div className="space-y-4">
       <article className="overflow-hidden rounded-[18px] border border-[#EDEAE6] bg-white p-4">
         <div className="h-1 w-full rounded-full bg-[#B8735D]" />
-        <p className="mt-3 text-[10px] font-semibold tracking-[0.1em] text-[#B8735D]">CURRENT THERAPY</p>
+        <p className="mt-3 text-[10px] font-semibold tracking-[0.1em] text-[#B8735D]">
+          CURRENT THERAPY
+        </p>
         {therapy.lines.map((line) => (
           <p key={line} className="mt-2 text-sm font-medium text-[#1B3B2E]">
             {line}
@@ -352,7 +365,9 @@ function ProblemsSheet({ patientId }: { patientId: string }) {
     <div className="space-y-4">
       <article className="overflow-hidden rounded-[18px] border border-[#EDEAE6] bg-white p-4">
         <div className="h-1 w-full rounded-full bg-[#1B3B2E]" />
-        <p className="mt-3 text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">PROBLEM LIST</p>
+        <p className="mt-3 text-[10px] font-semibold tracking-[0.1em] text-[#1B3B2E]">
+          PROBLEM LIST
+        </p>
         <p className="mt-2 text-sm text-[#8A8F8C]">Active diagnoses on chart for this patient.</p>
       </article>
       {problems.map((problem) => (
@@ -440,7 +455,9 @@ export function ChartDetailSheet({
       }
       case "therapy": {
         const therapy = getPatientTherapy(patientId);
-        return therapy ? <TherapySheet therapy={therapy} onOpenMedication={onOpenMedication} /> : null;
+        return therapy ? (
+          <TherapySheet therapy={therapy} onOpenMedication={onOpenMedication} />
+        ) : null;
       }
       case "problems":
         return <ProblemsSheet patientId={patientId} />;

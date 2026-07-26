@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  UserPlus,
-  UserCheck,
-  ListOrdered,
-  CalendarPlus,
-  Users,
-  Monitor,
-} from "lucide-react";
+import { UserPlus, UserCheck, ListOrdered, CalendarPlus, Users, Monitor } from "lucide-react";
 import { SectionCard } from "./SectionCard";
 
 const actions = [

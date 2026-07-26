@@ -1,0 +1,26 @@
+# HELP medora_up 1 if process is serving
+# TYPE medora_up gauge
+medora_up 1
+# HELP medora_audit_dlq_open_failures Unresolved audit write failures
+# TYPE medora_audit_dlq_open_failures gauge
+medora_audit_dlq_open_failures 0
+# HELP medora_audit_dlq_acknowledged_failures Acknowledged but unresolved DLQ rows
+# TYPE medora_audit_dlq_acknowledged_failures gauge
+medora_audit_dlq_acknowledged_failures 0
+# HELP medora_audit_dlq_alert 1 when open_failures > 0
+# TYPE medora_audit_dlq_alert gauge
+medora_audit_dlq_alert 0
+# HELP medora_http_requests_5m Requests in rolling 5m window (in-process)
+# TYPE medora_http_requests_5m gauge
+medora_http_requests_5m 2
+# HELP medora_http_error_rate_5m Error rate in rolling 5m window
+# TYPE medora_http_error_rate_5m gauge
+medora_http_error_rate_5m 0
+# HELP medora_http_latency_ms Request latency percentiles (5m in-process)
+# TYPE medora_http_latency_ms gauge
+medora_http_latency_ms{quantile="0.5"} 177
+medora_http_latency_ms{quantile="0.95"} 829
+medora_http_latency_ms{quantile="0.99"} 829
+medora_http_latency_ms{quantile="avg"} 503
+# TYPE medora_http_requests_by_endpoint_5m gauge
+medora_http_requests_by_endpoint_5m{endpoint="/api/status"} 2

@@ -1,16 +1,34 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, type Appointment } from "@/lib/reception-desk/store";
 import StatusPill from "@/components/reception-desk/StatusPill";
-import { Plus, CalendarDays, ChevronLeft, ChevronRight, List, Calendar as CalendarIcon, Check } from "lucide-react";
-import CancelAppointmentModal from "@/components/reception-desk/CancelAppointmentModal";
+import {
+  Plus,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  List,
+  Calendar as CalendarIcon,
+  Check,
+} from "lucide-react";
+import CancelAppointmentModal, {
+  type CancelAppointmentReschedule,
+} from "@/components/reception-desk/CancelAppointmentModal";
 
-const pad = (n) => String(n).padStart(2, "0");
-const toISO = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const pad = (n: number) => String(n).padStart(2, "0");
+const toISO = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-const FILTERS = ["All", "Scheduled", "Checked-in", "In consult", "Completed", "No-show", "Cancelled"];
+const FILTERS = [
+  "All",
+  "Scheduled",
+  "Checked-in",
+  "In consult",
+  "Completed",
+  "No-show",
+  "Cancelled",
+];
 
-const filterMatch = (status, f) => {
+const filterMatch = (status: string, f: string) => {
   if (f === "All") return true;
   if (f === "Scheduled") return status === "scheduled";
   if (f === "Checked-in") return status === "checked-in";
@@ -24,16 +42,17 @@ const filterMatch = (status, f) => {
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Appointments() {
-  const { appointments, patients, doctors, updateAppointmentStatus, cancelAppointment } = useStore();
-  
+  const { appointments, patients, doctors, updateAppointmentStatus, cancelAppointment } =
+    useStore();
+
   const [date, setDate] = useState(new Date());
   const [filter, setFilter] = useState("All");
   const [doctorId, setDoctorId] = useState("ALL");
-  const [cancelTarget, setCancelTarget] = useState<any>(null);
-  
+  const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
+
   // View mode: list vs calendar
   const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
-  
+
   // Calendar month state
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -50,7 +69,7 @@ export default function Appointments() {
     [appointments, iso, doctorId, filter],
   );
 
-  const shiftDay = (n) => {
+  const shiftDay = (n: number) => {
     const d = new Date(date);
     d.setDate(d.getDate() + n);
     setDate(d);
@@ -58,7 +77,7 @@ export default function Appointments() {
     setCurrentMonth(d);
   };
 
-  const shiftMonth = (n) => {
+  const shiftMonth = (n: number) => {
     const d = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + n, 1);
     setCurrentMonth(d);
   };
@@ -67,12 +86,12 @@ export default function Appointments() {
   const calendarGridDays = useMemo(() => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
-    
+
     const firstDayIndex = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
-    
+
     const grid = [];
-    
+
     // Previous month padding
     const prevMonthTotalDays = new Date(year, month, 0).getDate();
     for (let i = firstDayIndex - 1; i >= 0; i--) {
@@ -82,7 +101,7 @@ export default function Appointments() {
         dateObj: new Date(year, month - 1, prevMonthTotalDays - i),
       });
     }
-    
+
     // Current month days
     for (let i = 1; i <= totalDays; i++) {
       grid.push({
@@ -91,7 +110,7 @@ export default function Appointments() {
         dateObj: new Date(year, month, i),
       });
     }
-    
+
     // Next month padding
     const remaining = 42 - grid.length;
     for (let i = 1; i <= remaining; i++) {
@@ -101,7 +120,7 @@ export default function Appointments() {
         dateObj: new Date(year, month + 1, i),
       });
     }
-    
+
     return grid;
   }, [currentMonth]);
 
@@ -114,7 +133,9 @@ export default function Appointments() {
           <button
             onClick={() => setViewMode("list")}
             className={`h-8 px-3 rounded-md text-[12.5px] font-medium transition-all flex items-center gap-1.5 ${
-              viewMode === "list" ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-900"
+              viewMode === "list"
+                ? "bg-white text-ink-900 shadow-sm"
+                : "text-ink-500 hover:text-ink-900"
             }`}
           >
             <List className="w-3.5 h-3.5" />
@@ -123,7 +144,9 @@ export default function Appointments() {
           <button
             onClick={() => setViewMode("calendar")}
             className={`h-8 px-3 rounded-md text-[12.5px] font-medium transition-all flex items-center gap-1.5 ${
-              viewMode === "calendar" ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-900"
+              viewMode === "calendar"
+                ? "bg-white text-ink-900 shadow-sm"
+                : "text-ink-500 hover:text-ink-900"
             }`}
           >
             <CalendarIcon className="w-3.5 h-3.5" />
@@ -350,7 +373,7 @@ export default function Appointments() {
                 {calendarGridDays.map((dayObj, idx) => {
                   const dayIso = toISO(dayObj.dateObj);
                   const isSelected = iso === dayIso;
-                  
+
                   // Filter appointments for this specific cell
                   const cellApts = appointments
                     .filter((a) => a.date === dayIso)
@@ -371,8 +394,8 @@ export default function Appointments() {
                         isSelected
                           ? "bg-sage-soft border-sage"
                           : dayObj.monthOffset !== 0
-                          ? "bg-bone/40 border-ink-100/50 text-ink-300 opacity-60"
-                          : "bg-white border-ink-200 text-ink-800 hover:border-sage/40 hover:bg-sage-soft/10"
+                            ? "bg-bone/40 border-ink-100/50 text-ink-300 opacity-60"
+                            : "bg-white border-ink-200 text-ink-800 hover:border-sage/40 hover:bg-sage-soft/10"
                       }`}
                     >
                       <div className="flex justify-between items-center">
@@ -419,9 +442,16 @@ export default function Appointments() {
           {/* Right Detailed Actions Sidebar */}
           <div className="col-span-12 lg:col-span-4 bg-white border border-ink-200 rounded-xl shadow-sm p-4 flex flex-col gap-4">
             <div className="border-b border-ink-200 pb-2">
-              <span className="text-[10.5px] font-mono uppercase tracking-wider text-ink-400">Selected date details</span>
+              <span className="text-[10.5px] font-mono uppercase tracking-wider text-ink-400">
+                Selected date details
+              </span>
               <h3 className="font-heading text-[15.5px] font-semibold text-ink-900 mt-0.5">
-                {date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
+                {date.toLocaleDateString([], {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </h3>
               <p className="text-[12px] text-ink-500 mt-1">
                 {dayAppointments.length} appointment{dayAppointments.length !== 1 && "s"} scheduled.
@@ -452,7 +482,9 @@ export default function Appointments() {
 
                     <div className="text-[11.5px] text-ink-600 bg-white p-2 rounded border border-ink-100">
                       <div>Dr. {doc?.name}</div>
-                      <div className="text-[10.5px] text-ink-400 mt-0.5">{doc?.specialty} · Type: {a.type}</div>
+                      <div className="text-[10.5px] text-ink-400 mt-0.5">
+                        {doc?.specialty} · Type: {a.type}
+                      </div>
                     </div>
 
                     {a.status === "cancelled" && a.cancellationReason && (
@@ -505,7 +537,12 @@ export default function Appointments() {
         open={cancelTarget !== null}
         appointment={cancelTarget}
         onClose={() => setCancelTarget(null)}
-        onConfirm={(apptId, reason, notes, rescheduleObj) => {
+        onConfirm={(
+          apptId: string,
+          reason: string,
+          notes: string,
+          rescheduleObj?: CancelAppointmentReschedule,
+        ) => {
           cancelAppointment(apptId, { reason, notes, reschedule: rescheduleObj });
           setCancelTarget(null);
         }}

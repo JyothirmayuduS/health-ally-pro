@@ -145,7 +145,9 @@ export function DoctorSentRxDetail({ rxId }: Props) {
             <p className="text-xs text-[#8A8F8C]">{record.patientRef}</p>
           </div>
           <div className="rounded-xl bg-[#FAFAF8] px-3 py-2">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">Diagnosis</p>
+            <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">
+              Diagnosis
+            </p>
             <p className="font-medium text-[#1B3B2E]">{record.draft.diagnosis || "—"}</p>
           </div>
         </div>
@@ -173,7 +175,9 @@ export function DoctorSentRxDetail({ rxId }: Props) {
         ) : null}
 
         {record.amended_from_rx_number ? (
-          <p className="mt-3 text-xs text-[#8A8F8C]">Amendment of {record.amended_from_rx_number}</p>
+          <p className="mt-3 text-xs text-[#8A8F8C]">
+            Amendment of {record.amended_from_rx_number}
+          </p>
         ) : null}
       </header>
 
@@ -181,7 +185,10 @@ export function DoctorSentRxDetail({ rxId }: Props) {
         <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">Medications</p>
         <ul className="mt-3 space-y-2">
           {meds.map((m) => (
-            <li key={m} className="rounded-xl border border-[#EDEAE6] px-3 py-2 text-sm text-[#1B3B2E]">
+            <li
+              key={m}
+              className="rounded-xl border border-[#EDEAE6] px-3 py-2 text-sm text-[#1B3B2E]"
+            >
               {m}
             </li>
           ))}
@@ -236,9 +243,12 @@ export function DoctorSentRxDetail({ rxId }: Props) {
             aria-label="Close"
           />
           <div className="relative z-10 w-full max-w-md rounded-t-3xl bg-white p-5 sm:rounded-3xl">
-            <h3 className="font-serif text-lg font-semibold text-[#1B3B2E]">Cancel prescription?</h3>
+            <h3 className="font-serif text-lg font-semibold text-[#1B3B2E]">
+              Cancel prescription?
+            </h3>
             <p className="mt-1 text-sm text-[#5C635F]">
-              This marks {record.rx_number} as cancelled in your local ledger. Pharmacy/patient copies are not auto-revoked in this demo.
+              This marks {record.rx_number} as cancelled in your local ledger. Pharmacy/patient
+              copies are not auto-revoked in this demo.
             </p>
             <textarea
               value={cancelReason}

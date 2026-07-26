@@ -78,7 +78,8 @@ export const DOCTOR_REFERRALS: DoctorReferral[] = [
     status: "Accepted",
     specialty: "Pulmonology",
     fromDoctor: apkDoctor.name,
-    clinicalReason: "Asthma suboptimal control — PFT referral for technique review and step-up plan.",
+    clinicalReason:
+      "Asthma suboptimal control — PFT referral for technique review and step-up plan.",
     linkedDocument: "Peak flow diary",
     statusDetail: "Accepted · Patient & referring teams notified",
     relativeTime: "12 days ago",
@@ -191,22 +192,102 @@ export const DEFAULT_SCHEDULE = {
   breakMinutes: 10,
   workingDays: ["Mon", "Tue", "Wed", "Thu", "Fri"] as string[],
   slots: [
-    { id: "s1", time: "09:00", price: 800, capacity: 2, bookedToday: 1, inPerson: true, video: true, enabled: true },
-    { id: "s2", time: "09:30", price: 800, capacity: 2, bookedToday: 2, inPerson: true, video: false, enabled: true },
-    { id: "s3", time: "10:00", price: 800, capacity: 1, bookedToday: 1, inPerson: true, video: false, enabled: true },
-    { id: "s4", time: "11:15", price: 850, capacity: 2, bookedToday: 0, inPerson: true, video: true, enabled: true },
-    { id: "s5", time: "14:00", price: 800, capacity: 2, bookedToday: 1, inPerson: true, video: true, enabled: true },
-    { id: "s6", time: "15:15", price: 900, capacity: 1, bookedToday: 1, inPerson: true, video: false, enabled: true },
-    { id: "s7", time: "16:00", price: 900, capacity: 2, bookedToday: 0, inPerson: true, video: true, enabled: true },
-    { id: "s8", time: "17:30", price: 800, capacity: 1, bookedToday: 0, inPerson: true, video: false, enabled: false },
+    {
+      id: "s1",
+      time: "09:00",
+      price: 800,
+      capacity: 2,
+      bookedToday: 1,
+      inPerson: true,
+      video: true,
+      enabled: true,
+    },
+    {
+      id: "s2",
+      time: "09:30",
+      price: 800,
+      capacity: 2,
+      bookedToday: 2,
+      inPerson: true,
+      video: false,
+      enabled: true,
+    },
+    {
+      id: "s3",
+      time: "10:00",
+      price: 800,
+      capacity: 1,
+      bookedToday: 1,
+      inPerson: true,
+      video: false,
+      enabled: true,
+    },
+    {
+      id: "s4",
+      time: "11:15",
+      price: 850,
+      capacity: 2,
+      bookedToday: 0,
+      inPerson: true,
+      video: true,
+      enabled: true,
+    },
+    {
+      id: "s5",
+      time: "14:00",
+      price: 800,
+      capacity: 2,
+      bookedToday: 1,
+      inPerson: true,
+      video: true,
+      enabled: true,
+    },
+    {
+      id: "s6",
+      time: "15:15",
+      price: 900,
+      capacity: 1,
+      bookedToday: 1,
+      inPerson: true,
+      video: false,
+      enabled: true,
+    },
+    {
+      id: "s7",
+      time: "16:00",
+      price: 900,
+      capacity: 2,
+      bookedToday: 0,
+      inPerson: true,
+      video: true,
+      enabled: true,
+    },
+    {
+      id: "s8",
+      time: "17:30",
+      price: 800,
+      capacity: 1,
+      bookedToday: 0,
+      inPerson: true,
+      video: false,
+      enabled: false,
+    },
   ] satisfies ScheduleSlot[],
 };
 
 export type AwayReason = "emergency" | "stepped-out" | "leave" | "unavailable";
 
 export const AWAY_REASONS: { id: AwayReason; label: string; hint: string }[] = [
-  { id: "emergency", label: "Medical emergency", hint: "Urgent — colleagues notified to accept or decline" },
-  { id: "stepped-out", label: "Stepped out briefly", hint: "Short absence — split queue across colleagues" },
+  {
+    id: "emergency",
+    label: "Medical emergency",
+    hint: "Urgent — colleagues notified to accept or decline",
+  },
+  {
+    id: "stepped-out",
+    label: "Stepped out briefly",
+    hint: "Short absence — split queue across colleagues",
+  },
   { id: "leave", label: "On leave today", hint: "Full-day handoff with patient alerts" },
   { id: "unavailable", label: "Unavailable", hint: "Pause bookings; existing visits reassigned" },
 ];
@@ -235,14 +316,32 @@ export type CoveringDoctor = {
 };
 
 export const COVERING_DOCTORS: CoveringDoctor[] = [
-  { id: "d1", name: "Dr. Priya Sharma", initials: "PS", specialty: "General Medicine", room: "Room 2B" },
-  { id: "d2", name: "Dr. Karan Nair", initials: "KN", specialty: "Internal Medicine", room: "Room 1A" },
+  {
+    id: "d1",
+    name: "Dr. Priya Sharma",
+    initials: "PS",
+    specialty: "General Medicine",
+    room: "Room 2B",
+  },
+  {
+    id: "d2",
+    name: "Dr. Karan Nair",
+    initials: "KN",
+    specialty: "Internal Medicine",
+    room: "Room 1A",
+  },
   { id: "d3", name: "Dr. Anita Desai", initials: "AD", specialty: "Pulmonology", room: "Room 4C" },
   { id: "d4", name: "Dr. Omar Khan", initials: "OK", specialty: "Cardiology", room: "Room 2A" },
   { id: "d5", name: "Dr. Sneha Iyer", initials: "SI", specialty: "Endocrinology", room: "Room 3B" },
 ];
 
-export const REFERRAL_SPECIALTIES = ["Cardiology", "Pulmonology", "Endocrinology", "Nephrology", "Radiology"];
+export const REFERRAL_SPECIALTIES = [
+  "Cardiology",
+  "Pulmonology",
+  "Endocrinology",
+  "Nephrology",
+  "Radiology",
+];
 
 export function referralsAwaitingAction(refs = DOCTOR_REFERRALS) {
   return refs.filter((r) => r.status === "Pending").length;

@@ -15,7 +15,14 @@ export function getPortalPatientId() {
 export function getPortalPatientProfile() {
   const p = getSharedPatient(PORTAL_DEMO_PATIENT_ID) ?? loadPatientRegistry()[0];
   if (!p) {
-    return { name: "Guest", initials: "G", email: "", memberSince: "2024", age: 0, bloodGroup: "—" };
+    return {
+      name: "Guest",
+      initials: "G",
+      email: "",
+      memberSince: "2024",
+      age: 0,
+      bloodGroup: "—",
+    };
   }
   const parts = p.name.split(" ");
   const initials =
@@ -53,7 +60,9 @@ export function getPortalAppointments(): Appointment[] {
       doctorId: "d1",
       date: today,
       time: q.checkInTime,
-      reason: encounters.find((e) => e.appointmentId === q.appointmentId)?.chiefComplaint ?? "Clinic visit",
+      reason:
+        encounters.find((e) => e.appointmentId === q.appointmentId)?.chiefComplaint ??
+        "Clinic visit",
       status: q.status === "in-consultation" ? ("in-queue" as const) : ("in-queue" as const),
       queuePosition: q.tokenNumber % 100,
       estimatedWait: q.waitMinutes,

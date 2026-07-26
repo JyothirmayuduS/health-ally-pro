@@ -18,7 +18,9 @@ export default function TokenBoard() {
   const { doctors } = useStore();
   const now = useClock();
   const [queue, setQueue] = useState<ClinicQueueEntry[]>([]);
-  const [announcement, setAnnouncement] = useState("Welcome to Oakhaven Hospital. Please wait for your token to be called. Keep your physical slips ready.");
+  const [announcement, setAnnouncement] = useState(
+    "Welcome to Oakhaven Hospital. Please wait for your token to be called. Keep your physical slips ready.",
+  );
 
   // Fetch queue and announcement from localStorage
   const refreshData = () => {
@@ -97,7 +99,11 @@ export default function TokenBoard() {
         <div className="text-right flex items-center gap-6">
           <div>
             <div className="text-[44px] font-mono font-semibold leading-none tabular-nums text-white">
-              {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+              {now.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
             </div>
             <div className="text-[11px] uppercase tracking-wider text-[#7c8279] font-mono mt-1 font-medium">
               {now.toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" })}
@@ -112,7 +118,7 @@ export default function TokenBoard() {
         <section className="col-span-12 lg:col-span-8 flex flex-col justify-between">
           <div className="flex-1 bg-[#131512] border border-[#222521] rounded-sm p-8 flex flex-col justify-between shadow-lg relative overflow-hidden">
             <div className="absolute top-0 left-0 w-2 h-full bg-teal" />
-            
+
             <div className="flex items-center justify-between">
               <span className="text-[12px] uppercase tracking-[0.2em] text-[#7c8279] font-mono font-bold flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-teal rounded-full animate-pulse" />
@@ -133,20 +139,31 @@ export default function TokenBoard() {
                 >
                   #{mainServing.tokenNumber}
                 </div>
-                
+
                 <div className="mt-8 space-y-2">
                   <div className="text-[28px] text-[#e3e8e2] font-semibold flex items-center justify-center gap-2">
-                    Patient: <span className="font-mono text-white text-[32px] bg-[#1a1e19] px-4 py-1 border border-[#2e352d] rounded-sm">{patientInitialOnly(mainServing.patientId)}</span>
+                    Patient:{" "}
+                    <span className="font-mono text-white text-[32px] bg-[#1a1e19] px-4 py-1 border border-[#2e352d] rounded-sm">
+                      {patientInitialOnly(mainServing.patientId)}
+                    </span>
                   </div>
-                  
+
                   <div className="pt-6 mt-6 border-t border-[#222521] flex justify-center gap-12 text-left">
                     <div>
-                      <div className="text-[11px] uppercase tracking-wider text-[#7c8279] font-mono">Doctor</div>
-                      <div className="text-[22px] font-medium text-[#e3e8e2] mt-1">{getDoctorDetails(mainServing.doctorId).name}</div>
+                      <div className="text-[11px] uppercase tracking-wider text-[#7c8279] font-mono">
+                        Doctor
+                      </div>
+                      <div className="text-[22px] font-medium text-[#e3e8e2] mt-1">
+                        {getDoctorDetails(mainServing.doctorId).name}
+                      </div>
                     </div>
                     <div className="border-l border-[#222521] pl-12">
-                      <div className="text-[11px] uppercase tracking-wider text-[#7c8279] font-mono">Room / Cabin</div>
-                      <div className="text-[22px] font-bold text-teal mt-1">Room {getDoctorDetails(mainServing.doctorId).room}</div>
+                      <div className="text-[11px] uppercase tracking-wider text-[#7c8279] font-mono">
+                        Room / Cabin
+                      </div>
+                      <div className="text-[22px] font-bold text-teal mt-1">
+                        Room {getDoctorDetails(mainServing.doctorId).room}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -159,7 +176,7 @@ export default function TokenBoard() {
                 </div>
               </div>
             )}
-            
+
             <div className="text-[11.5px] text-[#555d51] flex items-center justify-between border-t border-[#222521] pt-4 font-mono">
               <span>* Private board. Displays first name initial only.</span>
               <span>Screen ID: TV-LOBBY-01</span>
@@ -192,7 +209,8 @@ export default function TokenBoard() {
                         Patient {patientInitialOnly(entry.patientId)}
                       </div>
                       <div className="text-[12.5px] text-[#e3e8e2] mt-1 truncate max-w-[200px]">
-                        {doc.name} · <span className="font-semibold text-teal">Room {doc.room}</span>
+                        {doc.name} ·{" "}
+                        <span className="font-semibold text-teal">Room {doc.room}</span>
                       </div>
                     </div>
                     <div className="text-right">
@@ -234,12 +252,15 @@ export default function TokenBoard() {
       <footer className="h-16 bg-teal text-white flex items-center shrink-0 border-t border-[#204a3e] relative overflow-hidden select-none">
         <div className="px-6 h-full bg-[#18392f] border-r border-[#204a3e] z-10 flex items-center justify-center gap-2 shrink-0">
           <Shield className="w-4 h-4 text-white" />
-          <span className="text-[11px] uppercase tracking-[0.2em] font-mono font-bold whitespace-nowrap">Announcements</span>
+          <span className="text-[11px] uppercase tracking-[0.2em] font-mono font-bold whitespace-nowrap">
+            Announcements
+          </span>
         </div>
-        
+
         <div className="flex-1 overflow-hidden relative flex items-center">
           <div className="animate-marquee whitespace-nowrap text-[17px] font-medium tracking-wide pr-[100%] flex items-center font-mono">
-            {announcement} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &bull; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {announcement}
+            {announcement} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &bull; &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp; {announcement}
           </div>
         </div>
       </footer>

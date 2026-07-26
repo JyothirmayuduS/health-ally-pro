@@ -1,5 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { jsonResponse, optionsResponse, unauthorizedResponse, verifyMedoraApiKey } from "@/server/ai/api-auth";
+import {
+  jsonResponse,
+  optionsResponse,
+  unauthorizedResponse,
+  verifyMedoraApiKey,
+} from "@/server/ai/api-auth";
 import type { PrescriptionAiServerInput } from "@/lib/ai/types";
 
 export const Route = createFileRoute("/api/ai/prescription")({

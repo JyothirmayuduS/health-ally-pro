@@ -78,9 +78,7 @@ export function buildPatientDietContext(medications: PatientMedication[]): Patie
     restrictions.push("Schedule magnesium-rich dinners away from morning thyroid dose");
   }
 
-  const conditions = active
-    .map((m) => m.clinicalReason)
-    .filter((c): c is string => !!c);
+  const conditions = active.map((m) => m.clinicalReason).filter((c): c is string => !!c);
 
   const timingNotes = active.map((m) => `${m.name}: ${m.instructionTag ?? m.reason}`);
 

@@ -46,11 +46,8 @@ import {
 } from "@/lib/patient-appointments-ui";
 
 const NEXT_MEAL = getNextMealPreview();
-const NEXT_EXERCISE = getTopExercisePicks(
-  exerciseRoutines,
-  getPatientExerciseContext(),
-  1,
-)[0]?.routine;
+const NEXT_EXERCISE = getTopExercisePicks(exerciseRoutines, getPatientExerciseContext(), 1)[0]
+  ?.routine;
 
 function statusLabel(status: string) {
   return appointmentStatusLabel(status as "in-queue" | "upcoming" | "completed" | "cancelled");
@@ -112,17 +109,11 @@ export function PatientMobileDashboard() {
   const liveQueue = getLiveQueueContext(doctors);
   const recentAppts = appointments.slice(0, 3);
   const recentReports = reports.slice(0, 3);
-  const careTeam = doctors
-    .filter((d) => appointments.some((a) => a.doctorId === d.id))
-    .slice(0, 2);
+  const careTeam = doctors.filter((d) => appointments.some((a) => a.doctorId === d.id)).slice(0, 2);
 
   const nextMed = meds.find((m) => !m.taken);
-  const upcomingAppt = appointments.find(
-    (a) => a.status === "upcoming" || a.status === "in-queue",
-  );
-  const nextExerciseDone = NEXT_EXERCISE
-    ? isRoutineCompletedToday(NEXT_EXERCISE.id)
-    : false;
+  const upcomingAppt = appointments.find((a) => a.status === "upcoming" || a.status === "in-queue");
+  const nextExerciseDone = NEXT_EXERCISE ? isRoutineCompletedToday(NEXT_EXERCISE.id) : false;
   const exerciseAdherence = getTodayAdherence(3);
   const visitsDone = appointments.filter((a) => a.status === "completed").length;
 
@@ -196,9 +187,7 @@ export function PatientMobileDashboard() {
           <div>
             <p className="text-sm text-ink-muted">{getTimeAwareGreeting()}</p>
             <div className="mt-0.5 flex items-center gap-2">
-              <h1 className="font-serif text-2xl tracking-tight text-ink">
-                {patientName}
-              </h1>
+              <h1 className="font-serif text-2xl tracking-tight text-ink">{patientName}</h1>
               <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden />
             </div>
           </div>
@@ -264,11 +253,7 @@ export function PatientMobileDashboard() {
                     >
                       <Icon className="h-5 w-5 text-ink" strokeWidth={1.75} />
                     </span>
-                    <Link
-                      to={task.to}
-                      params={task.params}
-                      className="min-w-0 flex-1"
-                    >
+                    <Link to={task.to} params={task.params} className="min-w-0 flex-1">
                       <p className="font-medium text-sm text-ink">{task.title}</p>
                       <p className="mt-0.5 text-xs text-ink-muted">{task.subtitle}</p>
                     </Link>
@@ -305,12 +290,7 @@ export function PatientMobileDashboard() {
             </div>
             <div className="-mx-1 flex gap-3.5 overflow-x-auto px-1 pb-1 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 lg:grid-cols-3">
               {meds.slice(0, 3).map((med) => (
-                <HomeMedCard
-                  key={med.id}
-                  med={med}
-                  onToggle={toggle}
-                  className="lg:w-full"
-                />
+                <HomeMedCard key={med.id} med={med} onToggle={toggle} className="lg:w-full" />
               ))}
             </div>
           </section>
@@ -415,7 +395,9 @@ export function PatientMobileDashboard() {
                         <Pill className="h-4 w-4 text-clay" strokeWidth={1.75} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-ink">{rx.draft.diagnosis}</p>
+                        <p className="truncate text-sm font-medium text-ink">
+                          {rx.draft.diagnosis}
+                        </p>
                         <p className="mt-0.5 text-xs text-ink-muted">
                           {rx.rx_number} · {formatRxRelative(rx.sent_at)}
                         </p>

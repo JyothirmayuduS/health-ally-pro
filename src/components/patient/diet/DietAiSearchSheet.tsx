@@ -12,7 +12,12 @@ import {
   runDietAiSearch,
   suggestLibraryMeals,
 } from "@/lib/diet-ai-client";
-import type { DietAiSearchInput, DietBudget, DietCuisineFilter, DietLanguage } from "@/lib/diet-ai-types";
+import type {
+  DietAiSearchInput,
+  DietBudget,
+  DietCuisineFilter,
+  DietLanguage,
+} from "@/lib/diet-ai-types";
 import { BUDGET_LABELS, DIET_LANGUAGE_LABELS } from "@/lib/diet-ai-types";
 import type { DietMeal } from "@/lib/diet-mock-data";
 import { saveAiDietMeal } from "@/lib/diet-store";
@@ -62,10 +67,7 @@ export function DietAiSearchSheet({
     [searchInput, ctx],
   );
 
-  const videoSuggestions = useMemo(
-    () => getSuggestedVideos(searchInput, ctx),
-    [searchInput, ctx],
-  );
+  const videoSuggestions = useMemo(() => getSuggestedVideos(searchInput, ctx), [searchInput, ctx]);
 
   useEffect(() => {
     if (open) {

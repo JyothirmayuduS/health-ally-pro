@@ -46,7 +46,11 @@ export function feesByDoctor(services?: ServiceFee[]): Record<string, number> {
   return Object.fromEntries(list.map((s) => [s.doctorId, s.fee]));
 }
 
-export function updateServiceFee(doctorId: string, fee: number, services?: ServiceFee[]): ServiceFee[] {
+export function updateServiceFee(
+  doctorId: string,
+  fee: number,
+  services?: ServiceFee[],
+): ServiceFee[] {
   const list = services ?? loadServiceFees();
   const next = list.map((s) => (s.doctorId === doctorId ? { ...s, fee } : s));
   saveServiceFees(next);

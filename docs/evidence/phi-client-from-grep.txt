@@ -1,0 +1,23 @@
+scripts/dual-tenant-rls-check.mjs:33:  await admin.from("patients").upsert(
+scripts/dual-tenant-rls-check.mjs:104:  await admin.from("hospital_memberships").upsert(
+scripts/dual-tenant-rls-check.mjs:110:  await admin.from("hospital_memberships").upsert(
+scripts/phi-read-audit-postgrest-proof.mjs:43:  const patients = await client.from("patients").select("id, hospital_id, mrn").limit(5);
+scripts/phi-read-audit-load-test.mjs:26:    .from("patients")
+scripts/phi-read-audit-load-test.mjs:55:  const p = await admin.from("patients").upsert(patients, { onConflict: "id" });
+scripts/phi-read-audit-load-test.mjs:57:  const a = await admin.from("appointments").upsert(appts, { onConflict: "id" });
+scripts/phi-read-audit-load-test.mjs:59:  const l = await admin.from("lab_results").upsert(labs, { onConflict: "id" });
+src/server/hospital-persist-auth.ts:116:      .from("hospital_memberships")
+src/server/phi-reads.ts:52:    .from("hospital_memberships")
+src/server/phi-reads.ts:65:    .from("patients")
+src/server/phi-reads.ts:129:    .from("staff_profiles")
+src/server/phi-reads.ts:147:      .from("patients")
+src/server/phi-reads.ts:159:    .from("patients")
+src/server/phi-reads.ts:173:      .from("patients")
+src/server/phi-reads.ts:181:      .from("appointments")
+src/server/phi-reads.ts:193:    .from("appointments")
+src/server/phi-reads.ts:209:    .from("lab_results")
+src/server/phi-reads.ts:233:    .from("patient_medications")
+src/server/phi-reads.ts:254:    .from("hospital_memberships")
+src/server/phi-reads.ts:266:    .from("queue_entries")
+src/server/phi-reads.ts:295:    .from("lab_results")
+src/server/phi-reads.ts:320:    .from("lab_results")

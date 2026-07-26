@@ -89,19 +89,19 @@ function dietResults(query: string): PatientSearchResult[] {
     .map((m) => {
       const n = getMealNutrition(m);
       return {
-      item: {
-        id: `diet-${m.id}`,
-        title: m.name,
-        subtitle: `${m.mealType} · ${n.calories} kcal · ${formatMacroSummary(n)}`,
-        category: "diet" as const,
-        to: "/diet/$mealId",
-        params: { mealId: m.id },
-      },
-      score: score(
-        `${m.name} ${m.ingredients.join(" ")} ${m.nutrients.join(" ")} ${m.type} ${m.budget}`,
-        query,
-      ),
-    };
+        item: {
+          id: `diet-${m.id}`,
+          title: m.name,
+          subtitle: `${m.mealType} · ${n.calories} kcal · ${formatMacroSummary(n)}`,
+          category: "diet" as const,
+          to: "/diet/$mealId",
+          params: { mealId: m.id },
+        },
+        score: score(
+          `${m.name} ${m.ingredients.join(" ")} ${m.nutrients.join(" ")} ${m.type} ${m.budget}`,
+          query,
+        ),
+      };
     })
     .filter((x) => x.score > 0)
     .sort((a, b) => b.score - a.score)
@@ -142,8 +142,7 @@ export function searchPatientRecords(
 
   const docList = options?.doctors ?? doctors;
   const repList = options?.reports ?? reports;
-  const medList =
-    options?.medications ?? patientMedications.filter((m) => m.status !== "past");
+  const medList = options?.medications ?? patientMedications.filter((m) => m.status !== "past");
 
   return [
     ...doctorResults(q, docList),
@@ -151,8 +150,7 @@ export function searchPatientRecords(
     ...medResults(q, medList),
     ...dietResults(q),
     ...exerciseResults(q),
-  ]
-    .slice(0, 12);
+  ].slice(0, 12);
 }
 
 export const PATIENT_SEARCH_EVENT = "medora-patient-open-search";

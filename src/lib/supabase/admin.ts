@@ -2,9 +2,14 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let adminClient: SupabaseClient | null = null;
 
-function readEnv(key: string): string | undefined {
+export function getRequestEnv(key: string): string | undefined {
   if (typeof process !== "undefined" && process.env[key]) return process.env[key];
   return undefined;
+}
+
+/** Read Worker/runtime env — process.env (incl. CLOUDFLARE_INCLUDE_PROCESS_ENV) first. */
+function readEnv(key: string): string | undefined {
+  return getRequestEnv(key);
 }
 
 export function getSupabaseAdmin(): SupabaseClient | null {
@@ -19,6 +24,11 @@ export function getSupabaseAdmin(): SupabaseClient | null {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   return adminClient;
+}
+
+/** Test-only: replace or clear the cached admin client. */
+export function __setSupabaseAdminForTests(client: SupabaseClient | null): void {
+  adminClient = client;
 }
 
 export function isSupabaseAdminConfigured(): boolean {

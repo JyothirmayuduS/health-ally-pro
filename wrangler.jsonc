@@ -1,7 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
+  "name": "medora-health-ally",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "env": {
+    "staging": {
+      "name": "medora-health-ally-staging",
+      "compatibility_date": "2025-09-24",
+      "compatibility_flags": ["nodejs_compat"]
+    }
+  }
 }

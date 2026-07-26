@@ -33,7 +33,9 @@ export function DoctorGlobalActions({
         >
           <Search className="h-4 w-4 shrink-0" strokeWidth={1.75} />
           <span className="flex-1 text-left">Search</span>
-          <kbd className="rounded-md bg-[#F5F2ED] px-1.5 py-0.5 text-[10px] font-medium text-[#ADADAD]">⌘K</kbd>
+          <kbd className="rounded-md bg-[#F5F2ED] px-1.5 py-0.5 text-[10px] font-medium text-[#ADADAD]">
+            ⌘K
+          </kbd>
         </button>
         {showNotifications && (
           <Link

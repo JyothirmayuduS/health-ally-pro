@@ -41,7 +41,9 @@ export function isBuiltInMealId(mealId?: string): boolean {
 
 function youtubeSearchEnabled(): boolean {
   if (typeof process === "undefined") return false;
-  return process.env.YOUTUBE_SEARCH_ENABLED === "true" || process.env.YOUTUBE_SEARCH_ENABLED === "1";
+  return (
+    process.env.YOUTUBE_SEARCH_ENABLED === "true" || process.env.YOUTUBE_SEARCH_ENABLED === "1"
+  );
 }
 
 export type ResolveMealMediaInput = {
@@ -194,9 +196,7 @@ async function cacheResolved(
   }
 }
 
-export async function resolveMealVideos(
-  input: ResolveMealMediaInput,
-): Promise<DietYoutubeVideo[]> {
+export async function resolveMealVideos(input: ResolveMealMediaInput): Promise<DietYoutubeVideo[]> {
   const lang = input.language ?? "en";
   const fp = mealMediaFingerprint(input.mealName, input.ingredients);
 

@@ -3,19 +3,27 @@ import { View, Text, StyleSheet, Pressable, ScrollView, Switch } from "react-nat
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { ChevronLeft, Shield, Eye, Brain, Share2, Info } from "lucide-react-native";
+import {
+  ChevronLeft,
+  Shield,
+  Eye,
+  Brain,
+  Share2,
+  Info,
+  type LucideIcon,
+} from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
 
-function PrivacyToggle({ 
-  icon: Icon, 
-  title, 
-  desc, 
-  defaultVal 
-}: { 
-  icon: any, 
-  title: string, 
-  desc: string, 
-  defaultVal: boolean 
+function PrivacyToggle({
+  icon: Icon,
+  title,
+  desc,
+  defaultVal,
+}: {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+  defaultVal: boolean;
 }) {
   const { colors } = useTheme();
   const [val, setVal] = useState(defaultVal);
@@ -28,9 +36,9 @@ function PrivacyToggle({
         <Text style={[s.rowTitle, { color: colors.foreground }]}>{title}</Text>
         <Text style={[s.rowDesc, { color: colors.inkMuted }]}>{desc}</Text>
       </View>
-      <Switch 
-        value={val} 
-        onValueChange={setVal} 
+      <Switch
+        value={val}
+        onValueChange={setVal}
         trackColor={{ false: colors.border, true: colors.clay }}
         thumbColor="#FFF"
       />
@@ -43,7 +51,10 @@ export default function PrivacySettingsScreen() {
   const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: colors.background }]} edges={["top", "bottom"]}>
+    <SafeAreaView
+      style={[s.safe, { backgroundColor: colors.background }]}
+      edges={["top", "bottom"]}
+    >
       <View style={s.header}>
         <Pressable onPress={() => router.back()} style={s.backBtn}>
           <ChevronLeft size={24} color={colors.foreground} strokeWidth={2} />
@@ -54,11 +65,14 @@ export default function PrivacySettingsScreen() {
 
       <ScrollView contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInDown.duration(400)}>
-          <View style={[s.heroCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View
+            style={[s.heroCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          >
             <Shield size={32} color={colors.clay} strokeWidth={1.5} style={{ marginBottom: 16 }} />
             <Text style={[s.heroTitle, { color: colors.foreground }]}>Your Data, Your Control</Text>
             <Text style={[s.heroDesc, { color: colors.inkMuted }]}>
-              Medora is built on a foundation of trust. We never sell your health data, and everything is encrypted at rest.
+              Medora is built on a foundation of trust. We never sell your health data, and
+              everything is encrypted at rest.
             </Text>
           </View>
         </Animated.View>
@@ -66,19 +80,19 @@ export default function PrivacySettingsScreen() {
         <Animated.View entering={FadeInDown.duration(400).delay(100)} style={s.section}>
           <Text style={[s.sectionLabel, { color: colors.inkMuted }]}>VISIBILITY & AI</Text>
           <View style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <PrivacyToggle 
+            <PrivacyToggle
               icon={Brain}
               title="AI Context Learning"
               desc="Allow the Medora AI to personalize advice based on your reports."
               defaultVal={true}
             />
-            <PrivacyToggle 
+            <PrivacyToggle
               icon={Eye}
               title="Doctor Stealth Mode"
               desc="Your profile will be hidden from searches unless you share a report."
               defaultVal={false}
             />
-            <PrivacyToggle 
+            <PrivacyToggle
               icon={Share2}
               title="Anonymous Research"
               desc="Contribute anonymized data to clinical trials for metabolic health."
@@ -90,7 +104,8 @@ export default function PrivacySettingsScreen() {
         <Animated.View entering={FadeInDown.duration(400).delay(200)} style={s.infoBox}>
           <Info size={16} color={colors.inkMuted} style={{ marginTop: 2 }} />
           <Text style={[s.infoText, { color: colors.inkMuted }]}>
-            Changes here take effect immediately across all linked devices. Some regulatory data must be kept for 7 years as per medical legal requirements.
+            Changes here take effect immediately across all linked devices. Some regulatory data
+            must be kept for 7 years as per medical legal requirements.
           </Text>
         </Animated.View>
       </ScrollView>
@@ -101,14 +116,17 @@ export default function PrivacySettingsScreen() {
 const s = StyleSheet.create({
   safe: { flex: 1 },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   backBtn: {
-    width: 40, height: 40, alignItems: 'center', justifyContent: 'center'
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerTitle: {
     fontSize: 18,
@@ -122,8 +140,8 @@ const s = StyleSheet.create({
     padding: 24,
     borderRadius: 24,
     borderWidth: 1,
-    alignItems: 'center',
-    textAlign: 'center',
+    alignItems: "center",
+    textAlign: "center",
   },
   heroTitle: {
     fontSize: 20,
@@ -134,7 +152,7 @@ const s = StyleSheet.create({
     fontSize: 14,
     fontFamily: "DMSans_400Regular",
     lineHeight: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   section: {
     gap: 12,
@@ -148,21 +166,21 @@ const s = StyleSheet.create({
   card: {
     borderRadius: 24,
     borderWidth: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    alignItems: 'center',
+    alignItems: "center",
   },
   iconBox: {
     width: 36,
     height: 36,
     borderRadius: 10,
     borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 16,
   },
   rowTitle: {
@@ -176,7 +194,7 @@ const s = StyleSheet.create({
     lineHeight: 18,
   },
   infoBox: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
     paddingHorizontal: 12,
   },
@@ -185,5 +203,5 @@ const s = StyleSheet.create({
     fontSize: 12,
     fontFamily: "DMSans_400Regular",
     lineHeight: 18,
-  }
+  },
 });

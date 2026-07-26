@@ -31,9 +31,7 @@ export function getPatientExerciseContext(): PatientExerciseContext {
     restrictions.push("Schedule evening mobility 1–2 hours before magnesium dose");
   }
 
-  const conditions = medications
-    .map((m) => m.clinicalReason)
-    .filter((c): c is string => !!c);
+  const conditions = medications.map((m) => m.clinicalReason).filter((c): c is string => !!c);
 
   const timingNotes = medications.map((m) => `${m.name}: ${m.instructionTag ?? m.reason}`);
 

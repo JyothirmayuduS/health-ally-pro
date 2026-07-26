@@ -100,7 +100,9 @@ function buildPatientDossier(patient: PanelPatient): string {
       : "Current meds: none active",
     recentRx.length ? `Recent Rx: ${recentRx.map((r) => r.title).join("; ")}` : "",
     `Prescribing clinician: ${apkDoctor.name}, ${apkDoctor.specialty}`,
-    `Formulary: ${DRUGS.filter((d) => d.rx_required).map((d) => d.generic_name).join(", ")}`,
+    `Formulary: ${DRUGS.filter((d) => d.rx_required)
+      .map((d) => d.generic_name)
+      .join(", ")}`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -194,7 +196,8 @@ function rulesForPatient(patient: PanelPatient, allergies: string[]): RulePack[]
       days: 30,
       refills: 3,
       confidence: 90,
-      rationale: "Hyperlipidemia on active problem list — LDL still above target on lifestyle alone.",
+      rationale:
+        "Hyperlipidemia on active problem list — LDL still above target on lifestyle alone.",
       guideline: "ACC/AHA — moderate-intensity statin for ASCVD risk",
       tier: "first-line",
     });
@@ -494,9 +497,14 @@ function buildLocalAnalysis(ctx: PrescriptionAiContext): PrescriptionAiAnalysis 
     `Clinical synthesis for ${ctx.patient.name}:`,
     top ? `• Primary recommendation: ${top.drug_name} ${top.strength} — ${top.rationale}` : "",
     suggestions.length > 1
-      ? `• Alternatives: ${suggestions.slice(1, 3).map((s) => s.drug_name).join(", ")}`
+      ? `• Alternatives: ${suggestions
+          .slice(1, 3)
+          .map((s) => s.drug_name)
+          .join(", ")}`
       : "",
-    alerts.length ? `• ${alerts.length} safety alert(s) require attention before signing.` : "• No critical safety blocks detected.",
+    alerts.length
+      ? `• ${alerts.length} safety alert(s) require attention before signing.`
+      : "• No critical safety blocks detected.",
     ctx.clinicianQuery ? `• Query addressed: ${ctx.clinicianQuery}` : "",
   ]
     .filter(Boolean)
@@ -670,10 +678,7 @@ export async function analyzePrescriptionContext(
   };
 }
 
-export function quickSafetyScan(
-  patient: PanelPatient,
-  draftDrugIds: string[],
-): AiAlert[] {
+export function quickSafetyScan(patient: PanelPatient, draftDrugIds: string[]): AiAlert[] {
   return detectInteractionAlerts(patient, draftDrugIds, parseAllergies(patient));
 }
 

@@ -4,11 +4,7 @@ import { SectionLabel, LocationChip, PickPath } from "@/components/pharmacy-desk
 import PharmacyPayDialog from "@/components/pharmacy-desk/PharmacyPayDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  type PharmacyInvoice,
-  type PaymentMethod,
-  fmtInr,
-} from "@/lib/pharmacy-desk/billing";
+import { type PharmacyInvoice, type PaymentMethod, fmtInr } from "@/lib/pharmacy-desk/billing";
 import { printPharmacyReceipt } from "@/lib/pharmacy-desk/billing";
 import type { WalkInItem } from "@/lib/pharmacy-desk/mockData";
 import type { Drug } from "@/lib/pharmacy-desk/mockData";
@@ -59,7 +55,9 @@ export default function WalkIn() {
   const paySale = walkInSales.find((s) => s.id === paySaleId);
   const payDrug = paySale ? drugs.find((d) => d.id === paySale.drug_id) : null;
 
-  const payInvoice: PharmacyInvoice | null = paySale ? walkInInvoice(paySale, payDrug) : null;
+  const payInvoice: PharmacyInvoice | null = paySale
+    ? walkInInvoice(paySale, payDrug ?? undefined)
+    : null;
   if (payInvoice && paySale?.payment === "unpaid") {
     payInvoice.amount_paid = 0;
     payInvoice.status = "unpaid";
@@ -78,7 +76,10 @@ export default function WalkIn() {
 
           <div className="mt-4 flex items-center gap-2 rounded-md border border-dashed border-ink-200 bg-stone-50 px-3 py-2">
             <ScanLine className="h-4 w-4 text-ink-400" />
-            <input placeholder="Scan barcode…" className="flex-1 bg-transparent text-[13px] outline-none" />
+            <input
+              placeholder="Scan barcode…"
+              className="flex-1 bg-transparent text-[13px] outline-none"
+            />
           </div>
 
           <Input
@@ -115,11 +116,24 @@ export default function WalkIn() {
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div>
               <label className="font-mono text-[10px] uppercase text-ink-400">Qty</label>
-              <Input type="number" min={1} value={qty} onChange={(e) => setQty(e.target.value)} className="mt-1 border-ink-200" />
+              <Input
+                type="number"
+                min={1}
+                value={qty}
+                onChange={(e) => setQty(e.target.value)}
+                className="mt-1 border-ink-200"
+              />
             </div>
             <div>
-              <label className="font-mono text-[10px] uppercase text-ink-400">Customer (optional)</label>
-              <Input value={patientName} onChange={(e) => setPatientName(e.target.value)} className="mt-1 border-ink-200" placeholder="Walk-in" />
+              <label className="font-mono text-[10px] uppercase text-ink-400">
+                Customer (optional)
+              </label>
+              <Input
+                value={patientName}
+                onChange={(e) => setPatientName(e.target.value)}
+                className="mt-1 border-ink-200"
+                placeholder="Walk-in"
+              />
             </div>
           </div>
 
@@ -140,23 +154,36 @@ export default function WalkIn() {
         </div>
 
         <div className="surface">
-          <div className="border-b border-ink-200 px-5 py-4 font-heading font-semibold">Today&apos;s walk-in sales</div>
+          <div className="border-b border-ink-200 px-5 py-4 font-heading font-semibold">
+            Today&apos;s walk-in sales
+          </div>
           <div className="divide-y divide-ink-100">
             {walkInSales.length === 0 ? (
-              <p className="px-5 py-10 text-center text-[13px] text-ink-400">No sales yet this session.</p>
+              <p className="px-5 py-10 text-center text-[13px] text-ink-400">
+                No sales yet this session.
+              </p>
             ) : (
               walkInSales.map((s) => {
                 const drug = drugs.find((d) => d.id === s.drug_id);
                 return (
-                  <div key={s.id} className="flex items-center justify-between gap-3 px-5 py-3 text-[13px]">
+                  <div
+                    key={s.id}
+                    className="flex items-center justify-between gap-3 px-5 py-3 text-[13px]"
+                  >
                     <div>
-                      <span className="font-medium">{drug?.generic_name} × {s.qty}</span>
+                      <span className="font-medium">
+                        {drug?.generic_name} × {s.qty}
+                      </span>
                       <div className="text-[11px] text-ink-400">{s.patient_name ?? "Walk-in"}</div>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sage">{fmtInr(s.amount)}</span>
                       {s.payment === "unpaid" ? (
-                        <Button size="sm" className="btn-primary h-7" onClick={() => setPaySaleId(s.id)}>
+                        <Button
+                          size="sm"
+                          className="btn-primary h-7"
+                          onClick={() => setPaySaleId(s.id)}
+                        >
                           Pay
                         </Button>
                       ) : (

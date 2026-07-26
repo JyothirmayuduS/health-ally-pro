@@ -1,0 +1,251 @@
+{
+  "at": "2026-07-23T13:10:18.476Z",
+  "hospital_id": "a0000001-0001-4001-8001-000000000001",
+  "actor_id": "b0000001-0001-4001-8001-000000000004",
+  "tests": {
+    "known_artifacts_not_open": {
+      "pass": true,
+      "known_ids": [
+        "27be26a6-a418-4828-974a-66970cb78a64",
+        "ad905f3f-fa4f-422d-9f67-54241ee0a790",
+        "f302f5ee-f085-47df-b849-27203e5460b8"
+      ],
+      "rows": [
+        {
+          "id": "27be26a6-a418-4828-974a-66970cb78a64",
+          "resolved_at": "2026-07-23T13:05:22.191+00:00",
+          "status": "test_artifact",
+          "reason": "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident"
+        },
+        {
+          "id": "ad905f3f-fa4f-422d-9f67-54241ee0a790",
+          "resolved_at": "2026-07-23T13:05:22.606+00:00",
+          "status": "test_artifact",
+          "reason": "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident"
+        },
+        {
+          "id": "f302f5ee-f085-47df-b849-27203e5460b8",
+          "resolved_at": "2026-07-23T13:05:23.082+00:00",
+          "status": "test_artifact",
+          "reason": "Forced PHI_AUDIT_FORCE_FAIL / simulated DLQ proof — not a production incident"
+        }
+      ],
+      "health_rpc": {
+        "ok": true,
+        "alert": false,
+        "checked_at": "2026-07-23T13:10:18.866214+00:00",
+        "open_failures": 0
+      },
+      "status_audit_dlq": {
+        "ok": true,
+        "alert": false,
+        "open_failures": 0,
+        "acknowledged_failures": 0,
+        "resolved_or_artifact": 4,
+        "checked_at": "2026-07-23T13:10:18.744Z",
+        "source": "app_layer"
+      }
+    },
+    "historical_retained": {
+      "pass": true,
+      "count": 3,
+      "ids": [
+        "27be26a6-a418-4828-974a-66970cb78a64",
+        "ad905f3f-fa4f-422d-9f67-54241ee0a790",
+        "f302f5ee-f085-47df-b849-27203e5460b8"
+      ]
+    },
+    "new_forced_failure": {
+      "pass": true,
+      "force_mode": "simulated_enqueue",
+      "clinical": {
+        "status": 200,
+        "ok": true,
+        "rows": 83
+      },
+      "dlq_id": "9cc72105-074c-400a-8f4e-c8f70206fdf8",
+      "open_in_window": 1,
+      "health": {
+        "ok": false,
+        "alert": true,
+        "checked_at": "2026-07-23T13:10:25.443726+00:00",
+        "open_failures": 1
+      },
+      "marker": "ops-regression-1784812219521"
+    },
+    "resolve_returns_health": {
+      "pass": true,
+      "resolve": {
+        "ok": true,
+        "resolution": {
+          "status": "test_artifact",
+          "resolved_at": "2026-07-23T13:10:25.391Z",
+          "resolved_by": "scripts/ops-regression-dlq-latency.mjs",
+          "reason": "Ops regression forced-failure cleanup — mark test_artifact; retain historical evidence",
+          "previous_status": "open",
+          "original_error_message": "PHI_AUDIT_FORCE_FAIL",
+          "original_created_at": "2026-07-23T13:10:25.200897+00:00"
+        }
+      },
+      "health_after": {
+        "ok": true,
+        "alert": false,
+        "checked_at": "2026-07-23T13:10:25.956888+00:00",
+        "open_failures": 0
+      },
+      "status_audit_dlq": {
+        "ok": true,
+        "alert": false,
+        "open_failures": 0,
+        "acknowledged_failures": 0,
+        "resolved_or_artifact": 5,
+        "checked_at": "2026-07-23T13:10:25.807Z",
+        "source": "app_layer"
+      },
+      "retained": {
+        "id": "9cc72105-074c-400a-8f4e-c8f70206fdf8",
+        "resolved_at": "2026-07-23T13:10:25.391+00:00",
+        "status": "test_artifact"
+      }
+    },
+    "concurrent_8": {
+      "pass": true,
+      "responses": [
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 471.41,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 817.86,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 473.73,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 552.37,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 434.38,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 552.04,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 470.08,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        },
+        {
+          "status": 200,
+          "ok": true,
+          "rows": 83,
+          "ms": 548.9,
+          "first_id": "01cba800-3abd-47fe-bf94-24e3d35b397b",
+          "last_id": "f9f36cf5-d593-4bca-b517-1c1ba19369df"
+        }
+      ],
+      "unique_fingerprints": 1,
+      "audit_count": 9,
+      "audit_ids": [
+        "fb936216-a73e-4af1-aa81-59d23dc840b8",
+        "e036aa1d-60c1-4615-a539-4d66784aef34",
+        "a661ae28-eca4-4196-8334-65d773702725",
+        "facba966-d190-4a30-968d-1984e1fa5bfa",
+        "f9b7bb9c-f279-4639-9389-0f118dcf240d",
+        "1f23e72c-59bc-409d-b1ea-e6be0669a871",
+        "ba55b0d6-3d1f-405a-9b1b-98974adb4bc0",
+        "5ed48c42-9e01-4ac5-97f9-05581c95c5f3",
+        "e90e929d-923e-4c3f-91b1-ad5837bd3c2f"
+      ],
+      "latency": {
+        "n": 8,
+        "min": 434.38,
+        "avg": 540.1,
+        "p50": 473.73,
+        "p95": 817.86,
+        "p99": 817.86,
+        "max": 817.86
+      },
+      "record_level_ok": true
+    },
+    "tenant_isolation": {
+      "pass": true,
+      "status": 403,
+      "body": {
+        "error": "Hospital out of scope"
+      },
+      "requested_hospital": "a0000001-0001-4001-8001-000000000099"
+    },
+    "unauthorized": {
+      "pass": true,
+      "no_token": {
+        "status": 401,
+        "body": {
+          "error": "Bearer token required"
+        }
+      },
+      "bad_token": {
+        "status": 401
+      }
+    },
+    "docker": {
+      "pass": true,
+      "root": 200,
+      "status": 200,
+      "status_ok_app": true
+    },
+    "clinical_flows": {
+      "pass": true,
+      "flows": {
+        "patients": {
+          "status": 200,
+          "ok": true,
+          "rows": 81
+        },
+        "appointments": {
+          "status": 200,
+          "ok": true,
+          "rows": 83
+        },
+        "lab_results": {
+          "status": 200,
+          "ok": true,
+          "rows": 85
+        }
+      }
+    }
+  },
+  "pass": true
+}

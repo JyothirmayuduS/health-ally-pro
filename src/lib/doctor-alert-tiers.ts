@@ -49,7 +49,5 @@ export function alertTierDotClass(tier: AlertTier) {
 
 /** Nav tab badges — only P1+ get red; counts alone use neutral */
 export function navBadgeClass(urgent: boolean) {
-  return urgent
-    ? "bg-[#C45C4A] text-white"
-    : "bg-[#EDEAE6] text-[#6B6B6B]";
+  return urgent ? "bg-[#C45C4A] text-white" : "bg-[#EDEAE6] text-[#6B6B6B]";
 }

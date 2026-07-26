@@ -661,7 +661,9 @@ function loadPublishedLabResults(): Array<{
 }
 
 /** Convert a published lab result into a ResultDocument for the doctor's inbox */
-function publishedResultToDocument(r: ReturnType<typeof loadPublishedLabResults>[number]): ResultDocument {
+function publishedResultToDocument(
+  r: ReturnType<typeof loadPublishedLabResults>[number],
+): ResultDocument {
   const isAbnormal = r.status === "abnormal";
   const analytes: ResultAnalyte[] = r.results
     ? Object.entries(r.results).map(([key, value]) => ({
@@ -687,7 +689,9 @@ function publishedResultToDocument(r: ReturnType<typeof loadPublishedLabResults>
       })()
     : "Recently";
 
-  const doctorLabel = r.doctorName ? `Dr. ${r.doctorName.replace(/^Dr\.?\s*/i, "")}` : "Ordering Clinician";
+  const doctorLabel = r.doctorName
+    ? `Dr. ${r.doctorName.replace(/^Dr\.?\s*/i, "")}`
+    : "Ordering Clinician";
   const patientLabel = r.patientName || "Patient";
 
   return {
@@ -697,7 +701,8 @@ function publishedResultToDocument(r: ReturnType<typeof loadPublishedLabResults>
     modality: "LAB",
     modalityClass: "Lab",
     channel: "Lab",
-    description: r.summary || `${r.testName} results validated and released by Oakhaven Laboratory.`,
+    description:
+      r.summary || `${r.testName} results validated and released by Oakhaven Laboratory.`,
     source: "Oakhaven Laboratory",
     relativeTime,
     needsReview: isAbnormal,
@@ -898,11 +903,7 @@ export function sortResultDocuments(docs: ResultDocument[], sort: ResultSort) {
   return list;
 }
 
-export function filterResultDocuments(
-  docs: ResultDocument[],
-  tab: ResultFilterTab,
-  query: string,
-) {
+export function filterResultDocuments(docs: ResultDocument[], tab: ResultFilterTab, query: string) {
   let list = docs;
   if (tab === "review") list = list.filter((d) => d.needsReview);
   if (tab === "patient-shared") list = list.filter((d) => d.filterTabs.includes("patient-shared"));

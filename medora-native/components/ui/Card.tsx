@@ -17,7 +17,16 @@ export function Card({ variant = "soft", className = "", style, ...props }: Card
   return (
     <View
       className={`${variants[variant]} ${className}`}
-      style={[{ shadowColor: "#1E3A32", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 2 }, style]}
+      style={[
+        {
+          shadowColor: "#1E3A32",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.04,
+          shadowRadius: 8,
+          elevation: 2,
+        },
+        style,
+      ]}
       {...props}
     />
   );

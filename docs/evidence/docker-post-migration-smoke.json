@@ -1,0 +1,103 @@
+{
+  "at": "2026-07-24T08:25:39.152Z",
+  "base": "http://127.0.0.1:3001",
+  "status_endpoint": {
+    "status": "operational",
+    "build": {
+      "git_commit": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+      "build_version": "v1.0.1",
+      "built_at": "2026-07-24T06:15:10Z",
+      "environment": "release",
+      "dirty_working_tree": false
+    },
+    "audit_dlq": {
+      "ok": true,
+      "alert": false,
+      "open_failures": 0,
+      "acknowledged_failures": 0,
+      "resolved_or_artifact": 10,
+      "checked_at": "2026-07-24T08:25:39.147855+00:00",
+      "source": "database_rpc"
+    },
+    "optional_degraded": [
+      "billing",
+      "bot_guard"
+    ],
+    "required_failed": []
+  },
+  "tests": [
+    {
+      "test": "appointments_auth_200",
+      "expected": "200 ok rows>0",
+      "actual": "200 ok=true rows=83",
+      "result": "PASS",
+      "ms": 1309
+    },
+    {
+      "test": "patients_auth_200",
+      "expected": "200 ok",
+      "actual": "200 ok=true rows=81",
+      "result": "PASS"
+    },
+    {
+      "test": "lab_results_auth_200",
+      "expected": "200 ok",
+      "actual": "200 ok=true rows=85",
+      "result": "PASS"
+    },
+    {
+      "test": "missing_auth_401",
+      "expected": "401",
+      "actual": "401",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid_auth_401",
+      "expected": "401",
+      "actual": "401",
+      "result": "PASS"
+    },
+    {
+      "test": "cross_tenant_403",
+      "expected": "403",
+      "actual": "403 Hospital out of scope",
+      "result": "PASS"
+    },
+    {
+      "test": "audit_durability_waituntil",
+      "expected": "200 + audit with record_ids",
+      "actual": "status=200 audit=null ids=0",
+      "result": "FAIL",
+      "request_id": "docker-durability-1784881530059",
+      "response_ms": 147.51,
+      "audit_id": null,
+      "record_count": 0,
+      "poll_timeout_ms": 8000
+    },
+    {
+      "test": "clinical_not_blocked_on_audit",
+      "expected": "response_ms reasonable (<2000) while audit may appear later",
+      "actual": "response_ms=148",
+      "result": "PASS"
+    },
+    {
+      "test": "open_failures_remain_0",
+      "expected": "0 / database_rpc",
+      "actual": "0 database_rpc",
+      "result": "PASS"
+    },
+    {
+      "test": "no_new_dlq_from_normal_reads",
+      "expected": "open_failures unchanged at 0",
+      "actual": "before=0 after=0",
+      "result": "PASS"
+    },
+    {
+      "test": "build_identity_matches",
+      "expected": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+      "actual": "a66a85e1197c795b545044770c8ecd2389ce80c9",
+      "result": "FAIL"
+    }
+  ],
+  "pass": false
+}

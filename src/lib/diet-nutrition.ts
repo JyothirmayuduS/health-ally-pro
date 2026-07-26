@@ -42,12 +42,17 @@ export function pctDaily(value: number | undefined, daily: number): number | nul
   return Math.round((value / daily) * 100);
 }
 
-export function formatMacroSummary(n: Pick<DietNutritionPerServing, "proteinG" | "carbsG" | "fatG">): string {
+export function formatMacroSummary(
+  n: Pick<DietNutritionPerServing, "proteinG" | "carbsG" | "fatG">,
+): string {
   return `P ${n.proteinG}g · C ${n.carbsG}g · F ${n.fatG}g`;
 }
 
 /** Curated per-serving profiles for the clinical meal library. */
-const LIBRARY_NUTRITION: Record<string, Omit<DietNutritionPerServing, "calories"> & { calories?: number }> = {
+const LIBRARY_NUTRITION: Record<
+  string,
+  Omit<DietNutritionPerServing, "calories"> & { calories?: number }
+> = {
   eb1: {
     servingSize: "1 bowl (250 g)",
     servings: 1,
@@ -295,8 +300,10 @@ function inferClinicalMicros(meal: DietMeal): Partial<DietNutritionPerServing> {
   if (/selenium|brazil/.test(tags + ings)) micro.seleniumMcg = micro.seleniumMcg ?? 35;
   if (/zinc|lentil|dal|scallop/.test(tags + ings)) micro.zincMg = micro.zincMg ?? 2;
   if (/iron|ragi|spinach|lentil/.test(tags + ings)) micro.ironMg = micro.ironMg ?? 3;
-  if (/vitamin d|d3|sardine|salmon|egg/.test(tags + ings)) micro.vitaminDMcg = micro.vitaminDMcg ?? 6;
-  if (/magnesium|quinoa|bajra|millet|spinach/.test(tags + ings)) micro.magnesiumMg = micro.magnesiumMg ?? 55;
+  if (/vitamin d|d3|sardine|salmon|egg/.test(tags + ings))
+    micro.vitaminDMcg = micro.vitaminDMcg ?? 6;
+  if (/magnesium|quinoa|bajra|millet|spinach/.test(tags + ings))
+    micro.magnesiumMg = micro.magnesiumMg ?? 55;
 
   if (meal.mealType === "breakfast" && /oat/.test(ings)) {
     micro.iodineMcg = 40;
@@ -372,7 +379,10 @@ export type ClinicalMicroKey =
   | "vitaminDMcg"
   | "magnesiumMg";
 
-export const CLINICAL_MICRO_LABELS: Record<ClinicalMicroKey, { label: string; unit: string; daily: number }> = {
+export const CLINICAL_MICRO_LABELS: Record<
+  ClinicalMicroKey,
+  { label: string; unit: string; daily: number }
+> = {
   iodineMcg: { label: "Iodine", unit: "mcg", daily: DAILY_VALUES.iodineMcg },
   seleniumMcg: { label: "Selenium", unit: "mcg", daily: DAILY_VALUES.seleniumMcg },
   zincMg: { label: "Zinc", unit: "mg", daily: DAILY_VALUES.zincMg },
@@ -381,7 +391,9 @@ export const CLINICAL_MICRO_LABELS: Record<ClinicalMicroKey, { label: string; un
   magnesiumMg: { label: "Magnesium", unit: "mg", daily: DAILY_VALUES.magnesiumMg },
 };
 
-export function listClinicalMicros(n: DietNutritionPerServing): { key: ClinicalMicroKey; value: number; pct: number | null }[] {
+export function listClinicalMicros(
+  n: DietNutritionPerServing,
+): { key: ClinicalMicroKey; value: number; pct: number | null }[] {
   return (Object.keys(CLINICAL_MICRO_LABELS) as ClinicalMicroKey[])
     .map((key) => {
       const value = n[key];

@@ -1,5 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { useStore, WARD_CATEGORIES } from "@/lib/reception-desk/store";
+import type { LucideIcon } from "lucide-react";
+import {
+  useStore,
+  WARD_CATEGORIES,
+  type AdmissionRecord,
+  type Bed,
+  type Invoice,
+  type InvoiceItem,
+} from "@/lib/reception-desk/store";
 import { TODAY_STR } from "@/lib/reception-desk/mockData";
 import { PAYMENT_METHODS, computeTotals } from "@/lib/reception-desk/billingData";
 import { toast } from "sonner";
@@ -21,18 +29,18 @@ import {
 } from "lucide-react";
 import RefundModal from "@/components/reception-desk/RefundModal";
 
-const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n: number | string | null | undefined) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 const STATUS_FILTERS = ["All", "Unpaid", "Paid"];
 
-const METHOD_ICON = {
+const METHOD_ICON: Record<string, LucideIcon> = {
   cash: Banknote,
   card: CreditCard,
   upi: Smartphone,
   insurance: ShieldCheck,
 };
 
-function StatusChip({ status }) {
+function StatusChip({ status }: { status: string }) {
   if (status === "paid") {
     return (
       <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide border rounded-sm bg-money/10 text-money border-money/30">
@@ -61,7 +69,25 @@ function StatusChip({ status }) {
   );
 }
 
-function PayDialog({ invoice, totals, onClose, onPay }) {
+interface BillingTotals {
+  subtotal: number;
+  discount: number;
+  tax: number;
+  total: number;
+  processedItems?: InvoiceItem[];
+}
+
+function PayDialog({
+  invoice,
+  totals,
+  onClose,
+  onPay,
+}: {
+  invoice: Invoice | null | undefined;
+  totals: BillingTotals;
+  onClose: () => void;
+  onPay: (method: string) => void;
+}) {
   const [method, setMethod] = useState("cash");
   if (!invoice) return null;
   return (
@@ -238,23 +264,25 @@ export default function Billing() {
 
   const patientAdmission = useMemo(() => {
     if (!selected) return null;
-    return admissions.find((a: any) => a.patientId === selected.patientId && a.status !== "discharged");
+    return admissions.find(
+      (a: AdmissionRecord) => a.patientId === selected.patientId && a.status !== "discharged",
+    );
   }, [selected, admissions]);
 
   const itemsWithBedStay = useMemo(() => {
     if (!selected) return [];
     const base = [...selected.items];
     if (patientAdmission) {
-      const bed = beds.find((b: any) => b.id === patientAdmission.bedId);
+      const bed = beds.find((b: Bed) => b.id === patientAdmission.bedId);
       const rate = WARD_CATEGORIES.find((w) => w.id === bed?.wardCategory)?.ratePerDay || 0;
-      
+
       const start = new Date(patientAdmission.admittedAt);
       const now = new Date();
       const diffTime = Math.max(0, now.getTime() - start.getTime());
       const days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-      
+
       const bedStayLabel = `Inpatient Bed Stay — ${bed?.name || patientAdmission.bedId} (${bed?.wardCategory || ""})`;
-      
+
       const exists = base.some((it) => it.label.startsWith("Inpatient Bed Stay"));
       if (!exists) {
         base.push({
@@ -270,13 +298,13 @@ export default function Billing() {
 
   const selTotals = useMemo(() => {
     if (!selected) return { subtotal: 0, discount: 0, tax: 0, total: 0, processedItems: [] };
-    
+
     const tariffPlan = selected.tariffPlan || "standard";
     const manualDiscount = selected.discount || 0;
-    
+
     let subtotal = 0;
     let tariffDiscount = 0;
-    
+
     const processedItems = itemsWithBedStay.map((it) => {
       let unit = it.unit;
       if (tariffPlan === "cghs") {
@@ -288,16 +316,16 @@ export default function Billing() {
           unit = Math.min(unit, 500);
         }
       }
-      
+
       const amount = it.qty * unit;
       subtotal += amount;
-      
+
       if (tariffPlan === "star-corporate") {
         if (!it.label.toLowerCase().includes("consultation")) {
           tariffDiscount += amount * 0.15;
         }
       }
-      
+
       return { ...it, unit, amount };
     });
 
@@ -366,7 +394,8 @@ export default function Billing() {
     toast.success("Added pharmacy line item");
   };
 
-  const updateItem = (idx, patch) => {
+  const updateItem = (idx: number, patch: Partial<InvoiceItem>) => {
+    if (!selected) return;
     const items = selected.items.map((it, i) =>
       i === idx
         ? {
@@ -379,13 +408,15 @@ export default function Billing() {
     updateInvoice(selected.id, { items });
   };
 
-  const removeItem = (idx) => {
+  const removeItem = (idx: number) => {
+    if (!selected) return;
     updateInvoice(selected.id, {
       items: selected.items.filter((_, i) => i !== idx),
     });
   };
 
-  const onPay = (method) => {
+  const onPay = (method: string) => {
+    if (!selected) return;
     collectPayment(selected.id, method);
     toast.success(`Paid via ${method.toUpperCase()}`, {
       description: `${selPatient?.name} · ${fmt(selTotals.total)}`,
@@ -534,14 +565,18 @@ export default function Billing() {
                   </div>
                   {selected.status === "unpaid" ? (
                     <div className="mt-3 flex items-center gap-3">
-                      <span className="text-[11px] font-medium text-ink-500 uppercase tracking-wider font-mono">Tariff Plan:</span>
+                      <span className="text-[11px] font-medium text-ink-500 uppercase tracking-wider font-mono">
+                        Tariff Plan:
+                      </span>
                       <select
                         className="h-8 px-2.5 text-[12.5px] bg-white border border-ink-200 rounded focus:outline-none focus:border-sage"
                         value={selected.tariffPlan || "standard"}
                         onChange={(e) => updateInvoice(selected.id, { tariffPlan: e.target.value })}
                       >
                         <option value="standard">Standard Tariff Rates</option>
-                        <option value="star-corporate">Star Health Corporate (15% Procedures Disc)</option>
+                        <option value="star-corporate">
+                          Star Health Corporate (15% Procedures Disc)
+                        </option>
                         <option value="cghs">CGHS Gov Scheme (Capped Rates)</option>
                         <option value="staff">Staff Discount (50% Disc)</option>
                       </select>
@@ -666,15 +701,17 @@ export default function Billing() {
                             {fmt(it.amount)}
                           </td>
                           <td className="py-2.5 text-right">
-                            {selected.status === "unpaid" && selected.items.length > 1 && !isBedStay && (
-                              <button
-                                data-testid={`billing-remove-item-${idx}`}
-                                onClick={() => removeItem(idx)}
-                                className="btn-icon"
-                              >
-                                <Trash2 className="w-3.5 h-3.5 text-status-noshowText" />
-                              </button>
-                            )}
+                            {selected.status === "unpaid" &&
+                              selected.items.length > 1 &&
+                              !isBedStay && (
+                                <button
+                                  data-testid={`billing-remove-item-${idx}`}
+                                  onClick={() => removeItem(idx)}
+                                  className="btn-icon"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5 text-status-noshowText" />
+                                </button>
+                              )}
                           </td>
                         </tr>
                       );
@@ -722,7 +759,8 @@ export default function Billing() {
                       </div>
                       <div className="text-[13px] text-ink-900 inline-flex items-center gap-1.5">
                         {(() => {
-                          const M = METHOD_ICON[selected.method] || Receipt;
+                          const M =
+                            (selected.method ? METHOD_ICON[selected.method] : undefined) || Receipt;
                           return <M className="w-3.5 h-3.5 text-money" />;
                         })()}
                         {selected.method?.toUpperCase()}
@@ -760,7 +798,9 @@ export default function Billing() {
                       </div>
                       <div className="flex justify-between text-money font-medium">
                         <span>IPD Deposit Credit</span>
-                        <span className="font-mono text-money">−{fmt(patientAdmission.depositAmount)}</span>
+                        <span className="font-mono text-money">
+                          −{fmt(patientAdmission.depositAmount)}
+                        </span>
                       </div>
                     </>
                   )}
@@ -783,15 +823,24 @@ export default function Billing() {
                     Refund History
                   </div>
                   <div className="space-y-2">
-                    {selected.refunds.map((ref: any, idx: number) => (
-                      <div key={idx} className="flex justify-between items-start text-[12.5px] text-ink-600 bg-white p-2.5 rounded-sm border border-ink-200 shadow-xs">
+                    {selected.refunds.map((ref, idx) => (
+                      <div
+                        key={idx}
+                        className="flex justify-between items-start text-[12.5px] text-ink-600 bg-white p-2.5 rounded-sm border border-ink-200 shadow-xs"
+                      >
                         <div>
                           <div className="font-medium text-ink-900 capitalize">
-                            {ref.type === "credit" ? "Credit Note" : `${ref.type} Refund`} · {ref.reason}
+                            {ref.type === "credit" ? "Credit Note" : `${ref.type} Refund`} ·{" "}
+                            {ref.reason}
                           </div>
-                          {ref.notes && <div className="text-[11.5px] text-ink-500 mt-0.5">Notes: {ref.notes}</div>}
+                          {ref.notes && (
+                            <div className="text-[11.5px] text-ink-500 mt-0.5">
+                              Notes: {ref.notes}
+                            </div>
+                          )}
                           <div className="text-[10.5px] text-ink-400 font-mono mt-1">
-                            Processed: {ref.processedAt.slice(0, 10)} {ref.processedAt.slice(11, 16)} by {ref.processedBy}
+                            Processed: {ref.processedAt.slice(0, 10)}{" "}
+                            {ref.processedAt.slice(11, 16)} by {ref.processedBy}
                           </div>
                         </div>
                         <span className="font-mono text-status-noshowText font-medium">
@@ -802,7 +851,7 @@ export default function Billing() {
                   </div>
                 </div>
               )}
- 
+
               <div className="px-6 py-4 border-t border-ink-200 flex flex-wrap gap-2 items-center">
                 <button
                   data-testid="billing-print"
@@ -827,7 +876,8 @@ export default function Billing() {
                     className="btn-money btn-lg"
                   >
                     <CheckCircle2 className="w-4 h-4" />
-                    Collect {fmt(
+                    Collect{" "}
+                    {fmt(
                       patientAdmission && patientAdmission.depositAmount > 0
                         ? Math.max(0, selTotals.total - patientAdmission.depositAmount)
                         : selTotals.total,
@@ -851,7 +901,7 @@ export default function Billing() {
           )}
         </section>
       </div>
- 
+
       {payOpen && (
         <PayDialog
           invoice={selected}

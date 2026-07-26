@@ -1,0 +1,65 @@
+{
+  "at": "2026-07-22T04:27:23.806Z",
+  "notes": [
+    {
+      "role": "lab",
+      "mobile": false,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "lab",
+      "mobile": true,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "pharmacy",
+      "mobile": false,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "pharmacy",
+      "mobile": true,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "nursing",
+      "mobile": false,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "nursing",
+      "mobile": true,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "billing",
+      "mobile": false,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "billing",
+      "mobile": true,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "reception",
+      "mobile": false,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    },
+    {
+      "role": "reception",
+      "mobile": true,
+      "error": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8787/login\nCall log:\n  - navigating to \"http://127.0.0.1:8787/login\", waiting until \"domcontentloaded\"\n",
+      "url": "about:blank"
+    }
+  ]
+}

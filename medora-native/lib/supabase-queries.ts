@@ -14,6 +14,25 @@ const DOCTOR_NAMES: Record<string, string> = {
   LP: "Dr. Lucien Park",
 };
 
+const API_BASE = (process.env.EXPO_PUBLIC_MEDORA_API_URL || "").replace(/\/$/, "");
+
+async function fetchPhi<T>(resource: string): Promise<T | null> {
+  if (!API_BASE) return null;
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_BASE}/api/hospital/phi?resource=${resource}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { data?: T };
+    return body.data ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchMobileDashboard() {
   const useDemoHome = process.env.EXPO_PUBLIC_DEMO_HOME !== "false";
   if (!isSupabaseConfigured() || useDemoHome) {
@@ -31,11 +50,10 @@ export async function fetchMobileDashboard() {
 
     let patient = mockPatient;
     if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("full_name, email")
-        .eq("id", user.id)
-        .maybeSingle();
+      const profileBundle = await fetchPhi<{
+        profile: { full_name: string | null; email: string | null } | null;
+      }>("patient_profile");
+      const profile = profileBundle?.profile;
       if (profile?.full_name) {
         const parts = profile.full_name.split(" ");
         patient = {
@@ -50,16 +68,22 @@ export async function fetchMobileDashboard() {
       }
     }
 
-    const { data: staff } = await supabase
-      .from("staff_profiles")
-      .select(
-        "id, legacy_id, specialty, initials, bio, rating, review_count, experience_years, consultation_fee, next_available_slot",
-      )
-      .eq("is_active", true)
-      .not("specialty", "is", null);
+    type StaffRow = {
+      id: string;
+      legacy_id: string | null;
+      specialty: string | null;
+      initials: string | null;
+      bio: string | null;
+      rating: number | null;
+      review_count: number | null;
+      experience_years: number | null;
+      consultation_fee: number | null;
+      next_available_slot: string | null;
+    };
+    const staff = (await fetchPhi<StaffRow[]>("staff_profiles")) ?? [];
 
     const doctors =
-      staff?.map((d) => ({
+      staff.map((d) => ({
         id: d.legacy_id ?? d.id,
         name: DOCTOR_NAMES[d.initials ?? ""] ?? `Dr. ${d.specialty}`,
         specialty: d.specialty ?? "General",
@@ -75,37 +99,37 @@ export async function fetchMobileDashboard() {
 
     let appointments = mockAppointments;
     if (user) {
-      const { data: patientRow } = await supabase
-        .from("patients")
-        .select("id")
-        .eq("profile_id", user.id)
-        .maybeSingle();
-
-      if (patientRow) {
-        const { data: rows } = await supabase
-          .from("appointments")
-          .select(
-            "id, legacy_id, scheduled_at, time_label, reason, status, staff_profiles(legacy_id), queue_entries(position, estimated_wait_minutes)",
-          )
-          .eq("patient_id", patientRow.id)
-          .order("scheduled_at", { ascending: true });
-
-        if (rows?.length) {
-          appointments = rows.map((a) => ({
-            id: a.legacy_id ?? a.id,
-            doctorId: a.staff_profiles?.legacy_id ?? "",
-            date: a.scheduled_at,
-            time: a.time_label ?? "",
-            reason: a.reason ?? "",
-            status: a.status,
-            queuePosition: a.queue_entries?.[0]?.position ?? undefined,
-            estimatedWait: a.queue_entries?.[0]?.estimated_wait_minutes ?? undefined,
-          }));
-        }
+      type ApptRow = {
+        id: string;
+        legacy_id: string | null;
+        scheduled_at: string;
+        time_label: string | null;
+        reason: string | null;
+        status: string;
+        staff_profiles?: { legacy_id: string | null } | null;
+        queue_entries?: Array<{ position: number; estimated_wait_minutes: number }> | null;
+      };
+      const rows = await fetchPhi<ApptRow[]>("appointments");
+      if (rows?.length) {
+        appointments = rows.map((a) => ({
+          id: a.legacy_id ?? a.id,
+          doctorId: a.staff_profiles?.legacy_id ?? "",
+          date: a.scheduled_at,
+          time: a.time_label ?? "",
+          reason: a.reason ?? "",
+          status: a.status,
+          queuePosition: a.queue_entries?.[0]?.position ?? undefined,
+          estimatedWait: a.queue_entries?.[0]?.estimated_wait_minutes ?? undefined,
+        }));
       }
     }
 
-    return { patient, appointments, doctors, connected: true };
+    return {
+      patient,
+      appointments,
+      doctors: doctors.length ? doctors : mockDoctors,
+      connected: true,
+    };
   } catch {
     return {
       patient: mockPatient,

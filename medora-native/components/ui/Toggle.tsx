@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 interface ToggleProps {
   defaultOn?: boolean;
@@ -35,7 +31,14 @@ export function Toggle({ defaultOn = true, onToggle }: ToggleProps) {
         <Animated.View
           className="h-5 w-5 rounded-full bg-surface"
           style={[
-            { marginLeft: 2, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2, elevation: 2 },
+            {
+              marginLeft: 2,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 2,
+              elevation: 2,
+            },
             thumbStyle,
           ]}
         />

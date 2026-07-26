@@ -25,7 +25,10 @@ export default function PrescriptionDetailScreen() {
 
   if (!record) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+        edges={["top"]}
+      >
         <View style={styles.header}>
           <Pressable onPress={() => router.back()} style={styles.backBtn}>
             <ArrowLeft size={22} color={colors.ink} />
@@ -47,7 +50,10 @@ export default function PrescriptionDetailScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top"]}
+    >
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <ArrowLeft size={22} color={colors.ink} />
@@ -63,7 +69,9 @@ export default function PrescriptionDetailScreen() {
           <View style={[styles.rxPad, { backgroundColor: "#FFFEF9", borderColor: colors.border }]}>
             <Text style={styles.rxEyebrow}>ELECTRONIC PRESCRIPTION</Text>
             <Text style={styles.rxNumber}>{record.rx_number}</Text>
-            <Text style={[styles.rxDate, { color: colors.inkMuted }]}>{formatSentAt(record.sent_at)}</Text>
+            <Text style={[styles.rxDate, { color: colors.inkMuted }]}>
+              {formatSentAt(record.sent_at)}
+            </Text>
 
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
@@ -82,7 +90,9 @@ export default function PrescriptionDetailScreen() {
             <View style={styles.row}>
               <Calendar size={14} color={colors.clay} />
               <Text style={[styles.rowLabel, { color: colors.inkMuted }]}>Diagnosis</Text>
-              <Text style={[styles.rowValue, { color: colors.foreground }]}>{record.diagnosis}</Text>
+              <Text style={[styles.rowValue, { color: colors.foreground }]}>
+                {record.diagnosis}
+              </Text>
             </View>
 
             <Text style={[styles.medHeading, { color: colors.foreground }]}>℞ Medications</Text>
@@ -101,17 +111,18 @@ export default function PrescriptionDetailScreen() {
             {record.patientInstructions ? (
               <View style={[styles.noteBox, { backgroundColor: colors.background }]}>
                 <Text style={[styles.noteTitle, { color: colors.clay }]}>Patient instructions</Text>
-                <Text style={[styles.noteBody, { color: colors.inkMuted }]}>{record.patientInstructions}</Text>
+                <Text style={[styles.noteBody, { color: colors.inkMuted }]}>
+                  {record.patientInstructions}
+                </Text>
               </View>
             ) : null}
           </View>
         </Animated.View>
 
-        <Pressable
-          onPress={handleShare}
-          style={[styles.shareBtn, { backgroundColor: colors.ink }]}
-        >
-          <Text style={[styles.shareBtnText, { color: colors.primaryForeground }]}>Share with pharmacy</Text>
+        <Pressable onPress={handleShare} style={[styles.shareBtn, { backgroundColor: colors.ink }]}>
+          <Text style={[styles.shareBtnText, { color: colors.primaryForeground }]}>
+            Share with pharmacy
+          </Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -170,7 +181,12 @@ const styles = StyleSheet.create({
   medSig: { fontSize: 13, fontFamily: "DMSans_400Regular", marginTop: 4, lineHeight: 20 },
   medQty: { fontSize: 11, fontFamily: "DMSans_400Regular", marginTop: 6 },
   noteBox: { borderRadius: 14, padding: 14, marginTop: 8 },
-  noteTitle: { fontSize: 11, fontFamily: "DMSans_700Bold", textTransform: "uppercase", letterSpacing: 0.5 },
+  noteTitle: {
+    fontSize: 11,
+    fontFamily: "DMSans_700Bold",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
   noteBody: { fontSize: 13, fontFamily: "DMSans_400Regular", marginTop: 6, lineHeight: 20 },
   shareBtn: {
     marginTop: 20,

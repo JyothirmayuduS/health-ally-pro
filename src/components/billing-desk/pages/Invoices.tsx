@@ -106,9 +106,13 @@ export default function BillingInvoices() {
           {active ? (
             <div className="space-y-4">
               <div>
-                <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">Invoice</div>
+                <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">
+                  Invoice
+                </div>
                 <h2 className="font-heading mt-1 text-lg font-semibold">{active.id}</h2>
-                <p className="text-[12px] text-ink-500">{active.date} · {active.source}</p>
+                <p className="text-[12px] text-ink-500">
+                  {active.date} · {active.source}
+                </p>
               </div>
               <ul className="divide-y divide-ink-100 text-[13px]">
                 {active.items.map((line, i) => (
@@ -121,7 +125,9 @@ export default function BillingInvoices() {
               <div className="rounded-lg border border-ink-200 bg-stone-50 px-4 py-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-ink-600">Balance due</span>
-                  <span className="font-mono text-lg font-semibold text-clay">{fmtLedger(balance)}</span>
+                  <span className="font-mono text-lg font-semibold text-clay">
+                    {fmtLedger(balance)}
+                  </span>
                 </div>
               </div>
               {balance > 0 && (

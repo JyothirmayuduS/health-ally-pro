@@ -13,7 +13,7 @@ import { isCareRoute, isExerciseRoute, isHealthRoute } from "@/lib/patient-nav-u
 import { isReportDetailRoute } from "@/lib/reports-utils";
 
 const tabs = [
-  { to: "/", label: "Home", icon: LayoutDashboard, match: (p: string) => p === "/" },
+  { to: "/app", label: "Home", icon: LayoutDashboard, match: (p: string) => p === "/app" },
   {
     to: "/care",
     label: "Care",

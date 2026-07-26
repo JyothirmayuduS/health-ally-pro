@@ -11,12 +11,7 @@ export type ExerciseYoutubeVideo = {
 };
 
 export type ExerciseIntensity = "gentle" | "moderate" | "active";
-export type ExerciseCategory =
-  | "mobility"
-  | "cardio"
-  | "strength"
-  | "breathing"
-  | "recovery";
+export type ExerciseCategory = "mobility" | "cardio" | "strength" | "breathing" | "recovery";
 
 export type ExerciseStepDetail = {
   instruction: string;
@@ -63,11 +58,26 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Finish with 2 minutes of slow breathing.",
     ],
     bodyEffects: [
-      { time: "5 min", effect: "Circulation boost", description: "Heart rate gently rises, improving blood flow to muscles and thyroid tissue." },
-      { time: "15 min", effect: "Energy priming", description: "Endorphin release counters hypothyroid fatigue without overtaxing adrenals." },
-      { time: "2 h", effect: "Metabolic lift", description: "Post-walk thermogenesis supports afternoon energy stability." },
+      {
+        time: "5 min",
+        effect: "Circulation boost",
+        description: "Heart rate gently rises, improving blood flow to muscles and thyroid tissue.",
+      },
+      {
+        time: "15 min",
+        effect: "Energy priming",
+        description: "Endorphin release counters hypothyroid fatigue without overtaxing adrenals.",
+      },
+      {
+        time: "2 h",
+        effect: "Metabolic lift",
+        description: "Post-walk thermogenesis supports afternoon energy stability.",
+      },
     ],
-    cautions: ["Stop if palpitations occur — may signal dose mismatch", "Avoid high-intensity sprints on thyroid meds"],
+    cautions: [
+      "Stop if palpitations occur — may signal dose mismatch",
+      "Avoid high-intensity sprints on thyroid meds",
+    ],
     keywords: ["morning walk beginner", "thyroid safe walking", "gentle cardio explained"],
   },
   {
@@ -89,12 +99,29 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Finish with relaxed diaphragmatic breathing.",
     ],
     bodyEffects: [
-      { time: "2 min", effect: "Fascia release", description: "Tight anterior neck muscles begin to lengthen, reducing headache pressure." },
-      { time: "8 min", effect: "Posture reset", description: "Scapular mobility improves — less forward-head strain on thyroid area." },
-      { time: "24 h", effect: "Tension reduction", description: "Regular practice lowers baseline muscle tone linked to thyroid-related stiffness." },
+      {
+        time: "2 min",
+        effect: "Fascia release",
+        description: "Tight anterior neck muscles begin to lengthen, reducing headache pressure.",
+      },
+      {
+        time: "8 min",
+        effect: "Posture reset",
+        description: "Scapular mobility improves — less forward-head strain on thyroid area.",
+      },
+      {
+        time: "24 h",
+        effect: "Tension reduction",
+        description:
+          "Regular practice lowers baseline muscle tone linked to thyroid-related stiffness.",
+      },
     ],
     cautions: ["Never force neck rotation", "Skip if acute neck injury or vertigo"],
-    keywords: ["neck stretch beginner explained", "thyroid neck exercises gentle", "shoulder mobility short"],
+    keywords: [
+      "neck stretch beginner explained",
+      "thyroid neck exercises gentle",
+      "shoulder mobility short",
+    ],
   },
   {
     id: "ex-breath",
@@ -114,12 +141,31 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Repeat for 5 minutes; focus on long exhales.",
     ],
     bodyEffects: [
-      { time: "1 min", effect: "Heart-rate drop", description: "Vagal tone increases; resting pulse often falls 3–8 bpm." },
-      { time: "5 min", effect: "Cortisol dampening", description: "Parasympathetic shift supports hormone conversion pathways." },
-      { time: "1 h", effect: "Mental clarity", description: "Reduced brain fog — common in hypothyroid and high-stress states." },
+      {
+        time: "1 min",
+        effect: "Heart-rate drop",
+        description: "Vagal tone increases; resting pulse often falls 3–8 bpm.",
+      },
+      {
+        time: "5 min",
+        effect: "Cortisol dampening",
+        description: "Parasympathetic shift supports hormone conversion pathways.",
+      },
+      {
+        time: "1 h",
+        effect: "Mental clarity",
+        description: "Reduced brain fog — common in hypothyroid and high-stress states.",
+      },
     ],
-    cautions: ["If dizzy, return to normal breathing", "Not a substitute for emergency asthma care"],
-    keywords: ["diaphragmatic breathing tutorial short", "belly breathing explained beginner", "stress relief breathing 5 min"],
+    cautions: [
+      "If dizzy, return to normal breathing",
+      "Not a substitute for emergency asthma care",
+    ],
+    keywords: [
+      "diaphragmatic breathing tutorial short",
+      "belly breathing explained beginner",
+      "stress relief breathing 5 min",
+    ],
   },
   {
     id: "ex-sunwalk",
@@ -140,12 +186,28 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Log sun exposure for your care team.",
     ],
     bodyEffects: [
-      { time: "10 min", effect: "Light activation", description: "UVB exposure triggers skin vitamin D production alongside your supplement." },
-      { time: "30 min", effect: "Mood lift", description: "Serotonin pathways activate — supports thyroid-related low mood." },
-      { time: "4 wk", effect: "D status support", description: "Combined oral + lifestyle approach improves 25(OH)D trends." },
+      {
+        time: "10 min",
+        effect: "Light activation",
+        description: "UVB exposure triggers skin vitamin D production alongside your supplement.",
+      },
+      {
+        time: "30 min",
+        effect: "Mood lift",
+        description: "Serotonin pathways activate — supports thyroid-related low mood.",
+      },
+      {
+        time: "4 wk",
+        effect: "D status support",
+        description: "Combined oral + lifestyle approach improves 25(OH)D trends.",
+      },
     ],
     cautions: ["Use SPF per dermatology advice", "Avoid overheating"],
-    keywords: ["walking sunshine vitamin D explained", "outdoor walk beginner short", "vitamin d exercise easy"],
+    keywords: [
+      "walking sunshine vitamin D explained",
+      "outdoor walk beginner short",
+      "vitamin d exercise easy",
+    ],
   },
   {
     id: "ex-evening-stretch",
@@ -166,12 +228,28 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Legs-up-the-wall — 2 minutes.",
     ],
     bodyEffects: [
-      { time: "5 min", effect: "Muscle unwind", description: "Golgi tendon organs release tension in tight posterior chain." },
-      { time: "10 min", effect: "Sleep prep", description: "Parasympathetic dominance supports melatonin onset with your PM magnesium." },
-      { time: "Overnight", effect: "Recovery sleep", description: "Deeper slow-wave sleep improves next-day energy and muscle repair." },
+      {
+        time: "5 min",
+        effect: "Muscle unwind",
+        description: "Golgi tendon organs release tension in tight posterior chain.",
+      },
+      {
+        time: "10 min",
+        effect: "Sleep prep",
+        description: "Parasympathetic dominance supports melatonin onset with your PM magnesium.",
+      },
+      {
+        time: "Overnight",
+        effect: "Recovery sleep",
+        description: "Deeper slow-wave sleep improves next-day energy and muscle repair.",
+      },
     ],
     cautions: ["Avoid deep forward folds if dizzy", "Keep stretches pain-free"],
-    keywords: ["bedtime stretch routine short", "gentle yoga evening beginner", "sleep stretch explained"],
+    keywords: [
+      "bedtime stretch routine short",
+      "gentle yoga evening beginner",
+      "sleep stretch explained",
+    ],
   },
   {
     id: "ex-low-impact",
@@ -192,12 +270,31 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Cool-down walk in place — 2 minutes.",
     ],
     bodyEffects: [
-      { time: "8 min", effect: "Glucose uptake", description: "Muscle glucose transporters activate — supports metabolic health." },
-      { time: "12 min", effect: "Calorie burn", description: "Sustainable burn without cortisol spike from high-intensity work." },
-      { time: "48 h", effect: "BMR support", description: "Regular sessions help counter hypothyroid-related metabolic slowdown." },
+      {
+        time: "8 min",
+        effect: "Glucose uptake",
+        description: "Muscle glucose transporters activate — supports metabolic health.",
+      },
+      {
+        time: "12 min",
+        effect: "Calorie burn",
+        description: "Sustainable burn without cortisol spike from high-intensity work.",
+      },
+      {
+        time: "48 h",
+        effect: "BMR support",
+        description: "Regular sessions help counter hypothyroid-related metabolic slowdown.",
+      },
     ],
-    cautions: ["Monitor heart rate — stay below 70% max if on thyroid meds", "Stop if chest pain or severe breathlessness"],
-    keywords: ["low impact cardio beginner explained", "no jump workout easy", "metabolic walking workout short"],
+    cautions: [
+      "Monitor heart rate — stay below 70% max if on thyroid meds",
+      "Stop if chest pain or severe breathlessness",
+    ],
+    keywords: [
+      "low impact cardio beginner explained",
+      "no jump workout easy",
+      "metabolic walking workout short",
+    ],
   },
   {
     id: "ex-ankle",
@@ -217,12 +314,28 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Add clockwise ankle circles — 5 each direction.",
     ],
     bodyEffects: [
-      { time: "1 min", effect: "Venous return", description: "Calf pump pushes blood back toward the heart — less leg heaviness." },
-      { time: "5 min", effect: "Warmth in feet", description: "Improved peripheral circulation — common complaint in hypothyroidism." },
-      { time: "Daily", effect: "Edema prevention", description: "Micro-movement breaks prevent afternoon ankle swelling." },
+      {
+        time: "1 min",
+        effect: "Venous return",
+        description: "Calf pump pushes blood back toward the heart — less leg heaviness.",
+      },
+      {
+        time: "5 min",
+        effect: "Warmth in feet",
+        description: "Improved peripheral circulation — common complaint in hypothyroidism.",
+      },
+      {
+        time: "Daily",
+        effect: "Edema prevention",
+        description: "Micro-movement breaks prevent afternoon ankle swelling.",
+      },
     ],
     cautions: ["Gentle only if varicose veins present — consult clinician"],
-    keywords: ["ankle pumps exercise explained", "circulation exercises seated short", "leg swelling exercises beginner"],
+    keywords: [
+      "ankle pumps exercise explained",
+      "circulation exercises seated short",
+      "leg swelling exercises beginner",
+    ],
   },
   {
     id: "ex-core-gentle",
@@ -243,12 +356,28 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Rest 30 seconds between sets.",
     ],
     bodyEffects: [
-      { time: "4 min", effect: "Transverse activation", description: "Deep core engages — lumbar spine gains passive support." },
-      { time: "8 min", effect: "Postural stability", description: "Reduced slouching decreases neck compression near thyroid." },
-      { time: "2 wk", effect: "Back resilience", description: "Progressive core endurance lowers daily ache frequency." },
+      {
+        time: "4 min",
+        effect: "Transverse activation",
+        description: "Deep core engages — lumbar spine gains passive support.",
+      },
+      {
+        time: "8 min",
+        effect: "Postural stability",
+        description: "Reduced slouching decreases neck compression near thyroid.",
+      },
+      {
+        time: "2 wk",
+        effect: "Back resilience",
+        description: "Progressive core endurance lowers daily ache frequency.",
+      },
     ],
     cautions: ["No breath-holding — exhale on effort", "Skip if acute back injury"],
-    keywords: ["dead bug exercise beginner explained", "gentle core workout short", "pelvic tilt tutorial easy"],
+    keywords: [
+      "dead bug exercise beginner explained",
+      "gentle core workout short",
+      "pelvic tilt tutorial easy",
+    ],
   },
   {
     id: "ex-balance",
@@ -268,12 +397,28 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "Repeat circuit twice.",
     ],
     bodyEffects: [
-      { time: "3 min", effect: "Proprioceptor wake-up", description: "Ankle and hip stabilizers fire — joint position sense improves." },
-      { time: "7 min", effect: "Leg strength", description: "Eccentric control builds without heavy loading." },
-      { time: "4 wk", effect: "Fall-risk reduction", description: "Documented balance gains with consistent short sessions." },
+      {
+        time: "3 min",
+        effect: "Proprioceptor wake-up",
+        description: "Ankle and hip stabilizers fire — joint position sense improves.",
+      },
+      {
+        time: "7 min",
+        effect: "Leg strength",
+        description: "Eccentric control builds without heavy loading.",
+      },
+      {
+        time: "4 wk",
+        effect: "Fall-risk reduction",
+        description: "Documented balance gains with consistent short sessions.",
+      },
     ],
     cautions: ["Use wall support", "Avoid if orthostatic hypotension"],
-    keywords: ["balance exercises beginner explained short", "single leg stand tutorial", "fall prevention exercises easy"],
+    keywords: [
+      "balance exercises beginner explained short",
+      "single leg stand tutorial",
+      "fall prevention exercises easy",
+    ],
   },
   {
     id: "ex-relax",
@@ -293,12 +438,28 @@ export const exerciseRoutines: ExerciseRoutine[] = [
       "End with 1 minute of quiet breathing.",
     ],
     bodyEffects: [
-      { time: "5 min", effect: "Tension mapping", description: "Brain learns to distinguish held vs relaxed muscle states." },
-      { time: "10 min", effect: "Full-body release", description: "Cortisol and muscle tone drop — ideal pre-sleep window." },
-      { time: "Overnight", effect: "Sleep depth", description: "Improved sleep architecture supports thyroid hormone rhythm." },
+      {
+        time: "5 min",
+        effect: "Tension mapping",
+        description: "Brain learns to distinguish held vs relaxed muscle states.",
+      },
+      {
+        time: "10 min",
+        effect: "Full-body release",
+        description: "Cortisol and muscle tone drop — ideal pre-sleep window.",
+      },
+      {
+        time: "Overnight",
+        effect: "Sleep depth",
+        description: "Improved sleep architecture supports thyroid hormone rhythm.",
+      },
     ],
     cautions: ["Avoid tensing injured areas", "Not for acute muscle spasm"],
-    keywords: ["progressive muscle relaxation short guided", "PMR for beginners explained", "sleep relaxation 10 minutes"],
+    keywords: [
+      "progressive muscle relaxation short guided",
+      "PMR for beginners explained",
+      "sleep relaxation 10 minutes",
+    ],
   },
 ];
 

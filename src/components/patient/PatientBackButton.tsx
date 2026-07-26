@@ -10,12 +10,7 @@ type Props = {
 };
 
 /** Browser-style back when history exists; otherwise navigates to fallback. */
-export function PatientBackButton({
-  fallbackTo,
-  label,
-  className,
-  ariaLabel,
-}: Props) {
+export function PatientBackButton({ fallbackTo, label, className, ariaLabel }: Props) {
   const router = useRouter();
   const canGoBack = useCanGoBack();
 

@@ -97,7 +97,8 @@ export function invoiceFromRx(
     subtotal,
     tax,
     total,
-    amount_paid: rx.payment_status === "paid" ? total : rx.payment_status === "partial" ? total * 0.5 : 0,
+    amount_paid:
+      rx.payment_status === "paid" ? total : rx.payment_status === "partial" ? total * 0.5 : 0,
     status: rx.payment_status,
     created_at: rx.received_at,
   };

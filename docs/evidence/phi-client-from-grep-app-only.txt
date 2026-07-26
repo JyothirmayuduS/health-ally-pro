@@ -1,0 +1,2 @@
+=== app client/native grep (expect empty) ===
+match_count=0

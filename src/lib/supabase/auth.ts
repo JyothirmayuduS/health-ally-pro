@@ -1,5 +1,7 @@
 import { supabase } from "./client";
 import type { UserRole } from "./types";
+import { allowDemoAuth } from "@/lib/production";
+import { DEMO_STAFF_TABLE } from "./demo-credentials";
 
 export type AuthSession = {
   userId: string;
@@ -12,83 +14,31 @@ export type AuthSession = {
 
 const DEMO_AUTH_KEY = "medora_demo_auth";
 
-/** Staff demo logins — used when Supabase user is missing or credentials not synced yet. */
+/**
+ * Demo passwords are killed unless allowDemoAuth() (dev / explicit VITE_ALLOW_DEMO_AUTH).
+ * Production boot also refuses to serve if demo auth is enabled.
+ */
+export function getDemoCredentials(): typeof DEMO_STAFF_TABLE {
+  if (!allowDemoAuth()) return {} as typeof DEMO_STAFF_TABLE;
+  return DEMO_STAFF_TABLE;
+}
+
+/** @deprecated Prefer getDemoCredentials() — static snapshot for UI lists in demo mode */
 export const DEMO_CREDENTIALS: Record<
   string,
   { password: string; fullName: string; roles: UserRole[]; userId: string }
-> = {
-  "lab@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "J. Mensah",
-    roles: ["lab_technician"],
-    userId: "demo-lab-technician",
-  },
-  "lab.supervisor@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Dr. Rajan",
-    roles: ["lab_supervisor"],
-    userId: "demo-lab-supervisor",
-  },
-  "pharmacy@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Riley Chen",
-    roles: ["pharmacist"],
-    userId: "demo-pharmacist",
-  },
-  "reception@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Maya Kapoor",
-    roles: ["receptionist"],
-    userId: "demo-receptionist",
-  },
-  "billing@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Anita Rao",
-    roles: ["billing_staff"],
-    userId: "demo-billing",
-  },
-  "nursing@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Sunita Pillai",
-    roles: ["nurse"],
-    userId: "demo-nurse",
-  },
-  "admin@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Admin User",
-    roles: ["hospital_admin"],
-    userId: "demo-admin",
-  },
-  "doctor@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Tyra Dhillon",
-    roles: ["doctor"],
-    userId: "demo-doctor",
-  },
-  "patient@oakhaven.demo": {
-    password: "Demo1234!",
-    fullName: "Anjali Krishnan",
-    roles: ["patient"],
-    userId: "demo-patient",
-  },
-};
+> = getDemoCredentials();
 
 /** @deprecated Use DEMO_CREDENTIALS */
 export const LAB_DEMO_CREDENTIALS = DEMO_CREDENTIALS;
 
-function readDemoSession(): AuthSession | null {
-  if (typeof sessionStorage === "undefined") return null;
-  try {
-    const raw = sessionStorage.getItem(DEMO_AUTH_KEY);
-    return raw ? (JSON.parse(raw) as AuthSession) : null;
-  } catch {
-    return null;
-  }
-}
-
 function writeDemoSession(session: AuthSession) {
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.setItem(DEMO_AUTH_KEY, JSON.stringify(session));
+  }
+  if (typeof document !== "undefined") {
+    const maxAge = 60 * 60 * 12;
+    document.cookie = `${DEMO_AUTH_KEY}=${encodeURIComponent(JSON.stringify(session))}; Path=/; Max-Age=${maxAge}; SameSite=Lax`;
   }
 }
 
@@ -96,10 +46,37 @@ function clearDemoSession() {
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.removeItem(DEMO_AUTH_KEY);
   }
+  if (typeof document !== "undefined") {
+    document.cookie = `${DEMO_AUTH_KEY}=; Path=/; Max-Age=0; SameSite=Lax`;
+  }
+}
+
+function readDemoSessionFromCookie(): AuthSession | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`(?:^|; )${DEMO_AUTH_KEY}=([^;]*)`));
+  if (!match?.[1]) return null;
+  try {
+    return JSON.parse(decodeURIComponent(match[1])) as AuthSession;
+  } catch {
+    return null;
+  }
+}
+
+function readDemoSession(): AuthSession | null {
+  if (typeof sessionStorage !== "undefined") {
+    try {
+      const raw = sessionStorage.getItem(DEMO_AUTH_KEY);
+      if (raw) return JSON.parse(raw) as AuthSession;
+    } catch {
+      /* fall through */
+    }
+  }
+  return readDemoSessionFromCookie();
 }
 
 function tryDemoSignIn(email: string, password: string): AuthSession | null {
-  const cred = DEMO_CREDENTIALS[email.trim().toLowerCase()];
+  if (!allowDemoAuth()) return null;
+  const cred = getDemoCredentials()[email.trim().toLowerCase()];
   if (!cred || cred.password !== password) return null;
   const session: AuthSession = {
     userId: cred.userId,
@@ -114,12 +91,22 @@ function tryDemoSignIn(email: string, password: string): AuthSession | null {
 }
 
 export async function signIn(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const normalized = email.trim().toLowerCase();
+  // Prefer local demo for *.demo accounts so staff E2E / sales demos never hang on remote Auth.
+  if (allowDemoAuth() && normalized.endsWith(".demo")) {
+    const demo = tryDemoSignIn(normalized, password);
+    if (demo) return { user: null, session: null };
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: normalized,
+    password,
+  });
   if (!error) {
     clearDemoSession();
     return data;
   }
-  const demo = tryDemoSignIn(email, password);
+  const demo = tryDemoSignIn(normalized, password);
   if (demo) return { user: null, session: null };
   throw error;
 }
@@ -147,24 +134,23 @@ export async function getSession() {
 }
 
 export async function getAuthSession(): Promise<AuthSession | null> {
-  const demo = readDemoSession();
+  const demo = allowDemoAuth() ? readDemoSession() : null;
   if (demo) return demo;
 
   const session = await getSession();
   if (!session?.user) return null;
 
-  const { data: memberships } = await supabase
-    .from("hospital_memberships")
-    .select("role, hospital_id")
-    .eq("profile_id", session.user.id)
-    .eq("is_active", true);
+  const { fetchPhiResource } = await import("@/lib/supabase/phi-api");
+  const membershipRes =
+    await fetchPhiResource<Array<{ role: UserRole; hospital_id: string }>>("hospital_memberships");
+  const memberships = membershipRes.ok ? (membershipRes.data ?? []) : [];
 
-  const roles = (memberships ?? []).map((m) => m.role as UserRole);
+  const roles = memberships.map((m) => m.role as UserRole);
   const appRole = session.user.app_metadata?.role as UserRole | undefined;
   const allRoles = appRole && !roles.includes(appRole) ? [...roles, appRole] : roles;
   const primaryRole = pickPrimaryRole(allRoles);
   const hospitalId =
-    (memberships?.[0]?.hospital_id as string | undefined) ??
+    (memberships[0]?.hospital_id as string | undefined) ??
     (session.user.app_metadata?.hospital_id as string | undefined) ??
     null;
 

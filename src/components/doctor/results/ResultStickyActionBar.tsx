@@ -32,9 +32,7 @@ export function ResultStickyActionBar({
     <div
       className={cn(
         "shrink-0 border-t border-[#EDEAE6] bg-white/95 backdrop-blur-md",
-        variant === "sheet"
-          ? "px-4 pb-3 pt-3"
-          : "rounded-b-[24px] px-5 py-4",
+        variant === "sheet" ? "px-4 pb-3 pt-3" : "rounded-b-[24px] px-5 py-4",
       )}
     >
       {(onPrev || onNext) && (

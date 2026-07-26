@@ -9,8 +9,10 @@ import { getLiveQueueContext } from "@/lib/patient-queue";
 import { pushPatientNotification } from "@/lib/patient-notifications-store";
 import { clinicPhoneHref } from "@/lib/patient-care-actions";
 
+type QueueSearch = { doctor?: string };
+
 export const Route = createFileRoute("/queue")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): QueueSearch => ({
     doctor: typeof search.doctor === "string" ? search.doctor : undefined,
   }),
   head: () => ({
@@ -94,9 +96,7 @@ function Queue() {
 
       <header className="mb-5 border-b border-[#EDEAE6] pb-5 lg:mb-8 lg:flex lg:items-end lg:justify-between lg:gap-8 lg:pb-6">
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">
-            Live visit
-          </p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">Live visit</p>
           <h1 className="mt-1 font-serif text-[26px] leading-tight tracking-tight text-ink sm:text-[32px] lg:text-[40px]">
             Your queue status
           </h1>
@@ -117,11 +117,7 @@ function Queue() {
       {/* Mobile: single column stack · Desktop (lg+): main + sidebar */}
       <div className="flex flex-col gap-4 lg:grid lg:grid-cols-12 lg:gap-8">
         <div className="flex min-w-0 flex-col gap-4 lg:col-span-7 xl:col-span-8">
-          <LiveQueueHeroCard
-            appointment={appointment}
-            doctor={doctor}
-            to={undefined}
-          />
+          <LiveQueueHeroCard appointment={appointment} doctor={doctor} to={undefined} />
           <QueueBoard
             position={position}
             total={total}
@@ -186,9 +182,7 @@ function Queue() {
                 <ul className="mt-2 space-y-2 text-xs leading-relaxed text-ink-muted">
                   <li>· Keep your phone volume on — we send a push at 1 patient ahead.</li>
                   <li>· Have your ID and insurance card ready at check-in.</li>
-                  <li>
-                    · Shared reports are already visible to {doctor.name.split(" ").pop()}.
-                  </li>
+                  <li>· Shared reports are already visible to {doctor.name.split(" ").pop()}.</li>
                 </ul>
               </div>
             </div>

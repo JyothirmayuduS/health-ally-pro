@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
+  BarChart3,
   Calendar,
   ChevronRight,
   ClipboardList,
   Clock,
+  Stethoscope,
   Users,
 } from "lucide-react";
 import { useLiveQueue } from "@/lib/doctor-live-queue-store";
@@ -17,6 +19,7 @@ import { DoctorHomeNextActions } from "@/components/doctor/DoctorHomeNextActions
 import { DoctorHomeTriage } from "@/components/doctor/DoctorHomeTriage";
 import { DoctorResultsInboxStrip } from "@/components/doctor/DoctorResultsInboxStrip";
 import { DoctorTodayTimeline } from "@/components/doctor/DoctorTodayTimeline";
+import { useDoctorSpecialty } from "@/lib/specialties";
 
 function panelHealthItems() {
   return [
@@ -30,14 +33,18 @@ function panelHealthItems() {
     {
       id: "htn",
       label: "Hypertensive — not seen 60+ days",
-      count: PANEL_PATIENTS.filter((p) => p.condition === "Hypertension" && p.categories.includes("follow-up")).length,
+      count: PANEL_PATIENTS.filter(
+        (p) => p.condition === "Hypertension" && p.categories.includes("follow-up"),
+      ).length,
       dot: "#E9A820",
       filter: { view: "panel" as const, category: "follow-up" as const },
     },
     {
       id: "labs",
       label: "Pending investigation results",
-      count: PANEL_PATIENTS.filter((p) => p.pills.some((x) => x.includes("Lab") || x.includes("Result"))).length,
+      count: PANEL_PATIENTS.filter((p) =>
+        p.pills.some((x) => x.includes("Lab") || x.includes("Result")),
+      ).length,
       dot: "#B8735D",
       filter: { view: "panel" as const, category: "all" as const },
     },
@@ -56,6 +63,7 @@ export function DoctorHomeDashboard() {
   const overview = computeClinicOverview({ accepting, room, entries, bookingRequests });
   const counts = panelCounts();
   const panelHealth = panelHealthItems();
+  const { specialty, doctor } = useDoctorSpecialty();
 
   const kpiCards = [
     {
@@ -100,6 +108,50 @@ export function DoctorHomeDashboard() {
   return (
     <div className="space-y-5">
       <DoctorClinicOnboardingBanner />
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Link
+          to="/doctor/specialty"
+          className="flex items-center gap-4 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5"
+          style={{ borderLeftWidth: 4, borderLeftColor: specialty.accent }}
+        >
+          <span
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl"
+            style={{ background: specialty.accentSoft, color: specialty.accent }}
+          >
+            <Stethoscope className="h-6 w-6" strokeWidth={1.75} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Your specialty workstation
+            </p>
+            <p className="font-semibold text-[#1B3B2E]">{specialty.name}</p>
+            <p className="text-sm text-[#8A8F8C]">
+              {specialty.tagline}
+              {doctor?.room ? ` · ${doctor.room}` : ""}
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-[#8A8F8C]" />
+        </Link>
+
+        <Link
+          to="/doctor/statistics"
+          className="flex items-center gap-4 rounded-[24px] border border-[#EDEAE6] bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#1B3B2E" }}
+        >
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#F0EEE9] text-[#1B3B2E]">
+            <BarChart3 className="h-6 w-6" strokeWidth={1.75} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Practice insights
+            </p>
+            <p className="font-semibold text-[#1B3B2E]">Analytics</p>
+            <p className="text-sm text-[#8A8F8C]">Fill, revenue, panel &amp; workload</p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-[#8A8F8C]" />
+        </Link>
+      </div>
 
       {/* Now — live triage */}
       <DoctorHomeTriage layout="grid" />
@@ -151,7 +203,10 @@ export function DoctorHomeDashboard() {
                       search={item.filter}
                       className="flex items-center gap-3 py-3 hover:opacity-80"
                     >
-                      <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: item.dot }} />
+                      <span
+                        className="h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: item.dot }}
+                      />
                       <span className="min-w-0 flex-1 text-sm text-[#1B3B2E]">{item.label}</span>
                       <span className="text-sm font-semibold text-[#1B3B2E]">{item.count}</span>
                     </Link>
@@ -171,7 +226,8 @@ export function DoctorHomeDashboard() {
             <AlertTriangle className="h-5 w-5 text-[#C45C4A]" strokeWidth={1.75} />
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-[#1B3B2E]">
-                {overview.urgentWaitingCount} urgent patient{overview.urgentWaitingCount > 1 ? "s" : ""} in queue
+                {overview.urgentWaitingCount} urgent patient
+                {overview.urgentWaitingCount > 1 ? "s" : ""} in queue
               </p>
               <p className="text-sm text-[#8A8F8C]">Open live queue to call next</p>
             </div>
@@ -181,7 +237,9 @@ export function DoctorHomeDashboard() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">TODAY&apos;S TIMELINE</h2>
+            <h2 className="text-[11px] font-medium tracking-[0.12em] text-[#8A8F8C]">
+              TODAY&apos;S TIMELINE
+            </h2>
             <Link to="/doctor/schedule" className="text-[11px] font-semibold text-[#B8735D]">
               Full schedule
             </Link>

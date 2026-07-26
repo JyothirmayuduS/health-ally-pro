@@ -28,10 +28,7 @@ function extractVideoId(url: string): string | null {
   return m?.[1] ?? null;
 }
 
-async function searchPipedOnce(
-  baseUrl: string,
-  query: string,
-): Promise<PipedSearchItem[]> {
+async function searchPipedOnce(baseUrl: string, query: string): Promise<PipedSearchItem[]> {
   const url = `${baseUrl}/search?q=${encodeURIComponent(query)}&filter=videos`;
   const res = await fetch(url, { signal: AbortSignal.timeout(7000) });
   if (!res.ok) return [];
@@ -68,8 +65,7 @@ export async function searchPipedRecipeVideos(
             title: item.title ?? mealName,
             channel: item.uploaderName ?? "YouTube",
             language,
-            thumbnailUrl:
-              item.thumbnail ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+            thumbnailUrl: item.thumbnail ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
           };
 
           if (videoMatchesMeal(video, searchName, ingredients)) {

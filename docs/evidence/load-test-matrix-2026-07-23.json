@@ -1,0 +1,78 @@
+{
+  "at": "2026-07-23T21:11:24.712467Z",
+  "base": "http://127.0.0.1:3001",
+  "image": "medora-app:7b4d0b9-20260723T153116Z-hardened (running)",
+  "docker_stats_post_load": {
+    "BlockIO": "1.92GB / 544MB",
+    "CPUPerc": "11.28%",
+    "Container": "health-ally-pro-main-app-1",
+    "ID": "6c16201d7737",
+    "MemPerc": "24.58%",
+    "MemUsage": "503.3MiB / 2GiB",
+    "Name": "health-ally-pro-main-app-1",
+    "NetIO": "61.1MB / 61MB",
+    "PIDs": "47"
+  },
+  "scenarios": [
+    {
+      "users": 100,
+      "concurrency": 25,
+      "throughput_rps": 9.58,
+      "p50": 925.94,
+      "p95": 7662.83,
+      "p99": 7780.75,
+      "errors": 0,
+      "error_rate": 0,
+      "wall_ms": 10434,
+      "pass": true
+    },
+    {
+      "users": 250,
+      "concurrency": 25,
+      "throughput_rps": 13.05,
+      "p50": 1455.56,
+      "p95": 5773.98,
+      "p99": 8207.73,
+      "errors": 0,
+      "error_rate": 0,
+      "wall_ms": 19153,
+      "pass": true
+    },
+    {
+      "users": 500,
+      "concurrency": 40,
+      "throughput_rps": 33.38,
+      "p50": 655.59,
+      "p95": 3610.11,
+      "p99": 5030.8,
+      "errors": 0,
+      "error_rate": 0,
+      "wall_ms": 14980,
+      "pass": true
+    },
+    {
+      "users": 1000,
+      "concurrency": 50,
+      "throughput_rps": 22.06,
+      "p50": 1248.75,
+      "p95": 10489.32,
+      "p99": 11834.43,
+      "errors": 0,
+      "error_rate": 0,
+      "wall_ms": 45336,
+      "pass": true
+    }
+  ],
+  "resource_notes": {
+    "cpu_mem": "Captured after 1000u run via docker stats",
+    "database": "Not separately instrumented in this run",
+    "worker": "In-process workerd via vite preview in container",
+    "audit_dlq": "open_failures remained 0 on /api/metrics during tests",
+    "audit_latency": "Not separately measured beyond PHI response latency"
+  },
+  "prometheus_scrape": {
+    "status": "target_down_403",
+    "note": "Host curl /api/metrics 200; Prometheus via host.docker.internal received 403 \u2014 scrape auth/network pending"
+  },
+  "grafana": "http://127.0.0.1:3010 (port remapped from 3002 conflict)"
+}

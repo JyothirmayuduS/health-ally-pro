@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  Activity,
-  Dumbbell,
-  Heart,
-  Lock,
-  ShieldCheck,
-  Wind,
-} from "lucide-react";
+import { Activity, Dumbbell, Heart, Lock, ShieldCheck, Wind } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { PatientHubLayout } from "@/components/patient/PatientHubLayout";
 import { DIET_LANGUAGE_LABELS } from "@/lib/diet-ai-types";
@@ -22,12 +15,12 @@ import {
   ExerciseRecoveryPicks,
   EXERCISE_SLOT_LABELS,
 } from "@/components/patient/exercise/ExerciseRecoveryPicks";
-import { CATEGORY_META, ExerciseRoutineCard } from "@/components/patient/exercise/ExerciseRoutineCard";
-import { getPatientExerciseContext } from "@/lib/exercise-ai-client";
 import {
-  exerciseRoutines,
-  type ExerciseCategory,
-} from "@/lib/exercise-mock-data";
+  CATEGORY_META,
+  ExerciseRoutineCard,
+} from "@/components/patient/exercise/ExerciseRoutineCard";
+import { getPatientExerciseContext } from "@/lib/exercise-ai-client";
+import { exerciseRoutines, type ExerciseCategory } from "@/lib/exercise-mock-data";
 import {
   getCurrentTimeSlot,
   getTopExercisePicksForSlot,
@@ -105,9 +98,7 @@ export function ExerciseRecoveryHubPage() {
 
   const categorySections = useMemo(() => {
     const cats =
-      category === "all"
-        ? (Object.keys(CATEGORY_META) as ExerciseCategory[])
-        : [category];
+      category === "all" ? (Object.keys(CATEGORY_META) as ExerciseCategory[]) : [category];
     return cats
       .map((cat) => ({
         category: cat,
@@ -180,11 +171,7 @@ export function ExerciseRecoveryHubPage() {
         ))}
       </div>
 
-      <ExerciseRecoveryPicks
-        routines={exerciseRoutines}
-        activeSlot={slot}
-        showAllSlots={false}
-      />
+      <ExerciseRecoveryPicks routines={exerciseRoutines} activeSlot={slot} showAllSlots={false} />
 
       <div className="-mx-1 mb-5 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none sm:mb-6 lg:flex-wrap lg:overflow-visible">
         {CATEGORY_FILTERS.map(({ id, label, icon: Icon }) => (
@@ -281,7 +268,10 @@ export function ExerciseRecoveryHubPage() {
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3 text-[13px]">
-        <Link to="/medications" className="inline-flex items-center gap-1.5 font-semibold text-clay">
+        <Link
+          to="/medications"
+          className="inline-flex items-center gap-1.5 font-semibold text-clay"
+        >
           View medications
         </Link>
         <span className="text-ink-muted/40">·</span>

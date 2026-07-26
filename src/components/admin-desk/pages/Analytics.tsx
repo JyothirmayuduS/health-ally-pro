@@ -13,7 +13,14 @@ import { listEncounters } from "@/lib/shared/encounters";
 import { SHARED_PATIENTS } from "@/lib/shared/patients";
 import { listVitals } from "@/lib/nursing-desk/vitals";
 import { DeskKpi, DeskPanel } from "@/components/desk-shell/ui";
-import { Calendar, Download, RefreshCw, BarChart2, PieChart as PieIcon, TrendingUp } from "lucide-react";
+import {
+  Calendar,
+  Download,
+  RefreshCw,
+  BarChart2,
+  PieChart as PieIcon,
+  TrendingUp,
+} from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -39,10 +46,10 @@ function inrFmt(v: number) {
   return `₹${v.toLocaleString("en-IN")}`;
 }
 
-function downloadCSV(filename: string, headers: string[], rows: any[][]) {
+function downloadCSV(filename: string, headers: string[], rows: (string | number)[][]) {
   const csvContent =
     "data:text/csv;charset=utf-8," +
-    [headers.join(","), ...rows.map((r) => r.map(val => `"${val}"`).join(","))].join("\n");
+    [headers.join(","), ...rows.map((r) => r.map((val) => `"${val}"`).join(","))].join("\n");
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
   link.setAttribute("href", encodedUri);
@@ -63,10 +70,14 @@ export default function AdminAnalytics() {
   // Filter multiplier depending on selected date range to simulate filtering
   const multiplier = useMemo(() => {
     switch (dateRange) {
-      case "7 Days": return 0.22;
-      case "30 Days": return 0.45;
-      case "90 Days": return 0.70;
-      default: return 1.0;
+      case "7 Days":
+        return 0.22;
+      case "30 Days":
+        return 0.45;
+      case "90 Days":
+        return 0.7;
+      default:
+        return 1.0;
     }
   }, [dateRange]);
 
@@ -76,7 +87,9 @@ export default function AdminAnalytics() {
   }, [invoices, multiplier]);
 
   const patientCount = useMemo(() => {
-    return Math.round(SHARED_PATIENTS.length * (dateRange === "12 Months" ? 1.0 : multiplier * 1.5));
+    return Math.round(
+      SHARED_PATIENTS.length * (dateRange === "12 Months" ? 1.0 : multiplier * 1.5),
+    );
   }, [dateRange, multiplier]);
 
   const encountersCount = useMemo(() => {
@@ -85,13 +98,14 @@ export default function AdminAnalytics() {
 
   // 1. Monthly revenue trend data
   const revenueTrendData = useMemo(() => {
-    const monthsToShow = dateRange === "7 Days" ? 2 : dateRange === "30 Days" ? 4 : dateRange === "90 Days" ? 6 : 12;
+    const monthsToShow =
+      dateRange === "7 Days" ? 2 : dateRange === "30 Days" ? 4 : dateRange === "90 Days" ? 6 : 12;
     return MONTHLY_REVENUE.slice(-monthsToShow);
   }, [dateRange]);
 
   // 2. Top tests data
   const topTestsData = useMemo(() => {
-    return TOP_TESTS.map(t => ({
+    return TOP_TESTS.map((t) => ({
       name: t.name.length > 20 ? t.name.slice(0, 18) + "..." : t.name,
       count: Math.round(t.count * multiplier),
     })).slice(0, 8);
@@ -99,7 +113,7 @@ export default function AdminAnalytics() {
 
   // 3. Top diagnoses data
   const topDiagnosesData = useMemo(() => {
-    return TOP_DIAGNOSES.map(d => ({
+    return TOP_DIAGNOSES.map((d) => ({
       name: d.name.length > 20 ? d.name.slice(0, 18) + "..." : d.name,
       count: Math.round(d.count * multiplier),
     })).slice(0, 8);
@@ -107,7 +121,7 @@ export default function AdminAnalytics() {
 
   // 4. OPD visit mix
   const opdVisitData = useMemo(() => {
-    return OPD_VISIT_TYPES.map(v => ({
+    return OPD_VISIT_TYPES.map((v) => ({
       type: v.type,
       count: Math.round(v.count * multiplier),
       color: v.color,
@@ -134,7 +148,9 @@ export default function AdminAnalytics() {
               key={r}
               onClick={() => setDateRange(r)}
               className={`rounded px-3 py-1 text-[11px] font-medium transition-all ${
-                dateRange === r ? "bg-white shadow-sm text-ink-950" : "text-ink-500 hover:text-ink-800"
+                dateRange === r
+                  ? "bg-white shadow-sm text-ink-950"
+                  : "text-ink-500 hover:text-ink-800"
               }`}
             >
               {r}
@@ -174,7 +190,7 @@ export default function AdminAnalytics() {
                 downloadCSV(
                   "revenue_trend.csv",
                   ["Month", "Invoiced", "Collected"],
-                  revenueTrendData.map((d) => [d.month, d.invoiced, d.collected])
+                  revenueTrendData.map((d) => [d.month, d.invoiced, d.collected]),
                 )
               }
               className="p-1 hover:bg-stone-100 rounded"
@@ -198,11 +214,28 @@ export default function AdminAnalytics() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0ede8" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
+                <YAxis
+                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+                  tick={{ fontSize: 11 }}
+                />
                 <Tooltip formatter={(v: number) => inrFmt(v)} />
                 <Legend />
-                <Area type="monotone" dataKey="invoiced" stroke="#a87826" fillOpacity={1} fill="url(#colorInvoiced)" name="Invoiced Amount" />
-                <Area type="monotone" dataKey="collected" stroke="#2c7873" fillOpacity={1} fill="url(#colorCollected)" name="Collected Amount" />
+                <Area
+                  type="monotone"
+                  dataKey="invoiced"
+                  stroke="#a87826"
+                  fillOpacity={1}
+                  fill="url(#colorInvoiced)"
+                  name="Invoiced Amount"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="collected"
+                  stroke="#2c7873"
+                  fillOpacity={1}
+                  fill="url(#colorCollected)"
+                  name="Collected Amount"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -220,7 +253,7 @@ export default function AdminAnalytics() {
                 downloadCSV(
                   "top_tests.csv",
                   ["Test Name", "Volume"],
-                  topTestsData.map((d) => [d.name, d.count])
+                  topTestsData.map((d) => [d.name, d.count]),
                 )
               }
               className="p-1 hover:bg-stone-100 rounded"
@@ -254,7 +287,7 @@ export default function AdminAnalytics() {
                 downloadCSV(
                   "top_diagnoses.csv",
                   ["Diagnosis", "Encounters Count"],
-                  topDiagnosesData.map((d) => [d.name, d.count])
+                  topDiagnosesData.map((d) => [d.name, d.count]),
                 )
               }
               className="p-1 hover:bg-stone-100 rounded"
@@ -288,7 +321,7 @@ export default function AdminAnalytics() {
                 downloadCSV(
                   "opd_visit_types.csv",
                   ["Visit Type", "Count"],
-                  opdVisitData.map((d) => [d.type, d.count])
+                  opdVisitData.map((d) => [d.type, d.count]),
                 )
               }
               className="p-1 hover:bg-stone-100 rounded"
@@ -342,7 +375,7 @@ export default function AdminAnalytics() {
                 downloadCSV(
                   "ipd_los.csv",
                   ["Ward Tier", "Average Length of Stay (Days)"],
-                  IPD_LENGTH_OF_STAY.map((d) => [d.tier, d.avgDays])
+                  IPD_LENGTH_OF_STAY.map((d) => [d.tier, d.avgDays]),
                 )
               }
               className="p-1 hover:bg-stone-100 rounded"
@@ -380,7 +413,13 @@ export default function AdminAnalytics() {
                 downloadCSV(
                   "appointment_statuses.csv",
                   ["Week", "Scheduled", "Completed", "Cancelled", "No Show"],
-                  apptStatusData.map((d) => [d.week, d.scheduled, d.completed, d.cancelled, d.noShow])
+                  apptStatusData.map((d) => [
+                    d.week,
+                    d.scheduled,
+                    d.completed,
+                    d.cancelled,
+                    d.noShow,
+                  ]),
                 )
               }
               className="p-1 hover:bg-stone-100 rounded"
@@ -410,19 +449,28 @@ export default function AdminAnalytics() {
       {/* Repeat patient rate stats card */}
       <div className="surface p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h4 className="font-heading font-semibold text-[15px] text-ink-950">Loyalty & Retention Index</h4>
+          <h4 className="font-heading font-semibold text-[15px] text-ink-950">
+            Loyalty & Retention Index
+          </h4>
           <p className="text-[12.5px] text-ink-500 mt-0.5">
-            Percentage of active registry patients returning for follow-ups or repeating consultations.
+            Percentage of active registry patients returning for follow-ups or repeating
+            consultations.
           </p>
         </div>
         <div className="flex gap-6 items-center shrink-0">
           <div className="text-center">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-ink-400">Current Rate</div>
+            <div className="text-[10px] uppercase font-mono tracking-wider text-ink-400">
+              Current Rate
+            </div>
             <div className="text-3xl font-semibold text-teal">{REPEAT_PATIENT_RATE.current}%</div>
           </div>
           <div className="text-center">
-            <div className="text-[10px] uppercase font-mono tracking-wider text-ink-400">Previous Quarter</div>
-            <div className="text-2xl font-semibold text-ink-400">{REPEAT_PATIENT_RATE.previous}%</div>
+            <div className="text-[10px] uppercase font-mono tracking-wider text-ink-400">
+              Previous Quarter
+            </div>
+            <div className="text-2xl font-semibold text-ink-400">
+              {REPEAT_PATIENT_RATE.previous}%
+            </div>
           </div>
         </div>
       </div>

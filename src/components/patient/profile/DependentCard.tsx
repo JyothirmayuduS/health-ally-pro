@@ -1,11 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  AlertTriangle,
-  CalendarClock,
-  ChevronRight,
-  Pill,
-  Stethoscope,
-} from "lucide-react";
+import { AlertTriangle, CalendarClock, ChevronRight, Pill, Stethoscope } from "lucide-react";
 import {
   DependentPersonaAvatar,
   dependentAccent,
@@ -14,15 +8,7 @@ import type { Dependent } from "@/lib/patient-profile-data";
 import { relationTag } from "@/lib/patient-profile-data";
 import { cn } from "@/lib/utils";
 
-function StatChip({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: string;
-  accent?: string;
-}) {
+function StatChip({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
     <div className="min-w-0 flex-1 rounded-xl bg-[#F9F7F2] px-3 py-2">
       <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-muted">{label}</p>
@@ -94,10 +80,7 @@ export function DependentFullCard({ dep }: { dep: Dependent }) {
         <div className="mt-4 flex gap-2">
           <StatChip label="Adherence" value={`${dep.adherence}%`} accent={stroke} />
           <StatChip label="Meds today" value={dep.medsTotalToday ? medProgress : "—"} />
-          <StatChip
-            label="Next visit"
-            value={dep.nextConsultation.split("·")[0]?.trim() ?? "—"}
-          />
+          <StatChip label="Next visit" value={dep.nextConsultation.split("·")[0]?.trim() ?? "—"} />
         </div>
       </Link>
 
@@ -132,8 +115,8 @@ export function DependentEmptyState({ onAdd }: { onAdd: () => void }) {
     <div className="rounded-[22px] border border-dashed border-[#D8D4CE] bg-white px-6 py-10 text-center">
       <p className="font-serif text-xl text-ink">No dependents yet</p>
       <p className="mx-auto mt-2 max-w-sm text-sm text-ink-muted">
-        Add a child, parent, or spouse to manage appointments, medications, and reports on
-        their behalf.
+        Add a child, parent, or spouse to manage appointments, medications, and reports on their
+        behalf.
       </p>
       <button
         type="button"

@@ -4,37 +4,46 @@ import { View, Text, StyleSheet, Pressable, ScrollView, Linking } from "react-na
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { ChevronLeft, MessageCircle, Phone, Mail, HelpCircle, ExternalLink, ShieldCheck } from "lucide-react-native";
+import {
+  ChevronLeft,
+  MessageCircle,
+  Phone,
+  Mail,
+  HelpCircle,
+  ExternalLink,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react-native";
 import { useTheme } from "@/theme/ThemeProvider";
 
-function SupportAction({ 
-  icon: Icon, 
-  title, 
-  desc, 
-  onPress, 
-  color = "#5B8FF9" 
-}: { 
-  icon: any, 
-  title: string, 
-  desc: string, 
-  onPress?: () => void,
-  color?: string 
+function SupportAction({
+  icon: Icon,
+  title,
+  desc,
+  onPress,
+  color = "#5B8FF9",
+}: {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+  onPress?: () => void;
+  color?: string;
 }) {
   const { colors } = useTheme();
   return (
-    <Pressable 
+    <Pressable
       onPress={onPress}
       style={({ pressed }) => [
-        s.actionCard, 
-        { 
-          backgroundColor: colors.surface, 
+        s.actionCard,
+        {
+          backgroundColor: colors.surface,
           borderColor: colors.border,
           opacity: pressed ? 0.7 : 1,
-          transform: [{ scale: pressed ? 0.98 : 1 }]
-        }
+          transform: [{ scale: pressed ? 0.98 : 1 }],
+        },
       ]}
     >
-      <View style={[s.iconBox, { backgroundColor: color + '15' }]}>
+      <View style={[s.iconBox, { backgroundColor: color + "15" }]}>
         <Icon size={20} color={color} strokeWidth={2} />
       </View>
       <View style={s.actionContent}>
@@ -42,7 +51,12 @@ function SupportAction({
         <Text style={[s.actionDesc, { color: colors.inkMuted }]}>{desc}</Text>
       </View>
       <View style={s.chevronWrap}>
-        <ChevronLeft size={18} color={colors.inkMuted} style={{ transform: [{ rotate: '180deg'}] }} strokeWidth={2} />
+        <ChevronLeft
+          size={18}
+          color={colors.inkMuted}
+          style={{ transform: [{ rotate: "180deg" }] }}
+          strokeWidth={2}
+        />
       </View>
     </Pressable>
   );
@@ -53,7 +67,10 @@ export default function HelpSupportScreen() {
   const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: colors.background }]} edges={["top", "bottom"]}>
+    <SafeAreaView
+      style={[s.safe, { backgroundColor: colors.background }]}
+      edges={["top", "bottom"]}
+    >
       <View style={s.header}>
         <Pressable onPress={() => router.back()} style={s.backBtn}>
           <ChevronLeft size={24} color={colors.foreground} strokeWidth={2} />
@@ -62,25 +79,30 @@ export default function HelpSupportScreen() {
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView 
-        contentContainerStyle={s.scrollContent} 
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={s.scrollContent} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInDown.duration(400)}>
           <View style={[s.heroCard, { backgroundColor: colors.ink }]}>
             <View style={s.heroMain}>
-              <Text style={[s.heroTitle, { color: colors.primaryForeground }]}>We're here for you.</Text>
+              <Text style={[s.heroTitle, { color: colors.primaryForeground }]}>
+                We're here for you.
+              </Text>
               <Text style={[s.heroDesc, { color: colors.primaryForeground, opacity: 0.8 }]}>
-                Our clinical support team is reachable 24/7 for account issues and medical technicalities.
+                Our clinical support team is reachable 24/7 for account issues and medical
+                technicalities.
               </Text>
             </View>
-            <ShieldCheck size={48} color={colors.primaryForeground} opacity={0.1} style={s.heroIcon} />
+            <ShieldCheck
+              size={48}
+              color={colors.primaryForeground}
+              opacity={0.1}
+              style={s.heroIcon}
+            />
           </View>
         </Animated.View>
 
         <View style={s.actionGroup}>
           <Animated.View entering={FadeInDown.duration(400).delay(100)}>
-            <SupportAction 
+            <SupportAction
               icon={MessageCircle}
               title="Live Chat Support"
               desc="Average response time: 2 minutes"
@@ -89,20 +111,20 @@ export default function HelpSupportScreen() {
             />
           </Animated.View>
           <Animated.View entering={FadeInDown.duration(400).delay(150)}>
-            <SupportAction 
+            <SupportAction
               icon={Phone}
               title="Call Support Team"
               desc="Speak directly with a coordinator"
-              onPress={() => Linking.openURL('tel:+15551234567')}
+              onPress={() => Linking.openURL("tel:+15551234567")}
               color="#4CAF50"
             />
           </Animated.View>
           <Animated.View entering={FadeInDown.duration(400).delay(200)}>
-            <SupportAction 
+            <SupportAction
               icon={Mail}
               title="Email Inquiry"
               desc="support@medora.clinic"
-              onPress={() => Linking.openURL('mailto:support@medora.clinic')}
+              onPress={() => Linking.openURL("mailto:support@medora.clinic")}
               color="#5B8FF9"
             />
           </Animated.View>
@@ -110,18 +132,23 @@ export default function HelpSupportScreen() {
 
         <Animated.View entering={FadeInDown.duration(400).delay(300)} style={s.faqSection}>
           <Text style={[s.sectionTitle, { color: colors.foreground }]}>Self Service</Text>
-          <View style={[s.faqCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View
+            style={[s.faqCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          >
             {[
               "Setting up 2FA",
               "Adding health dependents",
               "Sharing reports with doctors",
-              "Managing subscription billing"
+              "Managing subscription billing",
             ].map((text, i, arr) => (
-              <Pressable 
-                key={text} 
+              <Pressable
+                key={text}
                 style={[
-                  s.faqItem, 
-                  i < arr.length - 1 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }
+                  s.faqItem,
+                  i < arr.length - 1 && {
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: colors.border,
+                  },
                 ]}
               >
                 <HelpCircle size={16} color={colors.inkMuted} strokeWidth={1.5} />
@@ -139,9 +166,9 @@ export default function HelpSupportScreen() {
 const s = StyleSheet.create({
   safe: { flex: 1 },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
@@ -150,7 +177,10 @@ const s = StyleSheet.create({
     fontFamily: "Fraunces_600SemiBold",
   },
   backBtn: {
-    width: 44, height: 44, alignItems: 'center', justifyContent: 'center'
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollContent: {
     padding: 24,
@@ -159,8 +189,8 @@ const s = StyleSheet.create({
   heroCard: {
     padding: 24,
     borderRadius: 24,
-    flexDirection: 'row',
-    overflow: 'hidden',
+    flexDirection: "row",
+    overflow: "hidden",
     marginBottom: 32,
   },
   heroMain: { flex: 1, zIndex: 1 },
@@ -175,7 +205,7 @@ const s = StyleSheet.create({
     lineHeight: 22,
   },
   heroIcon: {
-    position: 'absolute',
+    position: "absolute",
     right: -10,
     bottom: -10,
   },
@@ -184,19 +214,19 @@ const s = StyleSheet.create({
     marginBottom: 40,
   },
   actionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 24,
     borderWidth: 1,
-    width: '100%',
+    width: "100%",
   },
   iconBox: {
     width: 48,
     height: 48,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   actionContent: {
     flex: 1,
@@ -214,7 +244,7 @@ const s = StyleSheet.create({
   },
   chevronWrap: {
     width: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   faqSection: {
     gap: 16,
@@ -227,11 +257,11 @@ const s = StyleSheet.create({
   faqCard: {
     borderRadius: 24,
     borderWidth: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   faqItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 18,
     gap: 12,
   },
@@ -239,5 +269,5 @@ const s = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontFamily: "DMSans_500Medium",
-  }
+  },
 });

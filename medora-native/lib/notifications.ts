@@ -1,12 +1,15 @@
-import { Platform } from 'react-native';
-import Constants, { ExecutionEnvironment } from 'expo-constants';
+import { Platform } from "react-native";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 
 const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
 export function getNotificationsModule() {
   if (isExpoGo) return null;
   try {
-    return require('expo-notifications');
+    // Intentionally dynamic: this native module isn't available in Expo Go, and a
+    // static import would be evaluated eagerly and crash there. Guard with require().
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require("expo-notifications");
   } catch {
     return null;
   }
@@ -33,7 +36,7 @@ export const checkNotificationPermission = async () => {
 
   try {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    return existingStatus === 'granted';
+    return existingStatus === "granted";
   } catch {
     return true;
   }
@@ -46,22 +49,22 @@ export const requestNotificationPermission = async () => {
   try {
     const { status } = await Notifications.requestPermissionsAsync();
 
-    if (status === 'granted' && Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
+    if (status === "granted" && Platform.OS === "android") {
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#B6785C',
+        lightColor: "#B6785C",
       });
-      await Notifications.setNotificationChannelAsync('rx-alerts', {
-        name: 'Prescription alerts',
+      await Notifications.setNotificationChannelAsync("rx-alerts", {
+        name: "Prescription alerts",
         importance: Notifications.AndroidImportance.HIGH,
         vibrationPattern: [0, 180, 100, 180],
-        lightColor: '#2C7873',
+        lightColor: "#2C7873",
       });
     }
 
-    return status === 'granted';
+    return status === "granted";
   } catch {
     return true;
   }
@@ -79,7 +82,7 @@ export const scheduleTestNotification = async () => {
       content: {
         title: "Medora Live synchronization 📡",
         body: "Notifications are now active. You'll receive live updates for your queue, prescriptions, and medication reminders.",
-        data: { type: 'test' },
+        data: { type: "test" },
       },
       trigger: { seconds: 2 },
     });
@@ -104,7 +107,7 @@ export async function notifyNewPrescription(input: {
       content: {
         title: "New e-prescription",
         body: `${input.doctorName} sent ${input.rxNumber}. ${input.diagnosis}`,
-        data: { type: 'rx', rxNumber: input.rxNumber },
+        data: { type: "rx", rxNumber: input.rxNumber },
         sound: true,
       },
       trigger: null,

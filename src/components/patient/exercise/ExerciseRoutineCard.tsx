@@ -1,5 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, CheckCircle2, ChevronRight, Dumbbell, Heart, ShieldCheck, Wind, Youtube } from "lucide-react";
+import {
+  Activity,
+  CheckCircle2,
+  ChevronRight,
+  Dumbbell,
+  Heart,
+  ShieldCheck,
+  Wind,
+  Youtube,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ExerciseCategory, ExerciseRoutine } from "@/lib/exercise-mock-data";
 import { EXERCISE_SESSION_EVENT, isRoutineCompletedToday } from "@/lib/exercise-session-store";
@@ -44,7 +53,10 @@ export function ExerciseRoutineCard({ routine }: { routine: ExerciseRoutine }) {
         <div className="flex items-start justify-between gap-2">
           <p className={cn("font-semibold text-ink", done && "text-ink-muted")}>{routine.name}</p>
           {done ? (
-            <CheckCircle2 className="h-5 w-5 shrink-0 text-status-doneText" aria-label="Completed today" />
+            <CheckCircle2
+              className="h-5 w-5 shrink-0 text-status-doneText"
+              aria-label="Completed today"
+            />
           ) : null}
         </div>
         <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{routine.clinicalRationale}</p>

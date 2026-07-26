@@ -12,12 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import {
-  BOOK_DAYS,
-  VISIT_TYPES,
-  doctorFeeRangeInr,
-  getPastMedsByDoctor,
-} from "@/lib/book-utils";
+import { BOOK_DAYS, VISIT_TYPES, doctorFeeRangeInr, getPastMedsByDoctor } from "@/lib/book-utils";
 import { PROFILE_STORE_EVENT } from "@/lib/doctor-profile-store";
 import { doctors } from "@/lib/mock-data";
 import {
@@ -60,10 +55,7 @@ export function BookDoctorPage({ doctorId }: { doctorId: string }) {
     [doctorId, selectedDay, slotVersion],
   );
 
-  const pastMeds = useMemo(
-    () => (doctor ? getPastMedsByDoctor(doctor.name) : []),
-    [doctor],
-  );
+  const pastMeds = useMemo(() => (doctor ? getPastMedsByDoctor(doctor.name) : []), [doctor]);
 
   const selectedSlotMeta = bookableSlots.find((s) => s.time === selectedSlot);
   const feeRange = doctor ? doctorFeeRangeInr(doctor) : { min: 800, max: 900 };
@@ -151,9 +143,7 @@ export function BookDoctorPage({ doctorId }: { doctorId: string }) {
         >
           <ChevronLeft className="h-6 w-6 text-ink" strokeWidth={2.5} />
         </Link>
-        <h1 className="flex-1 text-center font-semibold text-ink sm:text-left">
-          Book Appointment
-        </h1>
+        <h1 className="flex-1 text-center font-semibold text-ink sm:text-left">Book Appointment</h1>
         <span className="w-11 shrink-0" aria-hidden />
       </header>
 
@@ -176,12 +166,14 @@ export function BookDoctorPage({ doctorId }: { doctorId: string }) {
             {[
               { icon: Star, value: String(doctor.rating), label: "Rating", fill: true },
               { icon: Calendar, value: `${doctor.experience}y`, label: "Experience", fill: false },
-              { icon: MapPin, value: doctor.hospital.split(" ")[0], label: "Hospital", fill: false },
+              {
+                icon: MapPin,
+                value: doctor.hospital.split(" ")[0],
+                label: "Hospital",
+                fill: false,
+              },
             ].map(({ icon: Icon, value, label, fill }) => (
-              <div
-                key={label}
-                className="rounded-xl bg-white/10 px-2 py-2.5 text-center"
-              >
+              <div key={label} className="rounded-xl bg-white/10 px-2 py-2.5 text-center">
                 <Icon
                   className="mx-auto h-3.5 w-3.5 text-clay"
                   fill={fill ? "currentColor" : "none"}
@@ -282,9 +274,7 @@ export function BookDoctorPage({ doctorId }: { doctorId: string }) {
                     className={cn(
                       "relative flex min-w-[72px] shrink-0 flex-col items-center rounded-2xl border px-3 py-3",
                       dayTaken && "cursor-not-allowed opacity-40",
-                      sel
-                        ? "border-ink bg-ink text-white"
-                        : "border-[#EDEAE6] bg-white text-ink",
+                      sel ? "border-ink bg-ink text-white" : "border-[#EDEAE6] bg-white text-ink",
                     )}
                   >
                     <span
@@ -431,10 +421,7 @@ function SlotTile({
     >
       <p className="font-serif text-xl tabular-nums">{slot.displayTime}</p>
       <p
-        className={cn(
-          "mt-0.5 text-xs leading-snug",
-          selected ? "text-white/65" : "text-ink-muted",
-        )}
+        className={cn("mt-0.5 text-xs leading-snug", selected ? "text-white/65" : "text-ink-muted")}
       >
         {slot.period} ₹{slot.price}
         {statusDetail ? ` · ${statusDetail}` : ""}

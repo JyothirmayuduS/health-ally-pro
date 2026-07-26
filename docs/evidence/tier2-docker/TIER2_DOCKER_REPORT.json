@@ -1,0 +1,59 @@
+{
+  "tier": 2,
+  "completed_at": "2026-07-22T07:02:48Z",
+  "host": {
+    "uname_m": "x86_64",
+    "note": "Apple Silicon macOS \u2014 amd64 tested via Docker buildx/QEMU emulation only, NOT native amd64 hardware"
+  },
+  "alpine_pins": {
+    "amd64": "sha256:b74031e546d7f4faf561d797ac1b76beccac856a042815ca77db4fd047581605",
+    "arm64": "sha256:d51cff3fa44ab8a368ae8708ae974480165be1b699b19527b7c0d2523433b271",
+    "pulled": true,
+    "usable_for_vite_preview_workerd": false,
+    "reason": "Cloudflare workerd is glibc-linked; on Alpine/musl spawn() returns ENOENT even when the binary file exists."
+  },
+  "serving_base": {
+    "image": "node:22-bookworm-slim",
+    "arm64_digest": "sha256:ef03a3d0e663b3c9d38c95be3fd31a100514d41df2599562b68a58a57f979adf",
+    "amd64_digest": "sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27",
+    "why_switched": "bookworm-slim provides glibc required by workerd used by vite preview / wrangler local"
+  },
+  "item4_wrangler_server_entry": {
+    "root_cause": "Missing @cloudflare/vite-plugin in vite.config.ts \u2014 TanStack Start SSR entry not wired for Workers",
+    "fix": "cloudflare({ viteEnvironment: { name: 'ssr' } }) + wrangler devDependency",
+    "local_proof": "docs/evidence/tier2-docker/local-preview-proof.json"
+  },
+  "item5_vite_preview_404": {
+    "same_root_cause": true,
+    "status": "fixed with cloudflare vite plugin; container CMD uses vite preview"
+  },
+  "item6_multiarch": {
+    "arm64_native": {
+      "hardware": "real arm64 (Apple Silicon)",
+      "image": "health-ally-pro-main-app:latest",
+      "compose_port": "3001->3000",
+      "root_http": 200,
+      "api_status_http": 200,
+      "health": "healthy"
+    },
+    "amd64_emulated": {
+      "hardware": "EMULATED via docker buildx --platform linux/amd64 on arm64 host (NOT real amd64 hardware)",
+      "image": "health-ally-pro-main-app:amd64-emulated",
+      "image_id": "39ce0e5035d2",
+      "test_port": "3002->3000",
+      "root_http": 200,
+      "api_status_http": 200,
+      "build_log": "docs/evidence/tier2-docker/docker-build-bookworm-amd64-emulated.log",
+      "http_root": 200,
+      "http_api_status": 200,
+      "tested_via": "docker run --platform linux/amd64 -p 3002:3000",
+      "hardware_note": "EMULATED on Apple Silicon via QEMU/binfmt \u2014 NOT real amd64 hardware"
+    }
+  },
+  "item7_e2e_container": {
+    "url": "http://127.0.0.1:3001/",
+    "screenshot": "docs/evidence/tier2-docker/07-container-home.png",
+    "title": "Medora \u2014 Hospital OS for multi-specialty campuses",
+    "http_proof": "docs/evidence/tier2-docker/container-http-proof.json"
+  }
+}

@@ -138,7 +138,10 @@ function StatChip({
 }) {
   const inner = (
     <>
-      <span className="grid h-7 w-7 place-items-center rounded-full" style={{ backgroundColor: iconBg }}>
+      <span
+        className="grid h-7 w-7 place-items-center rounded-full"
+        style={{ backgroundColor: iconBg }}
+      >
         <Icon className="h-3.5 w-3.5 text-[#1B3B2E]" strokeWidth={1.75} />
       </span>
       <div className="flex items-baseline gap-1 whitespace-nowrap">
@@ -444,7 +447,9 @@ export function DoctorProfileScreen() {
 
           {store.away.active && (
             <ProfileCard className="border border-[#F5E6B8] bg-[#FDF8EB]">
-              <p className="text-sm font-semibold text-[#5C4A1E]">Away mode is controlling availability</p>
+              <p className="text-sm font-semibold text-[#5C4A1E]">
+                Away mode is controlling availability
+              </p>
               <p className="mt-1 text-xs text-[#8A8F8C]">
                 End away mode from Emergency / away to resume bookings.
               </p>

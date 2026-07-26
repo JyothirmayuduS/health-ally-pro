@@ -128,20 +128,14 @@ export function DependentDetailPage({ dependentId }: { dependentId: string }) {
     return (
       <div className="py-16 text-center">
         <p className="text-ink-muted">Dependent not found.</p>
-        <Link to="/profile/dependents/" className="mt-4 inline-block text-clay">
+        <Link to="/profile/dependents" className="mt-4 inline-block text-clay">
           Back to family profiles
         </Link>
       </div>
     );
   }
 
-  return (
-    <DependentDetailContent
-      dependent={dependent}
-      record={record}
-      setRecord={setRecord}
-    />
-  );
+  return <DependentDetailContent dependent={dependent} record={record} setRecord={setRecord} />;
 }
 
 function DependentDetailContent({
@@ -163,16 +157,14 @@ function DependentDetailContent({
     <div className="mx-auto w-full max-w-3xl pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:max-w-5xl lg:pb-12">
       <header className="mb-4 flex items-center gap-2 sm:mb-6 sm:gap-3">
         <Link
-          to="/profile/dependents/"
+          to="/profile/dependents"
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full sm:h-11 sm:w-11"
           aria-label="Back"
         >
           <ChevronLeft className="h-5 w-5 text-ink sm:h-6 sm:w-6" strokeWidth={2.25} />
         </Link>
         <div className="min-w-0 flex-1 text-center lg:text-left">
-          <h1 className="truncate font-serif text-2xl text-ink sm:text-[28px]">
-            {dependent.name}
-          </h1>
+          <h1 className="truncate font-serif text-2xl text-ink sm:text-[28px]">{dependent.name}</h1>
           <p className="mt-0.5 text-sm text-ink-muted">
             {relationTag(dependent)} · {dependent.bloodGroup}
           </p>
@@ -239,7 +231,9 @@ function DependentDetailContent({
                     <button
                       type="button"
                       onClick={() => toggleMed(m.id, !m.taken)}
-                      aria-label={m.taken ? `Mark ${m.name} as not taken` : `Mark ${m.name} as taken`}
+                      aria-label={
+                        m.taken ? `Mark ${m.name} as not taken` : `Mark ${m.name} as taken`
+                      }
                       className={cn(
                         "grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 transition-colors",
                         m.taken

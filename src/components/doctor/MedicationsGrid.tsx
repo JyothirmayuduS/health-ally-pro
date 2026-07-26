@@ -19,10 +19,7 @@ export function MedicationsGrid() {
 
       <div className="grid flex-1 grid-cols-2 gap-3 sm:grid-cols-3">
         {supplements.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col rounded-[20px] bg-[#F5F2ED]/60 p-3.5"
-          >
+          <div key={item.id} className="flex flex-col rounded-[20px] bg-[#F5F2ED]/60 p-3.5">
             <span className="text-[11px] font-semibold text-[#CBD5E1]">{item.index}</span>
             <div className="flex flex-1 items-center justify-center py-2">
               <SupplementBottle variant={item.variant ?? "jar"} />

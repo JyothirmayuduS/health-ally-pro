@@ -25,33 +25,31 @@ export function hasAnyAiProvider(env: ServerAiEnv = getServerAiEnv()): boolean {
   return !!(env.geminiApiKey || env.groqApiKey || env.huggingfaceToken);
 }
 
-export const TASK_MODELS: Record<
-  AiTask,
-  { gemini: string; groq: string; huggingface: string[] }
-> = {
-  prescription: {
-    gemini: "gemini-2.0-flash",
-    groq: "llama-3.3-70b-versatile",
-    huggingface: ["epfl-llm/meditron-7b-v1", "mistralai/Mistral-7B-Instruct-v0.3"],
-  },
-  clinical_chat: {
-    gemini: "gemini-2.0-flash",
-    groq: "llama-3.1-8b-instant",
-    huggingface: ["meta-llama/Meta-Llama-3-8B-Instruct", "Qwen/Qwen2.5-7B-Instruct"],
-  },
-  billing_insight: {
-    gemini: "gemini-2.0-flash",
-    groq: "llama-3.1-8b-instant",
-    huggingface: ["meta-llama/Meta-Llama-3-8B-Instruct"],
-  },
-  lab_summary: {
-    gemini: "gemini-2.0-flash",
-    groq: "llama-3.3-70b-versatile",
-    huggingface: ["mistralai/Mistral-7B-Instruct-v0.3"],
-  },
-  search_rerank: {
-    gemini: "gemini-2.0-flash",
-    groq: "llama-3.1-8b-instant",
-    huggingface: ["meta-llama/Meta-Llama-3-8B-Instruct"],
-  },
-};
+export const TASK_MODELS: Record<AiTask, { gemini: string; groq: string; huggingface: string[] }> =
+  {
+    prescription: {
+      gemini: "gemini-2.0-flash",
+      groq: "llama-3.3-70b-versatile",
+      huggingface: ["epfl-llm/meditron-7b-v1", "mistralai/Mistral-7B-Instruct-v0.3"],
+    },
+    clinical_chat: {
+      gemini: "gemini-2.0-flash",
+      groq: "llama-3.1-8b-instant",
+      huggingface: ["meta-llama/Meta-Llama-3-8B-Instruct", "Qwen/Qwen2.5-7B-Instruct"],
+    },
+    billing_insight: {
+      gemini: "gemini-2.0-flash",
+      groq: "llama-3.1-8b-instant",
+      huggingface: ["meta-llama/Meta-Llama-3-8B-Instruct"],
+    },
+    lab_summary: {
+      gemini: "gemini-2.0-flash",
+      groq: "llama-3.3-70b-versatile",
+      huggingface: ["mistralai/Mistral-7B-Instruct-v0.3"],
+    },
+    search_rerank: {
+      gemini: "gemini-2.0-flash",
+      groq: "llama-3.1-8b-instant",
+      huggingface: ["meta-llama/Meta-Llama-3-8B-Instruct"],
+    },
+  };

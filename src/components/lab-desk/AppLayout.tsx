@@ -23,8 +23,7 @@ const titleFromPath = (pathname: string, isSupervisor: boolean) => {
       : { eyebrow: "Bench", title: "My bench" };
   if (pathname.startsWith("/lab/my-submissions"))
     return { eyebrow: "Results", title: "My submissions" };
-  if (pathname.startsWith("/lab/orders"))
-    return { eyebrow: "Worklist", title: "Orders inbox" };
+  if (pathname.startsWith("/lab/orders")) return { eyebrow: "Worklist", title: "Orders inbox" };
   if (pathname.startsWith("/lab/collection"))
     return { eyebrow: "Phlebotomy", title: "Collection queue" };
   if (pathname.startsWith("/lab/processing"))
@@ -33,10 +32,8 @@ const titleFromPath = (pathname: string, isSupervisor: boolean) => {
     return { eyebrow: "Supervisor", title: "Validation & release" };
   if (pathname.startsWith("/lab/walk-in"))
     return { eyebrow: "Front desk", title: "Walk-in registration" };
-  if (pathname.startsWith("/lab/team"))
-    return { eyebrow: "Admin", title: "Team & roles" };
-  if (pathname.startsWith("/lab/catalog"))
-    return { eyebrow: "Reference", title: "Test catalog" };
+  if (pathname.startsWith("/lab/team")) return { eyebrow: "Admin", title: "Team & roles" };
+  if (pathname.startsWith("/lab/catalog")) return { eyebrow: "Reference", title: "Test catalog" };
   if (pathname.startsWith("/lab/samples"))
     return {
       eyebrow: "Specimens",
@@ -44,17 +41,14 @@ const titleFromPath = (pathname: string, isSupervisor: boolean) => {
     };
   if (pathname.startsWith("/lab/radiology"))
     return { eyebrow: "Imaging", title: "Radiology queue" };
-  if (pathname.startsWith("/lab/reports"))
-    return { eyebrow: "Insights", title: "Lab reports" };
-  if (pathname.startsWith("/lab/qc"))
-    return { eyebrow: "Quality", title: "QC Run Registry" };
+  if (pathname.startsWith("/lab/reports")) return { eyebrow: "Insights", title: "Lab reports" };
+  if (pathname.startsWith("/lab/qc")) return { eyebrow: "Quality", title: "QC Run Registry" };
   if (pathname.startsWith("/lab/reagents"))
     return { eyebrow: "Inventory", title: "Reagent & Consumables" };
   if (pathname.startsWith("/lab/storage"))
     return { eyebrow: "Specimens", title: "Storage & Aliquots" };
-  if (pathname.startsWith("/lab/settings"))
-    return { eyebrow: "Operations", title: "Lab settings" };
-  return { eyebrow: "Laboratory", title: "Maple Hospital" };
+  if (pathname.startsWith("/lab/settings")) return { eyebrow: "Operations", title: "Lab settings" };
+  return { eyebrow: "Laboratory", title: "Oak Haven Medical" };
 };
 
 export default function AppLayout() {
@@ -95,9 +89,7 @@ export default function AppLayout() {
                 <span className="text-ink-400">·</span>
                 <span>{date}</span>
               </div>
-              {email && (
-                <span className="hidden text-[11px] text-ink-400 lg:inline">{email}</span>
-              )}
+              {email && <span className="hidden text-[11px] text-ink-400 lg:inline">{email}</span>}
               <button type="button" data-testid="topbar-notif" className="btn-icon relative">
                 <Bell className="h-4 w-4" />
                 <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 animate-pulse-dot rounded-full bg-sage" />

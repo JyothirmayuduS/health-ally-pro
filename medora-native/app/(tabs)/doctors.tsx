@@ -58,10 +58,15 @@ export default function DoctorsScreen() {
                   <Text className="text-xs text-ink-muted font-sans">{d.hospital}</Text>
                 </View>
                 <Pressable
-                  onPress={() => router.push({ pathname: "/(tabs)/book/[doctorId]", params: { doctorId: d.id } })}
+                  onPress={() =>
+                    router.push({ pathname: "/(tabs)/book/[doctorId]", params: { doctorId: d.id } })
+                  }
                   className="flex-row items-center gap-1.5"
                 >
-                  <Text className="text-xs font-sans-medium uppercase text-ink" style={{ letterSpacing: 2.5 }}>
+                  <Text
+                    className="text-xs font-sans-medium uppercase text-ink"
+                    style={{ letterSpacing: 2.5 }}
+                  >
                     Book
                   </Text>
                   <ArrowRight size={12} color={colors.ink} />

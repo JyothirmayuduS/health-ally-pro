@@ -17,6 +17,9 @@ export type LiveQueueEntry = {
   calledAt?: string;
   completedLabel?: string;
   completedAt?: string;
+  appointmentId?: string;
+  canonicalPatientId?: string;
+  canonicalDoctorId?: string;
 };
 
 export type BookingRequest = {
@@ -281,10 +284,7 @@ function normalizeState(state: LiveQueueState): LiveQueueState {
     entries: state.entries.map((e) => ({
       ...e,
       checkInAt: e.checkInAt ?? undefined,
-      waitMinutes:
-        e.status === "waiting"
-          ? Math.floor(checkInSeconds(e) / 60)
-          : e.waitMinutes,
+      waitMinutes: e.status === "waiting" ? Math.floor(checkInSeconds(e) / 60) : e.waitMinutes,
     })),
   };
 }
@@ -377,9 +377,7 @@ export function addPatientToQueue(input: {
 }): { state: LiveQueueState; token: number | null; alreadyInQueue: boolean } {
   const state = load();
   const active = state.entries.find(
-    (e) =>
-      e.patientId === input.patientId &&
-      (e.status === "waiting" || e.status === "serving"),
+    (e) => e.patientId === input.patientId && (e.status === "waiting" || e.status === "serving"),
   );
   if (active) return { state, token: active.token, alreadyInQueue: true };
 
@@ -461,7 +459,7 @@ export function callPatient(entryId: string) {
   const target = state.entries.find((e) => e.id === entryId && e.status === "waiting");
   if (!target) return state;
 
-  let entries = state.entries.map((e) => {
+  const entries = state.entries.map((e) => {
     if (e.status === "serving") return markCompleted(e);
     if (e.id === entryId) return markServing(e);
     return e;
@@ -475,9 +473,7 @@ export function completeServing() {
   const serving = state.entries.find((e) => e.status === "serving");
   if (!serving) return state;
 
-  const entries = state.entries.map((e) =>
-    e.id === serving.id ? markCompleted(e) : e,
-  );
+  const entries = state.entries.map((e) => (e.id === serving.id ? markCompleted(e) : e));
 
   return emit({ ...state, entries });
 }
@@ -498,7 +494,11 @@ export function getQueuePatient(patientId: string) {
   return getPanelPatient(patientId) ?? PANEL_PATIENTS.find((p) => p.id === patientId);
 }
 
-export function getQueueAlerts(entries: LiveQueueEntry[], bookingCount: number, nowMs = Date.now()) {
+export function getQueueAlerts(
+  entries: LiveQueueEntry[],
+  bookingCount: number,
+  nowMs = Date.now(),
+) {
   const alerts: string[] = [];
   const longWait = entries.filter(
     (e) => e.status === "waiting" && checkInSeconds(e, nowMs) >= 15 * 60,
@@ -509,9 +509,14 @@ export function getQueueAlerts(entries: LiveQueueEntry[], bookingCount: number, 
     return patient?.status === "Urgent";
   });
 
-  if (bookingCount > 0) alerts.push(`${bookingCount} booking request${bookingCount > 1 ? "s" : ""} awaiting approval`);
-  if (urgentWaiting.length) alerts.push(`${urgentWaiting.length} urgent patient${urgentWaiting.length > 1 ? "s" : ""} in line`);
-  if (longWait.length) alerts.push(`${longWait.length} patient${longWait.length > 1 ? "s" : ""} waiting 15+ minutes`);
+  if (bookingCount > 0)
+    alerts.push(`${bookingCount} booking request${bookingCount > 1 ? "s" : ""} awaiting approval`);
+  if (urgentWaiting.length)
+    alerts.push(
+      `${urgentWaiting.length} urgent patient${urgentWaiting.length > 1 ? "s" : ""} in line`,
+    );
+  if (longWait.length)
+    alerts.push(`${longWait.length} patient${longWait.length > 1 ? "s" : ""} waiting 15+ minutes`);
 
   return alerts;
 }

@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-07-26T04:04:31.318Z",
+  "phase": "emr-ehr-phase3",
+  "architecture": {
+    "canonical_store": "postgres",
+    "worker_only_mutations": true,
+    "immutable_note_versions": true,
+    "record_level_audit": "emr_record_audit",
+    "composed_timeline": true
+  },
+  "schema": {
+    "migration": "supabase/migrations/20260726180000_emr_ehr_phase3.sql",
+    "harden_migration": "supabase/migrations/20260726183000_harden_emr_ehr_phase3.sql",
+    "applied_to": "health_ally_pro",
+    "tables": [
+      "clinical_note_versions",
+      "patient_diagnoses",
+      "patient_procedures",
+      "patient_immunizations",
+      "clinical_attachments",
+      "emr_record_audit"
+    ],
+    "vitals_structured_columns": true,
+    "immutable_triggers": true,
+    "postgrest_revoked": true,
+    "private_bucket": true
+  },
+  "api": {
+    "route": "/api/hospital/emr/$patientId",
+    "actions": [
+      "chart",
+      "note_versions",
+      "open_encounter",
+      "soap",
+      "vitals",
+      "diagnosis",
+      "procedure",
+      "allergy",
+      "immunization",
+      "history",
+      "attachment",
+      "download_attachment"
+    ],
+    "audit_scheduled": true
+  },
+  "ui": {
+    "doctor_emr_route": true,
+    "workspace": true,
+    "chart_embed": true
+  },
+  "tests": {
+    "unit": "src/lib/emr/emr.test.ts",
+    "security": "src/server/emr/security-inventory.test.ts",
+    "e2e": "e2e/emr-ehr-phase3.spec.ts"
+  },
+  "privacy": {
+    "contains_phi": false,
+    "contains_tokens": false,
+    "contains_signed_urls": false
+  },
+  "limitations": [
+    "Live authenticated hospital A/B probes require dedicated test identities.",
+    "Local immunization store remains a compatibility surface alongside Postgres patient_immunizations."
+  ]
+}

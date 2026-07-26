@@ -19,9 +19,8 @@ export const Route = createFileRoute("/api/ai/chat")({
           const body = (await request.json()) as ClinicalChatInput & {
             patientDossier?: string;
           };
-          const { runClinicalChat, runPatientAssistantChat } = await import(
-            "@/server/ai/prescription"
-          );
+          const { runClinicalChat, runPatientAssistantChat } =
+            await import("@/server/ai/prescription");
 
           const result =
             body.context === "general" && body.patientDossier

@@ -122,7 +122,9 @@ export async function fetchMealMedia(req: MealMediaRequest): Promise<MealMediaRe
   }
 }
 
-export async function fetchMealHeroImage(req: Omit<MealMediaRequest, "language"> & { language?: DietLanguage }): Promise<string | null> {
+export async function fetchMealHeroImage(
+  req: Omit<MealMediaRequest, "language"> & { language?: DietLanguage },
+): Promise<string | null> {
   const result = await fetchMealMedia({
     ...req,
     language: req.language ?? "en",
@@ -130,9 +132,7 @@ export async function fetchMealHeroImage(req: Omit<MealMediaRequest, "language">
   return result.imageUrl;
 }
 
-export async function fetchYoutubeRecipeVideos(
-  req: MealMediaRequest,
-): Promise<DietYoutubeVideo[]> {
+export async function fetchYoutubeRecipeVideos(req: MealMediaRequest): Promise<DietYoutubeVideo[]> {
   const result = await fetchMealMedia(req);
   return result.videos ?? [];
 }

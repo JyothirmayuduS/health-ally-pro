@@ -1,11 +1,4 @@
-import {
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-  X,
-} from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ExerciseYoutubeEmbed } from "@/components/patient/exercise/ExerciseYoutubeEmbed";
 import type { ExerciseRoutine, ExerciseYoutubeVideo } from "@/lib/exercise-mock-data";
@@ -33,7 +26,8 @@ export function ExerciseSessionMode({ routine, videos, onExit, onFinish }: Props
   const [showVideo, setShowVideo] = useState(false);
   const startedAt = useRef(Date.now());
   const step = steps[stepIndex];
-  const progress = ((stepIndex + (step ? 1 - secondsLeft / step.durationSeconds : 0)) / steps.length) * 100;
+  const progress =
+    ((stepIndex + (step ? 1 - secondsLeft / step.durationSeconds : 0)) / steps.length) * 100;
 
   useEffect(() => {
     setExerciseSessionActive(true);

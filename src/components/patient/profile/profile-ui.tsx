@@ -19,19 +19,10 @@ export function ProfileSectionTitle({
   );
 }
 
-export function ProfileCard({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+export function ProfileCard({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <div
-      className={cn(
-        "overflow-hidden rounded-[24px] border border-[#EDEAE6] bg-white",
-        className,
-      )}
+      className={cn("overflow-hidden rounded-[24px] border border-[#EDEAE6] bg-white", className)}
     >
       {children}
     </div>
@@ -59,9 +50,7 @@ export function ProfileRow({
         </span>
       ) : null}
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-ink-muted">
-          {label}
-        </p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-ink-muted">{label}</p>
         {value ? <p className="mt-0.5 text-sm font-medium text-ink">{value}</p> : null}
       </div>
       {chevron ? <ChevronRight className="h-4 w-4 shrink-0 text-ink-muted" /> : null}
@@ -80,9 +69,7 @@ export function ProfileRow({
     );
   }
 
-  return (
-    <div className="flex items-center gap-3.5 px-4 py-4 sm:px-5">{inner}</div>
-  );
+  return <div className="flex items-center gap-3.5 px-4 py-4 sm:px-5">{inner}</div>;
 }
 
 export function ProfileLinkRow({
@@ -171,25 +158,13 @@ export function AvatarWithAdherenceRing({
 }) {
   const r = 20;
   const circumference = 2 * Math.PI * r;
-  const offset =
-    circumference - (Math.min(100, Math.max(0, value)) / 100) * circumference;
+  const offset = circumference - (Math.min(100, Math.max(0, value)) / 100) * circumference;
   const inset = Math.max(4, Math.round(size * 0.1));
 
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
-      <svg
-        className="absolute inset-0 h-full w-full -rotate-90"
-        viewBox="0 0 48 48"
-        aria-hidden
-      >
-        <circle
-          cx="24"
-          cy="24"
-          r={r}
-          fill="none"
-          strokeWidth="3"
-          stroke={trackStroke}
-        />
+      <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 48 48" aria-hidden>
+        <circle cx="24" cy="24" r={r} fill="none" strokeWidth="3" stroke={trackStroke} />
         <circle
           cx="24"
           cy="24"
@@ -238,14 +213,7 @@ export function AdherenceRing({
   return (
     <div className={cn("relative shrink-0", className)} style={{ width: size, height: size }}>
       <svg className="h-full w-full -rotate-90" viewBox="0 0 44 44" aria-hidden>
-        <circle
-          cx="22"
-          cy="22"
-          r={r}
-          fill="none"
-          strokeWidth="3"
-          stroke={trackStroke}
-        />
+        <circle cx="22" cy="22" r={r} fill="none" strokeWidth="3" stroke={trackStroke} />
         <circle
           cx="22"
           cy="22"

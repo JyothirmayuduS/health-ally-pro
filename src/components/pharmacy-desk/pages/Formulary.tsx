@@ -55,7 +55,10 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
       if (zoneFilter !== "all" && d.location.zone !== zoneFilter) return false;
       if (!query) return true;
       const q = query.toLowerCase();
-      return [d.generic_name, ...d.brand_names, d.sku, d.strength].join(" ").toLowerCase().includes(q);
+      return [d.generic_name, ...d.brand_names, d.sku, d.strength]
+        .join(" ")
+        .toLowerCase()
+        .includes(q);
     });
   }, [drugs, query, zoneFilter]);
 
@@ -115,7 +118,12 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
             {z === "all" ? "All" : z}
           </Button>
         ))}
-        <Button size="sm" variant="outline" className="ml-auto border-ink-200" onClick={() => setAddOpen(true)}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="ml-auto border-ink-200"
+          onClick={() => setAddOpen(true)}
+        >
           <Plus className="mr-1 h-3.5 w-3.5" /> Add medicine
         </Button>
       </div>
@@ -138,7 +146,11 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
             {filtered.length === 0 ? (
               <tr>
                 <td colSpan={8}>
-                  <EmptyState icon={BookOpen} title="No medicines" hint="Adjust search or filters." />
+                  <EmptyState
+                    icon={BookOpen}
+                    title="No medicines"
+                    hint="Adjust search or filters."
+                  />
                 </td>
               </tr>
             ) : (
@@ -148,11 +160,15 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                     <div className="font-medium text-ink-900">
                       {d.generic_name} {d.strength}
                     </div>
-                    <div className="font-mono text-[11px] text-ink-400">{d.sku} · {d.form}</div>
+                    <div className="font-mono text-[11px] text-ink-400">
+                      {d.sku} · {d.form}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-[12px] text-ink-600">
                     {d.pack_size} / pack
-                    <div className="font-mono text-[11px] text-ink-400">MRP {fmtInr(d.pack_mrp ?? 0)}</div>
+                    <div className="font-mono text-[11px] text-ink-400">
+                      MRP {fmtInr(d.pack_mrp ?? 0)}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right font-mono text-[12px]">
                     {fmtInr(d.purchase_cost ?? 0)}
@@ -173,12 +189,19 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                       {fmtMargin(d)}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-center font-mono text-[12px]">{d.gst_rate ?? 5}%</td>
+                  <td className="px-4 py-3 text-center font-mono text-[12px]">
+                    {d.gst_rate ?? 5}%
+                  </td>
                   <td className="px-4 py-3">
                     <LocationChip location={d.location} />
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button size="sm" variant="outline" className="border-ink-200" onClick={() => openEdit(d)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-ink-200"
+                      onClick={() => openEdit(d)}
+                    >
                       <Pencil className="mr-1 h-3.5 w-3.5" />
                       Edit
                     </Button>
@@ -209,9 +232,7 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                   step="0.01"
                   className="border-ink-200 pl-9"
                   value={draft.unit_price ?? ""}
-                  onChange={(e) =>
-                    setDraft((p) => ({ ...p, unit_price: Number(e.target.value) }))
-                  }
+                  onChange={(e) => setDraft((p) => ({ ...p, unit_price: Number(e.target.value) }))}
                 />
               </div>
             </div>
@@ -222,9 +243,7 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                 step="0.01"
                 className="border-ink-200"
                 value={draft.purchase_cost ?? ""}
-                onChange={(e) =>
-                  setDraft((p) => ({ ...p, purchase_cost: Number(e.target.value) }))
-                }
+                onChange={(e) => setDraft((p) => ({ ...p, purchase_cost: Number(e.target.value) }))}
               />
             </div>
             <div className="space-y-1.5">
@@ -233,9 +252,7 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                 type="number"
                 className="border-ink-200"
                 value={draft.pack_size ?? ""}
-                onChange={(e) =>
-                  setDraft((p) => ({ ...p, pack_size: Number(e.target.value) }))
-                }
+                onChange={(e) => setDraft((p) => ({ ...p, pack_size: Number(e.target.value) }))}
               />
             </div>
             <div className="space-y-1.5">
@@ -245,16 +262,16 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                 step="0.01"
                 className="border-ink-200"
                 value={draft.pack_mrp ?? ""}
-                onChange={(e) =>
-                  setDraft((p) => ({ ...p, pack_mrp: Number(e.target.value) }))
-                }
+                onChange={(e) => setDraft((p) => ({ ...p, pack_mrp: Number(e.target.value) }))}
               />
             </div>
             <div className="space-y-1.5">
               <Label>GST rate</Label>
               <Select
                 value={String(draft.gst_rate ?? editDrug?.gst_rate ?? 5)}
-                onValueChange={(v) => setDraft((p) => ({ ...p, gst_rate: Number(v) as 0 | 5 | 12 | 18 }))}
+                onValueChange={(v) =>
+                  setDraft((p) => ({ ...p, gst_rate: Number(v) as 0 | 5 | 12 | 18 }))
+                }
               >
                 <SelectTrigger className="border-ink-200">
                   <SelectValue />
@@ -274,9 +291,7 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                 type="number"
                 className="border-ink-200"
                 value={draft.reorder_level ?? ""}
-                onChange={(e) =>
-                  setDraft((p) => ({ ...p, reorder_level: Number(e.target.value) }))
-                }
+                onChange={(e) => setDraft((p) => ({ ...p, reorder_level: Number(e.target.value) }))}
               />
             </div>
           </div>
@@ -290,7 +305,9 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
             </div>
             <div className="mt-1 flex justify-between text-[12px] text-ink-500">
               <span>Auto pack MRP</span>
-              <span className="font-mono">{fmtInr(Math.round(draftUnit * draftPack * 100) / 100)}</span>
+              <span className="font-mono">
+                {fmtInr(Math.round(draftUnit * draftPack * 100) / 100)}
+              </span>
             </div>
           </div>
 
@@ -309,7 +326,9 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
         <DialogContent className="max-w-md border-ink-200">
           <DialogHeader>
             <DialogTitle>Add medicine to formulary</DialogTitle>
-            <DialogDescription>New entries appear in inventory search and walk-in OTC.</DialogDescription>
+            <DialogDescription>
+              New entries appear in inventory search and walk-in OTC.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3">
             <div>
@@ -336,7 +355,9 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
                   value={newDrug.form}
                   onValueChange={(v) => setNewDrug((p) => ({ ...p, form: v }))}
                 >
-                  <SelectTrigger className="mt-1 border-ink-200"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="mt-1 border-ink-200">
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Tablet">Tablet</SelectItem>
                     <SelectItem value="Capsule">Capsule</SelectItem>
@@ -357,7 +378,9 @@ export default function Formulary({ mode = "pharmacy" }: Props) {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setAddOpen(false)}>Cancel</Button>
+            <Button variant="ghost" onClick={() => setAddOpen(false)}>
+              Cancel
+            </Button>
             <Button
               className="btn-primary"
               disabled={!newDrug.generic_name || !newDrug.strength}

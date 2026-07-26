@@ -1,0 +1,52 @@
+{
+  "endpoint": "http://127.0.0.1:8787/api/hospital/phi?resource=patients",
+  "runs": [
+    {
+      "status": 200,
+      "ms": 585.47,
+      "ok": true,
+      "error": null,
+      "dataCount": 81
+    },
+    {
+      "status": 200,
+      "ms": 727.91,
+      "ok": true,
+      "error": null,
+      "dataCount": 81
+    },
+    {
+      "status": 200,
+      "ms": 555.62,
+      "ok": true,
+      "error": null,
+      "dataCount": 81
+    }
+  ],
+  "latency_ms": {
+    "runs": [
+      585.47,
+      727.91,
+      555.62
+    ],
+    "median": 585.47,
+    "min": 555.62,
+    "max": 727.91
+  },
+  "audit": {
+    "error": null,
+    "rows_since_before": 4,
+    "sample": {
+      "id": "f9ab68c4-f25a-4a7a-8a28-b8c9db6a9559",
+      "created_at": "2026-07-21T21:32:46.957063+00:00",
+      "action": "read",
+      "resource": "patients",
+      "actor_id": "b0000001-0001-4001-8001-000000000004",
+      "metadata": {
+        "count": 81
+      }
+    }
+  },
+  "note": "audit is fire-and-forget after response; latency excludes waiting on audit completion (measured to HTTP response)",
+  "pass": true
+}

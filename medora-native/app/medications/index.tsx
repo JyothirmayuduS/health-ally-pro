@@ -1,20 +1,9 @@
 import React, { useCallback, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  addDays,
-  format,
-  isSameDay,
-  startOfWeek,
-} from "date-fns";
+import { addDays, format, isSameDay, startOfWeek } from "date-fns";
 import {
   CalendarDays,
   ChevronLeft,
@@ -60,14 +49,10 @@ function DoseRow({
   onToggle: (id: string) => void;
 }) {
   const router = useRouter();
-  const takenLabel = med.taken
-    ? `Mark ${med.name} as not taken`
-    : `Mark ${med.name} as taken`;
+  const takenLabel = med.taken ? `Mark ${med.name} as not taken` : `Mark ${med.name} as taken`;
 
   return (
-    <View
-      style={[rowStyles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
-    >
+    <View style={[rowStyles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       <AccessiblePressable
         label={takenLabel}
         hint="Toggles today's dose adherence"
@@ -212,7 +197,13 @@ export default function MedicationsScreen() {
         </Pressable>
 
         <View style={s.summaryRow}>
-          <View style={[s.progressCard, s.summaryHalf, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View
+            style={[
+              s.progressCard,
+              s.summaryHalf,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
             <Text style={[s.progressTitle, { color: colors.foreground }]}>
               {taken} of {meds.length} doses taken
             </Text>
@@ -224,7 +215,13 @@ export default function MedicationsScreen() {
             </View>
           </View>
 
-          <View style={[s.adherenceCard, s.summaryHalf, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View
+            style={[
+              s.adherenceCard,
+              s.summaryHalf,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
             <Text style={[s.adherenceLabel, { color: colors.inkMuted }]}>OVERALL ADHERENCE</Text>
             <Text style={[s.adherencePct, { color: colors.foreground }]}>0%</Text>
             <View style={[s.track, { backgroundColor: colors.border, marginTop: 12 }]}>
@@ -236,7 +233,11 @@ export default function MedicationsScreen() {
         {tab === "timetable" ? (
           <>
             <Text style={[s.weekLabel, { color: colors.inkMuted }]}>THIS WEEK</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ marginBottom: 20 }}
+            >
               <View style={s.weekRow}>
                 {weekDays.map((day) => {
                   const active = isSameDay(day, today);
@@ -270,7 +271,12 @@ export default function MedicationsScreen() {
                 <View key={med.id} style={s.timelineRow}>
                   <Text style={[s.timeLabel, { color: colors.clay }]}>{med.time}</Text>
                   <View style={s.timelineRail}>
-                    <View style={[s.timelineDot, { borderColor: colors.border, backgroundColor: colors.surface }]} />
+                    <View
+                      style={[
+                        s.timelineDot,
+                        { borderColor: colors.border, backgroundColor: colors.surface },
+                      ]}
+                    />
                     {i < sortedByTime.length - 1 ? (
                       <View style={[s.timelineLine, { backgroundColor: colors.border }]} />
                     ) : null}
@@ -408,7 +414,13 @@ const s = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
   },
-  refillIcon: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" },
+  refillIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   refillLinkText: { flex: 1, fontSize: 16, fontFamily: "DMSans_600SemiBold" },
   progressCard: {
     padding: 18,

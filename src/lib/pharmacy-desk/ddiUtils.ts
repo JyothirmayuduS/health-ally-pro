@@ -28,9 +28,7 @@ export function checkDDI(currentDrugs: string[], patientActiveDrugs: string[]): 
       const ruleA = rule.drugA.trim().toLowerCase();
       const ruleB = rule.drugB.trim().toLowerCase();
 
-      const match =
-        (ruleA === name1 && ruleB === name2) ||
-        (ruleA === name2 && ruleB === name1);
+      const match = (ruleA === name1 && ruleB === name2) || (ruleA === name2 && ruleB === name1);
 
       if (match) {
         alerts.push({

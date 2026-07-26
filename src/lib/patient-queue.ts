@@ -107,10 +107,7 @@ export function patientsBehind(position: number, total: number): number {
   return Math.max(0, total - position);
 }
 
-export function getQueueProgressCaption(
-  position: number,
-  doctorName: string,
-): string {
+export function getQueueProgressCaption(position: number, doctorName: string): string {
   const inRoom = patientInConsultation(position);
   if (!inRoom) return `You're #${position} in line`;
 
@@ -134,10 +131,7 @@ export function getYouRowSubtitle(position: number): string {
   return "You're next after the patient in the room";
 }
 
-export function getQueueStatusCaption(
-  inRoomPersona: QueuePersona,
-  doctorName: string,
-): string {
+export function getQueueStatusCaption(inRoomPersona: QueuePersona, doctorName: string): string {
   return `${getPersonaShortLabel(inRoomPersona)} is with ${doctorName} now · you're next after them`;
 }
 
@@ -169,15 +163,10 @@ export type LiveQueueContext = {
   doctor: Doctor;
 };
 
-export function getLiveQueueContext(
-  doctors: Doctor[],
-  doctorId?: string,
-): LiveQueueContext | null {
+export function getLiveQueueContext(doctors: Doctor[], doctorId?: string): LiveQueueContext | null {
   const appointments = listPatientAppointments();
   const inQueue = doctorId
-    ? appointments.find(
-        (a) => a.status === "in-queue" && a.doctorId === doctorId,
-      )
+    ? appointments.find((a) => a.status === "in-queue" && a.doctorId === doctorId)
     : appointments.find((a) => a.status === "in-queue");
   if (!inQueue) return null;
   const doctor = doctors.find((d) => d.id === inQueue.doctorId);

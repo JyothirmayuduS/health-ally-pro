@@ -201,10 +201,31 @@ export const doctorQueue: QueueItem[] = [
 export const supplements: Supplement[] = [
   { id: "s1", index: "01", name: "Fish Oil", tint: "#F5F2ED", variant: "jar", color: "yellow" },
   { id: "s2", index: "02", name: "Vitamin B", tint: "#F5F2ED", variant: "jar", color: "brown" },
-  { id: "s3", index: "03", name: "Stamina Booster", tint: "#F5F2ED", variant: "capsule", color: "green" },
+  {
+    id: "s3",
+    index: "03",
+    name: "Stamina Booster",
+    tint: "#F5F2ED",
+    variant: "capsule",
+    color: "green",
+  },
   { id: "s4", index: "04", name: "Blood Booster", tint: "#F5F2ED", variant: "tube", color: "red" },
-  { id: "s5", index: "05", name: "Skin Medication", tint: "#F5F2ED", variant: "dropper", color: "brown" },
-  { id: "s6", index: "06", name: "Bone Medication", tint: "#F5F2ED", variant: "jar", color: "blue" },
+  {
+    id: "s5",
+    index: "05",
+    name: "Skin Medication",
+    tint: "#F5F2ED",
+    variant: "dropper",
+    color: "brown",
+  },
+  {
+    id: "s6",
+    index: "06",
+    name: "Bone Medication",
+    tint: "#F5F2ED",
+    variant: "jar",
+    color: "blue",
+  },
 ];
 
 export type SupplementVariant = "jar" | "dropper" | "tube" | "capsule";

@@ -43,10 +43,13 @@ function useNavCounts() {
     return {
       orders: open.length,
       validation: orders.filter((o) => o.status === "validation").length,
-      bench: myBench.filter((o) => ["ordered", "collected", "processing"].includes(o.status)).length || statBench.length,
+      bench:
+        myBench.filter((o) => ["ordered", "collected", "processing"].includes(o.status)).length ||
+        statBench.length,
       submissions: submissions.length,
       collection: myBench.filter((o) => o.status === "ordered").length,
-      processing: myBench.filter((o) => o.status === "collected" || o.status === "processing").length,
+      processing: myBench.filter((o) => o.status === "collected" || o.status === "processing")
+        .length,
     };
   }, [orders, techCtx]);
 }

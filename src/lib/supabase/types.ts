@@ -69,6 +69,16 @@ export type AppointmentRow = {
   reason: string | null;
   status: AppointmentStatus;
   legacy_id: string | null;
+  appointment_type?: string;
+  visit_mode?: "scheduled" | "walk_in";
+  token_number?: number | null;
+  checked_in_at?: string | null;
+  cancelled_at?: string | null;
+  cancel_reason?: string | null;
+  rescheduled_from_id?: string | null;
+  follow_up_of_id?: string | null;
+  follow_up_at?: string | null;
+  notes?: string | null;
   staff_profiles?: StaffProfile | null;
   queue_entries?: Array<{
     position: number | null;
@@ -131,9 +141,43 @@ export type Database = {
       queue_entries: {
         Row: {
           id: string;
+          hospital_id: string;
+          appointment_id: string | null;
+          patient_id: string;
+          doctor_staff_id: string | null;
+          token_number: number | null;
           position: number | null;
           estimated_wait_minutes: number | null;
           status: string;
+          called_at: string | null;
+          completed_at: string | null;
+        };
+      };
+      doctor_availability_rules: {
+        Row: {
+          id: string;
+          hospital_id: string;
+          doctor_staff_id: string;
+          weekday: number;
+          start_time: string;
+          end_time: string;
+          slot_minutes: number;
+          capacity: number;
+          effective_from: string | null;
+          effective_to: string | null;
+          is_active: boolean;
+        };
+      };
+      doctor_availability_exceptions: {
+        Row: {
+          id: string;
+          hospital_id: string;
+          doctor_staff_id: string;
+          exception_date: string;
+          kind: "blocked" | "override";
+          start_time: string | null;
+          end_time: string | null;
+          reason: string | null;
         };
       };
       branches: { Row: { id: string; name: string } };

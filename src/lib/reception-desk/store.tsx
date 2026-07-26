@@ -7,7 +7,12 @@ import { drainReceptionInvoices, RECEPTION_INVOICE_EVENT } from "@/lib/shared/bi
 import { loadServiceFees, feesByDoctor } from "@/lib/shared/services";
 import { loadLabCatalog } from "@/lib/shared/lab-catalog";
 import { pushLabOrder, type DoctorLabPayload } from "@/lib/lab-desk/order-bridge";
-import { getSharedPatient, resolvePatientId, calcAge } from "@/lib/shared/patients";
+import {
+  getSharedPatient,
+  resolvePatientId,
+  calcAge,
+  type SharedPatient,
+} from "@/lib/shared/patients";
 import {
   loadPatientRegistry,
   registerPatient,
@@ -15,8 +20,14 @@ import {
   PATIENT_REGISTRY_EVENT,
 } from "@/lib/shared/patient-registry";
 import {
+  loadPersistedJson,
+  savePersistedJson,
+  hydratePersistedJson,
+} from "@/lib/shared/persisted-store";
+import {
   enqueueFromCheckIn,
   listClinicQueue,
+  syncClinicQueueFromCanonical,
   updateQueueByAppointment,
   CLINIC_QUEUE_EVENT,
 } from "@/lib/shared/clinic-queue";
@@ -26,6 +37,7 @@ import {
   linkToEncounter,
   listEncounters,
   openEncounterForCheckIn,
+  type Encounter,
 } from "@/lib/shared/encounters";
 import {
   ensureLedgerHydrated,
@@ -34,6 +46,15 @@ import {
 } from "@/lib/billing-desk/store";
 import { LEDGER_EVENT, loadLedgerInvoices, type LedgerInvoice } from "@/lib/shared/billing-ledger";
 import { pushPatientNotification } from "@/lib/patient-notifications-store";
+import { toast } from "sonner";
+import {
+  bookOpdAppointment,
+  cancelOpdAppointment,
+  checkInOpdAppointment,
+  listOpdAppointments,
+  rescheduleOpdAppointment,
+} from "@/lib/opd/client";
+import { opdToReceptionAppointment } from "@/lib/opd/compat";
 
 export interface PreAuthRecord {
   id: string;
@@ -99,13 +120,7 @@ const SEED_PREAUTHS: PreAuthRecord[] = [
 const PREAUTHS_KEY = "medora-reception-preauths-v1";
 
 function loadPreAuths(): PreAuthRecord[] {
-  if (typeof window === "undefined") return SEED_PREAUTHS;
-  try {
-    const raw = localStorage.getItem(PREAUTHS_KEY);
-    return raw ? JSON.parse(raw) : SEED_PREAUTHS;
-  } catch {
-    return SEED_PREAUTHS;
-  }
+  return loadPersistedJson(PREAUTHS_KEY, SEED_PREAUTHS);
 }
 
 export interface Bed {
@@ -201,40 +216,31 @@ const SEED_ADMISSIONS: AdmissionRecord[] = [
 
 const BEDS_KEY = "medora-reception-beds-v1";
 const ADMISSIONS_KEY = "medora-reception-admissions-v1";
+export const RECEPTION_IPD_EVENT = "medora-reception-ipd-change";
 
 function loadBeds(): Bed[] {
-  if (typeof window === "undefined") return SEED_BEDS;
-  try {
-    const raw = localStorage.getItem(BEDS_KEY);
-    return raw ? JSON.parse(raw) : SEED_BEDS;
-  } catch {
-    return SEED_BEDS;
-  }
+  return loadPersistedJson(BEDS_KEY, SEED_BEDS);
+}
+
+export function loadReceptionBeds(): Bed[] {
+  return loadBeds();
+}
+
+export function loadReceptionAdmissions(): AdmissionRecord[] {
+  return loadPersistedJson(ADMISSIONS_KEY, SEED_ADMISSIONS);
 }
 
 function loadAdmissions(): AdmissionRecord[] {
-  if (typeof window === "undefined") return SEED_ADMISSIONS;
-  try {
-    const raw = localStorage.getItem(ADMISSIONS_KEY);
-    return raw ? JSON.parse(raw) : SEED_ADMISSIONS;
-  } catch {
-    return SEED_ADMISSIONS;
-  }
+  return loadReceptionAdmissions();
 }
 
 const APPOINTMENTS_KEY = "medora-reception-appointments-v1";
 
-function loadAppointments() {
-  if (typeof window === "undefined") return APPOINTMENTS;
-  try {
-    const raw = localStorage.getItem(APPOINTMENTS_KEY);
-    return raw ? JSON.parse(raw) : APPOINTMENTS;
-  } catch {
-    return APPOINTMENTS;
-  }
+function loadAppointments(): Appointment[] {
+  return loadPersistedJson<Appointment[]>(APPOINTMENTS_KEY, APPOINTMENTS as Appointment[]);
 }
 
-function ledgerToReceptionInvoice(li: LedgerInvoice) {
+function ledgerToReceptionInvoice(li: LedgerInvoice): Invoice {
   return {
     id: li.id,
     date: li.date,
@@ -250,7 +256,225 @@ function ledgerToReceptionInvoice(li: LedgerInvoice) {
   };
 }
 
-const StoreCtx = createContext(null);
+/** Loose action signature — preserves callability without `any`. */
+type StoreAction = (...args: unknown[]) => unknown;
+
+export interface InvoiceItem {
+  label: string;
+  qty: number;
+  unit: number;
+  amount: number;
+}
+
+export interface RefundRecord {
+  type: string;
+  amount: number;
+  reason?: string;
+  notes?: string;
+  processedAt: string;
+  processedBy: string;
+  method: string;
+}
+
+export interface Invoice {
+  id: string;
+  date: string;
+  patientId: string;
+  doctorId?: string | null;
+  appointmentId?: string | null;
+  items: InvoiceItem[];
+  discount: number;
+  method?: string | null;
+  status: string;
+  note?: string;
+  paidAt?: string;
+  refunds?: RefundRecord[];
+  tariffPlan?: string;
+}
+
+export interface Appointment {
+  id: string;
+  patientId: string;
+  doctorId: string;
+  date: string;
+  time: string;
+  type: string;
+  duration?: number;
+  status: string;
+  tokenNumber: number | null;
+  notes?: string;
+  cancellationReason?: string;
+  cancellationNotes?: string;
+  rescheduledFromId?: string;
+}
+
+export interface Shift {
+  id: string;
+  date: string;
+  label?: string;
+  staffId?: string;
+  openedAt: string;
+  closedAt: string | null;
+  openingFloat?: number;
+  closingDenom: Record<number, number> | null;
+  cashCollected: number;
+  variance: number | null;
+  status: string;
+  handover: string | null;
+}
+
+export interface ClaimDocument {
+  name: string;
+  size: string;
+}
+
+export interface Claim {
+  id: string;
+  patientId: string;
+  appointmentId: string | null;
+  doctorId: string;
+  provider: string;
+  policyId: string;
+  diagnosis: string;
+  serviceType: string;
+  estimatedCost: number;
+  requestedAmount: number;
+  approvedAmount: number | null;
+  status: string;
+  createdAt?: string;
+  submittedAt: string | null;
+  decisionAt: string | null;
+  documents: ClaimDocument[];
+  note?: string;
+}
+
+type NewInvoiceInput = Pick<Invoice, "patientId" | "items"> &
+  Partial<Omit<Invoice, "patientId" | "items">>;
+
+type NewShiftInput = Partial<Shift>;
+
+type NewClaimInput = Pick<
+  Claim,
+  | "patientId"
+  | "appointmentId"
+  | "doctorId"
+  | "provider"
+  | "policyId"
+  | "diagnosis"
+  | "serviceType"
+  | "estimatedCost"
+  | "requestedAmount"
+> &
+  Partial<
+    Omit<
+      Claim,
+      | "patientId"
+      | "appointmentId"
+      | "doctorId"
+      | "provider"
+      | "policyId"
+      | "diagnosis"
+      | "serviceType"
+      | "estimatedCost"
+      | "requestedAmount"
+    >
+  >;
+
+type NewPreAuthInput = Pick<
+  PreAuthRecord,
+  "patientId" | "provider" | "policyId" | "procedureType" | "diagnosis" | "estimatedCost"
+> &
+  Partial<
+    Omit<
+      PreAuthRecord,
+      "patientId" | "provider" | "policyId" | "procedureType" | "diagnosis" | "estimatedCost"
+    >
+  >;
+
+type NewPatientInput = {
+  name: string;
+  dob?: string | null;
+  gender: string;
+  phone: string;
+  email?: string;
+  address?: string;
+  bloodGroup?: string;
+  allergies?: string;
+  insuranceProvider?: string;
+  policyId?: string;
+  emergencyName?: string;
+  emergencyPhone?: string;
+  emergencyRelation?: string;
+};
+
+type NewAppointmentInput = Pick<Appointment, "patientId" | "doctorId" | "date" | "time" | "type"> &
+  Partial<Omit<Appointment, "patientId" | "doctorId" | "date" | "time" | "type">>;
+
+type CancelAppointmentOptions = {
+  reason?: string;
+  notes?: string;
+  reschedule?: {
+    doctorId?: string;
+    date: string;
+    time: string;
+    type?: string;
+  };
+};
+
+/** The exact shape `receptionInvoiceToLedger` (billing-desk/store) accepts. */
+type LedgerSourceInvoice = Parameters<typeof receptionInvoiceToLedger>[0];
+
+type ReceptionStoreValue = {
+  patients: ReturnType<typeof loadPatientRegistry>;
+  appointments: Appointment[];
+  doctors: typeof DOCTORS;
+  invoices: Invoice[];
+  encounters: ReturnType<typeof listEncounters>;
+  shifts: Shift[];
+  claims: Claim[];
+  staff: typeof STAFF;
+  beds: Bed[];
+  admissions: AdmissionRecord[];
+  preAuths: PreAuthRecord[];
+  serviceFees: ReturnType<typeof loadServiceFees>;
+  labCatalog: ReturnType<typeof loadLabCatalog>;
+  addPatient: (data: NewPatientInput) => SharedPatient;
+  addAppointment: (data: NewAppointmentInput) => Appointment;
+  checkInAppointment: (appointmentId: string) => number | null;
+  updateAppointmentStatus: StoreAction;
+  transferAppointment: StoreAction;
+  findDuplicate: (phone?: string, name?: string, dob?: string) => SharedPatient | undefined;
+  addInvoice: (data: NewInvoiceInput) => Invoice;
+  updateInvoice: (id: string, patch: Partial<Invoice>) => void;
+  collectPayment: (id: string, method: string) => void;
+  openShift: (data: NewShiftInput) => Shift;
+  closeShift: (id: string, patch: Partial<Shift>) => void;
+  addClaim: (data: NewClaimInput) => Claim;
+  updateClaim: (id: string, patch: Partial<Claim>) => void;
+  orderLabForPatient: (patientId: string, testCode: string, notes?: string) => boolean;
+  findOpenEncounterForPatient: (patientId: string) => Encounter | undefined;
+  getConsultFee: (doctorId: string) => number;
+  refreshServiceFees: StoreAction;
+  addRefund: (
+    invoiceId: string,
+    amount: number,
+    type: string,
+    reason?: string,
+    notes?: string,
+    method?: string,
+  ) => Invoice | null;
+  cancelAppointment: StoreAction;
+  addPreAuth: (data: NewPreAuthInput) => PreAuthRecord;
+  updatePreAuth: (id: string, patch: Partial<PreAuthRecord>) => void;
+  convertPreAuthToClaim: (id: string) => Claim | null;
+  admitPatient: StoreAction;
+  transferPatient: StoreAction;
+  initiateDischarge: StoreAction;
+  finalizeDischarge: StoreAction;
+  clearMaintenanceBed: StoreAction;
+};
+
+const StoreCtx = createContext<ReceptionStoreValue | null>(null);
 
 let mrnCounter = 100239;
 let aptCounter = 50020;
@@ -259,18 +483,18 @@ const nextMrn = () => `MRN-${mrnCounter++}`;
 const nextApt = () => `APT-${aptCounter++}`;
 
 // Token numbering is per-doctor: DOC-001 -> 1xx, DOC-002 -> 2xx, etc.
-const docTokenBase = (doctorId) => {
+const docTokenBase = (doctorId: string) => {
   const idx = DOCTORS.findIndex((d) => d.id === doctorId);
   return (idx + 1) * 100;
 };
 
-export function StoreProvider({ children }) {
+export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [patients, setPatients] = useState(() => loadPatientRegistry());
-  const [appointments, setAppointments] = useState(() => loadAppointments());
+  const [appointments, setAppointments] = useState<Appointment[]>(() => loadAppointments());
   const [doctors, setDoctors] = useState(DOCTORS);
-  const [invoices, setInvoices] = useState(SEED_INVOICES);
-  const [shifts, setShifts] = useState(SEED_SHIFTS);
-  const [claims, setClaims] = useState(SEED_CLAIMS);
+  const [invoices, setInvoices] = useState<Invoice[]>(() => SEED_INVOICES as Invoice[]);
+  const [shifts, setShifts] = useState<Shift[]>(() => SEED_SHIFTS as Shift[]);
+  const [claims, setClaims] = useState<Claim[]>(() => SEED_CLAIMS as Claim[]);
   const [staff] = useState(STAFF);
   const [serviceFees, setServiceFees] = useState(() => loadServiceFees());
   const [labCatalog] = useState(() => loadLabCatalog());
@@ -278,29 +502,33 @@ export function StoreProvider({ children }) {
   const [preAuths, setPreAuths] = useState<PreAuthRecord[]>(() => loadPreAuths());
   const [beds, setBeds] = useState<Bed[]>(() => loadBeds());
   const [admissions, setAdmissions] = useState<AdmissionRecord[]>(() => loadAdmissions());
+  const [persistReady, setPersistReady] = useState(false);
 
-  const notifyPatientBillingEvent = useCallback((patientId, title, body) => {
-    const patient = getSharedPatient(resolvePatientId(patientId));
-    const patientName = patient?.name ?? patientId;
-    pushPatientNotification({
-      title,
-      body: body.replace(/\{patient\}/g, patientName),
-      at: "Just now",
-      type: "general",
-      to: "/profile/notifications",
-    });
-  }, []);
+  const notifyPatientBillingEvent = useCallback(
+    (patientId: string, title: string, body: string) => {
+      const patient = getSharedPatient(resolvePatientId(patientId));
+      const patientName = patient?.name ?? patientId;
+      pushPatientNotification({
+        title,
+        body: body.replace(/\{patient\}/g, patientName),
+        at: "Just now",
+        type: "general",
+        to: "/profile/notifications",
+      });
+    },
+    [],
+  );
 
   const ingestBridgeInvoices = useCallback(() => {
     const payloads = drainReceptionInvoices();
     if (!payloads.length) return;
-    const addedInvoices = [];
+    const addedInvoices: Invoice[] = [];
     setInvoices((list) => {
       const next = [...list];
       for (const p of payloads) {
         const exists = next.some((i) => i.note?.includes(p.labOrderId));
         if (exists) continue;
-        const inv = {
+        const inv: Invoice = {
           id: p.id,
           date: TODAY_STR,
           patientId: resolvePatientId(p.patientId),
@@ -325,7 +553,7 @@ export function StoreProvider({ children }) {
             discount: 0,
             method: null,
             status: "unpaid",
-          }),
+          } as unknown as LedgerSourceInvoice),
           source: "lab",
           referenceId: p.labOrderId,
         });
@@ -349,42 +577,70 @@ export function StoreProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    void listOpdAppointments({ date: TODAY_STR }).then((result) => {
+      if (!result.ok || result.data.items.length === 0) return;
+      setAppointments((local) => {
+        const byId = new Map(local.map((appointment) => [appointment.id, appointment]));
+        for (const remote of result.data.items) {
+          const adapted = opdToReceptionAppointment(remote);
+          byId.set(adapted.id, { ...byId.get(adapted.id), ...adapted });
+        }
+        return Array.from(byId.values());
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     const refreshEncounters = () => setEncounters(listEncounters());
     window.addEventListener(ENCOUNTERS_EVENT, refreshEncounters);
     return () => window.removeEventListener(ENCOUNTERS_EVENT, refreshEncounters);
   }, []);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(appointments));
-    } catch {
-      /* ignore quota */
-    }
-  }, [appointments]);
+    if (!persistReady) return;
+    savePersistedJson(APPOINTMENTS_KEY, "reception", appointments);
+  }, [persistReady, appointments]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(PREAUTHS_KEY, JSON.stringify(preAuths));
-    } catch {
-      /* ignore quota */
-    }
-  }, [preAuths]);
+    if (!persistReady) return;
+    savePersistedJson(PREAUTHS_KEY, "reception", preAuths);
+  }, [persistReady, preAuths]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(BEDS_KEY, JSON.stringify(beds));
-    } catch {
-      /* ignore quota */
-    }
-  }, [beds]);
+    if (!persistReady) return;
+    savePersistedJson(BEDS_KEY, "reception", beds);
+    window.dispatchEvent(new Event(RECEPTION_IPD_EVENT));
+  }, [persistReady, beds]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(ADMISSIONS_KEY, JSON.stringify(admissions));
-    } catch {
-      /* ignore quota */
-    }
-  }, [admissions]);
+    if (!persistReady) return;
+    savePersistedJson(ADMISSIONS_KEY, "reception", admissions);
+    window.dispatchEvent(new Event(RECEPTION_IPD_EVENT));
+  }, [persistReady, admissions]);
+
+  useEffect(() => {
+    void Promise.all([
+      hydratePersistedJson(APPOINTMENTS_KEY, "reception", APPOINTMENTS),
+      hydratePersistedJson(PREAUTHS_KEY, "reception", SEED_PREAUTHS),
+      hydratePersistedJson(BEDS_KEY, "reception", SEED_BEDS),
+      hydratePersistedJson(ADMISSIONS_KEY, "reception", SEED_ADMISSIONS),
+    ])
+      .then(([apts, auths, remoteBeds, remoteAdmissions]) => {
+        setAppointments(apts);
+        setPreAuths(auths);
+        setBeds(remoteBeds);
+        setAdmissions(remoteAdmissions);
+      })
+      .finally(() => setPersistReady(true));
+    const onRemote = () => {
+      setAppointments(loadAppointments());
+      setPreAuths(loadPreAuths());
+      setBeds(loadBeds());
+      setAdmissions(loadAdmissions());
+    };
+    window.addEventListener("medora-desk-hydrated", onRemote);
+    return () => window.removeEventListener("medora-desk-hydrated", onRemote);
+  }, []);
 
   useEffect(() => {
     ensureLedgerHydrated();
@@ -422,8 +678,15 @@ export function StoreProvider({ children }) {
       );
     };
     syncFromQueue();
+    void syncClinicQueueFromCanonical();
+    const poll = window.setInterval(() => {
+      void syncClinicQueueFromCanonical();
+    }, 15_000);
     window.addEventListener(CLINIC_QUEUE_EVENT, syncFromQueue);
-    return () => window.removeEventListener(CLINIC_QUEUE_EVENT, syncFromQueue);
+    return () => {
+      window.clearInterval(poll);
+      window.removeEventListener(CLINIC_QUEUE_EVENT, syncFromQueue);
+    };
   }, []);
 
   useEffect(() => {
@@ -446,11 +709,16 @@ export function StoreProvider({ children }) {
                 return {
                   ...d,
                   onDuty: match.onDuty,
-                  shift: match.shift === "off" ? "Off today" : match.shift === "leave" ? "On leave" : match.shift
+                  shift:
+                    match.shift === "off"
+                      ? "Off today"
+                      : match.shift === "leave"
+                        ? "On leave"
+                        : match.shift,
                 };
               }
               return d;
-            })
+            }),
           );
         }
       } catch (e) {
@@ -531,11 +799,11 @@ export function StoreProvider({ children }) {
     setServiceFees(loadServiceFees());
   }, []);
 
-  const openShift = useCallback((data) => {
+  const openShift = useCallback((data: NewShiftInput): Shift => {
     const now = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
+    const pad = (n: number) => String(n).padStart(2, "0");
     const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
-    const s = {
+    const s: Shift = {
       id: nextShiftId(),
       date: TODAY_STR,
       openedAt: ts,
@@ -551,21 +819,21 @@ export function StoreProvider({ children }) {
     return s;
   }, []);
 
-  const closeShift = useCallback((id, patch) => {
+  const closeShift = useCallback((id: string, patch: Partial<Shift>) => {
     const now = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
+    const pad = (n: number) => String(n).padStart(2, "0");
     const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
     setShifts((list) =>
       list.map((s) => (s.id === id ? { ...s, ...patch, closedAt: ts, status: "closed" } : s)),
     );
   }, []);
 
-  const updateClaim = useCallback((id, patch) => {
+  const updateClaim = useCallback((id: string, patch: Partial<Claim>) => {
     setClaims((list) => list.map((c) => (c.id === id ? { ...c, ...patch } : c)));
   }, []);
 
-  const addClaim = useCallback((data) => {
-    const c = {
+  const addClaim = useCallback((data: NewClaimInput): Claim => {
+    const c: Claim = {
       id: nextClaimId(),
       status: "pending",
       submittedAt: null,
@@ -579,8 +847,8 @@ export function StoreProvider({ children }) {
   }, []);
 
   const addInvoice = useCallback(
-    (data) => {
-      const inv = {
+    (data: NewInvoiceInput): Invoice => {
+      const inv: Invoice = {
         id: nextInvoiceId(),
         date: TODAY_STR,
         discount: 0,
@@ -593,7 +861,7 @@ export function StoreProvider({ children }) {
       if (enc) {
         linkToEncounter(enc.id, { invoiceId: inv.id });
       }
-      mirrorToLedger(receptionInvoiceToLedger(inv));
+      mirrorToLedger(receptionInvoiceToLedger(inv as LedgerSourceInvoice));
       const totals = computeTotals(inv.items, inv.discount);
       notifyPatientBillingEvent(
         inv.patientId,
@@ -605,44 +873,43 @@ export function StoreProvider({ children }) {
     [findOpenEncounterForPatient, notifyPatientBillingEvent],
   );
 
-  const updateInvoice = useCallback((id, patch) => {
+  const updateInvoice = useCallback((id: string, patch: Partial<Invoice>) => {
     setInvoices((list) => {
       const next = list.map((i) => (i.id === id ? { ...i, ...patch } : i));
       const updated = next.find((i) => i.id === id);
-      if (updated) mirrorToLedger(receptionInvoiceToLedger(updated));
+      if (updated) mirrorToLedger(receptionInvoiceToLedger(updated as LedgerSourceInvoice));
       return next;
     });
   }, []);
 
   const collectPayment = useCallback(
-    (id, method) => {
+    (id: string, method: string) => {
       const now = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
+      const pad = (n: number) => String(n).padStart(2, "0");
       const ts = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
         now.getDate(),
       )}T${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
-      let paidInvoice = null;
       setInvoices((list) => {
         const next = list.map((i) =>
           i.id === id ? { ...i, status: "paid", method, paidAt: ts } : i,
         );
-        paidInvoice = next.find((i) => i.id === id);
-        if (paidInvoice) mirrorToLedger(receptionInvoiceToLedger(paidInvoice));
+        const paidInvoice = next.find((i) => i.id === id);
+        if (paidInvoice) {
+          mirrorToLedger(receptionInvoiceToLedger(paidInvoice as LedgerSourceInvoice));
+          notifyPatientBillingEvent(
+            paidInvoice.patientId,
+            "Payment received",
+            `Your payment for invoice ${paidInvoice.id} has been recorded.`,
+          );
+        }
         return next;
       });
-      if (paidInvoice) {
-        notifyPatientBillingEvent(
-          paidInvoice.patientId,
-          "Payment received",
-          `Your payment for invoice ${paidInvoice.id} has been recorded.`,
-        );
-      }
     },
     [notifyPatientBillingEvent],
   );
 
-  const addPreAuth = useCallback((data) => {
-    const newPa = {
+  const addPreAuth = useCallback((data: NewPreAuthInput): PreAuthRecord => {
+    const newPa: PreAuthRecord = {
       id: `PA-${Date.now().toString().slice(-4)}`,
       status: "draft",
       createdAt: new Date().toISOString(),
@@ -652,45 +919,53 @@ export function StoreProvider({ children }) {
     return newPa;
   }, []);
 
-  const updatePreAuth = useCallback((id, patch) => {
-    setPreAuths((list) =>
-      list.map((pa) => (pa.id === id ? { ...pa, ...patch } : pa)),
-    );
+  const updatePreAuth = useCallback((id: string, patch: Partial<PreAuthRecord>) => {
+    setPreAuths((list) => list.map((pa) => (pa.id === id ? { ...pa, ...patch } : pa)));
   }, []);
 
-  const convertPreAuthToClaim = useCallback((id) => {
-    let createdClaim = null;
-    setPreAuths((list) => {
-      const pa = list.find((x) => x.id === id);
-      if (pa && pa.status === "approved") {
-        createdClaim = addClaim({
-          patientId: pa.patientId,
-          appointmentId: null,
-          doctorId: "DOC-001",
-          provider: pa.provider,
-          policyId: pa.policyId,
-          diagnosis: pa.diagnosis,
-          serviceType: pa.procedureType,
-          estimatedCost: pa.estimatedCost,
-          requestedAmount: pa.estimatedCost,
-          approvedAmount: pa.approvedAmount ?? pa.estimatedCost,
-          status: "pending",
-        });
-        return list.map((x) => (x.id === id ? { ...x, status: "submitted" } : x));
-      }
-      return list;
-    });
-    return createdClaim;
-  }, [addClaim]);
+  const convertPreAuthToClaim = useCallback(
+    (id: string) => {
+      let createdClaim: Claim | null = null;
+      setPreAuths((list) => {
+        const pa = list.find((x) => x.id === id);
+        if (pa && pa.status === "approved") {
+          createdClaim = addClaim({
+            patientId: pa.patientId,
+            appointmentId: null,
+            doctorId: "DOC-001",
+            provider: pa.provider,
+            policyId: pa.policyId,
+            diagnosis: pa.diagnosis,
+            serviceType: pa.procedureType,
+            estimatedCost: pa.estimatedCost,
+            requestedAmount: pa.estimatedCost,
+            approvedAmount: pa.approvedAmount ?? pa.estimatedCost,
+            status: "pending",
+          });
+          return list.map((x) => (x.id === id ? { ...x, status: "submitted" } : x));
+        }
+        return list;
+      });
+      return createdClaim;
+    },
+    [addClaim],
+  );
 
   const addRefund = useCallback(
-    (invoiceId, amount, type, reason, notes, method = "cash") => {
-      let updatedInvoice = null;
+    (
+      invoiceId: string,
+      amount: number,
+      type: string,
+      reason?: string,
+      notes?: string,
+      method: string = "cash",
+    ) => {
+      let updatedInvoice: Invoice | null = null;
       setInvoices((list) => {
         const next = list.map((i) => {
           if (i.id === invoiceId) {
-            const currentRefunds = i.refunds || [];
-            const newRefund = {
+            const currentRefunds = i.refunds ?? [];
+            const newRefund: RefundRecord = {
               type,
               amount: Number(amount),
               reason,
@@ -703,7 +978,7 @@ export function StoreProvider({ children }) {
             const totalRefunded = updatedRefunds.reduce((sum, r) => sum + r.amount, 0);
             const invoiceTotal = computeTotals(i.items, i.discount).total;
             const status = totalRefunded >= invoiceTotal ? "refunded" : "partial-refund";
-            const updated = {
+            const updated: Invoice = {
               ...i,
               status,
               refunds: updatedRefunds,
@@ -715,38 +990,37 @@ export function StoreProvider({ children }) {
         });
 
         if (updatedInvoice) {
-          mirrorToLedger(receptionInvoiceToLedger(updatedInvoice));
+          mirrorToLedger(receptionInvoiceToLedger(updatedInvoice as LedgerSourceInvoice));
 
           if (type === "credit") {
             const currentPatient = getSharedPatient(updatedInvoice.patientId);
             if (currentPatient) {
-              const currentBalance = currentPatient.balance || 0;
+              const currentBalance = currentPatient.balance ?? 0;
               const newBalance = currentBalance - Number(amount);
               updatePatientRegistry(updatedInvoice.patientId, { balance: newBalance });
               setPatients(loadPatientRegistry());
             }
           }
+
+          notifyPatientBillingEvent(
+            updatedInvoice.patientId,
+            "Refund processed",
+            `A refund of ₹${amount} (${type}) has been issued for invoice ${invoiceId}.`,
+          );
         }
 
         return next;
       });
 
-      if (updatedInvoice) {
-        notifyPatientBillingEvent(
-          updatedInvoice.patientId,
-          "Refund processed",
-          `A refund of ₹${amount} (${type}) has been issued for invoice ${invoiceId}.`,
-        );
-      }
       return updatedInvoice;
     },
     [notifyPatientBillingEvent, patients],
   );
 
-  const addPatient = useCallback((data) => {
+  const addPatient = useCallback((data: NewPatientInput) => {
     const newP = registerPatient({
       name: data.name,
-      dob: data.dob,
+      dob: data.dob ?? undefined,
       gender: data.gender,
       phone: data.phone,
       email: data.email,
@@ -771,7 +1045,7 @@ export function StoreProvider({ children }) {
   }, []);
 
   const findDuplicate = useCallback(
-    (phone, name, dob) => {
+    (phone?: string, name?: string, dob?: string) => {
       return patients.find(
         (p) =>
           (phone && p.phone.replace(/\s+/g, "") === phone.replace(/\s+/g, "")) ||
@@ -781,52 +1055,94 @@ export function StoreProvider({ children }) {
     [patients],
   );
 
-  const addAppointment = useCallback((data) => {
-    const newA = {
+  const addAppointment = useCallback((data: NewAppointmentInput): Appointment => {
+    const newA: Appointment = {
       id: nextApt(),
       status: "scheduled",
       tokenNumber: null,
       ...data,
     };
     setAppointments((a) => [...a, newA]);
+    const scheduledAt = new Date(`${newA.date}T${newA.time}:00`).toISOString();
+    void bookOpdAppointment({
+      patientId: newA.patientId,
+      doctorId: newA.doctorId,
+      legacyId: newA.id,
+      scheduledAt,
+      timeLabel: newA.time,
+      appointmentType: newA.type,
+      notes: newA.notes,
+    }).then((result) => {
+      if (result.ok) return;
+      if (result.status === 409) {
+        setAppointments((appointments) =>
+          appointments.filter((appointment) => appointment.id !== newA.id),
+        );
+        toast.error("That doctor slot was just booked", {
+          description: "Choose another available time.",
+        });
+      }
+    });
     return newA;
   }, []);
 
-  const checkInAppointment = useCallback((apptId) => {
-    // Read current state synchronously to compute token before any async updates
-    const apt = appointments.find((a) => a.id === apptId);
-    if (!apt) return null;
+  const checkInAppointment = useCallback(
+    (apptId: string) => {
+      // Read current state synchronously to compute token before any async updates
+      const apt = appointments.find((a) => a.id === apptId);
+      if (!apt) return null;
 
-    const docApts = appointments.filter((a) => a.doctorId === apt.doctorId && a.tokenNumber !== null);
-    const base = docTokenBase(apt.doctorId);
-    const used = docApts.map((a) => a.tokenNumber).filter((n) => n >= base && n < base + 100);
-    const issuedToken = used.length ? Math.max(...used) + 1 : base + 1;
+      const docApts = appointments.filter(
+        (a) => a.doctorId === apt.doctorId && a.tokenNumber !== null,
+      );
+      const base = docTokenBase(apt.doctorId);
+      const used = docApts
+        .map((a) => a.tokenNumber)
+        .filter((n): n is number => n !== null && n >= base && n < base + 100);
+      const issuedToken = used.length ? Math.max(...used) + 1 : base + 1;
 
-    setAppointments((apts) =>
-      apts.map((a) =>
-        a.id === apptId ? { ...a, status: "checked-in", tokenNumber: issuedToken } : a,
-      ),
-    );
+      setAppointments((apts) =>
+        apts.map((a) =>
+          a.id === apptId ? { ...a, status: "checked-in", tokenNumber: issuedToken } : a,
+        ),
+      );
 
-    const doctor = DOCTORS.find((d) => d.id === apt.doctorId);
-    const enc = openEncounterForCheckIn({
-      patientId: apt.patientId,
-      appointmentId: apt.id,
-      doctorName: doctor?.name,
-      chiefComplaint: apt.notes,
-    });
-    enqueueFromCheckIn({
-      appointmentId: apt.id,
-      patientId: apt.patientId,
-      doctorId: apt.doctorId,
-      tokenNumber: issuedToken,
-      encounterId: enc.id,
-    });
+      const doctor = DOCTORS.find((d) => d.id === apt.doctorId);
+      const enc = openEncounterForCheckIn({
+        patientId: apt.patientId,
+        appointmentId: apt.id,
+        doctorName: doctor?.name,
+        chiefComplaint: apt.notes,
+      });
+      enqueueFromCheckIn({
+        appointmentId: apt.id,
+        patientId: apt.patientId,
+        doctorId: apt.doctorId,
+        tokenNumber: issuedToken,
+        encounterId: enc.id,
+      });
+      void checkInOpdAppointment(apptId).then((result) => {
+        if (!result.ok) return;
+        setAppointments((current) =>
+          current.map((appointment) =>
+            appointment.id === apptId
+              ? {
+                  ...appointment,
+                  status: "checked-in",
+                  tokenNumber: result.data.appointment.tokenNumber,
+                }
+              : appointment,
+          ),
+        );
+        void syncClinicQueueFromCanonical();
+      });
 
-    return issuedToken;
-  }, [appointments]);
+      return issuedToken;
+    },
+    [appointments],
+  );
 
-  const updateAppointmentStatus = useCallback((apptId, status) => {
+  const updateAppointmentStatus = useCallback((apptId: string, status: string) => {
     setAppointments((apts) => apts.map((a) => (a.id === apptId ? { ...a, status } : a)));
     if (status === "in-progress") {
       updateQueueByAppointment(apptId, { status: "in-consultation" });
@@ -836,14 +1152,15 @@ export function StoreProvider({ children }) {
     }
   }, []);
 
-  const transferAppointment = useCallback((apptId, newDoctorId) => {
+  const transferAppointment = useCallback((apptId: string, newDoctorId: string) => {
     setAppointments((apts) => {
       const apt = apts.find((a) => a.id === apptId);
       if (!apt) return apts;
       const base = docTokenBase(newDoctorId);
       const used = apts
         .filter((a) => a.doctorId === newDoctorId && a.tokenNumber !== null)
-        .map((a) => a.tokenNumber);
+        .map((a) => a.tokenNumber)
+        .filter((n): n is number => n !== null);
       const nextNum = used.length ? Math.max(...used) + 1 : base + 1;
       return apts.map((a) =>
         a.id === apptId ? { ...a, doctorId: newDoctorId, tokenNumber: nextNum } : a,
@@ -851,96 +1168,118 @@ export function StoreProvider({ children }) {
     });
   }, []);
 
-  const cancelAppointment = useCallback((apptId, { reason, notes, reschedule } = {}) => {
-    const orig = appointments.find((a) => a.id === apptId);
-    if (!orig) return null;
+  const cancelAppointment = useCallback(
+    (apptId: string, { reason, notes, reschedule }: CancelAppointmentOptions = {}) => {
+      const orig = appointments.find((a) => a.id === apptId);
+      if (!orig) return null;
 
-    let createdRescheduled = null;
-    if (reschedule) {
-      createdRescheduled = {
-        id: nextApt(),
-        status: "scheduled",
-        tokenNumber: null,
-        patientId: orig.patientId,
-        doctorId: reschedule.doctorId || orig.doctorId,
-        date: reschedule.date,
-        time: reschedule.time,
-        type: reschedule.type || orig.type,
-        rescheduledFromId: apptId,
-      };
-    }
-
-    setAppointments((apts) => {
-      const next = apts.map((a) =>
-        a.id === apptId
-          ? {
-              ...a,
-              status: "cancelled",
-              cancellationReason: reason || "",
-              cancellationNotes: notes || "",
-            }
-          : a
-      );
-      if (createdRescheduled) {
-        return [...next, createdRescheduled];
+      let createdRescheduled: Appointment | null = null;
+      if (reschedule) {
+        createdRescheduled = {
+          id: nextApt(),
+          status: "scheduled",
+          tokenNumber: null,
+          patientId: orig.patientId,
+          doctorId: reschedule.doctorId || orig.doctorId,
+          date: reschedule.date,
+          time: reschedule.time,
+          type: reschedule.type || orig.type,
+          rescheduledFromId: apptId,
+        };
       }
-      return next;
-    });
 
-    pushPatientNotification({
-      title: "Appointment cancelled",
-      body: `Your appointment ${orig.id} has been cancelled. Reason: ${reason || "-"}`,
-      at: "Just now",
-      type: "appointment",
-      to: "/book",
-    });
+      setAppointments((apts) => {
+        const next = apts.map((a) =>
+          a.id === apptId
+            ? {
+                ...a,
+                status: "cancelled",
+                cancellationReason: reason || "",
+                cancellationNotes: notes || "",
+              }
+            : a,
+        );
+        if (createdRescheduled) {
+          return [...next, createdRescheduled];
+        }
+        return next;
+      });
 
-    if (createdRescheduled) {
       pushPatientNotification({
-        title: "New appointment scheduled",
-        body: `A new appointment ${createdRescheduled.id} has been scheduled for ${reschedule.date} at ${reschedule.time}.`,
+        title: "Appointment cancelled",
+        body: `Your appointment ${orig.id} has been cancelled. Reason: ${reason || "-"}`,
         at: "Just now",
         type: "appointment",
         to: "/book",
       });
-    }
 
-    return createdRescheduled;
-  }, [appointments]);
+      if (createdRescheduled) {
+        pushPatientNotification({
+          title: "New appointment scheduled",
+          body: `A new appointment ${createdRescheduled.id} has been scheduled for ${createdRescheduled.date} at ${createdRescheduled.time}.`,
+          at: "Just now",
+          type: "appointment",
+          to: "/book",
+        });
+        void rescheduleOpdAppointment({
+          appointmentId: apptId,
+          doctorId: createdRescheduled.doctorId,
+          scheduledAt: new Date(
+            `${createdRescheduled.date}T${createdRescheduled.time}:00`,
+          ).toISOString(),
+          reason: reason || "Reception reschedule",
+        });
+      } else {
+        void cancelOpdAppointment(apptId, reason || "Cancelled", notes);
+      }
 
-  const admitPatient = useCallback((patientId: string, bedId: string, doctorId: string, tariffPlan: string, depositAmount: number) => {
-    setBeds((prevBeds) =>
-      prevBeds.map((b) => (b.id === bedId ? { ...b, status: "occupied" } : b))
-    );
+      return createdRescheduled;
+    },
+    [appointments],
+  );
 
-    const newAdm: AdmissionRecord = {
-      id: `ADM-${Date.now().toString().slice(-4)}`,
-      patientId,
-      bedId,
-      doctorId,
-      admittedAt: new Date().toISOString(),
-      depositAmount,
-      status: "active",
-      tariffPlan: tariffPlan as any,
-      transfers: [],
-    };
-    setAdmissions((prev) => [newAdm, ...prev]);
+  const admitPatient = useCallback(
+    (
+      patientId: string,
+      bedId: string,
+      doctorId: string,
+      tariffPlan: AdmissionRecord["tariffPlan"],
+      depositAmount: number,
+    ) => {
+      setBeds((prevBeds) =>
+        prevBeds.map((b) => (b.id === bedId ? { ...b, status: "occupied" } : b)),
+      );
 
-    const patient = getSharedPatient(patientId);
-    if (patient) {
-      const currentBalance = patient.balance || 0;
-      updatePatientRegistry(patientId, { balance: currentBalance - depositAmount });
-      setPatients(loadPatientRegistry());
-    }
+      const newAdm: AdmissionRecord = {
+        id: `ADM-${Date.now().toString().slice(-4)}`,
+        patientId,
+        bedId,
+        doctorId,
+        admittedAt: new Date().toISOString(),
+        depositAmount,
+        status: "active",
+        tariffPlan,
+        transfers: [],
+      };
+      setAdmissions((prev) => [newAdm, ...prev]);
 
-    notifyPatientBillingEvent(
-      patientId,
-      "Admission Confirmed",
-      `You have been admitted to bed ${bedId} under doctor ${doctorId}. Deposit of ₹${depositAmount} has been credited.`
-    );
+      const patient = getSharedPatient(patientId);
+      if (patient) {
+        const currentBalance = patient.balance ?? 0;
+        updatePatientRegistry(patientId, { balance: currentBalance - depositAmount });
+        setPatients(loadPatientRegistry());
+      }
 
-    return newAdm;
-  }, [notifyPatientBillingEvent]);
+      notifyPatientBillingEvent(
+        patientId,
+        "Admission Confirmed",
+        `You have been admitted to bed ${bedId} under doctor ${doctorId}. Deposit of ₹${depositAmount} has been credited.`,
+      );
+
+      return newAdm;
+    },
+    [notifyPatientBillingEvent],
+  );
 
   const transferPatient = useCallback((admissionId: string, toBedId: string) => {
     let fromBedId = "";
@@ -960,7 +1299,7 @@ export function StoreProvider({ children }) {
           };
         }
         return adm;
-      })
+      }),
     );
 
     if (fromBedId) {
@@ -969,16 +1308,14 @@ export function StoreProvider({ children }) {
           if (b.id === fromBedId) return { ...b, status: "available" };
           if (b.id === toBedId) return { ...b, status: "occupied" };
           return b;
-        })
+        }),
       );
     }
   }, []);
 
   const initiateDischarge = useCallback((admissionId: string) => {
     setAdmissions((prev) =>
-      prev.map((adm) =>
-        adm.id === admissionId ? { ...adm, status: "pending-clearance" } : adm
-      )
+      prev.map((adm) => (adm.id === admissionId ? { ...adm, status: "pending-clearance" } : adm)),
     );
   }, []);
 
@@ -995,21 +1332,19 @@ export function StoreProvider({ children }) {
           };
         }
         return adm;
-      })
+      }),
     );
 
     if (bedIdToRelease) {
       setBeds((prevBeds) =>
-        prevBeds.map((b) =>
-          b.id === bedIdToRelease ? { ...b, status: "maintenance" } : b
-        )
+        prevBeds.map((b) => (b.id === bedIdToRelease ? { ...b, status: "maintenance" } : b)),
       );
     }
   }, []);
 
   const clearMaintenanceBed = useCallback((bedId: string) => {
     setBeds((prevBeds) =>
-      prevBeds.map((b) => (b.id === bedId ? { ...b, status: "available" } : b))
+      prevBeds.map((b) => (b.id === bedId ? { ...b, status: "available" } : b)),
     );
   }, []);
 
@@ -1100,11 +1435,16 @@ export function StoreProvider({ children }) {
     ],
   );
 
-  return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>;
+  return <StoreCtx.Provider value={value as ReceptionStoreValue}>{children}</StoreCtx.Provider>;
 }
 
 export function useStore() {
   const ctx = useContext(StoreCtx);
   if (!ctx) throw new Error("useStore must be used within StoreProvider");
   return ctx;
+}
+
+/** Like useStore, but returns null instead of throwing when used outside a StoreProvider. */
+export function useStoreOptional() {
+  return useContext(StoreCtx);
 }

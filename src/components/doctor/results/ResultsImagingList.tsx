@@ -93,9 +93,7 @@ function DocumentCard({
       <div className="flex min-w-0 flex-1 flex-col">
         <div className={cn("relative", compact ? "px-3.5 py-3.5" : "px-4 py-4")}>
           <div className="absolute right-3 top-3.5 flex items-center gap-1.5">
-            {unread && (
-              <span className="h-2 w-2 rounded-full bg-[#B8735D]" aria-label="Unread" />
-            )}
+            {unread && <span className="h-2 w-2 rounded-full bg-[#B8735D]" aria-label="Unread" />}
             {doc.needsReview && (
               <span className="grid h-5 w-5 place-items-center rounded-full bg-[#F5E6B8]">
                 <AlertCircle className="h-3 w-3 text-[#D4A017]" strokeWidth={2.25} />

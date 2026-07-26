@@ -16,7 +16,7 @@ export const CRITICAL_THRESHOLDS: Record<string, CriticalThreshold> = {
   plt: { key: "plt", name: "Platelets", unit: "10³/µL", low: 20, high: 1000 },
   wbc: { key: "wbc", name: "WBC", unit: "10³/µL", low: 1.0, high: 30.0 },
   inr: { key: "inr", name: "INR", unit: "", high: 5.0 },
-  ph: { key: "ph", name: "pH (ABG)", unit: "", low: 7.20, high: 7.60 },
+  ph: { key: "ph", name: "pH (ABG)", unit: "", low: 7.2, high: 7.6 },
   po2: { key: "po2", name: "pO2", unit: "mmHg", low: 40 },
   creatinine: { key: "creatinine", name: "Creatinine", unit: "mg/dL", high: 10.0 },
   creat: { key: "creat", name: "Creatinine", unit: "mg/dL", high: 10.0 },

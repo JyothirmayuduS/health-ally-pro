@@ -12,7 +12,7 @@ export type NavItem = {
 
 type Props = {
   homeTo: string;
-  items: NavItem[];
+  items: readonly NavItem[];
   user: { name: string; role: string; photoUrl: string };
 };
 
@@ -22,7 +22,11 @@ export function StaffTopNav({ homeTo, items, user }: Props) {
   return (
     <header className="sticky top-0 z-50 border-b border-[#E8ECED]/80 bg-[#F5F7F8]/90 backdrop-blur-md">
       <div className="mx-auto flex h-[76px] max-w-[1440px] items-center gap-6 px-5 lg:px-10">
-        <Link to={homeTo} aria-label="Home" className="shrink-0 transition-opacity hover:opacity-90">
+        <Link
+          to={homeTo}
+          aria-label="Home"
+          className="shrink-0 transition-opacity hover:opacity-90"
+        >
           <MedoraLogo />
         </Link>
 

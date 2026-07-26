@@ -15,7 +15,7 @@ export type WorkQueueItem = {
   subtitle?: string;
   to: string;
   search?: Record<string, string | undefined>;
-  params?: Record<string, string>;
+  params?: { patientId: string };
 };
 
 function pushUnique(items: WorkQueueItem[], item: WorkQueueItem) {
@@ -37,7 +37,8 @@ export function buildAuthoritativeWorkQueue(
       id: `adherence-${alert.panelPatientId}-${alert.tier}`,
       tier: alert.tier === "critical" ? "critical" : "warn",
       title: alert.label,
-      subtitle: `${alert.patientName} · ${alert.detail}`,
+      // detail already includes patientName — do not prefix again ("Sneha · Sneha · …")
+      subtitle: alert.detail,
       to: "/doctor/patients/$patientId",
       params: { patientId: alert.panelPatientId },
     });
@@ -79,7 +80,9 @@ export function buildAuthoritativeWorkQueue(
     });
   }
 
-  const urgentPanel = PANEL_PATIENTS.filter((p) => p.status === "Urgent" || p.status === "Critical");
+  const urgentPanel = PANEL_PATIENTS.filter(
+    (p) => p.status === "Urgent" || p.status === "Critical",
+  );
   for (const p of urgentPanel.slice(0, 2)) {
     pushUnique(items, {
       id: `urgent-panel-${p.id}`,

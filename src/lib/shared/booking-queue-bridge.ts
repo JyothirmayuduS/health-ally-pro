@@ -5,10 +5,8 @@ import {
   pushBookingRequestFromPatient,
 } from "@/lib/doctor-live-queue";
 import type { PatientBooking } from "@/lib/patient-booking-store";
-import {
-  appendClinicalEvent,
-  demoPanelPatientId,
-} from "@/lib/shared/clinical-event-log";
+import { appendClinicalEvent, demoPanelPatientId } from "@/lib/shared/clinical-event-log";
+import { bookOpdAppointment } from "@/lib/opd/client";
 
 export type QueueMetrics = {
   queuePosition?: number;
@@ -23,14 +21,23 @@ export function bridgePatientBookingToDoctorQueue(
   meta: { reason: string; visitType?: string },
 ): void {
   const panelPatientId = demoPanelPatientId();
-  const mode: QueueVisitMode =
-    meta.visitType === "video" ? "Video" : "In-person";
+  const mode: QueueVisitMode = meta.visitType === "video" ? "Video" : "In-person";
 
   pushBookingRequestFromPatient({
     bookingId: booking.id,
     patientId: panelPatientId,
     time: booking.time,
     mode,
+    reason: meta.reason.trim() || "Scheduled visit via patient app",
+  });
+
+  void bookOpdAppointment({
+    patientId: panelPatientId,
+    doctorId: booking.doctorId,
+    legacyId: booking.id,
+    scheduledAt: new Date(`${booking.dateKey}T${booking.time}:00`).toISOString(),
+    timeLabel: booking.time,
+    appointmentType: meta.visitType || "consultation",
     reason: meta.reason.trim() || "Scheduled visit via patient app",
   });
 
@@ -46,13 +53,9 @@ export function bridgePatientBookingToDoctorQueue(
 }
 
 /** Resolve live queue position from doctor AWQ — replaces synthetic countdown math. */
-export function resolveQueueMetricsForPanelPatient(
-  panelPatientId: string,
-): QueueMetrics {
+export function resolveQueueMetricsForPanelPatient(panelPatientId: string): QueueMetrics {
   const state = getLiveQueueState();
-  const active = state.entries.filter(
-    (e) => e.status === "waiting" || e.status === "serving",
-  );
+  const active = state.entries.filter((e) => e.status === "waiting" || e.status === "serving");
   const sorted = [...active].sort((a, b) => a.token - b.token);
   const idx = sorted.findIndex((e) => e.patientId === panelPatientId);
 

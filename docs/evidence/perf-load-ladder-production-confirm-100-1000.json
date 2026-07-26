@@ -1,0 +1,282 @@
+{
+  "at": "2026-07-24T17:25:37.601Z",
+  "base": "https://medora-health-ally.jyothirmayudu03.workers.dev",
+  "host": {
+    "cpus": 8,
+    "total_mem_mb": 8192,
+    "free_mem_mb_start": 140
+  },
+  "methodology": {
+    "note": "In-process Node concurrency ladder — not distributed k6. Same JWT reused (auth cache warm path). Warm-up precedes first scenario. Direct PostgREST samples run after each API burst.",
+    "warmup_n": 40,
+    "scenarios": [
+      100,
+      1000
+    ],
+    "resources": [
+      "appointments",
+      "patients",
+      "lab_results"
+    ]
+  },
+  "scenarios": [
+    {
+      "users": 100,
+      "concurrency": 25,
+      "wall_ms": 1249,
+      "throughput_rps": 80.08,
+      "overall": {
+        "n": 100,
+        "min": 165.43,
+        "avg": 247.86,
+        "p50": 225.92,
+        "p95": 295.63,
+        "p99": 756.97,
+        "max": 961.8,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 34,
+          "min": 173.62,
+          "avg": 241.36,
+          "p50": 221.63,
+          "p95": 308.51,
+          "p99": 756.97,
+          "max": 756.97,
+          "errors": 0
+        },
+        "patients": {
+          "n": 33,
+          "min": 166.72,
+          "avg": 274.94,
+          "p50": 236.11,
+          "p95": 751.73,
+          "p99": 961.8,
+          "max": 961.8,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 33,
+          "min": 165.43,
+          "avg": 227.49,
+          "p50": 227.45,
+          "p95": 287.91,
+          "p99": 288.2,
+          "max": 288.2,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 63.22,
+          "avg": 219.51,
+          "p50": 170.64,
+          "p95": 491.16,
+          "p99": 578.2,
+          "max": 578.2
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 84.94,
+            "avg": 218.75,
+            "p50": 170.64,
+            "p95": 448.31,
+            "p99": 541.07,
+            "max": 541.07,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 63.22,
+            "avg": 239.2,
+            "p50": 194.63,
+            "p95": 491.16,
+            "p99": 578.2,
+            "max": 578.2,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 71.09,
+            "avg": 200.56,
+            "p50": 96.92,
+            "p95": 447.52,
+            "p99": 578.17,
+            "max": 578.17,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 65,
+        "rss_mb_after": 84,
+        "heap_used_mb_after": 21
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    },
+    {
+      "users": 1000,
+      "concurrency": 100,
+      "wall_ms": 4241,
+      "throughput_rps": 235.78,
+      "overall": {
+        "n": 1000,
+        "min": 170.53,
+        "avg": 391.32,
+        "p50": 327.98,
+        "p95": 752.88,
+        "p99": 1328.72,
+        "max": 1603.2,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 334,
+          "min": 192.51,
+          "avg": 398.69,
+          "p50": 330.03,
+          "p95": 746.05,
+          "p99": 1342.93,
+          "max": 1598.76,
+          "errors": 0
+        },
+        "patients": {
+          "n": 333,
+          "min": 170.53,
+          "avg": 391.49,
+          "p50": 326.5,
+          "p95": 895.5,
+          "p99": 1457.53,
+          "max": 1603.2,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 333,
+          "min": 178.58,
+          "avg": 383.75,
+          "p50": 327.97,
+          "p95": 695.13,
+          "p99": 1174.64,
+          "max": 1384.92,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 57.91,
+          "avg": 171.92,
+          "p50": 159.05,
+          "p95": 344.14,
+          "p99": 366.23,
+          "max": 366.23
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 63.44,
+            "avg": 183.93,
+            "p50": 179.67,
+            "p95": 365.91,
+            "p99": 366.23,
+            "max": 366.23,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 57.91,
+            "avg": 164.79,
+            "p50": 105.28,
+            "p95": 339.73,
+            "p99": 344.14,
+            "max": 344.14,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 68.69,
+            "avg": 167.04,
+            "p50": 135.93,
+            "p95": 325.91,
+            "p99": 351.16,
+            "max": 351.16,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 77,
+        "rss_mb_after": 134,
+        "heap_used_mb_after": 43
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    }
+  ],
+  "slowest_endpoints": [
+    {
+      "users": 1000,
+      "endpoint": "patients",
+      "p95": 895.5,
+      "p99": 1457.53,
+      "avg": 391.49
+    },
+    {
+      "users": 100,
+      "endpoint": "patients",
+      "p95": 751.73,
+      "p99": 961.8,
+      "avg": 274.94
+    },
+    {
+      "users": 1000,
+      "endpoint": "appointments",
+      "p95": 746.05,
+      "p99": 1342.93,
+      "avg": 398.69
+    },
+    {
+      "users": 1000,
+      "endpoint": "lab_results",
+      "p95": 695.13,
+      "p99": 1174.64,
+      "avg": 383.75
+    },
+    {
+      "users": 100,
+      "endpoint": "appointments",
+      "p95": 308.51,
+      "p99": 756.97,
+      "avg": 241.36
+    },
+    {
+      "users": 100,
+      "endpoint": "lab_results",
+      "p95": 287.91,
+      "p99": 288.2,
+      "avg": 227.49
+    }
+  ],
+  "enterprise_budget": {
+    "p50_ms": 500,
+    "p95_ms": 2000,
+    "p99_ms": 4000,
+    "error_rate_max": 0.005
+  }
+}

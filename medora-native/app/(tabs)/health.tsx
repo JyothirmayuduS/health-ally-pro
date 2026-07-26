@@ -2,13 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  Activity,
-  ChevronRight,
-  Dumbbell,
-  FileText,
-  Pill,
-} from "lucide-react-native";
+import { Activity, ChevronRight, Dumbbell, FileText, Pill } from "lucide-react-native";
 import { AccessiblePressable } from "@/components/ui/AccessiblePressable";
 import { useTheme } from "@/theme/ThemeProvider";
 
@@ -43,10 +37,13 @@ export default function HealthHubScreen() {
         <Text style={[styles.kicker, { color: colors.clay }]}>Health Hub</Text>
         <Text style={[styles.title, { color: colors.ink }]}>Meds, movement & results</Text>
         <Text style={[styles.subtitle, { color: colors.inkMuted }]}>
-          Track adherence, review labs, and complete prescribed exercise — mirroring the web Health hub.
+          Track adherence, review labs, and complete prescribed exercise — mirroring the web Health
+          hub.
         </Text>
 
-        <View style={[styles.hero, { backgroundColor: colors.ink + "10", borderColor: colors.border }]}>
+        <View
+          style={[styles.hero, { backgroundColor: colors.ink + "10", borderColor: colors.border }]}
+        >
           <Activity size={22} color={colors.ink} strokeWidth={2} />
           <Text style={[styles.heroText, { color: colors.ink }]}>
             Daily progress syncs with your care team when connected.

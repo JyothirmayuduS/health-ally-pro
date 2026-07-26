@@ -54,8 +54,7 @@ function defaultGst(form: string, controlled?: string): GstRate {
 export function normalizeDrug(drug: Drug): Drug {
   const pack_size = drug.pack_size ?? defaultPackSize(drug.form);
   const unit_price = drug.unit_price;
-  const purchase_cost =
-    drug.purchase_cost ?? Math.round(unit_price * 0.62 * 100) / 100;
+  const purchase_cost = drug.purchase_cost ?? Math.round(unit_price * 0.62 * 100) / 100;
   const pack_mrp = drug.pack_mrp ?? Math.round(unit_price * pack_size * 100) / 100;
   const gst_rate = drug.gst_rate ?? defaultGst(drug.form, drug.controlled_schedule);
   return {
@@ -82,7 +81,11 @@ export function loadFormulary(): Drug[] {
 
 export function saveFormulary(drugs: Drug[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(drugs.map(normalizeDrug)));
+  const normalized = drugs.map(normalizeDrug);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+  void import("@/lib/licensed-desk-store").then(({ writeLicensedLocalJson }) => {
+    writeLicensedLocalJson(STORAGE_KEY, normalized, "pharmacy");
+  });
 }
 
 export function marginPercent(selling: number, cost: number) {
@@ -95,24 +98,17 @@ export function pricePerTablet(drug: Drug) {
 }
 
 export function fmtMargin(drug: Drug) {
-  return `${marginPercent(drug.unit_price, drug.purchase_cost)}%`;
+  return `${marginPercent(drug.unit_price, drug.purchase_cost ?? 0)}%`;
 }
 
-export function weightedAvgCost(
-  batches: StockBatch[],
-  drugId: string,
-  fallback: number,
-): number {
+export function weightedAvgCost(batches: StockBatch[], drugId: string, fallback: number): number {
   const active = batches.filter(
     (b) => b.drug_id === drugId && b.status === "active" && b.purchase_cost_per_unit != null,
   );
   if (!active.length) return fallback;
   const totalQty = active.reduce((s, b) => s + b.qty, 0);
   if (totalQty <= 0) return fallback;
-  const totalCost = active.reduce(
-    (s, b) => s + (b.purchase_cost_per_unit ?? 0) * b.qty,
-    0,
-  );
+  const totalCost = active.reduce((s, b) => s + (b.purchase_cost_per_unit ?? 0) * b.qty, 0);
   return Math.round((totalCost / totalQty) * 100) / 100;
 }
 

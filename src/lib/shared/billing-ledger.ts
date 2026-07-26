@@ -1,4 +1,4 @@
-/** Hospital-wide billing ledger (localStorage) — reception, lab, pharmacy. */
+import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
 
 export type LedgerSource = "reception" | "lab" | "pharmacy";
 
@@ -73,22 +73,36 @@ const SEED: LedgerInvoice[] = [
 ];
 
 function load<T>(key: string, seed: T[]): T[] {
-  if (typeof window === "undefined") return seed;
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) {
-      localStorage.setItem(key, JSON.stringify(seed));
-      return seed;
-    }
-    const parsed = JSON.parse(raw) as T[];
-    return Array.isArray(parsed) && parsed.length ? parsed : seed;
-  } catch {
-    return seed;
-  }
+  const loaded = loadPersistedJson<T[]>(key, []);
+  if (loaded.length) return loaded;
+  if (typeof window !== "undefined") savePersistedJson(key, deskForKey(key), seed);
+  return seed;
 }
 
 function save<T>(key: string, data: T[]) {
-  if (typeof window !== "undefined") localStorage.setItem(key, JSON.stringify(data));
+  savePersistedJson(key, deskForKey(key), data);
+  if (key === INV_KEY) {
+    void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+      upsertClinicalEntities(
+        "invoices",
+        (data as LedgerInvoice[]).map((inv) => ({
+          legacy_id: inv.id,
+          payload: inv as unknown as Record<string, unknown>,
+        })),
+      ),
+    );
+  }
+  if (key === PAY_KEY) {
+    void import("@/lib/supabase/phi-api").then(({ upsertClinicalEntities }) =>
+      upsertClinicalEntities(
+        "payments",
+        (data as LedgerPayment[]).map((p) => ({
+          legacy_id: p.id,
+          payload: p as unknown as Record<string, unknown>,
+        })),
+      ),
+    );
+  }
 }
 
 export function loadLedgerInvoices(): LedgerInvoice[] {
@@ -126,8 +140,15 @@ export function recordLedgerPayment(
   const inv = invoices.find((i) => i.id === invoiceId);
   if (!inv) return invoices;
   const paid = Math.min(inv.total, Math.round((inv.amountPaid + amount) * 100) / 100);
-  const status = paid >= inv.total ? "paid" : paid > 0 ? "partial" : "unpaid";
-  const updated = { ...inv, amountPaid: paid, status, method, paidAt: status === "paid" ? new Date().toISOString() : inv.paidAt };
+  const status: LedgerInvoice["status"] =
+    paid >= inv.total ? "paid" : paid > 0 ? "partial" : "unpaid";
+  const updated: LedgerInvoice = {
+    ...inv,
+    amountPaid: paid,
+    status,
+    method,
+    paidAt: status === "paid" ? new Date().toISOString() : inv.paidAt,
+  };
   upsertLedgerInvoice(updated);
   const payments = loadLedgerPayments();
   payments.unshift({

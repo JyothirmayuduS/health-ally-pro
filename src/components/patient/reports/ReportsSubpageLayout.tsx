@@ -37,12 +37,8 @@ export function ReportsSubpageLayout({
           <ChevronLeft className="h-6 w-6 text-ink" strokeWidth={2.25} />
         </Link>
         <div className="min-w-0 flex-1">
-          <h1 className="font-serif text-[26px] leading-tight text-ink sm:text-[32px]">
-            {title}
-          </h1>
-          {subtitle ? (
-            <p className="mt-0.5 text-sm text-ink-muted">{subtitle}</p>
-          ) : null}
+          <h1 className="font-serif text-[26px] leading-tight text-ink sm:text-[32px]">{title}</h1>
+          {subtitle ? <p className="mt-0.5 text-sm text-ink-muted">{subtitle}</p> : null}
         </div>
       </header>
 

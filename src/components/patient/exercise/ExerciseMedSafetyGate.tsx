@@ -105,8 +105,7 @@ export function ExerciseMedSafetyGate({ status, onProceedAnyway, onCancel }: Pro
               onClick={onProceedAnyway}
               className="flex items-center justify-center gap-1.5 py-2 text-xs font-medium text-ink-muted underline-offset-2 hover:text-clay hover:underline"
             >
-              <AlertTriangle className="h-3.5 w-3.5" />
-              I understand the risk — start anyway
+              <AlertTriangle className="h-3.5 w-3.5" />I understand the risk — start anyway
             </button>
           ) : null}
         </div>

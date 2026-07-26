@@ -28,27 +28,26 @@ export function DoctorTodayTimeline() {
       {items.map((item, i) => {
         const patient = getQueuePatient(item.patientId);
         if (!patient) return null;
-        const href =
-          item.status === "booking"
-            ? "/doctor/queue"
-            : "/doctor/patients/$patientId";
-        const params =
-          item.status === "booking" ? undefined : { patientId: item.patientId };
+        const href = item.status === "booking" ? "/doctor/queue" : "/doctor/patients/$patientId";
+        const params = item.status === "booking" ? undefined : { patientId: item.patientId };
 
         return (
-          <li
-            key={item.id}
-            className="grid grid-cols-[46px_12px_minmax(0,1fr)] items-stretch"
-          >
+          <li key={item.id} className="grid grid-cols-[46px_12px_minmax(0,1fr)] items-stretch">
             <div className="flex items-start justify-end pr-2 pt-4">
               <span className="text-[12px] font-bold tabular-nums text-[#B8735D]">{item.time}</span>
             </div>
             <div className="relative flex justify-center self-stretch">
               {i > 0 && (
-                <div className="absolute left-1/2 top-0 h-4 w-px -translate-x-1/2 bg-[#E0DCD6]" aria-hidden />
+                <div
+                  className="absolute left-1/2 top-0 h-4 w-px -translate-x-1/2 bg-[#E0DCD6]"
+                  aria-hidden
+                />
               )}
               {i < items.length - 1 && (
-                <div className="absolute bottom-0 left-1/2 top-4 w-px -translate-x-1/2 bg-[#E0DCD6]" aria-hidden />
+                <div
+                  className="absolute bottom-0 left-1/2 top-4 w-px -translate-x-1/2 bg-[#E0DCD6]"
+                  aria-hidden
+                />
               )}
               <span className="relative z-10 mt-4 h-[9px] w-[9px] rounded-full bg-[#B8735D] ring-[4px] ring-[#F7F5F2]" />
             </div>

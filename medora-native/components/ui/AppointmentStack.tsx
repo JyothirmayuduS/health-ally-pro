@@ -14,9 +14,10 @@ import { Card } from "@/components/ui/Card";
 import { CalendarDays, Clock4, Video, CheckCircle2 } from "lucide-react-native";
 import { format } from "date-fns";
 import { useTheme } from "@/theme/ThemeProvider";
-import { doctors } from "@/lib/mock-data";
+import { doctors, type Appointment } from "@/lib/mock-data";
+import type { ThemeColors } from "@/theme/colors";
 
-export function AppointmentStack({ appointments }: { appointments: any[] }) {
+export function AppointmentStack({ appointments }: { appointments: Appointment[] }) {
   const { colors } = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -53,7 +54,7 @@ export function AppointmentStack({ appointments }: { appointments: any[] }) {
         // The top card is at index `visibleCards.length - 1`.
         const isTopCard = i === visibleCards.length - 1;
         const stackDepth = visibleCards.length - 1 - i; // 0 for top, 1 for middle, 2 for back
-        
+
         return (
           <SwipeableCard
             key={appt.id}
@@ -69,7 +70,19 @@ export function AppointmentStack({ appointments }: { appointments: any[] }) {
   );
 }
 
-function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
+function SwipeableCard({
+  appt,
+  isTop,
+  depth,
+  colors,
+  onSwipeComplete,
+}: {
+  appt: Appointment;
+  isTop: boolean;
+  depth: number;
+  colors: ThemeColors;
+  onSwipeComplete: () => void;
+}) {
   const doc = doctors.find((d) => d.id === appt.doctorId);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -83,7 +96,9 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
     .onEnd((event) => {
       if (Math.abs(event.translationX) > 120 || Math.abs(event.velocityX) > 800) {
         // Swipe dismissed
-        translateX.value = withSpring(Math.sign(event.translationX) * 500, { velocity: event.velocityX });
+        translateX.value = withSpring(Math.sign(event.translationX) * 500, {
+          velocity: event.velocityX,
+        });
         runOnJS(onSwipeComplete)();
       } else {
         // Snap back exactly to center
@@ -93,7 +108,7 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
     });
 
   const animatedStyle = useAnimatedStyle(() => {
-    // If it's the top card, follow the finger. 
+    // If it's the top card, follow the finger.
     // If it's a backend card, stay still.
     const transX = isTop ? translateX.value : 0;
     const transY = isTop ? translateY.value : 0;
@@ -103,7 +118,7 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
       Math.abs(translateX.value),
       [0, 150],
       [0, 1],
-      Extrapolation.CLAMP
+      Extrapolation.CLAMP,
     );
 
     // Depth scales:
@@ -112,22 +127,18 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
     // depth 2: scale 0.9, top offset 0
 
     const currentDepth = Math.max(0, depth - swipeProgress);
-    
+
     // Scale jumps from 1 -> 0.95 -> 0.9
     const scale = interpolate(currentDepth, [0, 1, 2], [1, 0.95, 0.9], Extrapolation.CLAMP);
-    
+
     // Y offset pushes it downwards visually so they peak from the top
     const translateYOffset = interpolate(currentDepth, [0, 1, 2], [16, 8, 0], Extrapolation.CLAMP);
-    
+
     // Opacity fades out heavily for deeper cards
     const opacity = interpolate(currentDepth, [0, 1, 2], [1, 0.6, 0.2], Extrapolation.CLAMP);
 
     return {
-      transform: [
-        { translateX: transX },
-        { translateY: transY + translateYOffset },
-        { scale },
-      ],
+      transform: [{ translateX: transX }, { translateY: transY + translateYOffset }, { scale }],
       opacity,
       position: "absolute",
       top: 0,
@@ -142,14 +153,21 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
   return (
     <GestureDetector gesture={pan}>
       <Animated.View style={animatedStyle}>
-        <Card variant="dark" className="p-0 overflow-hidden border-0 shadow-xl" style={{ shadowColor: colors.ink }}>
+        <Card
+          variant="dark"
+          className="p-0 overflow-hidden border-0 shadow-xl"
+          style={{ shadowColor: colors.ink }}
+        >
           <View className="p-6 pb-5">
             {/* Top Row: Avatar & Video Icon */}
             <View className="flex-row justify-between items-start">
               <View className="flex-row items-center gap-4 flex-1">
                 <Avatar initials={doc.initials} size="lg" />
                 <View className="flex-1 pr-2">
-                  <Text className="font-sans-medium text-lg text-primary-foreground" style={{ letterSpacing: -0.3 }}>
+                  <Text
+                    className="font-sans-medium text-lg text-primary-foreground"
+                    style={{ letterSpacing: -0.3 }}
+                  >
                     {doc.name}
                   </Text>
                   <Text className="text-sm text-primary-foreground opacity-70 font-sans mt-0.5">
@@ -158,26 +176,48 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
                 </View>
               </View>
               <Pressable className="h-12 w-12 rounded-full bg-primary-foreground items-center justify-center shadow-sm">
-                <Video size={20} color={colors.clay} strokeWidth={1.5} opacity={0.6}/>
+                <Video size={20} color={colors.clay} strokeWidth={1.5} opacity={0.6} />
               </Pressable>
             </View>
 
             {/* Middle Row: Date & Time */}
             <View className="flex-row gap-3 mt-6">
               <View className="flex-1 bg-[rgba(255,255,255,0.06)] rounded-xl p-3 flex-row items-center gap-3">
-                <CalendarDays size={16} color={colors.inkMuted} opacity={0.4} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+                <CalendarDays
+                  size={16}
+                  color={colors.inkMuted}
+                  opacity={0.4}
+                  strokeWidth={1.75}
+                  style={{ flexShrink: 0 }}
+                />
                 <View className="flex-1">
-                  <Text className="text-[10px] text-primary-foreground opacity-60 font-sans tracking-wide uppercase">Date</Text>
-                  <Text className="text-[13px] font-sans-medium text-primary-foreground pt-0.5" numberOfLines={1}>
+                  <Text className="text-[10px] text-primary-foreground opacity-60 font-sans tracking-wide uppercase">
+                    Date
+                  </Text>
+                  <Text
+                    className="text-[13px] font-sans-medium text-primary-foreground pt-0.5"
+                    numberOfLines={1}
+                  >
                     {format(new Date(appt.date), "dd MMM, EEE")}
                   </Text>
                 </View>
               </View>
               <View className="flex-1 bg-[rgba(255,255,255,0.06)] rounded-xl p-3 flex-row items-center gap-3">
-                <Clock4 size={16} color={colors.inkMuted} opacity={0.4} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+                <Clock4
+                  size={16}
+                  color={colors.inkMuted}
+                  opacity={0.4}
+                  strokeWidth={1.75}
+                  style={{ flexShrink: 0 }}
+                />
                 <View className="flex-1">
-                  <Text className="text-[10px] text-primary-foreground opacity-60 font-sans tracking-wide uppercase">Time</Text>
-                  <Text className="text-[13px] font-sans-medium text-primary-foreground pt-0.5" numberOfLines={1}>
+                  <Text className="text-[10px] text-primary-foreground opacity-60 font-sans tracking-wide uppercase">
+                    Time
+                  </Text>
+                  <Text
+                    className="text-[13px] font-sans-medium text-primary-foreground pt-0.5"
+                    numberOfLines={1}
+                  >
                     {appt.time}
                   </Text>
                 </View>
@@ -190,7 +230,9 @@ function SwipeableCard({ appt, isTop, depth, colors, onSwipeComplete }: any) {
                 <Text className="text-[13px] font-sans-medium text-ink">Re-schedule</Text>
               </Pressable>
               <Pressable className="flex-1 rounded-full bg-[rgba(255,255,255,0.15)] py-3.5 items-center">
-                <Text className="text-[13px] font-sans-medium text-primary-foreground">View profile</Text>
+                <Text className="text-[13px] font-sans-medium text-primary-foreground">
+                  View profile
+                </Text>
               </Pressable>
             </View>
           </View>

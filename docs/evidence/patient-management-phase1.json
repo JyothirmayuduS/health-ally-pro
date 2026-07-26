@@ -1,0 +1,151 @@
+{
+  "generated_at": "2026-07-25T20:03:13.101Z",
+  "phase": "patient-management-phase1",
+  "schema": {
+    "migration": "supabase/migrations/20260726120000_patient_management_phase1.sql",
+    "additive": true,
+    "tables": [
+      "patient_emergency_contacts",
+      "patient_relationships",
+      "patient_access_grants",
+      "patient_allergies",
+      "patient_history_entries",
+      "consent_templates",
+      "patient_consents",
+      "patient_documents",
+      "patient_qr_tokens",
+      "hospital_mrn_counters"
+    ],
+    "private_bucket": "patient-documents",
+    "mrn_function": "next_hospital_mrn",
+    "postgrest_revoked": true,
+    "service_role_granted": true,
+    "hospital_scoped_inventory_updated": true
+  },
+  "security": {
+    "qr_opaque_token_only": true,
+    "qr_hash_at_rest": true,
+    "cross_tenant_uniform_404": true,
+    "document_mime_allowlist": true,
+    "document_max_bytes": 10485760,
+    "storage_path_prefix": "hospital_id/patient_id/document_id/*",
+    "direct_storage_anon_denied": true
+  },
+  "rbac_matrix": [
+    {
+      "role": "receptionist",
+      "register": true,
+      "identity": true,
+      "history": false,
+      "qr": true
+    },
+    {
+      "role": "doctor",
+      "register": false,
+      "identity": false,
+      "history": true,
+      "allergies": true,
+      "qr": false
+    },
+    {
+      "role": "nurse",
+      "register": false,
+      "identity": false,
+      "history": true,
+      "allergies": true,
+      "qr": false
+    },
+    {
+      "role": "patient_self",
+      "register": false,
+      "identity": true,
+      "history": false,
+      "documents": true,
+      "qr": false
+    },
+    {
+      "role": "caregiver_grant",
+      "register": false,
+      "identity": false,
+      "documents": true,
+      "consents": true
+    }
+  ],
+  "api": {
+    "routes": [
+      "/api/hospital/patients",
+      "/api/hospital/patients/$patientId"
+    ],
+    "actions": [
+      "search",
+      "register",
+      "resolve_qr",
+      "templates",
+      "profile",
+      "update",
+      "contacts",
+      "allergy",
+      "history",
+      "sign_consent",
+      "revoke_consent",
+      "upload_document",
+      "download_document",
+      "archive_document",
+      "issue_qr"
+    ],
+    "audit_actions_covered": [
+      "patient_search",
+      "patient_register",
+      "patient_profile_read",
+      "patient_update",
+      "patient_qr_issue",
+      "patient_qr_resolve",
+      "patient_document_upload",
+      "patient_document_download"
+    ]
+  },
+  "ui": {
+    "reception_register_steps": true,
+    "reception_patients_workspace": true,
+    "doctor_chart_embed": true,
+    "nursing_profile_embed": true,
+    "patient_self_service_route": "/profile/health-record",
+    "qr_scanner_barcode_detector_fallback": true
+  },
+  "compatibility": {
+    "local_registry_fallback": true,
+    "shared_patient_mrn_id": true,
+    "allergy_structured_with_legacy_fallback": true,
+    "routes_preserved": [
+      "/reception/register",
+      "/reception/patients",
+      "/reception/check-in",
+      "/doctor/patients/$patientId"
+    ]
+  },
+  "tests": {
+    "unit": "src/lib/patient-management/patient-management.test.ts",
+    "security_inventory": "src/server/patient-management/security-inventory.test.ts",
+    "e2e": "e2e/patient-management.spec.ts"
+  },
+  "artifacts_present": {
+    "schemas": true,
+    "client": true,
+    "service": true,
+    "rbac": true,
+    "workspace": true
+  },
+  "limitations": [
+    "Migration applied to health_ally_pro on 2026-07-26; deployment verification found 10 tables, 19 policies, one private bucket, and zero direct PostgREST grants.",
+    "Full authenticated cross-tenant API probes still require dedicated hospital A/B test identities.",
+    "Document upload/download smoke requires private bucket + service role in the target environment.",
+    "Evidence intentionally omits PHI, access tokens, signed URLs, and document bytes."
+  ],
+  "rollout_steps": [
+    "Migration applied; retain 20260726133000_harden_patient_management_helpers.sql for RPC lockdown.",
+    "Continue verifying REVOKE/GRANT and RLS via inventory tests.",
+    "Enable Worker patient APIs behind existing auth; confirm reception dual-write fallback.",
+    "Pilot reception registration/search, then doctor/nursing embeds, then patient self-service.",
+    "Rotate any demo QR tokens before production cutover."
+  ]
+}

@@ -1,10 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  CalendarPlus,
-  ChevronRight,
-  Clock4,
-  Stethoscope,
-} from "lucide-react";
+import { CalendarPlus, ChevronRight, Clock4, Stethoscope } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LiveQueueHeroCard } from "@/components/patient/LiveQueueHeroCard";
 import { PatientHubLayout } from "@/components/patient/PatientHubLayout";
@@ -67,9 +62,7 @@ export function CareHubPage() {
   return (
     <PatientHubLayout>
       <header className="mb-5 sm:mb-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">
-          Get care
-        </p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">Get care</p>
         <h1 className="mt-1 font-serif text-[32px] leading-tight text-ink sm:text-[38px] lg:text-[40px]">
           Care
         </h1>
@@ -106,12 +99,7 @@ export function CareHubPage() {
             />
           ) : null}
 
-          <ul
-            className={cn(
-              "flex flex-col gap-4 sm:gap-5",
-              live && "mt-7 sm:mt-8 lg:mt-8",
-            )}
-          >
+          <ul className={cn("flex flex-col gap-4 sm:gap-5", live && "mt-7 sm:mt-8 lg:mt-8")}>
             <li>
               <HubLinkCard
                 to="/care/visits"

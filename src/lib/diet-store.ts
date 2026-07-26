@@ -97,9 +97,7 @@ export function getDietMeal(id: string): DietMeal | undefined {
   const needsNutrition = !meal.nutritionPerServing;
   if (!needsRepair && !needsNutrition) return meal;
 
-  const repaired = enrichMealNutrition(
-    needsRepair ? repairMealYoutubeVideos(meal) : meal,
-  );
+  const repaired = enrichMealNutrition(needsRepair ? repairMealYoutubeVideos(meal) : meal);
   if (needsRepair || needsNutrition) {
     const updated = meals.map((m) => (m.id === id ? repaired : m));
     saveAiMeals(updated);
@@ -110,10 +108,7 @@ export function getDietMeal(id: string): DietMeal | undefined {
 
 export function listAllDietMeals(): DietMeal[] {
   const ai = listAiDietMeals();
-  return dedupeDietMealsByName([
-    ...ai,
-    ...dietMeals.filter((m) => !ai.some((a) => a.id === m.id)),
-  ]);
+  return dedupeDietMealsByName([...ai, ...dietMeals.filter((m) => !ai.some((a) => a.id === m.id))]);
 }
 
 /** Collapse duplicate AI saves that share the same dish name. */

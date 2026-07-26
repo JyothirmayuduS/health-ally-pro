@@ -2,11 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Clock, MapPin, MessageCircle, Phone, Star, Video } from "lucide-react";
 import { toast } from "sonner";
 import type { Doctor } from "@/lib/mock-data";
-import {
-  clinicPhoneHref,
-  doctorMessageHref,
-  videoVisitNotice,
-} from "@/lib/patient-care-actions";
+import { clinicPhoneHref, doctorMessageHref, videoVisitNotice } from "@/lib/patient-care-actions";
 
 export function DoctorListCard({ doctor }: { doctor: Doctor }) {
   const messageLink = doctorMessageHref(doctor.name);
@@ -34,9 +30,7 @@ export function DoctorListCard({ doctor }: { doctor: Doctor }) {
         </span>
       </div>
 
-      <p className="mt-3.5 line-clamp-2 text-[13px] leading-relaxed text-ink-muted">
-        {doctor.bio}
-      </p>
+      <p className="mt-3.5 line-clamp-2 text-[13px] leading-relaxed text-ink-muted">{doctor.bio}</p>
 
       <div className="mt-3.5 flex flex-wrap gap-4 border-t border-[#EDEAE6] pt-3 text-xs text-ink-muted">
         <span className="inline-flex items-center gap-1.5">

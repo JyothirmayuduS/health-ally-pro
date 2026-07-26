@@ -1,12 +1,25 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useLabStore, formatRelative, formatDateTime, getPatient, flagValue } from "@/lib/lab-desk/store";
+import {
+  useLabStore,
+  formatRelative,
+  formatDateTime,
+  getPatient,
+  flagValue,
+} from "@/lib/lab-desk/store";
 import { useTechnicianOrders } from "@/lib/lab-desk/technician";
 import { isSubmittedToSupervisor } from "@/lib/lab-desk/specimen";
 import { SectionLabel, StatusPill, PriorityPill } from "@/components/lab-desk/Pills";
 import { Send, CheckCircle, Clock, ClipboardList, Beaker } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { LabOrder } from "@/lib/lab-desk/store";
 import LabReport from "@/components/lab-desk/LabReport";
@@ -17,11 +30,12 @@ export default function MySubmissions() {
   const [selectedSub, setSelectedSub] = useState<LabOrder | null>(null);
 
   const submissions = useMemo(
-    () => mine.filter(isSubmittedToSupervisor).sort((a, b) => {
-      const ta = a.completed_at ?? a.validated_at ?? "";
-      const tb = b.completed_at ?? b.validated_at ?? "";
-      return new Date(tb).getTime() - new Date(ta).getTime();
-    }),
+    () =>
+      mine.filter(isSubmittedToSupervisor).sort((a, b) => {
+        const ta = a.completed_at ?? a.validated_at ?? "";
+        const tb = b.completed_at ?? b.validated_at ?? "";
+        return new Date(tb).getTime() - new Date(ta).getTime();
+      }),
     [mine],
   );
 
@@ -33,9 +47,14 @@ export default function MySubmissions() {
       <div className="border-l-4 border-sage bg-sage-soft/40 px-4 py-3 text-[13px] text-ink-700">
         <strong className="text-sage">Result submissions</strong> — only tests you entered and sent
         to the supervisor. Physical tubes are tracked in{" "}
-        <Link to="/lab/samples" className="font-medium text-teal hover:underline">My samples</Link>.
-        Active draws stay in{" "}
-        <Link to="/lab/collection" className="font-medium text-plum hover:underline">Collection</Link>.
+        <Link to="/lab/samples" className="font-medium text-teal hover:underline">
+          My samples
+        </Link>
+        . Active draws stay in{" "}
+        <Link to="/lab/collection" className="font-medium text-plum hover:underline">
+          Collection
+        </Link>
+        .
       </div>
 
       <SectionLabel>My submissions</SectionLabel>
@@ -44,7 +63,9 @@ export default function MySubmissions() {
         <div className="surface p-4">
           <div className="flex items-center gap-2 text-clay">
             <Clock className="h-4 w-4" />
-            <span className="font-mono text-[10px] uppercase tracking-wider">Awaiting sign-off</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider">
+              Awaiting sign-off
+            </span>
           </div>
           <div className="mt-1 font-heading text-2xl font-semibold">{awaiting.length}</div>
         </div>
@@ -85,7 +106,9 @@ export default function MySubmissions() {
                   <div className="font-mono text-[12px]">{o.accession}</div>
                   <div className="min-w-[140px] flex-1">
                     <div className="font-medium">{p?.name}</div>
-                    <div className="text-[11px] text-ink-400">{o.test_code} · {o.test_name}</div>
+                    <div className="text-[11px] text-ink-400">
+                      {o.test_code} · {o.test_name}
+                    </div>
                   </div>
                   <PriorityPill priority={o.priority} />
                   <StatusPill status={o.status} />

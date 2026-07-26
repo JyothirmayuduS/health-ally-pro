@@ -52,10 +52,7 @@ export function DeskQuickAction({
       className="group surface flex items-center gap-3 px-4 py-3 transition-colors hover:border-sage hover:bg-sage-soft/40"
     >
       <div
-        className={cn(
-          "grid h-9 w-9 place-items-center rounded-sm transition-colors",
-          accentClass,
-        )}
+        className={cn("grid h-9 w-9 place-items-center rounded-sm transition-colors", accentClass)}
       >
         <Icon className="h-4 w-4" strokeWidth={2} />
       </div>
@@ -67,11 +64,13 @@ export function DeskQuickAction({
 
 export function DeskPanel({
   title,
+  subtitle,
   action,
   children,
   className,
 }: {
   title: string;
+  subtitle?: React.ReactNode;
   action?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
@@ -79,7 +78,10 @@ export function DeskPanel({
   return (
     <div className={cn("surface overflow-hidden", className)}>
       <div className="flex items-center justify-between border-b border-ink-200 px-5 py-4">
-        <h2 className="font-heading text-[15px] font-semibold text-ink-900">{title}</h2>
+        <div>
+          <h2 className="font-heading text-[15px] font-semibold text-ink-900">{title}</h2>
+          {subtitle ? <div className="mt-0.5 text-[12px] text-ink-400">{subtitle}</div> : null}
+        </div>
         {action}
       </div>
       {children}
@@ -94,11 +96,7 @@ export function DeskTable({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <table className={cn("w-full text-[13px]", className)}>
-      {children}
-    </table>
-  );
+  return <table className={cn("w-full text-[13px]", className)}>{children}</table>;
 }
 
 export function DeskThead({ children }: { children: React.ReactNode }) {
@@ -112,12 +110,36 @@ export function DeskThead({ children }: { children: React.ReactNode }) {
 export function DeskTh({
   children,
   align = "left",
+  className,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   align?: "left" | "right";
+  className?: string;
 }) {
   return (
-    <th className={cn("px-4 py-3", align === "right" ? "text-right" : "text-left")}>{children}</th>
+    <th className={cn("px-4 py-3", align === "right" ? "text-right" : "text-left", className)}>
+      {children}
+    </th>
+  );
+}
+
+export function DeskTr({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <tr className={cn("border-b border-ink-100 hover:bg-bone/10", className)}>{children}</tr>;
+}
+
+export function DeskTd({
+  children,
+  className,
+  colSpan,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  colSpan?: number;
+}) {
+  return (
+    <td className={cn("px-4 py-3 text-ink-700", className)} colSpan={colSpan}>
+      {children}
+    </td>
   );
 }
 

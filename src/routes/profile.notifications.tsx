@@ -33,10 +33,7 @@ export const Route = createFileRoute("/profile/notifications")({
     };
 
     return (
-      <ProfileSubpageLayout
-        title="Notifications"
-        subtitle="Reminders, shares, and care updates."
-      >
+      <ProfileSubpageLayout title="Notifications" subtitle="Reminders, shares, and care updates.">
         {unread > 0 ? (
           <button
             type="button"

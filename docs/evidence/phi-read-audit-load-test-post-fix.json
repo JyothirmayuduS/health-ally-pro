@@ -1,0 +1,63 @@
+{
+  "limit": 80,
+  "note": "HTTP-in-RLS removed; policies are plain predicates. Temporary SELECT grant for load test only.",
+  "post_fix": {
+    "patients": {
+      "rows": 80,
+      "error": null,
+      "code": null,
+      "ms_runs": [
+        109.44,
+        113.01,
+        119.62
+      ],
+      "ms_median": 113.01,
+      "ms_min": 109.44,
+      "ms_max": 119.62
+    },
+    "appointments": {
+      "rows": 80,
+      "error": null,
+      "code": null,
+      "ms_runs": [
+        119.41,
+        101.33,
+        192.51
+      ],
+      "ms_median": 119.41,
+      "ms_min": 101.33,
+      "ms_max": 192.51
+    },
+    "lab_results": {
+      "rows": 80,
+      "error": null,
+      "code": null,
+      "ms_runs": [
+        121.27,
+        100.06,
+        103.92
+      ],
+      "ms_median": 103.92,
+      "ms_min": 100.06,
+      "ms_max": 121.27
+    }
+  },
+  "prior_round1": {
+    "patients_active_median_ms": 3345.6,
+    "patients_baseline_off_median_ms": 141.95,
+    "appointments_active_median_ms": 3396.34,
+    "appointments_baseline_off_median_ms": 460.82,
+    "lab_results_active_median_ms": 3381.64,
+    "lab_results_baseline_off_median_ms": 263.37
+  },
+  "vs_prior_baseline": {
+    "patients_delta_vs_off": -28.94,
+    "appointments_delta_vs_off": -341.41,
+    "lab_results_delta_vs_off": -159.45
+  },
+  "vs_prior_active": {
+    "patients_improvement_ms": 3232.59,
+    "appointments_improvement_ms": 3276.93,
+    "lab_results_improvement_ms": 3277.72
+  }
+}

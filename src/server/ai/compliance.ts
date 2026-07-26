@@ -1,4 +1,5 @@
 import { getServerAiEnv } from "./env";
+import type { AiProviderId } from "@/lib/ai/types";
 
 export type AiComplianceConfig = {
   allowCloudPhi: boolean;
@@ -32,12 +33,14 @@ export function getAiComplianceConfig(): AiComplianceConfig {
   };
 }
 
-export function isProviderBaaCompliant(provider: "gemini" | "groq" | "huggingface"): boolean {
+export function isProviderBaaCompliant(provider: AiProviderId): boolean {
+  if (provider === "local") return false;
   const cfg = getAiComplianceConfig();
   return cfg.baaProviders[provider];
 }
 
-export function canSendToCloudProvider(provider: "gemini" | "groq" | "huggingface"): boolean {
+export function canSendToCloudProvider(provider: AiProviderId): boolean {
+  if (provider === "local") return false;
   const cfg = getAiComplianceConfig();
   const env = getServerAiEnv();
 

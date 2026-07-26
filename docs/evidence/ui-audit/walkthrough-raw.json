@@ -1,0 +1,1658 @@
+{
+  "generatedAt": "2026-07-22T04:10:23.690Z",
+  "base": "http://127.0.0.1:8787",
+  "results": [
+    {
+      "role": "_marketing",
+      "notes": [
+        {
+          "role": "_marketing",
+          "step": "01-landing-desktop",
+          "url": "http://127.0.0.1:8787/",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/_marketing/01-landing-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora HOSPITAL OS Product Pricing Security SLA sales@medora.health Staff login Start hospital Medora Specialty-true hospital software — license it for your campus. Assign a doctor’s specialty. They get the matching clinical desk and 3D anatomy — not another generic EMR screen. Start hospital onboarding Email sales MULTI-SPECIALTY HOSPITAL OS Eye. Heart. Children. Bones. One campus. See the"
+        },
+        {
+          "role": "_marketing",
+          "step": "01-landing-mobile",
+          "url": "http://127.0.0.1:8787/",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/_marketing/01-landing-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "Medora Staff login Start hospital Medora Specialty-true hospital software — license it for your campus. Assign a doctor’s specialty. They get the matching clinical desk and 3D anatomy — not another generic EMR screen. Start hospital onboarding Email sales MULTI-SPECIALTY HOSPITAL OS Eye. Heart. Children. Bones. One campus. See the product → Medora Product Pricing Security SLA Implementati"
+        },
+        {
+          "role": "_marketing",
+          "step": "02-login-desktop",
+          "url": "http://127.0.0.1:8787/login",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/_marketing/02-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "_marketing",
+          "step": "02-login-mobile",
+          "url": "http://127.0.0.1:8787/login",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/_marketing/02-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "doctor",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "doctor",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "doctor",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/doctor",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 GOOD MORNING Dr. Rajesh Internal Medicine WEDNESDAY 22 JULY 4 YOUR SPECIALTY WORKSTATION General Medicine Adult medicine, multimorbidity & referrals NOW IN ROOM Q-02 Sneha Rao "
+        },
+        {
+          "role": "doctor",
+          "step": "02-queue-desktop",
+          "url": "http://127.0.0.1:8787/doctor/queue",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/02-queue-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 Accepting Room 3A Live queue Wednesday 22 July Shortcuts: N call next · D mark done · P pause Live · synced 09:36:59 2 booking requests awaiting approval LIVE OPD 3 In line 2 Waiting"
+        },
+        {
+          "role": "doctor",
+          "step": "03-patients-desktop",
+          "url": "http://127.0.0.1:8787/doctor/patients?view=panel&category=all",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/03-patients-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 Patients Your active patient panel 5 Panel 3 Today 1 Urgent 1 3 Tasks More 5 PATIENTS Sort: Clinical priority PATIENT CONDITION STATUS QUEUE LAST SEEN FLAGS SR Sneha Rao P-3188 "
+        },
+        {
+          "role": "doctor",
+          "step": "04-orders-desktop",
+          "url": "http://127.0.0.1:8787/doctor/orders",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/04-orders-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 ORDERS · LAB Lab orders Order diagnostics with clinical indication and priority. Suggested panels are based on the patient's active problems. 1 Confirm patient 2 Select tests 3 Set pr"
+        },
+        {
+          "role": "doctor",
+          "step": "05-prescriptions-desktop",
+          "url": "http://127.0.0.1:8787/doctor/prescriptions?view=write",
+          "title": "E-prescribe — Medora Doctor",
+          "screenshot": "docs/evidence/ui-audit/doctor/05-prescriptions-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 Write Sent Rx Templates Accepting Room 3A Write prescription Preview Sneha Rao 29y · Female · P-3188 Asthma Last visit 9 days ago · Last Rx JUN 20 Known allergy: Aspirin SR AK PS MA "
+        },
+        {
+          "role": "doctor",
+          "step": "06-encounters-desktop",
+          "url": "http://127.0.0.1:8787/doctor/encounters",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/06-encounters-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 DOCUMENTATION · SOAP Clinical note Document the visit in SOAP format. Drafts autosave to the open encounter — sign when the consult is complete. 1 Chief complaint 2 Objective findings"
+        },
+        {
+          "role": "doctor",
+          "step": "07-specialty-desktop",
+          "url": "http://127.0.0.1:8787/doctor/specialty",
+          "title": "Specialty workstation — Medora Doctor",
+          "screenshot": "docs/evidence/ui-audit/doctor/07-specialty-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 SPECIALTY WORKSTATION General Medicine Adult medicine, multimorbidity & referrals Doctor · Medicine OPD · assigned by admin UNIT Medicine OPD COMMON PRESENTATIONS Fever Hypertensi"
+        },
+        {
+          "role": "doctor",
+          "step": "08-results-desktop",
+          "url": "http://127.0.0.1:8787/doctor/reports",
+          "title": "Inbox — Medora Doctor",
+          "screenshot": "docs/evidence/ui-audit/doctor/08-results-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 Messages 1 Referrals 2 Tasks 2 INBOX Results to review Labs · Imaging · Patient uploads · 6 awaiting sign-off Shortcuts: J / K navigate · S sign off Upload 12 All 6 Review 3 Patient "
+        }
+      ],
+      "consoleErrors": [
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <SafeFragment fallback={null}>\n      <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n        <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n          <SafeFragment fallback={function fallback}>\n            <MatchInnerImpl matchId=\"/doctor//d...\">\n              <Lazy>\n                <DoctorHome>\n                  <div className=\"relative m...\">\n                    <DoctorHomeHeader>\n                    <DoctorHomeDashboard>\n                      <div className=\"space-y-5\">\n                        <DoctorClinicOnboardingBanner>\n                        <a>\n                        <DoctorHomeTriage layout=\"grid\">\n                          <div className=\"grid gap-3...\">\n                            <article className=\"flex min-h...\">\n                              <div>\n                              <p>\n                              <p>\n                              <p>\n                              <p className=\"mt-auto pt...\">\n+                               18:00\n-                               26:32\n                                ...\n                              ...\n                            ...\n                        ...\n",
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <SafeFragment>\n      <SafeFragment fallback={null}>\n        <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n          <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n            <SafeFragment fallback={function fallback}>\n              <MatchInnerImpl matchId=\"/doctor/qu...\">\n                <Lazy>\n                  <DoctorQueue>\n                    <LiveQueueScreen>\n                      <div className=\"w-full min...\">\n                        <DoctorClinicStatusBar>\n                        <header className=\"flex flex-...\">\n                          <div className=\"min-w-0\">\n                            <h1>\n                            <p>\n                            <p>\n                            <p className=\"mt-1 inlin...\">\n                              <span>\n                              <span className=\"break-all ...\">\n+                               09:36:59\n-                               09:36:58\n                        ...\n",
+        "In HTML, %s cannot be a descendant of <%s>.\nThis will cause a hydration error.%s <a> a \n\n  ...\n    <MatchImpl matchId=\"/doctor/pa...\">\n      <MatchView router={{...}} matchId=\"/doctor/pa...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n        <SafeFragment>\n          <SafeFragment fallback={null}>\n            <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n              <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n                <SafeFragment fallback={function fallback}>\n                  <MatchInnerImpl matchId=\"/doctor/pa...\">\n                    <Lazy>\n                      <DoctorPatientsList>\n                        <div className=\"relative m...\">\n                          <header>\n                          <div>\n                          <div>\n                          <div>\n                          <div className=\"space-y-3 ...\">\n                            <article className=\"relative o...\">\n                              <div>\n>                             <a\n>                               href=\"/doctor/patients/p1\"\n>                               ref={{current:null}}\n>                               onClick={function}\n>                               onBlur={function}\n>                               onFocus={function}\n>                               onMouseEnter={function}\n>                               onMouseLeave={function}\n>                               onTouchStart={function}\n>                               target={undefined}\n>                               className=\"block p-4 pl-4\"\n>                             >\n                                <div>\n                                <p>\n                                <p>\n                                <div className=\"mt-3 flex ...\">\n                                  <span>\n>                                 <a\n>                                   href=\"/doctor/patients/p1\"\n>                                   ref={{current:null}}\n>                                   onClick={function}\n>                                   onBlur={function}\n>                                   onFocus={function}\n>                                   onMouseEnter={function}\n>                                   onMouseLeave={function}\n>                                   onTouchStart={function}\n>                                   target={undefined}\n>                                   className=\"rounded-lg bg-[#F5F2ED] px-2.5 py-1 text-[11px] font-medium text-[#B873...\"\n>                                 >\n                                  ...\n                              ...\n                            ...\n                          ...\n",
+        "<%s> cannot contain a nested %s.\nSee this log for the ancestor stack trace. a <a>",
+        "Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <MatchView router={{...}} matchId=\"/doctor/pa...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n      <SafeFragment>\n        <SafeFragment fallback={null}>\n          <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n            <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n              <SafeFragment fallback={function fallback}>\n                <MatchInnerImpl matchId=\"/doctor/pa...\">\n                  <Lazy>\n                    <DoctorPatientsList>\n                      <div className=\"relative m...\">\n                        <header>\n                        <div>\n                        <div>\n                        <div>\n                        <div className=\"space-y-3 ...\">\n                          <article className=\"relative o...\">\n                            <div>\n                            <a href=\"/doctor/pa...\" ref={{current:null}} onClick={function} onBlur={function} ...>\n                              <div>\n                              <p>\n                              <p>\n+                             <div className=\"mt-3 flex flex-wrap gap-1.5\">\n                            ...\n                          ...\n                        ...\n"
+      ]
+    },
+    {
+      "role": "doctor",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "doctor",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "doctor",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/doctor",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "GOOD MORNING Dr. Rajesh Internal Medicine WEDNESDAY 22 JULY 4 YOUR SPECIALTY WORKSTATION General Medicine Adult medicine, multimorbidity & referrals NOW IN ROOM Q-02 Sneha Rao Asthma exacerbation — peak flow low, O₂ sat 91% 18:01 in consult Mark done Open chart UP NEXT Q-03 Mohammed Ali Cardiology co-management — post-PCI day 14 Avg wait 11m 01s · Room 3A Call now APPROVALS 2 "
+        },
+        {
+          "role": "doctor",
+          "step": "02-queue-mobile",
+          "url": "http://127.0.0.1:8787/doctor/queue",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/02-queue-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "Accepting Room 3A Live queue Wednesday 22 July Live · synced 09:37:19 2 booking requests awaiting approval NOW SERVING Room 3A IN CONSULT 18:02 Called at 09:19 Waited 4m 00s 02 TOKEN Q-02 Slot 11:15 SR Sneha Rao P-3188 URGENT Asthma · Female · 29y Asthma exacerbation — peak flow low, O₂ sat 91% In-person 18:02 elapsed Checked in 11:02 Called at 09:19 Aspirin Done — release room "
+        },
+        {
+          "role": "doctor",
+          "step": "03-patients-mobile",
+          "url": "http://127.0.0.1:8787/doctor/patients?view=panel&category=all",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/03-patients-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "Patients Your active patient panel 5 Panel 3 Today 1 Urgent 1 3 Tasks More 5 PATIENTS Sort: Clinical priority SR Sneha Rao Asthma · 29y F Urgent Acute exacerbation, O2 sat 91% 9 days ago · Follow-up due · Lab pending In room · Q-02 Overview Open items Message Call Chart PS Priya Sharma Diabetes · 38y F Monitoring 14 days ago · HbA1c due · Rx expiring Done · Q-01 Overview Open items "
+        },
+        {
+          "role": "doctor",
+          "step": "04-orders-mobile",
+          "url": "http://127.0.0.1:8787/doctor/orders",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/04-orders-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "ORDERS · LAB Lab orders Order diagnostics with clinical indication and priority. Suggested panels are based on the patient's active problems. 1 Confirm patient 2 Select tests 3 Set priority 4 Send to lab desk PATIENT Sneha Rao · P-3188 Arjun Kapoor · P-2041 Priya Sharma · P-2910 Mohammed Ali · P-1102 Jane Cooper · P-3374 Suggested panels Based on Asthma Acute workup CBC, metabolic, urinalysi"
+        },
+        {
+          "role": "doctor",
+          "step": "05-prescriptions-mobile",
+          "url": "http://127.0.0.1:8787/doctor/prescriptions?view=write",
+          "title": "E-prescribe — Medora Doctor",
+          "screenshot": "docs/evidence/ui-audit/doctor/05-prescriptions-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "Write Sent Rx Templates Accepting Room 3A Write prescription Preview Sneha Rao 29y · Female · P-3188 Asthma Last visit 9 days ago · Last Rx JUN 20 Known allergy: Aspirin SR AK PS MA JC Med reconciliation Salbutamol inhaler 100mcg SOS · 90 days Renew Stop Prednisolone 5mg OD · 5 days Renew Stop TEMPLATES → Starter pack Hypertension combo Fever protocol Diagnosis / Indication * Persiste"
+        },
+        {
+          "role": "doctor",
+          "step": "06-encounters-mobile",
+          "url": "http://127.0.0.1:8787/doctor/encounters",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/doctor/06-encounters-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "DOCUMENTATION · SOAP Clinical note Document the visit in SOAP format. Drafts autosave to the open encounter — sign when the consult is complete. 1 Chief complaint 2 Objective findings 3 Assessment 4 Plan PATIENT Sneha Rao Arjun Kapoor Priya Sharma Mohammed Ali Jane Cooper No open encounter — saving will open a visit for this patient. QUICK START Stable follow-up HTN review Diabetes review Res"
+        },
+        {
+          "role": "doctor",
+          "step": "07-specialty-mobile",
+          "url": "http://127.0.0.1:8787/doctor/specialty",
+          "title": "Specialty workstation — Medora Doctor",
+          "screenshot": "docs/evidence/ui-audit/doctor/07-specialty-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "SPECIALTY WORKSTATION General Medicine Adult medicine, multimorbidity & referrals Doctor · Medicine OPD · assigned by admin UNIT Medicine OPD COMMON PRESENTATIONS Fever Hypertension Diabetes Anemia Infection General checkup Clinical charting 3D anatomy Active patient for this specialty note CLINICAL MODULES Systemic exam Common order sets Systemic exam General examination CVS RS Abdomen "
+        },
+        {
+          "role": "doctor",
+          "step": "08-results-mobile",
+          "url": "http://127.0.0.1:8787/doctor/reports",
+          "title": "Inbox — Medora Doctor",
+          "screenshot": "docs/evidence/ui-audit/doctor/08-results-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "Messages 1 Referrals 2 Tasks 2 INBOX Results to review Labs · Imaging · Patient uploads · 6 awaiting sign-off 0 of 6 reviewed today 6 left 12 All 6 Review 3 Patient shared 4 Imaging 12 in inbox Priority NEEDS REVIEW Abnormal, processing, or awaiting sign-off HbA1c + fasting glucose High Priya Sharma HbA1c 7.8% · fasting glucose 142 mg/dL — above target. Lab 14 days ago Flagged for di"
+        }
+      ],
+      "consoleErrors": [
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <SafeFragment fallback={null}>\n      <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n        <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n          <SafeFragment fallback={function fallback}>\n            <MatchInnerImpl matchId=\"/doctor//d...\">\n              <Lazy>\n                <DoctorHome>\n                  <div className=\"relative m...\">\n                    <DoctorHomeHeader>\n                    <DoctorHomeDashboard>\n                      <div className=\"space-y-5\">\n                        <DoctorClinicOnboardingBanner>\n                        <a>\n                        <DoctorHomeTriage layout=\"grid\">\n                          <div className=\"grid gap-3...\">\n                            <article className=\"flex min-h...\">\n                              <div>\n                              <p>\n                              <p>\n                              <p>\n                              <p className=\"mt-auto pt...\">\n+                               18:00\n-                               26:53\n                                ...\n                              ...\n                            ...\n                        ...\n",
+        "Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <main className=\"doctor-mob...\" style={{...}}>\n      <OutletImpl>\n        <MatchImpl matchId=\"/doctor/qu...\">\n          <MatchView router={{...}} matchId=\"/doctor/qu...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n            <SafeFragment>\n              <SafeFragment fallback={null}>\n                <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n                  <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n                    <SafeFragment fallback={function fallback}>\n                      <MatchInnerImpl matchId=\"/doctor/qu...\">\n                        <Lazy>\n                          <DoctorQueue>\n                            <LiveQueueScreen>\n                              <div className=\"w-full min...\">\n                                <DoctorClinicStatusBar>\n                                <header>\n                                <div className=\"mt-4 space...\">\n-                                 <div\n-                                   className=\"flex items-start gap-3 rounded-xl border border-[#F5E6B8] bg-[#F5E6B8]/...\"\n-                                 >\n                                ...\n",
+        "In HTML, %s cannot be a descendant of <%s>.\nThis will cause a hydration error.%s <a> a \n\n  ...\n    <MatchImpl matchId=\"/doctor/pa...\">\n      <MatchView router={{...}} matchId=\"/doctor/pa...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n        <SafeFragment>\n          <SafeFragment fallback={null}>\n            <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n              <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n                <SafeFragment fallback={function fallback}>\n                  <MatchInnerImpl matchId=\"/doctor/pa...\">\n                    <Lazy>\n                      <DoctorPatientsList>\n                        <div className=\"relative m...\">\n                          <header>\n                          <div>\n                          <div>\n                          <div>\n                          <div className=\"space-y-3 ...\">\n                            <article className=\"relative o...\">\n                              <div>\n>                             <a\n>                               href=\"/doctor/patients/p1\"\n>                               ref={{current:null}}\n>                               onClick={function}\n>                               onBlur={function}\n>                               onFocus={function}\n>                               onMouseEnter={function}\n>                               onMouseLeave={function}\n>                               onTouchStart={function}\n>                               target={undefined}\n>                               className=\"block p-4 pl-4\"\n>                             >\n                                <div>\n                                <p>\n                                <p>\n                                <div className=\"mt-3 flex ...\">\n                                  <span>\n>                                 <a\n>                                   href=\"/doctor/patients/p1\"\n>                                   ref={{current:null}}\n>                                   onClick={function}\n>                                   onBlur={function}\n>                                   onFocus={function}\n>                                   onMouseEnter={function}\n>                                   onMouseLeave={function}\n>                                   onTouchStart={function}\n>                                   target={undefined}\n>                                   className=\"rounded-lg bg-[#F5F2ED] px-2.5 py-1 text-[11px] font-medium text-[#B873...\"\n>                                 >\n                                  ...\n                              ...\n                            ...\n                          ...\n",
+        "<%s> cannot contain a nested %s.\nSee this log for the ancestor stack trace. a <a>",
+        "Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <MatchView router={{...}} matchId=\"/doctor/pa...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n      <SafeFragment>\n        <SafeFragment fallback={null}>\n          <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n            <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n              <SafeFragment fallback={function fallback}>\n                <MatchInnerImpl matchId=\"/doctor/pa...\">\n                  <Lazy>\n                    <DoctorPatientsList>\n                      <div className=\"relative m...\">\n                        <header>\n                        <div>\n                        <div>\n                        <div>\n                        <div className=\"space-y-3 ...\">\n                          <article className=\"relative o...\">\n                            <div>\n                            <a href=\"/doctor/pa...\" ref={{current:null}} onClick={function} onBlur={function} ...>\n                              <div>\n                              <p>\n                              <p>\n+                             <div className=\"mt-3 flex flex-wrap gap-1.5\">\n                            ...\n                          ...\n                        ...\n"
+      ]
+    },
+    {
+      "role": "admin",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "admin",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "admin",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/admin",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN CONTROL Hospital command center 09:37 AM · Wed, Jul 22 MEDO"
+        },
+        {
+          "role": "admin",
+          "step": "02-staff-desktop",
+          "url": "http://127.0.0.1:8787/admin/staff",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/02-staff-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN PEOPLE Staff directory 09:37 AM · Wed, Jul 22 TOTAL DIRECTOR"
+        },
+        {
+          "role": "admin",
+          "step": "03-doctors-desktop",
+          "url": "http://127.0.0.1:8787/admin/doctors",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/03-doctors-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN CLINICAL Doctors 09:37 AM · Wed, Jul 22 Add doctors with a s"
+        },
+        {
+          "role": "admin",
+          "step": "04-branches-desktop",
+          "url": "http://127.0.0.1:8787/admin/branches",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/04-branches-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN ORGANIZATION Branches 09:37 AM · Wed, Jul 22 Add branch BR-0"
+        },
+        {
+          "role": "admin",
+          "step": "05-audit-desktop",
+          "url": "http://127.0.0.1:8787/admin/audit",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/05-audit-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN COMPLIANCE PHI access audit 09:37 AM · Wed, Jul 22 COMPLIANC"
+        },
+        {
+          "role": "admin",
+          "step": "06-ot-desktop",
+          "url": "http://127.0.0.1:8787/admin/ot",
+          "title": "Operation Theatre — Admin",
+          "screenshot": "docs/evidence/ui-audit/admin/06-ot-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN CLINICAL Operation theatre 09:37 AM · Wed, Jul 22 LIVE UTIL"
+        },
+        {
+          "role": "admin",
+          "step": "07-occupancy-desktop",
+          "url": "http://127.0.0.1:8787/admin/occupancy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/07-occupancy-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN OPERATIONS Occupancy & load 09:37 AM · Wed, Jul 22 Live oper"
+        },
+        {
+          "role": "admin",
+          "step": "08-revenue-desktop",
+          "url": "http://127.0.0.1:8787/admin/revenue",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/08-revenue-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN FINANCE Revenue cycle 09:37 AM · Wed, Jul 22 Overview By Dep"
+        }
+      ],
+      "consoleErrors": [
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <OutletImpl>\n      <MatchImpl matchId=\"/admin/occ...\">\n        <MatchView router={{...}} matchId=\"/admin/occ...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n          <SafeFragment>\n            <SafeFragment fallback={null}>\n              <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n                <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n                  <SafeFragment fallback={function fallback}>\n                    <MatchInnerImpl matchId=\"/admin/occ...\">\n                      <Lazy>\n                        <AdminOccupancyLoad>\n                          <div className=\"space-y-6\" data-testid=\"admin-occu...\">\n                            <div className=\"flex flex-...\">\n                              <div className=\"text-[12.5...\">\n                                <span>\n+                               9:37:50 AM\n-                               9:37:49 AM\n                              ...\n                            ...\n",
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <MatchView router={{...}} matchId=\"/admin/rev...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n      <SafeFragment>\n        <SafeFragment fallback={null}>\n          <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n            <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n              <SafeFragment fallback={function fallback}>\n                <MatchInnerImpl matchId=\"/admin/rev...\">\n                  <Lazy>\n                    <AdminRevenue>\n                      <div className=\"space-y-5\" data-testid=\"admin-revenue\">\n                        <div>\n                        <OverviewTab>\n                          <div className=\"space-y-6\">\n                            <div className=\"grid gap-4...\">\n                              <div>\n                              <div className=\"surface px...\">\n                                <div>\n                                <div className=\"mt-1.5 text-3xl font-heading font-semibold tabular-nums text-money\">\n+                                 ₹12,04,946\n-                                 ₹12,31,434\n                              ...\n                            ...\n"
+      ]
+    },
+    {
+      "role": "admin",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "admin",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "admin",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/admin",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "CONTROL Hospital command center MEDORA ERP Hospital command center Clinical · Diagnostics · Operations · Finance OPD → IPD → Lab → Billing → REVENUE TODAY ₹2,84,500 +12.4% vs last week PENDING PAYMENTS ₹67,300 -3.1% vs last week TOTAL COLLECTED ₹12,48,000 +8.7% vs last week INSURANCE CLAIMS 18 +2 pending awaiting adjudication Revenue vs expenses Jan Feb Mar Apr May Jun ₹0L ₹4L ₹7L"
+        },
+        {
+          "role": "admin",
+          "step": "02-staff-mobile",
+          "url": "http://127.0.0.1:8787/admin/staff",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/02-staff-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "PEOPLE Staff directory TOTAL DIRECTORY 9 members ACTIVE DUTY 9 active DEACTIVATED 0 suspended All Departments Front desk Laboratory Pharmacy Finance Ward Administration Cardiology Pediatrics All Roles Receptionist Lab Technician Lab Supervisor Pharmacist Billing Staff Nurse Hospital Admin Doctor Export CSV Filtered Staff Directory · 9 EMPLOYEE ID NAME DESIGNATION / DEPT SECURITY ROLE CONTACT & SHI"
+        },
+        {
+          "role": "admin",
+          "step": "03-doctors-mobile",
+          "url": "http://127.0.0.1:8787/admin/doctors",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/03-doctors-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "CLINICAL Doctors Add doctors with a specialty. The doctor portal shows that specialty’s clinical workstation only.SYNCED TO DATABASE Edit fees Add doctor VS Dr. Vikram Shah Cardiology DOC-005 TODAY Afternoon Shift ROOM Cardio-1 ₹1,800 Edit specialty SI Dr. Sara Iyer Dermatology DOC-004 TODAY Morning Shift ROOM OPD-4 ₹1,500 Edit specialty AM Dr. Aarav Mehta General Medicine DOC-001 Linked "
+        },
+        {
+          "role": "admin",
+          "step": "04-branches-mobile",
+          "url": "http://127.0.0.1:8787/admin/branches",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/04-branches-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "ORGANIZATION Branches Add branch BR-01 BR-02 Save branches EVALUATION · EVALUATION · NOT FOR LIVE PHI"
+        },
+        {
+          "role": "admin",
+          "step": "05-audit-mobile",
+          "url": "http://127.0.0.1:8787/admin/audit",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/05-audit-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "COMPLIANCE PHI access audit COMPLIANCE PHI access audit Who read or wrote specialty charts, doctors, units, and anatomy markers. All resources Chart notes Doctors Units Anatomy Audit exports Refresh Export CSV WHEN ACTOR ACTION RESOURCE OUTCOME IP 7/22/2026, 9:38:02 AM demo read hospital_doctors success — 7/22/2026, 9:37:45 AM demo export audit_logs success — 7/22/2026, 9:37:42 AM demo read hosp"
+        },
+        {
+          "role": "admin",
+          "step": "06-ot-mobile",
+          "url": "http://127.0.0.1:8787/admin/ot",
+          "title": "Operation Theatre — Admin",
+          "screenshot": "docs/evidence/ui-audit/admin/06-ot-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "CLINICAL Operation theatre LIVE UTILIZATION 33% 2/6 theatres active AVAILABLE 2 Ready for intake POST-OP CLEAN 1 Sanitisation queue HVAC SERVICE 1 Under maintenance OT LOAD 33% LIVE Calculated across 6 theatres GAS MANIFOLD ALL SAFE Oxygen (O₂) +4.20 bar OK Nitrous Oxide +4.10 bar OK Vacuum -0.64 bar OK Air Compressor +4.00 bar OK Theatre 1 OT-1 In Surgery 19.5°C TEMP 52% RH 24"
+        },
+        {
+          "role": "admin",
+          "step": "07-occupancy-mobile",
+          "url": "http://127.0.0.1:8787/admin/occupancy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/07-occupancy-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "OPERATIONS Occupancy & load Live operations telemetry · Last update: 9:38:08 AM Refresh Dashboard OUTPATIENT (OPD) 2 waiting In clinic queue right now Peak Load today 42 patients INPATIENT (IPD) 26% 4 of 15 beds occupied LABORATORY 2 runs Pending/active lab orders Average TAT 32 mins PHARMACY 3 queue Patients at dispense counter Stock Availability 94% HOURLY LOAD DISTRIBUTION (PEAK / AVERAGE) Oper"
+        },
+        {
+          "role": "admin",
+          "step": "08-revenue-mobile",
+          "url": "http://127.0.0.1:8787/admin/revenue",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/admin/08-revenue-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "FINANCE Revenue cycle Overview By Department Outstanding Dues Payer Mix INVOICED (30D) ₹14,19,928 COLLECTED (30D) ₹12,26,921 COLLECTION RATE 86% 14-DAY REVENUE TREND Export CSV 07-09 07-11 07-13 07-15 07-17 07-19 07-22 ₹0k ₹20k ₹40k ₹60k ₹80k InvoicedCollected TOP REVENUE SERVICES 1. IPD Ward Stay (General) ₹2,10,000 2. OPD — Cardiology ₹1,12,000 3. CT Scan ₹89,000 4. CBC + Lipid Panel ₹67,000 5. "
+        }
+      ],
+      "consoleErrors": [
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n      <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n        <SafeFragment fallback={function fallback}>\n          <MatchInnerImpl matchId=\"/admin/admin\">\n            <Lazy>\n              <SplitComponent>\n                <AdminStoreProvider>\n                  <DeskLayout config={{id:\"admin\", ...}}>\n                    <div className=\"admin-desk...\">\n                      <DeskSidebar>\n                      <main className=\"flex min-h...\">\n                        <header data-testid=\"desk-topbar\" className=\"print-hide...\">\n                          <div className=\"flex items...\">\n                            <DeskMobileTrigger>\n                            <div>\n                            <div>\n                            <div className=\"ml-auto fl...\">\n                              <div className=\"hidden ite...\">\n                                <Clock>\n                                <span className=\"font-mono\">\n+                                 09:38 AM\n-                                 09:37 AM\n                                ...\n                              ...\n                        ...\n                      ...\n",
+        "Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  ...\n    <MatchView router={{...}} matchId=\"/admin/rev...\" resetKey={0} matchState={{routeId:\"/...\", ...}}>\n      <SafeFragment>\n        <SafeFragment fallback={null}>\n          <CatchBoundary getResetKey={function getResetKey} errorComponent={function DefaultErrorComponent} ...>\n            <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function onCatch}>\n              <SafeFragment fallback={function fallback}>\n                <MatchInnerImpl matchId=\"/admin/rev...\">\n                  <Lazy>\n                    <AdminRevenue>\n                      <div className=\"space-y-5\" data-testid=\"admin-revenue\">\n                        <div>\n                        <OverviewTab>\n                          <div className=\"space-y-6\">\n                            <div className=\"grid gap-4...\">\n                              <div>\n                              <div className=\"surface px...\">\n                                <div>\n                                <div className=\"mt-1.5 text-3xl font-heading font-semibold tabular-nums text-money\">\n+                                 ₹12,26,921\n-                                 ₹12,31,434\n                              ...\n                            ...\n"
+      ]
+    },
+    {
+      "role": "reception",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "reception",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "reception",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/reception",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD TODAY Reception dashboard 09:38 AM · Wed, Jul 22 [NORMAL] CAFETERIA CLOSED FOR RENOVATION THIS WEEK The ground floor cafeteria will remain "
+        },
+        {
+          "role": "reception",
+          "step": "02-register-desktop",
+          "url": "http://127.0.0.1:8787/reception/register",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/02-register-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD PATIENT INTAKE Register patient 09:38 AM · Wed, Jul 22 SECTION 1 Demographics FULL NAME * DATE OF BIRTH * GENDER * Male Female Other PHONE *"
+        },
+        {
+          "role": "reception",
+          "step": "03-check-in-desktop",
+          "url": "http://127.0.0.1:8787/reception/check-in",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/03-check-in-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD ARRIVALS Check-in 09:38 AM · Wed, Jul 22 4 AWAITING 3 CHECKED IN 0 COMPLETED 1 NO-SHOWS Walk-in patient? Register, book, and check-in in one"
+        },
+        {
+          "role": "reception",
+          "step": "04-queue-desktop",
+          "url": "http://127.0.0.1:8787/reception/queue",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/04-queue-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD LIVE Queue management 09:38 AM · Wed, Jul 22 Clinic Queue Management Call, skip, or transfer checked-in patients to active doctors. Open W"
+        },
+        {
+          "role": "reception",
+          "step": "05-appointments-desktop",
+          "url": "http://127.0.0.1:8787/reception/appointments",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/05-appointments-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD SCHEDULING Appointments 09:38 AM · Wed, Jul 22 List Calendar Wed, Jul 22, 2026 Today All Scheduled Checked-in In consult Completed No-show C"
+        },
+        {
+          "role": "reception",
+          "step": "06-billing-desktop",
+          "url": "http://127.0.0.1:8787/reception/billing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/06-billing-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD FRONT DESK Billing 09:38 AM · Wed, Jul 22 COLLECTED TODAY ₹1,995 OUTSTANDING ₹3,413 UNPAID INVOICES 2 INVOICES TODAY 5 All Unpaid Paid Arjun"
+        },
+        {
+          "role": "reception",
+          "step": "07-patients-desktop",
+          "url": "http://127.0.0.1:8787/reception/patients",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/07-patients-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD RECORDS Patients 09:38 AM · Wed, Jul 22 8 RECORDS AK Anjali Krishnan MRN-100231 · +91 98201 33421 37 y · F MF Mohammed Faraz DUE ₹1450 MRN-1"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "reception",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "reception",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "reception",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/reception",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "TODAY Reception dashboard [NORMAL] CAFETERIA CLOSED FOR RENOVATION THIS WEEK The ground floor cafeteria will remain closed from Monday through Friday for renovation. Please use the canteen on the 2nd floor. Inconvenience is regretted. [EMERGENCY] FIRE DRILL SCHEDULED 3 PM TODAY — ALL STAFF PLEASE NOTE A mandatory fire drill will be conducted across all floors at 3:00 PM today. All non-emergency"
+        },
+        {
+          "role": "reception",
+          "step": "02-register-mobile",
+          "url": "http://127.0.0.1:8787/reception/register",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/02-register-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "PATIENT INTAKE Register patient SECTION 1 Demographics FULL NAME * DATE OF BIRTH * GENDER * Male Female Other PHONE * EMAIL ADDRESS SECTION 2 Emergency contact CONTACT NAME CONTACT PHONE RELATION SECTION 3 Medical & insurance BLOOD GROUP A+ A- B+ B- AB+ AB- O+ O- ALLERGIES INSURANCE PROVIDER POLICY ID ID / PHOTO Identification Upload ID / scan JPG, PNG, PDF · max 5 MB REVIEW MRN will be auto-gener"
+        },
+        {
+          "role": "reception",
+          "step": "03-check-in-mobile",
+          "url": "http://127.0.0.1:8787/reception/check-in",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/03-check-in-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "ARRIVALS Check-in 4 AWAITING 3 CHECKED IN 0 COMPLETED 1 NO-SHOWS Walk-in patient? Register, book, and check-in in one fast flow Register first Quick walk-in ARRIVALS Scheduled · Not yet arrived 10:30 FOLLOW-UP KR Kavya Reddy MRN-100235 · +91 99000 71234 Check-in 11:30 LAB REVIEW DP Daniel Pereira Due ₹500 MRN-100236 · +91 98191 44021 Check-in 12:00 NEW NG Neha Gupta MRN-100237 · +91 97744 33012 Ch"
+        },
+        {
+          "role": "reception",
+          "step": "04-queue-mobile",
+          "url": "http://127.0.0.1:8787/reception/queue",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/04-queue-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "LIVE Queue management Clinic Queue Management Call, skip, or transfer checked-in patients to active doctors. Open Waiting Board (TV) Dr. Aarav Mehta General Medicine · Room G-12 · 08:00 – 16:00 WAITING 1 NOW #102 Mohammed Faraz MRN-100232 · New IN CONSULT Call next Mark complete Skip #101 Anjali Krishnan 09:00 · Follow-up 38m Re-call Dr. Priya Nair Pediatrics · Room P-04 · 09:00 – 17:00 WAITING "
+        },
+        {
+          "role": "reception",
+          "step": "05-appointments-mobile",
+          "url": "http://127.0.0.1:8787/reception/appointments",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/05-appointments-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": true,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "SCHEDULING Appointments List Calendar Wed, Jul 22, 2026 Today All Scheduled Checked-in In consult Completed No-show Cancelled All doctors Dr. Aarav Mehta Dr. Priya Nair Dr. Rohan Bhatt Dr. Sara Iyer Dr. Vikram Shah Book appointment TIME PATIENT DOCTOR TYPE TOKEN STATUS ACTIONS 09:00 Anjali Krishnan MRN-100231 Dr. Aarav Mehta General Medicine Follow-up #101 CHECKED-IN No-show 09:20 Mohammed "
+        },
+        {
+          "role": "reception",
+          "step": "06-billing-mobile",
+          "url": "http://127.0.0.1:8787/reception/billing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/06-billing-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "FRONT DESK Billing COLLECTED TODAY ₹1,995 OUTSTANDING ₹3,413 UNPAID INVOICES 2 INVOICES TODAY 5 All Unpaid Paid Arjun Malhotra INV-90015 · MRN-100238 ₹1,260 UNPAID Vijay Subramaniam INV-90013 · MRN-100234 ₹2,153 UNPAID INVOICE · 2026-07-22 INV-90011 Anjali Krishnan · MRN-100231 · PAID LINE ITEMS DESCRIPTION QTY UNIT AMOUNT Consultation — General Medicine 1 ₹600 ₹600 Vitals & BP check 1 ₹100 ₹100"
+        },
+        {
+          "role": "reception",
+          "step": "07-patients-mobile",
+          "url": "http://127.0.0.1:8787/reception/patients",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/reception/07-patients-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": true,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "RECORDS Patients 8 RECORDS AK Anjali Krishnan MRN-100231 · +91 98201 33421 37 y · F MF Mohammed Faraz DUE ₹1450 MRN-100232 · +91 99876 11203 53 y · M PD Priyanka Desai MRN-100233 · +91 97045 88210 30 y · F VS Vijay Subramaniam DUE ₹2300 MRN-100234 · +91 98330 02145 67 y · M KR Kavya Reddy MRN-100235 · +91 99000 71234 11 y · F DP Daniel Pereira DUE ₹500 MRN-100236 · +91 98191 44021 45 y · M NG Neha"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "lab",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "lab",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "02-orders-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/02-orders-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "03-collection-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/03-collection-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "04-processing-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/04-processing-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "05-reports-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/05-reports-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "lab",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "lab",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "02-orders-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/02-orders-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "03-collection-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/03-collection-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "04-processing-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/04-processing-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "lab",
+          "step": "05-reports-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/lab/05-reports-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "pharmacy",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "pharmacy",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "02-prescriptions-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/02-prescriptions-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "03-dispense-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/03-dispense-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "04-inventory-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/04-inventory-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "05-billing-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/05-billing-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "pharmacy",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "pharmacy",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "02-prescriptions-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/02-prescriptions-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "03-dispense-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/03-dispense-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "04-inventory-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/04-inventory-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "pharmacy",
+          "step": "05-billing-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fpharmacy",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/pharmacy/05-billing-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "nursing",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "nursing",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "02-patients-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/02-patients-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "03-vitals-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/03-vitals-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "04-beds-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/04-beds-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "nursing",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "nursing",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "02-patients-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/02-patients-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "03-vitals-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/03-vitals-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "nursing",
+          "step": "04-beds-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fnursing",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/nursing/04-beds-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "billing",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "billing",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "01-home-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/01-home-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "02-invoices-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/02-invoices-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "03-payments-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/03-payments-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "04-encounters-desktop",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/04-encounters-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "billing",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "billing",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "01-home-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/01-home-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "02-invoices-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/02-invoices-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "03-payments-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/03-payments-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "billing",
+          "step": "04-encounters-mobile",
+          "url": "http://127.0.0.1:8787/login?redirect=%2Fbilling",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/billing/04-encounters-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "role": "patient",
+      "mobile": false,
+      "notes": [
+        {
+          "role": "patient",
+          "step": "00-post-login-desktop",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/patient/00-post-login-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "patient",
+          "step": "01-care-desktop",
+          "url": "http://127.0.0.1:8787/care",
+          "title": "Care — Medora",
+          "screenshot": "docs/evidence/ui-audit/patient/01-care-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "M Medora CARE · CURATED Dashboard Care Health Diet Move Profile NEED HELP Speak with a care concierge. START CHAT → GET CARE Care Book visits, track your queue, and browse your care team. Book appointment Search specialists · pick a time · confirm instantly Past visits View upcoming and completed appointments Live queue No active visit — join when you check in Find a specialist Brows"
+        },
+        {
+          "role": "patient",
+          "step": "02-visits-desktop",
+          "url": "http://127.0.0.1:8787/care/visits",
+          "title": "Past Visits — Medora",
+          "screenshot": "docs/evidence/ui-audit/patient/02-visits-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "M Medora CARE · CURATED Dashboard Care Health Diet Move Profile NEED HELP Speak with a care concierge. START CHAT → YOUR VISITS Past visits Book new Upcoming appointments and your visit history with Medora. Completed SR Dr. Saanvi Reddy COMPLETED General Physician General check-up Mon, Jul 20, 2026 · 11:00 AM EVALUATION · EVALUATION · NOT FOR LIVE PHI"
+        },
+        {
+          "role": "patient",
+          "step": "03-book-desktop",
+          "url": "http://127.0.0.1:8787/book",
+          "title": "Find a Doctor — Medora",
+          "screenshot": "docs/evidence/ui-audit/patient/03-book-desktop.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "textPreview": "M Medora CARE · CURATED Dashboard Care Health Diet Move Profile NEED HELP Speak with a care concierge. START CHAT → SPECIALISTS Find a doctor Book with 80+ board-certified physicians near you. All Cardiology Ophthalmology Pediatrics Orthopedics Neurology Dermatology ENT Gastroenterology Nephrology Pulmonology Oncology Obstetrics & Gynecology Psychiatry Dental / Oral Surgery Urology Endocrin"
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 ()"
+      ]
+    },
+    {
+      "role": "patient",
+      "mobile": true,
+      "notes": [
+        {
+          "role": "patient",
+          "step": "00-post-login-mobile",
+          "url": "http://127.0.0.1:8787/login?",
+          "title": "Medora — Hospital OS for multi-specialty campuses",
+          "screenshot": "docs/evidence/ui-audit/patient/00-post-login-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf map pharmacy@oakhaven.demo · MedoraDemo!2026Rx Rec"
+        },
+        {
+          "role": "patient",
+          "step": "01-care-mobile",
+          "url": "http://127.0.0.1:8787/care",
+          "title": "Care — Medora",
+          "screenshot": "docs/evidence/ui-audit/patient/01-care-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "Search doctors, reports, meds… GET CARE Care Book visits, track your queue, and browse your care team. Book appointment Search specialists · pick a time · confirm instantly Past visits View upcoming and completed appointments Live queue No active visit — join when you check in Find a specialist Browse board-certified doctors in the Medora network Featured doctors ET Dr. Eleanor Thorne"
+        },
+        {
+          "role": "patient",
+          "step": "02-visits-mobile",
+          "url": "http://127.0.0.1:8787/care/visits",
+          "title": "Past Visits — Medora",
+          "screenshot": "docs/evidence/ui-audit/patient/02-visits-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "YOUR VISITS Past visits Book new Upcoming appointments and your visit history with Medora. Completed SR Dr. Saanvi Reddy COMPLETED General Physician General check-up Mon, Jul 20, 2026 · 11:00 AM Home Care Health Diet Move Profile EVALUATION · EVALUATION · NOT FOR LIVE PHI"
+        },
+        {
+          "role": "patient",
+          "step": "03-book-mobile",
+          "url": "http://127.0.0.1:8787/book",
+          "title": "Find a Doctor — Medora",
+          "screenshot": "docs/evidence/ui-audit/patient/03-book-mobile.png",
+          "stubSignals": [],
+          "horizontalOverflow": false,
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "textPreview": "SPECIALISTS Find a doctor Book with 80+ board-certified physicians near you. All Cardiology Ophthalmology Pediatrics Orthopedics Neurology Dermatology ENT Gastroenterology Nephrology Pulmonology Oncology Obstetrics & Gynecology Psychiatry Dental / Oral Surgery Urology Endocrinology Rheumatology General Physician Physiotherapy & Rehab 6 doctors available MO Dr. Mira Okafor Dermatology 4.95 "
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 401 ()"
+      ]
+    }
+  ]
+}

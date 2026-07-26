@@ -18,6 +18,7 @@ import {
 } from "@/lib/doctor-prescription-ai";
 import type { PanelPatient } from "@/lib/doctor-patients-apk-data";
 import { MedoraAiComplianceBadge } from "@/components/ai/MedoraAiComplianceBadge";
+import { cn } from "@/lib/utils";
 
 type Props = {
   patient: PanelPatient;
@@ -69,7 +70,12 @@ function SuggestionCard({
             <p className="break-words font-semibold text-[#1B3B2E]">
               {suggestion.drug_name} {suggestion.strength}
             </p>
-            <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", tierColor)}>
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                tierColor,
+              )}
+            >
               {suggestion.tier.replace("-", " ")}
             </span>
           </div>
@@ -79,7 +85,9 @@ function SuggestionCard({
           {suggestion.confidence}%
         </span>
       </div>
-      <p className="mt-2 break-words text-xs leading-relaxed text-[#5C635F]">{suggestion.rationale}</p>
+      <p className="mt-2 break-words text-xs leading-relaxed text-[#5C635F]">
+        {suggestion.rationale}
+      </p>
       <p className="mt-1 break-words text-[10px] text-[#ADADAD]">{suggestion.guideline}</p>
       <button
         type="button"
@@ -155,7 +163,9 @@ export function PrescriptionAiAssistant({
           </span>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="font-serif text-base font-semibold text-[#1B3B2E] sm:text-lg">Medora AI</h2>
+              <h2 className="font-serif text-base font-semibold text-[#1B3B2E] sm:text-lg">
+                Medora AI
+              </h2>
               <span className="rounded-full bg-[#F0DDD6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#B8735D]">
                 Clinical
               </span>

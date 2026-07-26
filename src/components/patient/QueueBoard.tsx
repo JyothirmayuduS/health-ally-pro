@@ -28,13 +28,7 @@ const STATUS: Record<
   waiting: { label: "Waiting", className: "bg-[#F0EDE8] text-ink-muted" },
 };
 
-export function QueueBoard({
-  position,
-  total,
-  doctorName,
-  doctorGender,
-  estimatedWait,
-}: Props) {
+export function QueueBoard({ position, total, doctorName, doctorGender, estimatedWait }: Props) {
   const nodes = useMemo(() => buildQueueTimeline(position, total), [position, total]);
 
   return (
@@ -104,13 +98,7 @@ function TimelineRow({
       {inRoom ? (
         <QueueConsultationPair patient={persona} doctorGender={doctorGender} />
       ) : (
-        <QueuePersonaIcon
-          persona={persona}
-          kind={kind}
-          size="sm"
-          surface="light"
-          plain={done}
-        />
+        <QueuePersonaIcon persona={persona} kind={kind} size="sm" plain={done} />
       )}
 
       <div className="min-w-0 flex-1">
@@ -118,7 +106,11 @@ function TimelineRow({
           <p
             className={cn(
               "text-sm font-semibold leading-tight",
-              isYou ? "text-[#8B4F3A]" : done ? "text-ink-muted line-through decoration-ink-muted/40" : "text-ink",
+              isYou
+                ? "text-[#8B4F3A]"
+                : done
+                  ? "text-ink-muted line-through decoration-ink-muted/40"
+                  : "text-ink",
             )}
           >
             {title}
@@ -127,10 +119,7 @@ function TimelineRow({
             #{String(position).padStart(2, "0")}
           </span>
           <span
-            className={cn(
-              "rounded-full px-2 py-0.5 text-[10px] font-semibold",
-              badge.className,
-            )}
+            className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold", badge.className)}
           >
             {badge.label}
           </span>

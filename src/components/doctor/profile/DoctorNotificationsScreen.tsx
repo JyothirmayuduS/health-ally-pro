@@ -1,10 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import {
-  DoctorProfileSubpage,
-  ProfileEmptyState,
-} from "./DoctorProfileSubpage";
+import { DoctorProfileSubpage, ProfileEmptyState } from "./DoctorProfileSubpage";
 import {
   acceptReferral,
   declineReferral,
@@ -14,9 +11,7 @@ import {
   restoreNotificationsRead,
   unreadNotificationCount,
 } from "@/lib/doctor-profile-store";
-import {
-  useProfileStore,
-} from "@/lib/doctor-profile-store-context";
+import { useProfileStore } from "@/lib/doctor-profile-store-context";
 import type { NotificationCategory, ProfileNotification } from "@/lib/doctor-profile-store";
 import { cn } from "@/lib/utils";
 
@@ -144,9 +139,7 @@ export function DoctorNotificationsScreen({ selectedId }: { selectedId?: string 
   }, [filtered]);
 
   const unread = unreadNotificationCount();
-  const selected = selectedId
-    ? store.notifications.find((n) => n.id === selectedId)
-    : undefined;
+  const selected = selectedId ? store.notifications.find((n) => n.id === selectedId) : undefined;
 
   const handleNavigate = (item: ProfileNotification) => {
     markNotificationRead(item.id);
@@ -190,10 +183,7 @@ export function DoctorNotificationsScreen({ selectedId }: { selectedId?: string 
     <DoctorProfileSubpage
       title="Notifications"
       subtitle={unread > 0 ? `${unread} unread` : "You're all caught up"}
-      breadcrumbs={[
-        { label: "Profile", to: "/doctor/settings" },
-        { label: "Notifications" },
-      ]}
+      breadcrumbs={[{ label: "Profile", to: "/doctor/settings" }, { label: "Notifications" }]}
       action={
         <button
           type="button"
@@ -268,7 +258,9 @@ export function DoctorNotificationsScreen({ selectedId }: { selectedId?: string 
             <p className="text-[10px] font-semibold tracking-wide text-[#8A8F8C]">
               {selected.category.toUpperCase()}
             </p>
-            <h2 className="mt-1 font-serif text-xl font-semibold text-[#1B3B2E]">{selected.title}</h2>
+            <h2 className="mt-1 font-serif text-xl font-semibold text-[#1B3B2E]">
+              {selected.title}
+            </h2>
             <p className="mt-3 text-sm leading-relaxed text-[#1B3B2E]">{selected.body}</p>
             <p className="mt-3 text-xs text-[#ADADAD]">{selected.relativeTime}</p>
             {selected.actionTo && (

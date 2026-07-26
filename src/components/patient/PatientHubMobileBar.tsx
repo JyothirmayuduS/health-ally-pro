@@ -22,12 +22,7 @@ export function PatientHubMobileBar({ className }: Props) {
 
   return (
     <div
-      className={[
-        "mb-4 flex items-center gap-2 lg:hidden",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={["mb-4 flex items-center gap-2 lg:hidden", className].filter(Boolean).join(" ")}
     >
       <button
         type="button"

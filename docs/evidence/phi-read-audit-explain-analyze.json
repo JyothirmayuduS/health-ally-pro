@@ -1,0 +1,15 @@
+{
+  "mode": "off (HTTP disabled for clean EXPLAIN)",
+  "query": "SELECT id, hospital_id FROM public.patients ORDER BY id LIMIT 5",
+  "role": "authenticated with JWT sub claim set",
+  "query_plan": [
+    "Limit  (cost=0.14..9.06 rows=5 width=32) (actual time=4.210..8.014 rows=5 loops=1)",
+    "  Output: id, hospital_id",
+    "  ->  Index Scan using patients_pkey on public.patients  (cost=0.14..48.28 rows=27 width=32) (actual time=4.209..8.011 rows=5 loops=1)",
+    "        Output: id, hospital_id",
+    "        Filter: private.log_phi_row_read('patients'::text, patients.id, patients.hospital_id, ((patients.profile_id = ...) OR staff_in_hospital(patients.hospital_id)))",
+    "Planning Time: 0.577 ms",
+    "Execution Time: 8.046 ms"
+  ],
+  "interpretation": "log_phi_row_read appears in the Index Scan Filter (not InitPlan/once). actual rows=5 on the scan means the filter expression is evaluated for rows considered for output; VOLATILE SECURITY DEFINER function cannot be constant-folded."
+}

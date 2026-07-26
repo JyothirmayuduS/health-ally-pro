@@ -1,0 +1,89 @@
+{
+  "project": "wsnpwyqypgclsclktoyf",
+  "migrations": [
+    {
+      "version": "20260622164948",
+      "name": "hospital_saas_foundation"
+    },
+    {
+      "version": "20260622170717",
+      "name": "demo_seed_data_v3"
+    },
+    {
+      "version": "20260625185505",
+      "name": "diet_clinical_supabase"
+    },
+    {
+      "version": "20260721184402",
+      "name": "specialty_hospital_persistence"
+    },
+    {
+      "version": "20260721184549",
+      "name": "chart_unit_client_keys"
+    },
+    {
+      "version": "20260721185808",
+      "name": "tighten_onboarding_rls"
+    },
+    {
+      "version": "20260721192832",
+      "name": "phi_audit_export_columns"
+    },
+    {
+      "version": "20260721202356",
+      "name": "hospital_desk_records"
+    },
+    {
+      "version": "20260721203805",
+      "name": "tighten_hospital_rls_cross_tenant"
+    },
+    {
+      "version": "20260721204213",
+      "name": "tighten_remaining_unscoped_rls"
+    },
+    {
+      "version": "20260721205606",
+      "name": "tighten_onboarding_insert_scope"
+    },
+    {
+      "version": "20260721211020",
+      "name": "phi_read_audit_and_postgrest_lockdown"
+    },
+    {
+      "version": "20260721211031",
+      "name": "phi_read_audit_select_policies"
+    },
+    {
+      "version": "20260721211045",
+      "name": "phi_read_audit_select_policies_2"
+    },
+    {
+      "version": "20260721211250",
+      "name": "phi_read_audit_http_ingest"
+    },
+    {
+      "version": "20260721211309",
+      "name": "phi_read_audit_ingest_rpc"
+    },
+    {
+      "version": "20260721211321",
+      "name": "phi_read_audit_http_logger"
+    },
+    {
+      "version": "20260721211322",
+      "name": "phi_read_audit_query_helper"
+    },
+    {
+      "version": "20260721212139",
+      "name": "phi_read_audit_dlq_and_modes"
+    },
+    {
+      "version": "20260721212202",
+      "name": "phi_read_audit_logger_dlq_fallback"
+    },
+    {
+      "version": "20260721212531",
+      "name": "revoke_core_phi_postgrest"
+    }
+  ]
+}

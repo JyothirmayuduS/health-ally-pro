@@ -1,0 +1,35 @@
+{
+  "clinical_status": 200,
+  "clinical_ok": true,
+  "rows": 83,
+  "request_id": "live-force-1784813255220",
+  "open_new": 1,
+  "dlq_id": "7b493d34-b03b-4828-bed8-5b4682d86780",
+  "health": {
+    "ok": false,
+    "alert": true,
+    "source": "database_rpc",
+    "checked_at": "2026-07-23T13:27:40.13034+00:00",
+    "open_failures": 1,
+    "resolved_or_artifact": 8,
+    "acknowledged_failures": 0
+  },
+  "cleanup": {
+    "rpc_ok": true,
+    "health_after": {
+      "ok": true,
+      "alert": false,
+      "source": "database_rpc",
+      "checked_at": "2026-07-23T13:27:40.334972+00:00",
+      "open_failures": 0,
+      "resolved_or_artifact": 9,
+      "acknowledged_failures": 0
+    },
+    "retained": {
+      "id": "7b493d34-b03b-4828-bed8-5b4682d86780",
+      "status": "test_artifact",
+      "resolved_at": "2026-07-23T13:27:40.261579+00:00"
+    }
+  },
+  "pass": true
+}

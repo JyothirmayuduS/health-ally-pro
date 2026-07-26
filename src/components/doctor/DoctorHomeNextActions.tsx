@@ -1,11 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  AlertTriangle,
-  Briefcase,
-  ChevronRight,
-  ClipboardList,
-  FlaskConical,
-} from "lucide-react";
+import { AlertTriangle, Briefcase, ChevronRight, ClipboardList, FlaskConical } from "lucide-react";
 import { useLiveQueue } from "@/lib/doctor-live-queue-store";
 import { computeClinicOverview } from "@/lib/doctor-clinic-overview";
 import { buildHomeNextActions, type HomeActionItem } from "@/lib/doctor-home-data";

@@ -35,9 +35,7 @@ export function VisitDetailPage({ visitId }: Props) {
   const [doctors] = useState<Doctor[]>(mockDoctors);
 
   const appointment = appointments.find((a) => a.id === visitId);
-  const doctor = appointment
-    ? doctors.find((d) => d.id === appointment.doctorId)
-    : undefined;
+  const doctor = appointment ? doctors.find((d) => d.id === appointment.doctorId) : undefined;
 
   if (!appointment || !doctor) {
     return (
@@ -62,9 +60,7 @@ export function VisitDetailPage({ visitId }: Props) {
       label: "Location",
       value: appointment.room ?? `${doctor.hospital} · Outpatient`,
     },
-    ...(appointment.checkInStatus
-      ? [{ label: "Check-in", value: appointment.checkInStatus }]
-      : []),
+    ...(appointment.checkInStatus ? [{ label: "Check-in", value: appointment.checkInStatus }] : []),
     ...(isLive && appointment.queuePosition
       ? [
           {
@@ -84,11 +80,7 @@ export function VisitDetailPage({ visitId }: Props) {
     <div className="w-full pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-12">
       <header className="mb-5 sm:mb-6">
         <div className="mb-4 flex items-start gap-3">
-          <PatientBackButton
-            fallbackTo="/care/visits"
-            label="Visits"
-            className="mt-1 shrink-0"
-          />
+          <PatientBackButton fallbackTo="/care/visits" label="Visits" className="mt-1 shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-clay">
               Visit details
@@ -156,10 +148,7 @@ export function VisitDetailPage({ visitId }: Props) {
           {detailRows.map((row, i) => (
             <div
               key={row.label}
-              className={cn(
-                "px-4 py-3.5 sm:px-5 sm:py-4",
-                i > 0 && "border-t border-[#EDEAE6]",
-              )}
+              className={cn("px-4 py-3.5 sm:px-5 sm:py-4", i > 0 && "border-t border-[#EDEAE6]")}
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-ink-muted">
                 {row.label}
@@ -187,10 +176,7 @@ export function VisitDetailPage({ visitId }: Props) {
               </div>
               <ChevronRight className="h-4 w-4 text-ink-muted" />
             </Link>
-            <Link
-              to="/reports"
-              className="flex items-center gap-3 px-4 py-4 sm:px-5"
-            >
+            <Link to="/reports" className="flex items-center gap-3 px-4 py-4 sm:px-5">
               <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#F3F1EC]">
                 <FileText className="h-4 w-4 text-ink-muted" strokeWidth={1.75} />
               </span>

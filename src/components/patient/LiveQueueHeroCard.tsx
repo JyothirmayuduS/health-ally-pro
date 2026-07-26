@@ -1,18 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  CalendarDays,
-  Clock4,
-  MapPin,
-  Radio,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Clock4, MapPin, Radio } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Appointment, Doctor } from "@/lib/mock-data";
-import {
-  formatAppointmentTime,
-  formatQueueDate,
-  getQueueBoardSummary,
-} from "@/lib/patient-queue";
+import { formatAppointmentTime, formatQueueDate, getQueueBoardSummary } from "@/lib/patient-queue";
 import { doctorGenderFor } from "@/lib/doctor-gender";
 import { DOCTOR_QUEUE_IMAGES, DOCTOR_QUEUE_INVERT } from "@/lib/queue-persona-assets";
 import { QueueBustAvatar } from "@/components/patient/QueueBustAvatar";
@@ -91,9 +81,7 @@ export function LiveQueueHeroCard({
                 / {String(total).padStart(2, "0")}
               </span>
             </p>
-            <p className="mt-1.5 text-xs text-white/55">
-              {getQueueBoardSummary(position, total)}
-            </p>
+            <p className="mt-1.5 text-xs text-white/55">{getQueueBoardSummary(position, total)}</p>
           </div>
           <div className="shrink-0 text-right">
             <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-white/40">
@@ -161,13 +149,7 @@ export function LiveQueueHeroCard({
   return body;
 }
 
-function MetaChip({
-  icon: Icon,
-  label,
-}: {
-  icon: typeof CalendarDays;
-  label: string;
-}) {
+function MetaChip({ icon: Icon, label }: { icon: typeof CalendarDays; label: string }) {
   return (
     <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-white/70 sm:px-2.5 sm:py-1 sm:text-[11px]">
       <Icon className="h-3 w-3 opacity-70" strokeWidth={1.75} />

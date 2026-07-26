@@ -40,9 +40,7 @@ export const VERIFIED_MEAL_MEDIA: Record<string, VerifiedMealMedia> = {
   },
   eb2: {
     imageUrl: "https://www.themealdb.com/images/media/meals/ysxwuq1487323065.jpg",
-    videos: [
-      vid("UVgJn2iD3u8", "Chettinad Fish Fry — Seer Fish", "Kannamma Cooks"),
-    ],
+    videos: [vid("UVgJn2iD3u8", "Chettinad Fish Fry — Seer Fish", "Kannamma Cooks")],
   },
   eb3: {
     imageUrl: "https://www.themealdb.com/images/media/meals/wuxrtu1483564410.jpg",
@@ -88,9 +86,7 @@ export const VERIFIED_MEAL_MEDIA: Record<string, VerifiedMealMedia> = {
   },
   el4: {
     imageUrl: "https://www.themealdb.com/images/media/meals/tqd7s21763780609.jpg",
-    videos: [
-      vid("xzDYKZl50FQ", "Crispy Sea Bass with Ginger & Chilli", "BBC Good Food"),
-    ],
+    videos: [vid("xzDYKZl50FQ", "Crispy Sea Bass with Ginger & Chilli", "BBC Good Food")],
   },
   in1: {
     imageUrl: ytImage("zS-gKmilBDY"),

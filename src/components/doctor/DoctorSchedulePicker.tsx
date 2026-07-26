@@ -21,18 +21,31 @@ export function DoctorSchedulePicker({ selectedDate, onSelect, className }: Prop
   const monthName = new Date(viewYear, viewMonth).toLocaleDateString("en-US", { month: "long" });
 
   return (
-    <div className={cn("rounded-[28px] bg-white p-6 shadow-[0_8px_32px_rgba(28,42,46,0.06)]", className)}>
+    <div
+      className={cn(
+        "rounded-[28px] bg-white p-6 shadow-[0_8px_32px_rgba(28,42,46,0.06)]",
+        className,
+      )}
+    >
       <div className="mb-4 flex items-center justify-between">
         <h3 className="font-bold text-[#1B3B2E]">Schedule</h3>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={() => setViewMonth((m) => (m === 0 ? 11 : m - 1))} className="rounded-lg p-1 hover:bg-[#E8E4DF]">
+          <button
+            type="button"
+            onClick={() => setViewMonth((m) => (m === 0 ? 11 : m - 1))}
+            className="rounded-lg p-1 hover:bg-[#E8E4DF]"
+          >
             <ChevronLeft className="h-4 w-4 text-[#8A8F8C]" />
           </button>
           <span className="flex items-center gap-1.5 text-sm font-medium text-[#8A8F8C]">
             <Calendar className="h-4 w-4" />
             {monthName}
           </span>
-          <button type="button" onClick={() => setViewMonth((m) => (m === 11 ? 0 : m + 1))} className="rounded-lg p-1 hover:bg-[#E8E4DF]">
+          <button
+            type="button"
+            onClick={() => setViewMonth((m) => (m === 11 ? 0 : m + 1))}
+            className="rounded-lg p-1 hover:bg-[#E8E4DF]"
+          >
             <ChevronRight className="h-4 w-4 text-[#8A8F8C]" />
           </button>
         </div>

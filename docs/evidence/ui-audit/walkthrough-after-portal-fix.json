@@ -1,0 +1,248 @@
+{
+  "at": "2026-07-22T04:34:33.907Z",
+  "notes": [
+    {
+      "role": "lab",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "lab",
+      "step": "fixed_lab",
+      "url": "http://127.0.0.1:8787/lab",
+      "preview": "LS Lab staff Maple Hospital LAB STAFF OVERVIEW My bench BENCH WORK Collection Processing Reagents Storage & Aliquots MY RECORDS My submissions My samples My Leaves REFERENCE Test catalog NO ACCESS Validation Analytics BENCH My bench 10:03 AM · Wed, Jul 22 MAPLE · LABORATORY Good shift, Lab End Shift Quality Control Pass: All instruments calibrated ",
+      "overflow": false
+    },
+    {
+      "role": "lab",
+      "step": "fixed_lab_orders",
+      "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+      "preview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf ",
+      "overflow": false
+    },
+    {
+      "role": "lab",
+      "step": "fixed_lab_collection",
+      "url": "http://127.0.0.1:8787/login?redirect=%2Flab",
+      "preview": "MEDORA Sign in Staff portal login — all desks. EMAIL PASSWORD Sign in DEMO ACCOUNTS Lab technician Bench — collection, processing, my records lab@oakhaven.demo · MedoraDemo!2026Lab Lab supervisor Control desk — validation, analytics, team lab.supervisor@oakhaven.demo · MedoraDemo!2026Lab Pharmacist Dispense, inventory, medicine search & shelf ",
+      "overflow": false
+    },
+    {
+      "role": "lab",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/lab",
+      "overflow": false,
+      "preview": "BENCH My bench MAPLE · LABORATORY Good shift, Lab End Shift Quality Control Pass: All instruments calibrated and QC checks verified for today. Step 1 Collection Draw patients Step 2 My samples Track t"
+    },
+    {
+      "role": "pharmacy",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "pharmacy",
+      "step": "fixed_pharmacy",
+      "url": "http://127.0.0.1:8787/pharmacy",
+      "preview": "P Pharmacist Maple Hospital PHARMACIST OVERVIEW Control desk QUEUE Prescriptions inbox 4 Billing counter 3 Dispense counter 2 Ward deliveries 4 Refills 2 Walk-in OTC STOCK Medicine search Inventory 4 Purchase orders Formulary & pricing Storage map Cycle count COMPLIANCE Controlled register Operations center 4 My Leaves PHARMACY Control desk 10:03 A",
+      "overflow": false
+    },
+    {
+      "role": "pharmacy",
+      "step": "fixed_pharmacy_prescriptions",
+      "url": "http://127.0.0.1:8787/pharmacy/prescriptions",
+      "preview": "P Pharmacist Maple Hospital PHARMACIST OVERVIEW Control desk QUEUE Prescriptions inbox 4 Billing counter 3 Dispense counter 2 Ward deliveries 4 Refills 2 Walk-in OTC STOCK Medicine search Inventory 4 Purchase orders Formulary & pricing Storage map Cycle count COMPLIANCE Controlled register Operations center 4 My Leaves QUEUE Prescriptions inbox 10:",
+      "overflow": false
+    },
+    {
+      "role": "pharmacy",
+      "step": "fixed_pharmacy_dispense",
+      "url": "http://127.0.0.1:8787/pharmacy/dispense",
+      "preview": "P Pharmacist Maple Hospital PHARMACIST OVERVIEW Control desk QUEUE Prescriptions inbox 4 Billing counter 3 Dispense counter 2 Ward deliveries 4 Refills 2 Walk-in OTC STOCK Medicine search Inventory 4 Purchase orders Formulary & pricing Storage map Cycle count COMPLIANCE Controlled register Operations center 4 My Leaves COUNTER Dispense 10:03 AM · W",
+      "overflow": false
+    },
+    {
+      "role": "pharmacy",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/pharmacy",
+      "overflow": false,
+      "preview": "PHARMACY Control desk 4 MAPLE · PHARMACY Control desk — Pharmacist End shift Open inbox Control Desk Overview Shift Handover History Pharmacy workspace. Review prescriptions, pick from rack/tray locat"
+    },
+    {
+      "role": "nursing",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "nursing",
+      "step": "fixed_nursing",
+      "url": "http://127.0.0.1:8787/nursing",
+      "preview": "Maple Hospital NURSING · V1.0 WARD Dashboard IPD & beds Patients Vitals My Leaves SP Sunita Pillai WARD · DAY SHIFT WARD Nursing station 10:03 AM · Wed, Jul 22 PATIENTS ON FILE 8 VITALS TODAY 0 TOTAL READINGS 0 Record vitals Patient census Shift snapshot Avg pulse today — Avg temp today — Allergies flagged 5 Recent vitals TIME PATIENT BP PULSE SPO₂",
+      "overflow": false
+    },
+    {
+      "role": "nursing",
+      "step": "fixed_nursing_beds",
+      "url": "http://127.0.0.1:8787/nursing/beds",
+      "preview": "Maple Hospital NURSING · V1.0 WARD Dashboard IPD & beds Patients Vitals My Leaves SP Sunita Pillai WARD · DAY SHIFT IPD Bed management 10:03 AM · Wed, Jul 22 TOTAL BEDS 120 OCCUPIED 94 AVAILABLE 26 OCCUPANCY RATE 78% Ward occupancy overview General Ward A 28/32 beds · 88% General Ward B 24/30 beds · 80% ICU 12/14 beds · 86% Pediatric Ward 18/24 bed",
+      "overflow": false
+    },
+    {
+      "role": "nursing",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/nursing",
+      "overflow": false,
+      "preview": "WARD Nursing station PATIENTS ON FILE 8 VITALS TODAY 0 TOTAL READINGS 0 Record vitals Patient census Shift snapshot Avg pulse today — Avg temp today — Allergies flagged 5 Recent vitals TIME PATIENT BP"
+    },
+    {
+      "role": "billing",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "billing",
+      "step": "fixed_billing",
+      "url": "http://127.0.0.1:8787/billing",
+      "preview": "Maple Hospital BILLING · V1.0 OVERVIEW Dashboard REVENUE Invoices Payments Encounters My Leaves AR Anita Rao FINANCE · BACK OFFICE FINANCE Billing dashboard 10:03 AM · Wed, Jul 22 TODAY'S COLLECTIONS ₹0 +12.4% vs last week OUTSTANDING ₹3,412.5 2 open PAYMENTS LOGGED 0 OPEN ENCOUNTERS 0 Review invoices Payment log Link encounters Revenue by departme",
+      "overflow": false
+    },
+    {
+      "role": "billing",
+      "step": "fixed_billing_invoices",
+      "url": "http://127.0.0.1:8787/billing/invoices",
+      "preview": "Maple Hospital BILLING · V1.0 OVERVIEW Dashboard REVENUE Invoices Payments Encounters My Leaves AR Anita Rao FINANCE · BACK OFFICE LEDGER Hospital invoices 10:03 AM · Wed, Jul 22 All invoices Ledger · 5 records ID PATIENT SOURCE TOTAL STATUS INV-90011 Anjali Krishnan MRN-100231 Reception ₹735 PAID INV-90013 Ravi Deshmukh MRN-100234 Reception ₹2",
+      "overflow": false
+    },
+    {
+      "role": "billing",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/billing",
+      "overflow": false,
+      "preview": "FINANCE Billing dashboard TODAY'S COLLECTIONS ₹0 +12.4% vs last week OUTSTANDING ₹3,412.5 2 open PAYMENTS LOGGED 0 OPEN ENCOUNTERS 0 Review invoices Payment log Link encounters Revenue by department R"
+    },
+    {
+      "role": "reception",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "reception",
+      "step": "fixed_reception",
+      "url": "http://127.0.0.1:8787/reception",
+      "preview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD TODAY Reception dashboard 10:03 AM · Wed, Jul 22 [NORMAL] CAFETERIA CLOSED FOR RENOVATION ",
+      "overflow": false
+    },
+    {
+      "role": "reception",
+      "step": "fixed_reception_register",
+      "url": "http://127.0.0.1:8787/reception/register",
+      "preview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD PATIENT INTAKE Register patient 10:03 AM · Wed, Jul 22 SECTION 1 Demographics FULL NAME * ",
+      "overflow": false
+    },
+    {
+      "role": "reception",
+      "step": "fixed_reception_billing",
+      "url": "http://127.0.0.1:8787/reception/billing",
+      "preview": "Maple Hospital RECEPTION · V1.2 WORKFLOW Dashboard Register Patients Appointments Admissions & Beds Check-in Record vitals Queue Doctor board Display BUSINESS Billing Cash drawer Insurance Reports Day sheet My Leaves Settings RD Reena D'souza FRONT DESK · OPD FRONT DESK Billing 10:03 AM · Wed, Jul 22 COLLECTED TODAY ₹1,995 OUTSTANDING ₹3,413 UNPAID",
+      "overflow": false
+    },
+    {
+      "role": "reception",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/reception",
+      "overflow": false,
+      "preview": "TODAY Reception dashboard [NORMAL] CAFETERIA CLOSED FOR RENOVATION THIS WEEK The ground floor cafeteria will remain closed from Monday through Friday for renovation. Please use the canteen on the 2nd"
+    },
+    {
+      "role": "admin",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "admin",
+      "step": "fixed_admin",
+      "url": "http://127.0.0.1:8787/admin",
+      "preview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN CONTROL Ho",
+      "overflow": false
+    },
+    {
+      "role": "admin",
+      "step": "fixed_admin_ot",
+      "url": "http://127.0.0.1:8787/admin/ot",
+      "preview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN CLINICAL O",
+      "overflow": false
+    },
+    {
+      "role": "admin",
+      "step": "fixed_admin_audit",
+      "url": "http://127.0.0.1:8787/admin/audit",
+      "preview": "Oak Haven Medical ADMINISTRATION · V1.0 OVERVIEW Command center Analytics Revenue Occupancy & load ORGANIZATION Hospital Departments Staff Access control Announcements HR & Performance CLINICAL CONFIG Doctors Doctor roster Hospital units Services & fees Lab catalog Pharmacy formulary SYSTEM PHI audit Settings AU Admin User HOSPITAL ADMIN COMPLIANCE",
+      "overflow": false
+    },
+    {
+      "role": "admin",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/admin",
+      "overflow": false,
+      "preview": "CONTROL Hospital command center MEDORA ERP Hospital command center Clinical · Diagnostics · Operations · Finance OPD → IPD → Lab → Billing → REVENUE TODAY ₹2,84,500 +12.4% vs last week PENDING"
+    },
+    {
+      "role": "doctor",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "doctor",
+      "step": "fixed_doctor",
+      "url": "http://127.0.0.1:8787/doctor",
+      "preview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 GOOD MORNING Dr. Rajesh Internal Medicine WEDNESDAY 22 JULY 4 YOUR SPECIALTY WORKSTATION General Medicine Adult medicine, multimo",
+      "overflow": false
+    },
+    {
+      "role": "doctor",
+      "step": "fixed_doctor_specialty",
+      "url": "http://127.0.0.1:8787/doctor/specialty",
+      "preview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 SPECIALTY WORKSTATION General Medicine Adult medicine, multimorbidity & referrals Doctor · Medicine OPD · assigned by admin UNIT Me",
+      "overflow": false
+    },
+    {
+      "role": "doctor",
+      "step": "fixed_doctor_prescriptions",
+      "url": "http://127.0.0.1:8787/doctor/prescriptions?view=write",
+      "preview": "Medora DOCTOR PORTAL R Dr. Rajesh General Medicine 5 Home 1 Patients 5 Queue 6 Inbox Profile CLINICAL TOOLS Medicine desk Prescribe Schedule Referrals Booking slots QUICK ACCESS Search ⌘K Notifications 4 Write Sent Rx Templates Accepting Room 3A Write prescription Preview Sneha Rao 29y · Female · P-3188 Asthma Last visit 9 days ago · L",
+      "overflow": false
+    },
+    {
+      "role": "doctor",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/doctor",
+      "overflow": false,
+      "preview": "GOOD MORNING Dr. Rajesh Internal Medicine WEDNESDAY 22 JULY 4 YOUR SPECIALTY WORKSTATION General Medicine Adult medicine, multimorbidity & referrals NOW IN ROOM Q-02 Sneha Rao Asthma exacer"
+    },
+    {
+      "role": "patient",
+      "step": "post-login",
+      "url": "http://127.0.0.1:8787/login?"
+    },
+    {
+      "role": "patient",
+      "step": "fixed_care",
+      "url": "http://127.0.0.1:8787/care",
+      "preview": "M Medora CARE · CURATED Dashboard Care Health Diet Move Profile NEED HELP Speak with a care concierge. START CHAT → GET CARE Care Book visits, track your queue, and browse your care team. Book appointment Search specialists · pick a time · confirm instantly Past visits View upcoming and completed appointments Live queue No active visit ",
+      "overflow": false
+    },
+    {
+      "role": "patient",
+      "step": "fixed_book",
+      "url": "http://127.0.0.1:8787/book",
+      "preview": "M Medora CARE · CURATED Dashboard Care Health Diet Move Profile NEED HELP Speak with a care concierge. START CHAT → SPECIALISTS Find a doctor Book with 80+ board-certified physicians near you. All Cardiology Ophthalmology Pediatrics Orthopedics Neurology Dermatology ENT Gastroenterology Nephrology Pulmonology Oncology Obstetrics & Gynecology",
+      "overflow": false
+    },
+    {
+      "role": "patient",
+      "step": "mobile-home",
+      "url": "http://127.0.0.1:8787/care",
+      "overflow": false,
+      "preview": "Search doctors, reports, meds… GET CARE Care Book visits, track your queue, and browse your care team. Book appointment Search specialists · pick a time · confirm instantly Past visits View upc"
+    }
+  ]
+}

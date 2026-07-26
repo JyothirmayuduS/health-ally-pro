@@ -1,0 +1,26 @@
+{
+  "at": "2026-07-23T21:56:51.631298+00:00",
+  "git_commit": "58cfeb95fdc4a27cf97254dacb85f25c87630cab",
+  "git_short": "58cfeb9",
+  "tags": [
+    "v1.0.0",
+    "v1.0.1"
+  ],
+  "ci_green_run": "https://github.com/JyothirmayuduS/health-ally-pro/actions/runs/30047668949",
+  "ci_jobs": [
+    "lint+typecheck+unit",
+    "secret+dependency scan",
+    "smoke+security regressions",
+    "docker build+scan+sbom",
+    "merge-gate"
+  ],
+  "docker_image_running": "medora-app:7b4d0b9-20260723T183213Z-slim",
+  "docker_size_disk": "1.31GB",
+  "sbom": "docs/evidence/medora-sbom-hardened.cdx.json",
+  "trivy": "docs/evidence/trivy-scan-after-slim.json",
+  "image_signature": {
+    "status": "pending",
+    "reason": "Cosign keyless sign only configured for push to main; branch CI builds without registry push/sign"
+  },
+  "match_note": "Running slim image was built from earlier commit 7b4d0b9/9c13d86 era; HEAD is 58cfeb9. Rebuild from clean HEAD recommended before production cutover for exact commit/digest match."
+}

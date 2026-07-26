@@ -45,7 +45,7 @@ export async function syncKnowledgeToVectorStore(): Promise<{ synced: number; sk
           updated_at: new Date().toISOString(),
         };
       })
-      .filter(Boolean);
+      .filter((row): row is NonNullable<typeof row> => row !== null);
 
     if (rows.length === 0) return;
 
@@ -61,10 +61,7 @@ export async function syncKnowledgeToVectorStore(): Promise<{ synced: number; sk
   }
 }
 
-export async function vectorSearchKnowledge(
-  query: string,
-  limit = 8,
-): Promise<KnowledgeChunk[]> {
+export async function vectorSearchKnowledge(query: string, limit = 8): Promise<KnowledgeChunk[]> {
   if (!isSupabaseAdminConfigured()) return [];
 
   await syncKnowledgeToVectorStore();
@@ -81,14 +78,16 @@ export async function vectorSearchKnowledge(
 
   if (error || !data) return [];
 
-  return (data as Array<{
-    id: string;
-    category: string;
-    title: string;
-    body: string;
-    keywords: string[];
-    link_to: string | null;
-  }>).map((row) => ({
+  return (
+    data as Array<{
+      id: string;
+      category: string;
+      title: string;
+      body: string;
+      keywords: string[];
+      link_to: string | null;
+    }>
+  ).map((row) => ({
     id: row.id,
     category: row.category as KnowledgeChunk["category"],
     title: row.title,

@@ -1,10 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  addDays,
-  format,
-  isSameDay,
-  startOfWeek,
-} from "date-fns";
+import { addDays, format, isSameDay, startOfWeek } from "date-fns";
 import {
   CalendarDays,
   ChevronLeft,
@@ -34,13 +29,7 @@ function InstructionTag({ label }: { label: string }) {
   );
 }
 
-function DoseRow({
-  med,
-  onToggle,
-}: {
-  med: PatientMedication;
-  onToggle: (id: string) => void;
-}) {
+function DoseRow({ med, onToggle }: { med: PatientMedication; onToggle: (id: string) => void }) {
   const tag = med.instructionTag ?? med.reason;
   const takenLabel = med.taken ? `Mark ${med.name} as not taken` : `Mark ${med.name} as taken`;
 
@@ -138,9 +127,7 @@ export function MedicationsHubPage() {
           <h1 className="font-serif text-[28px] leading-tight tracking-tight text-ink lg:text-[32px]">
             Medications
           </h1>
-          <p className="mt-0.5 text-[13px] text-ink-muted">
-            {format(today, "EEEE, d MMMM")}
-          </p>
+          <p className="mt-0.5 text-[13px] text-ink-muted">{format(today, "EEEE, d MMMM")}</p>
         </div>
         <span className="mt-1 rounded-[10px] bg-[#F0DDD6] px-2.5 py-1.5 text-[13px] font-semibold text-clay">
           {pct}%
@@ -217,10 +204,14 @@ export function MedicationsHubPage() {
                     key={day.toISOString()}
                     className={cn(
                       "flex w-[52px] shrink-0 flex-col items-center rounded-[14px] border py-2.5 lg:w-auto lg:min-w-[72px] lg:flex-1",
-                      active ? "border-ink bg-ink text-white" : "border-[#EDEAE6] bg-white text-ink",
+                      active
+                        ? "border-ink bg-ink text-white"
+                        : "border-[#EDEAE6] bg-white text-ink",
                     )}
                   >
-                    <span className="text-[10px] font-semibold">{format(day, "EEE").toUpperCase()}</span>
+                    <span className="text-[10px] font-semibold">
+                      {format(day, "EEE").toUpperCase()}
+                    </span>
                     <span className="mt-0.5 text-lg font-semibold">{format(day, "d")}</span>
                     {active ? <span className="mt-1.5 h-1 w-1 rounded-full bg-white" /> : null}
                   </div>

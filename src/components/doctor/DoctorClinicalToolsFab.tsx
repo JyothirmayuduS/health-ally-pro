@@ -1,13 +1,16 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Plus, X } from "lucide-react";
-import { DOCTOR_CLINICAL_TOOLS } from "@/lib/doctor-portal-nav";
+import { clinicalToolsForSpecialty } from "@/lib/doctor-portal-nav";
 import { shouldHideDoctorClinicalFab } from "@/lib/doctor-mobile-chrome";
+import { useDoctorSpecialty } from "@/lib/specialties";
 import { cn } from "@/lib/utils";
 
 export function DoctorClinicalToolsFab() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const { specialty } = useDoctorSpecialty();
+  const tools = clinicalToolsForSpecialty(specialty);
 
   useEffect(() => {
     setOpen(false);
@@ -29,8 +32,8 @@ export function DoctorClinicalToolsFab() {
       )}
       <div className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom))] right-4 z-50 flex flex-col items-end gap-2 lg:hidden">
         {open && (
-          <div className="mb-1 w-48 overflow-hidden rounded-2xl border border-[#EDEAE6] bg-white shadow-lg">
-            {DOCTOR_CLINICAL_TOOLS.map(({ to, label, icon: Icon }) => (
+          <div className="mb-1 w-52 overflow-hidden rounded-2xl border border-[#EDEAE6] bg-white shadow-lg">
+            {tools.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}
                 to={to}
@@ -53,7 +56,11 @@ export function DoctorClinicalToolsFab() {
           aria-label={open ? "Close clinical tools" : "Clinical tools"}
           aria-expanded={open}
         >
-          {open ? <X className="h-6 w-6" strokeWidth={1.75} /> : <Plus className="h-6 w-6" strokeWidth={1.75} />}
+          {open ? (
+            <X className="h-6 w-6" strokeWidth={1.75} />
+          ) : (
+            <Plus className="h-6 w-6" strokeWidth={1.75} />
+          )}
         </button>
       </div>
     </>

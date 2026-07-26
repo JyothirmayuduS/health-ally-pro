@@ -1,11 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Menu, Activity } from "lucide-react";
 import {
   LayoutDashboard,
@@ -24,6 +19,9 @@ import {
   FileText,
   Bed,
   CalendarOff,
+  Syringe,
+  BookUser,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +33,9 @@ const items = [
   { to: "/reception/admissions", label: "Admissions & Beds", icon: Bed, dot: "bg-teal" },
   { to: "/reception/check-in", label: "Check-in", icon: LogIn, dot: "bg-sage" },
   { to: "/reception/vitals", label: "Record vitals", icon: Activity, dot: "bg-teal" },
+  { to: "/reception/vaccination", label: "Vaccination", icon: Syringe, dot: "bg-mustard" },
+  { to: "/reception/reminders", label: "Reminders", icon: Bell, dot: "bg-clay" },
+  { to: "/reception/address-book", label: "Address book", icon: BookUser, dot: "bg-plum" },
   { to: "/reception/queue", label: "Queue", icon: ListOrdered, dot: "bg-mustard" },
   { to: "/reception/board", label: "Doctor board", icon: Stethoscope, dot: "bg-teal" },
   { to: "/reception/token-display", label: "Display", icon: MonitorPlay, dot: "bg-ink-900" },
@@ -49,7 +50,6 @@ const businessItems = [
   { to: "/reception/leave", label: "My Leaves", icon: CalendarOff, dot: "bg-plum" },
   { to: "/reception/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" },
 ];
-
 
 const disabled: { label: string; icon: typeof Settings }[] = [];
 
@@ -73,7 +73,9 @@ function NavItem({ to, label, icon: Icon, exact, dot, onClick }: NavItemProps) {
       data-testid={`nav-${label.toLowerCase().replace(/\s+/g, "-")}`}
       className={cn(
         "group relative flex items-center gap-3 rounded-md py-2 pl-3 pr-3 text-[13px] transition-colors",
-        active ? "bg-sage-soft font-medium text-sage" : "text-ink-600 hover:bg-white hover:text-ink-900",
+        active
+          ? "bg-sage-soft font-medium text-sage"
+          : "text-ink-600 hover:bg-white hover:text-ink-900",
       )}
     >
       {active && (
@@ -96,7 +98,7 @@ function NavContent({ onClick }: { onClick?: () => void }) {
           </div>
           <div>
             <div className="font-heading text-[15px] font-semibold leading-none text-ink-900">
-              Maple Hospital
+              Oak Haven Medical
             </div>
             <div className="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink-400">
               Reception · v1.2

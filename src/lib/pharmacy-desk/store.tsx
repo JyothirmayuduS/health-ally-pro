@@ -32,6 +32,7 @@ import {
   type PharmacyAlert,
   type WalkInItem,
   type WardReturn,
+  type PaymentStatus,
 } from "./mockData";
 import {
   type PurchaseOrder,
@@ -42,8 +43,7 @@ import {
   SEED_GRNS,
 } from "./purchaseOrdersData";
 import { pushPatientNotification } from "@/lib/patient-notifications-store";
-import { resolvePatientId } from "@/lib/reception-desk/store";
-import { getSharedPatient } from "@/lib/shared/patient-registry";
+import { resolvePatientId, getSharedPatient } from "@/lib/shared/patients";
 import { checkDDI } from "./ddiUtils";
 import { DDI_RULES } from "./ddiData";
 import { availableQty, fefoBatch } from "./location";
@@ -54,12 +54,7 @@ import {
   type DoctorRxPayload,
 } from "./prescription-bridge";
 import type { PharmacyPatient } from "./mockData";
-import {
-  invoiceFromRx,
-  balanceDue,
-  type PharmacyInvoice,
-  type PaymentMethod,
-} from "./billing";
+import { invoiceFromRx, balanceDue, type PharmacyInvoice, type PaymentMethod } from "./billing";
 import { mirrorToLedger } from "@/lib/billing-desk/store";
 import { findOpenEncounterForPatient, linkToEncounter } from "@/lib/shared/encounters";
 import {
@@ -70,6 +65,24 @@ import {
   type DrugPricingPatch,
   type ReceiveStockOptions,
 } from "./formulary";
+import {
+  hydratePharmacyDeskSnapshot,
+  loadPharmacyDeskSnapshot,
+  savePharmacyDeskSnapshot,
+  type ColdChainBreachEntry,
+  type ControlledSubstanceReconciliation,
+  type DDIOverrideEntry,
+  type ShiftReport,
+  type WastageEntry,
+} from "./desk-persistence";
+
+export type {
+  ColdChainBreachEntry,
+  ControlledSubstanceReconciliation,
+  DDIOverrideEntry,
+  ShiftReport,
+  WastageEntry,
+};
 
 const ACTOR = PHARMACIST.name;
 
@@ -107,13 +120,7 @@ function rebuildOpenInvoices(
     if (!rx) return inv;
     const p = getPatient(rx, patients);
     const seq = Number.parseInt(inv.invoice_number.replace(/\D/g, ""), 10) || 10040;
-    const fresh = invoiceFromRx(
-      rx,
-      p?.name ?? inv.patient_name,
-      p?.mrn ?? inv.mrn,
-      seq,
-      drugs,
-    );
+    const fresh = invoiceFromRx(rx, p?.name ?? inv.patient_name, p?.mrn ?? inv.mrn, seq, drugs);
     return {
       ...fresh,
       id: inv.id,
@@ -124,73 +131,6 @@ function rebuildOpenInvoices(
       paid_at: inv.paid_at,
     };
   });
-}
-
-export interface DDIOverrideEntry {
-  id: string;
-  drugA: string;
-  drugB: string;
-  severity: "major" | "moderate" | "minor";
-  pharmacistId: string;
-  timestamp: string;
-  rxRef: string;
-  reason: string;
-}
-
-export interface WastageEntry {
-  id: string;
-  drugName: string;
-  drugCategory: string;
-  batchId: string;
-  qty: number;
-  reason: string;
-  disposalMethod: "Incineration" | "Pharmacy bin" | "Return to supplier";
-  processedBy: string;
-  processedAt: string;
-  cost: number;
-}
-
-export interface ControlledSubstanceReconciliation {
-  drugName: string;
-  openingBalance: number;
-  totalDispensed: number;
-  closingBalance: number;
-  expectedBalance: number;
-  variance: number;
-}
-
-export interface ShiftReport {
-  id: string;
-  signedAt: string;
-  pharmacistName: string;
-  supervisorName: string;
-  notes: string;
-  rxCount: number;
-  priorityBreakdown: { stat: number; urgent: number; routine: number };
-  lineItemsCount: number;
-  avgDispenseTime: string;
-  reconciliation: ControlledSubstanceReconciliation[];
-  otcTotal: number;
-  otcBreakdown: { cash: number; card: number; upi: number };
-  ddiOverridesCount: number;
-  nearExpiryActioned: number;
-  coldChainBreaches: number;
-  wastageValue: number;
-  wardReturnsCount: number;
-}
-
-export interface ColdChainBreachEntry {
-  id: string;
-  loggedAt: string;
-  loggedBy: string;
-  unit: string;
-  tempReading: string;
-  expectedRange: string;
-  acknowledgedBy: string;
-  correctiveAction: string;
-  affectedBatchIds: string[];
-  status: "open" | "resolved";
-  resolvedAt?: string;
 }
 
 type StoreValue = {
@@ -244,39 +184,35 @@ type StoreValue = {
   }) => void;
   assignDrugToRack: (input: {
     drugId: string;
-    zone: import('./mockData').StorageZone;
+    zone: import("./mockData").StorageZone;
     aisle: string;
     rack: string;
     tray: string;
     slot: string;
-    temp: import('./mockData').StorageTemp;
+    temp: import("./mockData").StorageTemp;
     initialBatch?: { lot: string; expiry: string; qty: number; supplier?: string };
   }) => void;
   recordCycleCount: (batchId: string, countedQty: number) => void;
   searchDrugs: (q: string) => Drug[];
-
-  // Task 1 DDI
   ddiOverrides: DDIOverrideEntry[];
   logDdiOverride: (entry: Omit<DDIOverrideEntry, "id" | "timestamp">) => void;
-
-  // Task 2 Returns & Wastage
   returns: WardReturn[];
   restockWardReturn: (returnId: string) => void;
-  disposeWardReturn: (returnId: string, method: WastageEntry["disposalMethod"], reason: string) => void;
+  disposeWardReturn: (
+    returnId: string,
+    method: WastageEntry["disposalMethod"],
+    reason: string,
+  ) => void;
   wastage: WastageEntry[];
-
-  // Task 3 PO & GRN
   purchaseOrders: PurchaseOrder[];
-  createPurchaseOrder: (po: Omit<PurchaseOrder, "id" | "po_number" | "status" | "total_value">) => void;
+  createPurchaseOrder: (
+    po: Omit<PurchaseOrder, "id" | "po_number" | "status" | "total_value">,
+  ) => void;
   cancelPurchaseOrder: (poId: string) => void;
   grns: GRN[];
   createGRN: (grn: Omit<GRN, "id" | "grn_number" | "received_by" | "received_date">) => void;
-
-  // Task 4 Shift reports
   shiftReports: ShiftReport[];
   submitShiftReport: (report: Omit<ShiftReport, "id" | "signedAt">) => void;
-
-  // Cold chain breach log
   coldChainBreaches: ColdChainBreachEntry[];
   logColdChainBreach: (entry: Omit<ColdChainBreachEntry, "id" | "loggedAt">) => void;
   resolveColdChainBreach: (id: string) => void;
@@ -299,82 +235,76 @@ function enrichRx(rx: Prescription, batches: StockBatch[]): Prescription {
   return { ...rx, lines };
 }
 
+function applyPharmacySnapshot(
+  snap: ReturnType<typeof loadPharmacyDeskSnapshot>,
+  setters: {
+    setBatches: React.Dispatch<React.SetStateAction<StockBatch[]>>;
+    setPrescriptions: React.Dispatch<React.SetStateAction<Prescription[]>>;
+    setRefills: React.Dispatch<React.SetStateAction<RefillRequest[]>>;
+    setMovements: React.Dispatch<React.SetStateAction<StockMovement[]>>;
+    setControlled: React.Dispatch<React.SetStateAction<ControlledEntry[]>>;
+    setWardOrders: React.Dispatch<React.SetStateAction<WardOrder[]>>;
+    setAlerts: React.Dispatch<React.SetStateAction<PharmacyAlert[]>>;
+    setWalkInSales: React.Dispatch<React.SetStateAction<WalkInItem[]>>;
+    setInvoices: React.Dispatch<React.SetStateAction<PharmacyInvoice[]>>;
+    setDdiOverrides: React.Dispatch<React.SetStateAction<DDIOverrideEntry[]>>;
+    setReturns: React.Dispatch<React.SetStateAction<WardReturn[]>>;
+    setWastage: React.Dispatch<React.SetStateAction<WastageEntry[]>>;
+    setPurchaseOrders: React.Dispatch<React.SetStateAction<PurchaseOrder[]>>;
+    setGrns: React.Dispatch<React.SetStateAction<GRN[]>>;
+    setShiftReports: React.Dispatch<React.SetStateAction<ShiftReport[]>>;
+    setColdChainBreachesList: React.Dispatch<React.SetStateAction<ColdChainBreachEntry[]>>;
+  },
+) {
+  setters.setBatches(snap.batches);
+  setters.setPrescriptions(snap.prescriptions.map((rx) => enrichRx(rx, snap.batches)));
+  setters.setRefills(snap.refills);
+  setters.setMovements(snap.movements);
+  setters.setControlled(snap.controlled);
+  setters.setWardOrders(snap.wardOrders);
+  setters.setAlerts(snap.alerts);
+  setters.setWalkInSales(snap.walkInSales);
+  setters.setInvoices(snap.invoices);
+  setters.setDdiOverrides(snap.ddiOverrides);
+  setters.setReturns(snap.returns);
+  setters.setWastage(snap.wastage);
+  setters.setPurchaseOrders(snap.purchaseOrders);
+  setters.setGrns(snap.grns);
+  setters.setShiftReports(snap.shiftReports);
+  setters.setColdChainBreachesList(snap.coldChainBreachesList);
+}
+
 let drugSeq = 900;
 
 export function StoreProvider({ children }: { children: ReactNode }) {
+  const initial = loadPharmacyDeskSnapshot();
+  const [persistReady, setPersistReady] = useState(false);
   const [drugs, setDrugs] = useState<Drug[]>(() => loadFormulary());
-  const [batches, setBatches] = useState<StockBatch[]>(STOCK_BATCHES);
+  const [batches, setBatches] = useState<StockBatch[]>(() => initial.batches);
   const [patients, setPatients] = useState<PharmacyPatient[]>(PATIENTS);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(() =>
-    SEED_PRESCRIPTIONS.map((rx) => enrichRx(rx, STOCK_BATCHES)),
+    initial.prescriptions.map((rx) => enrichRx(rx, initial.batches)),
   );
-  const [refills, setRefills] = useState<RefillRequest[]>(SEED_REFILLS);
-  const [movements, setMovements] = useState<StockMovement[]>(SEED_MOVEMENTS);
-  const [controlled, setControlled] = useState<ControlledEntry[]>(SEED_CONTROLLED);
-  const [wardOrders, setWardOrders] = useState<WardOrder[]>(SEED_WARD_ORDERS);
-  const [alerts, setAlerts] = useState<PharmacyAlert[]>(SEED_ALERTS);
-  const [walkInSales, setWalkInSales] = useState<WalkInItem[]>([]);
-  const [invoices, setInvoices] = useState<PharmacyInvoice[]>(() =>
-    buildSeedInvoices(SEED_PRESCRIPTIONS, PATIENTS, loadFormulary()),
+  const [refills, setRefills] = useState<RefillRequest[]>(() => initial.refills);
+  const [movements, setMovements] = useState<StockMovement[]>(() => initial.movements);
+  const [controlled, setControlled] = useState<ControlledEntry[]>(() => initial.controlled);
+  const [wardOrders, setWardOrders] = useState<WardOrder[]>(() => initial.wardOrders);
+  const [alerts, setAlerts] = useState<PharmacyAlert[]>(() => initial.alerts);
+  const [walkInSales, setWalkInSales] = useState<WalkInItem[]>(() => initial.walkInSales);
+  const [invoices, setInvoices] = useState<PharmacyInvoice[]>(() => initial.invoices);
+  const [ddiOverrides, setDdiOverrides] = useState<DDIOverrideEntry[]>(() => initial.ddiOverrides);
+  const [returns, setReturns] = useState<WardReturn[]>(() => initial.returns);
+  const [wastage, setWastage] = useState<WastageEntry[]>(() => initial.wastage);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(
+    () => initial.purchaseOrders,
+  );
+  const [grns, setGrns] = useState<GRN[]>(() => initial.grns);
+  const [shiftReports, setShiftReports] = useState<ShiftReport[]>(() => initial.shiftReports);
+  const [coldChainBreachesList, setColdChainBreachesList] = useState<ColdChainBreachEntry[]>(
+    () => initial.coldChainBreachesList,
   );
 
-  // New States for Task 1, 2, 3, and 4
-  const [ddiOverrides, setDdiOverrides] = useState<DDIOverrideEntry[]>([]);
-  const [returns, setReturns] = useState<WardReturn[]>(SEED_RETURNS);
-  const [wastage, setWastage] = useState<WastageEntry[]>([]);
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(SEED_PURCHASE_ORDERS);
-  const [grns, setGrns] = useState<GRN[]>(SEED_GRNS);
-  const [shiftReports, setShiftReports] = useState<ShiftReport[]>(() => [
-    {
-      id: "rep-1",
-      signedAt: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
-      pharmacistName: "Riley Chen",
-      supervisorName: "Dr. Elena Vasquez",
-      notes: "Everything ran smoothly during the morning shift. Controlled counts reconciled perfectly.",
-      rxCount: 14,
-      priorityBreakdown: { stat: 2, urgent: 4, routine: 8 },
-      lineItemsCount: 22,
-      avgDispenseTime: "4.8 mins",
-      reconciliation: [
-        {
-          drugName: "Oxycodone 5 mg",
-          openingBalance: 40,
-          totalDispensed: 12,
-          closingBalance: 28,
-          expectedBalance: 28,
-          variance: 0
-        }
-      ],
-      otcTotal: 145.50,
-      otcBreakdown: { cash: 60.00, card: 85.50, upi: 0.00 },
-      ddiOverridesCount: 1,
-      nearExpiryActioned: 3,
-      coldChainBreaches: 0,
-      wastageValue: 24.50,
-      wardReturnsCount: 2
-    }
-  ]);
-  const [coldChainBreachesList, setColdChainBreachesList] = useState<ColdChainBreachEntry[]>([
-    {
-      id: "ccb-1",
-      loggedAt: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
-      loggedBy: "Riley Chen",
-      unit: "FRIDGE-1",
-      tempReading: "11°C",
-      expectedRange: "2–8°C",
-      acknowledgedBy: "Riley Chen",
-      correctiveAction: "Technician called. Door seal replaced. Affected stock moved to FRIDGE-2 during repair.",
-      affectedBatchIds: ["b4", "b8"],
-      status: "resolved",
-      resolvedAt: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
-    },
-  ]);
-
-
-  const findDrugById = useCallback(
-    (id: string) => drugs.find((d) => d.id === id),
-    [drugs],
-  );
+  const findDrugById = useCallback((id: string) => drugs.find((d) => d.id === id), [drugs]);
 
   const addMovement = useCallback((m: Omit<StockMovement, "id" | "at">) => {
     const entry: StockMovement = {
@@ -392,10 +322,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setPatients((prev) => {
         const next = [...prev];
         for (const payload of payloads) {
-          const exists = next.find((p) => p.id === payload.patient.id || p.mrn === payload.patient.mrn);
+          const exists = next.find(
+            (p) => p.id === payload.patient.id || p.mrn === payload.patient.mrn,
+          );
           if (!exists) next.push(payload.patient);
           else {
-            const idx = next.findIndex((p) => p.id === payload.patient.id || p.mrn === payload.patient.mrn);
+            const idx = next.findIndex(
+              (p) => p.id === payload.patient.id || p.mrn === payload.patient.mrn,
+            );
             next[idx] = { ...next[idx], ...payload.patient };
           }
         }
@@ -444,7 +378,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         });
         const ids = new Set(incoming.map((r) => r.id));
         const merged = [...incoming, ...prev.filter((r) => !ids.has(r.id))];
-        return merged.sort((a, b) => new Date(b.received_at).getTime() - new Date(a.received_at).getTime());
+        return merged.sort(
+          (a, b) => new Date(b.received_at).getTime() - new Date(a.received_at).getTime(),
+        );
       });
 
       setInvoices((prev) => {
@@ -510,6 +446,74 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener(PHARMACY_RX_EVENT, onIncoming);
   }, [syncDoctorInbox]);
 
+  useEffect(() => {
+    const setters = {
+      setBatches,
+      setPrescriptions,
+      setRefills,
+      setMovements,
+      setControlled,
+      setWardOrders,
+      setAlerts,
+      setWalkInSales,
+      setInvoices,
+      setDdiOverrides,
+      setReturns,
+      setWastage,
+      setPurchaseOrders,
+      setGrns,
+      setShiftReports,
+      setColdChainBreachesList,
+    };
+    void hydratePharmacyDeskSnapshot().then((snap) => {
+      applyPharmacySnapshot(snap, setters);
+      setPersistReady(true);
+    });
+    const onRemote = () => applyPharmacySnapshot(loadPharmacyDeskSnapshot(), setters);
+    window.addEventListener("medora-desk-hydrated", onRemote);
+    return () => window.removeEventListener("medora-desk-hydrated", onRemote);
+  }, []);
+
+  useEffect(() => {
+    if (!persistReady) return;
+    savePharmacyDeskSnapshot({
+      batches,
+      prescriptions,
+      refills,
+      movements,
+      controlled,
+      wardOrders,
+      alerts,
+      walkInSales,
+      invoices,
+      ddiOverrides,
+      returns,
+      wastage,
+      purchaseOrders,
+      grns,
+      shiftReports,
+      coldChainBreachesList,
+    });
+  }, [
+    persistReady,
+    batches,
+    prescriptions,
+    refills,
+    movements,
+    controlled,
+    wardOrders,
+    alerts,
+    walkInSales,
+    invoices,
+    ddiOverrides,
+    returns,
+    wastage,
+    purchaseOrders,
+    grns,
+    shiftReports,
+    coldChainBreachesList,
+  ]);
+
   const getInvoiceForRx = useCallback(
     (rxId: string) => invoices.find((i) => i.rx_id === rxId),
     [invoices],
@@ -522,7 +526,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!inv) return list;
       const payAmount = amount ?? balanceDue(inv);
       const newPaid = Math.min(inv.total, Math.round((inv.amount_paid + payAmount) * 100) / 100);
-      const status = newPaid >= inv.total ? "paid" : newPaid > 0 ? "partial" : "unpaid";
+      const status: PaymentStatus =
+        newPaid >= inv.total ? "paid" : newPaid > 0 ? "partial" : "unpaid";
 
       setPrescriptions((rxList) =>
         rxList.map((rx) =>
@@ -601,16 +606,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             ...patch,
             unit_price: unit,
             pack_size: pack,
-            pack_mrp:
-              patch.pack_mrp ?? Math.round(unit * pack * 100) / 100,
+            pack_mrp: patch.pack_mrp ?? Math.round(unit * pack * 100) / 100,
             price_updated_at: now,
             price_updated_by: ACTOR,
           });
         });
         saveFormulary(next);
-        setInvoices((invs) =>
-          rebuildOpenInvoices(invs, prescriptions, patients, next),
-        );
+        setInvoices((invs) => rebuildOpenInvoices(invs, prescriptions, patients, next));
         return next;
       });
       toast.success("Formulary pricing saved");
@@ -618,81 +620,93 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [prescriptions, patients],
   );
 
-  const acceptRx = useCallback((id: string) => {
-    const now = new Date().toISOString();
-    setPrescriptions((list) =>
-      list.map((rx) =>
-        rx.id === id
-          ? enrichRx(
-              {
-                ...rx,
-                status: "ready_to_dispense",
-                reviewed_at: now,
-                history: pushHistory(rx, ACTOR, "Accepted — ready to dispense"),
-              },
-              batches,
-            )
-          : rx,
-      ),
-    );
-    toast.success("Prescription accepted for dispensing");
-  }, [batches]);
+  const acceptRx = useCallback(
+    (id: string) => {
+      const now = new Date().toISOString();
+      setPrescriptions((list) =>
+        list.map((rx) =>
+          rx.id === id
+            ? enrichRx(
+                {
+                  ...rx,
+                  status: "ready_to_dispense",
+                  reviewed_at: now,
+                  history: pushHistory(rx, ACTOR, "Accepted — ready to dispense"),
+                },
+                batches,
+              )
+            : rx,
+        ),
+      );
+      toast.success("Prescription accepted for dispensing");
+    },
+    [batches],
+  );
 
-  const holdRx = useCallback((id: string, reason: string) => {
-    setPrescriptions((list) =>
-      list.map((rx) =>
-        rx.id === id
-          ? enrichRx(
-              {
-                ...rx,
-                status: "on_hold",
-                hold_reason: reason,
-                history: pushHistory(rx, ACTOR, "Placed on hold", reason),
-              },
-              batches,
-            )
-          : rx,
-      ),
-    );
-    toast("Prescription on hold");
-  }, [batches]);
+  const holdRx = useCallback(
+    (id: string, reason: string) => {
+      setPrescriptions((list) =>
+        list.map((rx) =>
+          rx.id === id
+            ? enrichRx(
+                {
+                  ...rx,
+                  status: "on_hold",
+                  hold_reason: reason,
+                  history: pushHistory(rx, ACTOR, "Placed on hold", reason),
+                },
+                batches,
+              )
+            : rx,
+        ),
+      );
+      toast("Prescription on hold");
+    },
+    [batches],
+  );
 
-  const rejectRx = useCallback((id: string, reason: string) => {
-    setPrescriptions((list) =>
-      list.map((rx) =>
-        rx.id === id
-          ? enrichRx(
-              {
-                ...rx,
-                status: "cancelled",
-                cancel_reason: reason,
-                history: pushHistory(rx, ACTOR, "Rejected", reason),
-              },
-              batches,
-            )
-          : rx,
-      ),
-    );
-    toast.error("Prescription rejected");
-  }, [batches]);
+  const rejectRx = useCallback(
+    (id: string, reason: string) => {
+      setPrescriptions((list) =>
+        list.map((rx) =>
+          rx.id === id
+            ? enrichRx(
+                {
+                  ...rx,
+                  status: "cancelled",
+                  cancel_reason: reason,
+                  history: pushHistory(rx, ACTOR, "Rejected", reason),
+                },
+                batches,
+              )
+            : rx,
+        ),
+      );
+      toast.error("Prescription rejected");
+    },
+    [batches],
+  );
 
-  const startDispense = useCallback((id: string) => {
-    setPrescriptions((list) =>
-      list.map((rx) =>
-        rx.id === id
-          ? enrichRx(
-              {
-                ...rx,
-                status: "dispensing",
-                history: pushHistory(rx, ACTOR, "Dispensing started"),
-              },
-              batches,
-            )
-          : rx,
-      ),
-    );
-    toast("Dispense workflow started");
-  }, [batches]);
+  const startDispense = useCallback(
+    (id: string) => {
+      setPrescriptions((list) =>
+        list.map((rx) =>
+          rx.id === id
+            ? enrichRx(
+                {
+                  ...rx,
+                  status: "dispensing",
+                  history: pushHistory(rx, ACTOR, "Dispensing started"),
+                },
+                batches,
+              )
+            : rx,
+        ),
+      );
+      toast("Dispense workflow started");
+    },
+    [batches],
+  );
 
   const pickLine = useCallback(
     (rxId: string, lineId: string, batchId: string, qty: number) => {
@@ -714,7 +728,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             {
               ...rx,
               lines,
-              history: pushHistory(rx, ACTOR, `Picked line ${lineId}`, `Batch ${batchId}, qty ${qty}`),
+              history: pushHistory(
+                rx,
+                ACTOR,
+                `Picked line ${lineId}`,
+                `Batch ${batchId}, qty ${qty}`,
+              ),
             },
             batches,
           );
@@ -803,94 +822,106 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [batches, addMovement],
   );
 
-  const markCollected = useCallback((id: string) => {
-    const now = new Date().toISOString();
-    setPrescriptions((list) =>
-      list.map((rx) =>
-        rx.id === id
-          ? enrichRx(
-              {
-                ...rx,
-                status: "collected",
-                collected_at: now,
-                history: pushHistory(rx, ACTOR, "Collected by patient"),
-              },
-              batches,
-            )
-          : rx,
-      ),
-    );
-    toast.success("Handover complete");
-  }, [batches]);
+  const markCollected = useCallback(
+    (id: string) => {
+      const now = new Date().toISOString();
+      setPrescriptions((list) =>
+        list.map((rx) =>
+          rx.id === id
+            ? enrichRx(
+                {
+                  ...rx,
+                  status: "collected",
+                  collected_at: now,
+                  history: pushHistory(rx, ACTOR, "Collected by patient"),
+                },
+                batches,
+              )
+            : rx,
+        ),
+      );
+      toast.success("Handover complete");
+    },
+    [batches],
+  );
 
-  const approveRefill = useCallback((id: string) => {
-    refillSeq += 1;
-    rxSeq += 1;
-    const refill = refills.find((r) => r.id === id);
-    if (!refill) return;
+  const approveRefill = useCallback(
+    (id: string) => {
+      refillSeq += 1;
+      rxSeq += 1;
+      const refill = refills.find((r) => r.id === id);
+      if (!refill) return;
 
-    // ── Hard block: refills exhausted ────────────────────────────────
-    if (refill.refills_remaining <= 0) {
-      toast.error("Cannot approve — this prescription has no refills remaining. A new prescription from the doctor is required.");
-      return;
-    }
+      // ── Hard block: refills exhausted ────────────────────────────────
+      if (refill.refills_remaining <= 0) {
+        toast.error(
+          "Cannot approve — this prescription has no refills remaining. A new prescription from the doctor is required.",
+        );
+        return;
+      }
 
-    const orig = prescriptions.find((r) => r.id === refill.original_rx_id);
+      const orig = prescriptions.find((r) => r.id === refill.original_rx_id);
 
-    // ── Hard block: original Rx expired (>90 days old) ───────────────
-    const rxAgeDays = orig
-      ? (Date.now() - new Date(orig.received_at).getTime()) / 86_400_000
-      : 999;
-    if (rxAgeDays > 90) {
-      toast.error("Cannot approve — original prescription has expired (older than 90 days). A fresh Rx is required.");
-      return;
-    }
+      // ── Hard block: original Rx expired (>90 days old) ───────────────
+      const rxAgeDays = orig
+        ? (Date.now() - new Date(orig.received_at).getTime()) / 86_400_000
+        : 999;
+      if (rxAgeDays > 90) {
+        toast.error(
+          "Cannot approve — original prescription has expired (older than 90 days). A fresh Rx is required.",
+        );
+        return;
+      }
 
-    const drug = findDrugById(refill.drug_id);
-    const doctor = DOCTORS.find((d) => d.id === orig?.doctor_id) ?? DOCTORS[0];
-    const now = new Date().toISOString();
+      const drug = findDrugById(refill.drug_id);
+      const doctor = DOCTORS.find((d) => d.id === orig?.doctor_id) ?? DOCTORS[0];
+      const now = new Date().toISOString();
 
-    const newRx: Prescription = enrichRx(
-      {
-        id: `rx-refill-${refillSeq}`,
-        rx_number: `RX-2025-${rxSeq}`,
-        patient_id: refill.patient_id,
-        doctor_id: doctor.id,
-        doctor_name: doctor.name,
-        source: "doctor",
-        priority: "routine",
-        status: "ready_to_dispense",
-        payment_status: "paid",
-        received_at: now,
-        reviewed_at: now,
-        lines: orig?.lines.filter((l) => l.drug_id === refill.drug_id).map((l) => ({
-          ...l,
-          id: `rl-${refillSeq}`,
-          qty_dispensed: 0,
-          pick_batch_id: undefined,
-        })) ?? [
-          {
-            id: `rl-${refillSeq}`,
-            drug_id: refill.drug_id,
-            sig: "As previously prescribed",
-            qty_prescribed: 30,
-            qty_dispensed: 0,
-            days_supply: 30,
-            refills_allowed: refill.refills_remaining,
-            refills_used: 0,
-          },
-        ],
-        history: [{ at: now, actor: ACTOR, action: "Refill approved — auto queued" }],
-      },
-      batches,
-    );
+      const newRx: Prescription = enrichRx(
+        {
+          id: `rx-refill-${refillSeq}`,
+          rx_number: `RX-2025-${rxSeq}`,
+          patient_id: refill.patient_id,
+          doctor_id: doctor.id,
+          doctor_name: doctor.name,
+          source: "doctor",
+          priority: "routine",
+          status: "ready_to_dispense",
+          payment_status: "paid",
+          received_at: now,
+          reviewed_at: now,
+          lines: orig?.lines
+            .filter((l) => l.drug_id === refill.drug_id)
+            .map((l) => ({
+              ...l,
+              id: `rl-${refillSeq}`,
+              qty_dispensed: 0,
+              pick_batch_id: undefined,
+            })) ?? [
+            {
+              id: `rl-${refillSeq}`,
+              drug_id: refill.drug_id,
+              sig: "As previously prescribed",
+              qty_prescribed: 30,
+              qty_dispensed: 0,
+              days_supply: 30,
+              refills_allowed: refill.refills_remaining,
+              refills_used: 0,
+            },
+          ],
+          history: [{ at: now, actor: ACTOR, action: "Refill approved — auto queued" }],
+        },
+        batches,
+      );
 
-    setPrescriptions((list) => [newRx, ...list]);
-    setRefills((list) =>
-      list.map((r) => (r.id === id ? { ...r, status: "approved" as const } : r)),
-    );
-    toast.success("Refill approved — added to dispense queue");
-  }, [refills, prescriptions, batches]);
+      setPrescriptions((list) => [newRx, ...list]);
+      setRefills((list) =>
+        list.map((r) => (r.id === id ? { ...r, status: "approved" as const } : r)),
+      );
+      toast.success("Refill approved — added to dispense queue");
+    },
+    [refills, prescriptions, batches],
+  );
 
   const denyRefill = useCallback((id: string, reason: string) => {
     setRefills((list) =>
@@ -900,21 +931,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const receiveStock = useCallback(
-    (
-      drugId: string,
-      lot: string,
-      expiry: string,
-      qty: number,
-      options?: ReceiveStockOptions,
-    ) => {
+    (drugId: string, lot: string, expiry: string, qty: number, options?: ReceiveStockOptions) => {
       batchSeq += 1;
       const now = new Date().toISOString();
       const drug = drugs.find((d) => d.id === drugId);
       const costPerUnit =
-        options?.purchaseCostPerUnit ??
-        drug?.purchase_cost ??
-        drug?.unit_price ??
-        0;
+        options?.purchaseCostPerUnit ?? drug?.purchase_cost ?? drug?.unit_price ?? 0;
       const poRef = options?.poReference ?? `PO-${batchSeq}`;
       const batch: StockBatch = {
         id: `b${batchSeq}`,
@@ -936,7 +958,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           setDrugs((drugList) => {
             const nextDrugs = drugList.map((d) =>
               d.id === drugId
-                ? normalizeDrug({ ...d, purchase_cost: avg, price_updated_at: now, price_updated_by: ACTOR })
+                ? normalizeDrug({
+                    ...d,
+                    purchase_cost: avg,
+                    price_updated_at: now,
+                    price_updated_by: ACTOR,
+                  })
                 : d,
             );
             saveFormulary(nextDrugs);
@@ -983,9 +1010,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const transferBatch = useCallback((batchId: string, newLocationCode: string) => {
     setBatches((list) =>
-      list.map((b) =>
-        b.id === batchId ? { ...b, location_override: newLocationCode } : b,
-      ),
+      list.map((b) => (b.id === batchId ? { ...b, location_override: newLocationCode } : b)),
     );
     toast(`Batch moved to ${newLocationCode}`);
   }, []);
@@ -1060,9 +1085,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const fefo = fefoBatch(batches.filter((b) => b.drug_id === sale.drug_id));
       if (fefo && sale.qty > 0) {
         setBatches((list) =>
-          list.map((b) =>
-            b.id === fefo.id ? { ...b, qty: Math.max(0, b.qty - sale.qty) } : b,
-          ),
+          list.map((b) => (b.id === fefo.id ? { ...b, qty: Math.max(0, b.qty - sale.qty) } : b)),
         );
         addMovement({
           drug_id: sale.drug_id,
@@ -1221,9 +1244,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const batch = batches.find((b) => b.id === batchId);
       if (!batch) return;
       const delta = countedQty - batch.qty;
-      setBatches((list) =>
-        list.map((b) => (b.id === batchId ? { ...b, qty: countedQty } : b)),
-      );
+      setBatches((list) => list.map((b) => (b.id === batchId ? { ...b, qty: countedQty } : b)));
       if (delta !== 0) {
         addMovement({
           drug_id: batch.drug_id,
@@ -1234,18 +1255,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           note: `Cycle count — expected ${batch.qty}, counted ${countedQty}`,
         });
       }
-      toast(delta === 0 ? "Count matches system" : `Variance ${delta > 0 ? "+" : ""}${delta} recorded`);
+      toast(
+        delta === 0 ? "Count matches system" : `Variance ${delta > 0 ? "+" : ""}${delta} recorded`,
+      );
     },
     [batches, addMovement],
   );
 
-  const searchDrugs = useCallback((q: string) => {
-    const lower = q.toLowerCase();
-    return drugs.filter((d) => {
-      const hay = [d.generic_name, ...d.brand_names, d.sku, d.barcode, d.location.location_code].join(" ").toLowerCase();
-      return hay.includes(lower);
-    });
-  }, [drugs]);
+  const searchDrugs = useCallback(
+    (q: string) => {
+      const lower = q.toLowerCase();
+      return drugs.filter((d) => {
+        const hay = [d.generic_name, ...d.brand_names, d.sku, d.barcode, d.location.location_code]
+          .join(" ")
+          .toLowerCase();
+        return hay.includes(lower);
+      });
+    },
+    [drugs],
+  );
 
   // Task 1: Log DDI Overrides
   const logDdiOverride = useCallback((entry: Omit<DDIOverrideEntry, "id" | "timestamp">) => {
@@ -1259,188 +1287,199 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Task 2: Ward returns restocking
-  const restockWardReturn = useCallback((returnId: string) => {
-    setReturns((prev) =>
-      prev.map((ret) => {
-        if (ret.id !== returnId) return ret;
-        // Restock means add quantity back to batch
-        setBatches((bList) =>
-          bList.map((b) =>
-            b.id === ret.batch_id ? { ...b, qty: b.qty + ret.qty } : b
-          )
-        );
-        // Log stock movement
-        addMovement({
-          drug_id: ret.drug_id,
-          batch_id: ret.batch_id,
-          type: "return",
-          qty: ret.qty,
-          actor: ACTOR,
-          note: `Restocked ward return from ${ret.ward} (Bed ${ret.bed})`,
-        });
-        toast.success(`Restocked ${ret.qty} units of drug to batch`);
-        return { ...ret, status: "restocked" as const };
-      })
-    );
-  }, [addMovement]);
+  const restockWardReturn = useCallback(
+    (returnId: string) => {
+      setReturns((prev) =>
+        prev.map((ret) => {
+          if (ret.id !== returnId) return ret;
+          // Restock means add quantity back to batch
+          setBatches((bList) =>
+            bList.map((b) => (b.id === ret.batch_id ? { ...b, qty: b.qty + ret.qty } : b)),
+          );
+          // Log stock movement
+          addMovement({
+            drug_id: ret.drug_id,
+            batch_id: ret.batch_id,
+            type: "return",
+            qty: ret.qty,
+            actor: ACTOR,
+            note: `Restocked ward return from ${ret.ward} (Bed ${ret.bed})`,
+          });
+          toast.success(`Restocked ${ret.qty} units of drug to batch`);
+          return { ...ret, status: "restocked" as const };
+        }),
+      );
+    },
+    [addMovement],
+  );
 
   // Task 2: Ward returns disposal/wastage
-  const disposeWardReturn = useCallback((
-    returnId: string,
-    method: WastageEntry["disposalMethod"],
-    reason: string
-  ) => {
-    setReturns((prev) =>
-      prev.map((ret) => {
-        if (ret.id !== returnId) return ret;
+  const disposeWardReturn = useCallback(
+    (returnId: string, method: WastageEntry["disposalMethod"], reason: string) => {
+      setReturns((prev) =>
+        prev.map((ret) => {
+          if (ret.id !== returnId) return ret;
 
-        const drug = drugs.find((d) => d.id === ret.drug_id);
-        const cost = (drug?.unit_price ?? 0.5) * ret.qty;
+          const drug = drugs.find((d) => d.id === ret.drug_id);
+          const cost = (drug?.unit_price ?? 0.5) * ret.qty;
 
-        const waste: WastageEntry = {
-          id: `wst-${Date.now()}`,
-          drugName: drug?.generic_name ?? "Unknown Drug",
-          drugCategory: drug?.controlled_schedule ? "Controlled" : "General Medicine",
-          batchId: ret.batch_id,
-          qty: ret.qty,
-          reason,
-          disposalMethod: method,
-          processedBy: ACTOR,
-          processedAt: new Date().toISOString(),
-          cost
-        };
-        setWastage((wList) => [waste, ...wList]);
+          const waste: WastageEntry = {
+            id: `wst-${Date.now()}`,
+            drugName: drug?.generic_name ?? "Unknown Drug",
+            drugCategory: drug?.controlled_schedule ? "Controlled" : "General Medicine",
+            batchId: ret.batch_id,
+            qty: ret.qty,
+            reason,
+            disposalMethod: method,
+            processedBy: ACTOR,
+            processedAt: new Date().toISOString(),
+            cost,
+          };
+          setWastage((wList) => [waste, ...wList]);
 
-        // Log adjustment movement of qty 0 since it remains out of inventory but needs clinical track
-        addMovement({
-          drug_id: ret.drug_id,
-          batch_id: ret.batch_id,
-          type: "adjust",
-          qty: 0,
-          actor: ACTOR,
-          note: `Wastage write-off: Return ID ${ret.id} disposed via ${method} - Reason: ${reason}`
-        });
+          // Log adjustment movement of qty 0 since it remains out of inventory but needs clinical track
+          addMovement({
+            drug_id: ret.drug_id,
+            batch_id: ret.batch_id,
+            type: "adjust",
+            qty: 0,
+            actor: ACTOR,
+            note: `Wastage write-off: Return ID ${ret.id} disposed via ${method} - Reason: ${reason}`,
+          });
 
-        toast.success(`Disposed returned drug via ${method}`);
-        return { ...ret, status: "disposed" as const };
-      })
-    );
-  }, [drugs, addMovement]);
+          toast.success(`Disposed returned drug via ${method}`);
+          return { ...ret, status: "disposed" as const };
+        }),
+      );
+    },
+    [drugs, addMovement],
+  );
 
   // Task 3: Create Purchase Order
-  const createPurchaseOrder = useCallback((po: Omit<PurchaseOrder, "id" | "po_number" | "status" | "total_value">) => {
-    const num = purchaseOrders.length + 1;
-    const po_number = `PO-2025-${String(num).padStart(3, "0")}`;
-    const total_value = po.items.reduce((sum, item) => sum + item.qty_ordered * item.unit_cost, 0);
-    const fresh: PurchaseOrder = {
-      ...po,
-      id: `po-${Date.now()}`,
-      po_number,
-      status: "submitted",
-      total_value
-    };
-    setPurchaseOrders((prev) => [fresh, ...prev]);
-    toast.success(`Purchase Order ${po_number} submitted to supplier`);
-  }, [purchaseOrders]);
+  const createPurchaseOrder = useCallback(
+    (po: Omit<PurchaseOrder, "id" | "po_number" | "status" | "total_value">) => {
+      const num = purchaseOrders.length + 1;
+      const po_number = `PO-2025-${String(num).padStart(3, "0")}`;
+      const total_value = po.items.reduce(
+        (sum, item) => sum + item.qty_ordered * item.unit_cost,
+        0,
+      );
+      const fresh: PurchaseOrder = {
+        ...po,
+        id: `po-${Date.now()}`,
+        po_number,
+        status: "submitted",
+        total_value,
+      };
+      setPurchaseOrders((prev) => [fresh, ...prev]);
+      toast.success(`Purchase Order ${po_number} submitted to supplier`);
+    },
+    [purchaseOrders],
+  );
 
   // Task 3: Cancel Purchase Order
   const cancelPurchaseOrder = useCallback((poId: string) => {
     setPurchaseOrders((prev) =>
-      prev.map((po) => (po.id === poId ? { ...po, status: "cancelled" as const } : po))
+      prev.map((po) => (po.id === poId ? { ...po, status: "cancelled" as const } : po)),
     );
     toast.success("Purchase order cancelled");
   }, []);
 
   // Task 3: Goods Received Note confirmation
-  const createGRN = useCallback((grnInput: Omit<GRN, "id" | "grn_number" | "received_by" | "received_date">) => {
-    const num = grns.length + 1;
-    const grn_number = `GRN-2025-${String(num).padStart(3, "0")}`;
-    const fresh: GRN = {
-      ...grnInput,
-      id: `grn-${Date.now()}`,
-      grn_number,
-      received_by: ACTOR,
-      received_date: new Date().toISOString().slice(0, 10),
-    };
+  const createGRN = useCallback(
+    (grnInput: Omit<GRN, "id" | "grn_number" | "received_by" | "received_date">) => {
+      const num = grns.length + 1;
+      const grn_number = `GRN-2025-${String(num).padStart(3, "0")}`;
+      const fresh: GRN = {
+        ...grnInput,
+        id: `grn-${Date.now()}`,
+        grn_number,
+        received_by: ACTOR,
+        received_date: new Date().toISOString().slice(0, 10),
+      };
 
-    setGrns((prev) => [fresh, ...prev]);
+      setGrns((prev) => [fresh, ...prev]);
 
-    // Update corresponding PO status
-    setPurchaseOrders((prevPOs) =>
-      prevPOs.map((po) => {
-        if (po.id !== grnInput.po_id) return po;
-        let allReceived = true;
-        grnInput.items.forEach((item) => {
-          if (item.qty_received < item.qty_ordered) {
-            allReceived = false;
-          }
-        });
-        return {
-          ...po,
-          status: allReceived ? ("received" as const) : ("partially-received" as const),
-        };
-      })
-    );
+      // Update corresponding PO status
+      setPurchaseOrders((prevPOs) =>
+        prevPOs.map((po) => {
+          if (po.id !== grnInput.po_id) return po;
+          let allReceived = true;
+          grnInput.items.forEach((item) => {
+            if (item.qty_received < item.qty_ordered) {
+              allReceived = false;
+            }
+          });
+          return {
+            ...po,
+            status: allReceived ? ("received" as const) : ("partially-received" as const),
+          };
+        }),
+      );
 
-    // Repopulate inventory batches and log movements
-    grnInput.items.forEach((item) => {
-      const goodQty = item.qty_received - item.qty_damaged;
+      // Repopulate inventory batches and log movements
+      grnInput.items.forEach((item) => {
+        const goodQty = item.qty_received - item.qty_damaged;
 
-      if (goodQty > 0) {
-        const batchId = `b-grn-${Date.now()}-${item.drug_id}`;
-        const newBatch: StockBatch = {
-          id: batchId,
-          drug_id: item.drug_id,
-          lot: item.batch_number || `LOT-GRN-${Date.now().toString().slice(-4)}`,
-          expiry: item.expiry_date || new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString().slice(0, 10),
-          qty: goodQty,
-          reserved_qty: 0,
-          status: "active",
-          received_at: new Date().toISOString(),
-        };
-        setBatches((prevBatches) => [newBatch, ...prevBatches]);
+        if (goodQty > 0) {
+          const batchId = `b-grn-${Date.now()}-${item.drug_id}`;
+          const newBatch: StockBatch = {
+            id: batchId,
+            drug_id: item.drug_id,
+            lot: item.batch_number || `LOT-GRN-${Date.now().toString().slice(-4)}`,
+            expiry:
+              item.expiry_date ||
+              new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString().slice(0, 10),
+            qty: goodQty,
+            reserved_qty: 0,
+            status: "active",
+            received_at: new Date().toISOString(),
+          };
+          setBatches((prevBatches) => [newBatch, ...prevBatches]);
 
-        addMovement({
-          drug_id: item.drug_id,
-          batch_id: batchId,
-          type: "receive",
-          qty: goodQty,
-          actor: ACTOR,
-          note: `Received stock via GRN ${grn_number} (PO ${grnInput.po_number})`,
-        });
-      }
+          addMovement({
+            drug_id: item.drug_id,
+            batch_id: batchId,
+            type: "receive",
+            qty: goodQty,
+            actor: ACTOR,
+            note: `Received stock via GRN ${grn_number} (PO ${grnInput.po_number})`,
+          });
+        }
 
-      if (item.qty_damaged > 0) {
-        const drug = drugs.find((d) => d.id === item.drug_id);
-        const cost = (drug?.unit_price ?? 0.5) * item.qty_damaged;
+        if (item.qty_damaged > 0) {
+          const drug = drugs.find((d) => d.id === item.drug_id);
+          const cost = (drug?.unit_price ?? 0.5) * item.qty_damaged;
 
-        const waste: WastageEntry = {
-          id: `wst-grn-${Date.now()}-${item.drug_id}`,
-          drugName: item.drug_name,
-          drugCategory: drug?.controlled_schedule ? "Controlled" : "General Medicine",
-          batchId: item.batch_number || "Damaged PO Line",
-          qty: item.qty_damaged,
-          reason: "Damaged on delivery",
-          disposalMethod: "Pharmacy bin",
-          processedBy: ACTOR,
-          processedAt: new Date().toISOString(),
-          cost
-        };
-        setWastage((prevWastage) => [waste, ...prevWastage]);
+          const waste: WastageEntry = {
+            id: `wst-grn-${Date.now()}-${item.drug_id}`,
+            drugName: item.drug_name,
+            drugCategory: drug?.controlled_schedule ? "Controlled" : "General Medicine",
+            batchId: item.batch_number || "Damaged PO Line",
+            qty: item.qty_damaged,
+            reason: "Damaged on delivery",
+            disposalMethod: "Pharmacy bin",
+            processedBy: ACTOR,
+            processedAt: new Date().toISOString(),
+            cost,
+          };
+          setWastage((prevWastage) => [waste, ...prevWastage]);
 
-        addMovement({
-          drug_id: item.drug_id,
-          batch_id: "damaged-line",
-          type: "adjust",
-          qty: -item.qty_damaged,
-          actor: ACTOR,
-          note: `Wastage write-off: Damaged on delivery (GRN ${grn_number})`
-        });
-      }
-    });
+          addMovement({
+            drug_id: item.drug_id,
+            batch_id: "damaged-line",
+            type: "adjust",
+            qty: -item.qty_damaged,
+            actor: ACTOR,
+            note: `Wastage write-off: Damaged on delivery (GRN ${grn_number})`,
+          });
+        }
+      });
 
-    toast.success(`GRN ${grn_number} submitted and shelf stock updated`);
-  }, [grns, purchaseOrders, drugs, addMovement]);
+      toast.success(`GRN ${grn_number} submitted and shelf stock updated`);
+    },
+    [grns, purchaseOrders, drugs, addMovement],
+  );
 
   // Task 4: Submit Shift report
   const submitShiftReport = useCallback((reportInput: Omit<ShiftReport, "id" | "signedAt">) => {
@@ -1469,8 +1508,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       prev.map((b) =>
         b.id === id
           ? { ...b, status: "resolved" as const, resolvedAt: new Date().toISOString() }
-          : b
-      )
+          : b,
+      ),
     );
     toast.success("Breach marked as resolved");
   }, []);

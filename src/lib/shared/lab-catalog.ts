@@ -1,25 +1,17 @@
 import { LAB_CATALOG as SEED_CATALOG, type LabCatalogItem } from "@/lib/lab-desk/mockData";
+import { deskForKey, loadPersistedJson, savePersistedJson } from "./persisted-store";
 
 export type { LabCatalogItem };
 
 const STORAGE_KEY = "medora-lab-catalog-v1";
 
 export function loadLabCatalog(): LabCatalogItem[] {
-  if (typeof window === "undefined") return [...SEED_CATALOG];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [...SEED_CATALOG];
-    const parsed = JSON.parse(raw) as LabCatalogItem[];
-    if (!Array.isArray(parsed) || parsed.length === 0) return [...SEED_CATALOG];
-    return parsed;
-  } catch {
-    return [...SEED_CATALOG];
-  }
+  const loaded = loadPersistedJson<LabCatalogItem[]>(STORAGE_KEY, []);
+  return loaded.length ? loaded : [...SEED_CATALOG];
 }
 
 export function saveLabCatalog(catalog: LabCatalogItem[]) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+  savePersistedJson(STORAGE_KEY, deskForKey(STORAGE_KEY), catalog);
 }
 
 export function findCatalogItem(code: string, catalog?: LabCatalogItem[]) {

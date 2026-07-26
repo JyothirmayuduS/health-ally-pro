@@ -1,0 +1,51 @@
+{
+  "limit": 80,
+  "active": {
+    "appointments": {
+      "rows": 80,
+      "error": null,
+      "ms_runs": [
+        3396.34,
+        3370.09,
+        3450.48
+      ],
+      "ms_median": 3396.34
+    },
+    "lab_results": {
+      "rows": 80,
+      "error": null,
+      "ms_runs": [
+        3713.88,
+        3381.64,
+        3312.33
+      ],
+      "ms_median": 3381.64
+    }
+  },
+  "baseline": {
+    "appointments": {
+      "rows": 80,
+      "error": null,
+      "ms_runs": [
+        261.4,
+        508.28,
+        460.82
+      ],
+      "ms_median": 460.82
+    },
+    "lab_results": {
+      "rows": 80,
+      "error": null,
+      "ms_runs": [
+        261.89,
+        332.19,
+        263.37
+      ],
+      "ms_median": 263.37
+    }
+  },
+  "delta_ms_median": {
+    "appointments": 2935.52,
+    "lab_results": 3118.27
+  }
+}

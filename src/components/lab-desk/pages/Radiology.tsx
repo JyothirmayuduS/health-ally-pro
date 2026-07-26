@@ -42,7 +42,8 @@ export default function RadiologyPage() {
       </DeskPanel>
 
       <p className="text-sm text-ink-500">
-        {upcoming} scan(s) scheduled. PACS integration and radiologist reporting can be linked from the doctor results inbox.
+        {upcoming} scan(s) scheduled. PACS integration and radiologist reporting can be linked from
+        the doctor results inbox.
       </p>
     </div>
   );

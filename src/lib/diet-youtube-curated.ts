@@ -35,11 +35,15 @@ function v(
 /** Per-meal verified tutorials — each meal gets unique videos (not shared defaults). */
 export const DIET_CURATED_BY_MEAL_ID: Record<
   string,
-  Partial<Record<DietLanguage, DietYoutubeVideo[]>>
+  Partial<Record<DietLanguage, CuratedVideo[]>>
 > = {
   eb1: {
     en: [
-      v("BV5QJQaaJLo", "Overnight Oats — 5 Healthy Ways", "Downshiftology", "en", ["oat", "overnight", "breakfast"]),
+      v("BV5QJQaaJLo", "Overnight Oats — 5 Healthy Ways", "Downshiftology", "en", [
+        "oat",
+        "overnight",
+        "breakfast",
+      ]),
       v("8Ohp-Pfck4M", "Masala Oats Recipe", "Hebbars Kitchen", "en", ["oat", "masala"]),
     ],
     hi: [
@@ -48,16 +52,22 @@ export const DIET_CURATED_BY_MEAL_ID: Record<
   },
   eb2: {
     en: [
-      v("UVgJn2iD3u8", "Chettinad Fish Fry — Seer Fish", "Kannamma Cooks", "en", ["fish", "sardine", "seafood"]),
+      v("UVgJn2iD3u8", "Chettinad Fish Fry — Seer Fish", "Kannamma Cooks", "en", [
+        "fish",
+        "sardine",
+        "seafood",
+      ]),
       v("GM3ptjnjsfM", "Brown Rice Bowl with Protein", "Kabita's Kitchen", "en", ["rice", "bowl"]),
     ],
-    hi: [
-      v("UVgJn2iD3u8", "Fish Fry Recipe — Hindi", "Kannamma Cooks", "hi", ["fish", "machi"]),
-    ],
+    hi: [v("UVgJn2iD3u8", "Fish Fry Recipe — Hindi", "Kannamma Cooks", "hi", ["fish", "machi"])],
   },
   eb3: {
     en: [
-      v("0nqUMCsGcFk", "Moong Dal Tadka Recipe", "Hebbars Kitchen", "en", ["dal", "lentil", "stew"]),
+      v("0nqUMCsGcFk", "Moong Dal Tadka Recipe", "Hebbars Kitchen", "en", [
+        "dal",
+        "lentil",
+        "stew",
+      ]),
       v("8c_scYUN5uc", "Dhaba Style Dal Tadka", "Your Food Lab", "en", ["dal", "lentil", "carrot"]),
     ],
     hi: [
@@ -66,101 +76,159 @@ export const DIET_CURATED_BY_MEAL_ID: Record<
   },
   ba1: {
     en: [
-      v("n0ZgH6ePvbA", "Avocado Toast with Poached Egg", "Gordon Ramsay", "en", ["avocado", "egg", "toast", "breakfast"]),
+      v("n0ZgH6ePvbA", "Avocado Toast with Poached Egg", "Gordon Ramsay", "en", [
+        "avocado",
+        "egg",
+        "toast",
+        "breakfast",
+      ]),
       v("C4xqhN6fkWk", "Perfect Avocado Toast", "Tasty", "en", ["avocado", "toast"]),
     ],
   },
   ba2: {
     en: [
-      v("GM3ptjnjsfM", "Pressure Cooker Chicken Curry", "Kabita's Kitchen", "en", ["chicken", "roasted"]),
-      v("tM85IC5Y7vQ", "Healthy Quinoa Chicken Bowl", "Fit Foodie Finds", "en", ["chicken", "quinoa"]),
+      v("GM3ptjnjsfM", "Pressure Cooker Chicken Curry", "Kabita's Kitchen", "en", [
+        "chicken",
+        "roasted",
+      ]),
+      v("tM85IC5Y7vQ", "Healthy Quinoa Chicken Bowl", "Fit Foodie Finds", "en", [
+        "chicken",
+        "quinoa",
+      ]),
     ],
-    hi: [
-      v("GM3ptjnjsfM", "Chicken Curry — Hindi", "Kabita's Kitchen", "hi", ["chicken"]),
-    ],
+    hi: [v("GM3ptjnjsfM", "Chicken Curry — Hindi", "Kabita's Kitchen", "hi", ["chicken"])],
   },
   ba3: {
     en: [
-      v("9Hay3Xy2EKU", "Authentic Miso Soup", "Japanese Cooking 101", "en", ["miso", "soup", "kelp", "noodle"]),
-      v("ZnZ-u-9m_Jo", "Thyroid-Friendly Broth Bowls", "Hypothyroid Chef", "en", ["soup", "thyroid"]),
+      v("9Hay3Xy2EKU", "Authentic Miso Soup", "Japanese Cooking 101", "en", [
+        "miso",
+        "soup",
+        "kelp",
+        "noodle",
+      ]),
+      v("ZnZ-u-9m_Jo", "Thyroid-Friendly Broth Bowls", "Hypothyroid Chef", "en", [
+        "soup",
+        "thyroid",
+      ]),
     ],
   },
   el1: {
     en: [
-      v("jD6_Q4rYq8A", "Baked Salmon with Asparagus", "Sam the Cooking Guy", "en", ["salmon", "asparagus", "wild"]),
+      v("jD6_Q4rYq8A", "Baked Salmon with Asparagus", "Sam the Cooking Guy", "en", [
+        "salmon",
+        "asparagus",
+        "wild",
+      ]),
       v("4aZgoSazYto", "Pan Seared Salmon Recipe", "Joshua Weissman", "en", ["salmon", "fish"]),
     ],
   },
   el2: {
     en: [
-      v("d6bcgW-VgsI", "Greek Yogurt Parfait with Berries", "Clean & Delicious", "en", ["parfait", "berry", "brazil", "nut"]),
+      v("d6bcgW-VgsI", "Greek Yogurt Parfait with Berries", "Clean & Delicious", "en", [
+        "parfait",
+        "berry",
+        "brazil",
+        "nut",
+      ]),
       v("BV5QJQaaJLo", "Nut & Seed Breakfast Bowl", "Downshiftology", "en", ["nut", "breakfast"]),
     ],
   },
   el3: {
     en: [
-      v("k6E1n0iE5wY", "Pan Seared Scallops — Restaurant Style", "Gordon Ramsay", "en", ["scallop", "seafood", "pan"]),
+      v("k6E1n0iE5wY", "Pan Seared Scallops — Restaurant Style", "Gordon Ramsay", "en", [
+        "scallop",
+        "seafood",
+        "pan",
+      ]),
       v("UVgJn2iD3u8", "Seafood Pan Fry Technique", "Kannamma Cooks", "en", ["seafood", "fish"]),
     ],
   },
   in1: {
     en: [
-      v("mY4kzgGma6Y", "Bajra Khichdi Recipe", "Hebbars Kitchen", "en", ["khichdi", "bajra", "millet"]),
+      v("mY4kzgGma6Y", "Bajra Khichdi Recipe", "Hebbars Kitchen", "en", [
+        "khichdi",
+        "bajra",
+        "millet",
+      ]),
     ],
-    hi: [
-      v("mY4kzgGma6Y", "Bajra Khichdi — Hindi", "Hebbars Kitchen", "hi", ["khichdi", "bajra"]),
-    ],
-    ta: [
-      v("mY4kzgGma6Y", "Khichdi — Tamil Style", "Hebbars Kitchen", "ta", ["khichdi"]),
-    ],
+    hi: [v("mY4kzgGma6Y", "Bajra Khichdi — Hindi", "Hebbars Kitchen", "hi", ["khichdi", "bajra"])],
+    ta: [v("mY4kzgGma6Y", "Khichdi — Tamil Style", "Hebbars Kitchen", "ta", ["khichdi"])],
   },
   in2: {
     en: [
-      v("8Z5S9eVnJ5k", "Ragi Dosa — Finger Millet", "Hebbars Kitchen", "en", ["ragi", "dosa", "millet"]),
+      v("8Z5S9eVnJ5k", "Ragi Dosa — Finger Millet", "Hebbars Kitchen", "en", [
+        "ragi",
+        "dosa",
+        "millet",
+      ]),
     ],
-    hi: [
-      v("8Z5S9eVnJ5k", "Ragi Dosa — Hindi", "Hebbars Kitchen", "hi", ["ragi", "dosa"]),
-    ],
-    ta: [
-      v("Pt9iMB19iPI", "Millet Dosa — Tamil", "Hebbars Kitchen", "ta", ["dosa", "millet"]),
-    ],
+    hi: [v("8Z5S9eVnJ5k", "Ragi Dosa — Hindi", "Hebbars Kitchen", "hi", ["ragi", "dosa"])],
+    ta: [v("Pt9iMB19iPI", "Millet Dosa — Tamil", "Hebbars Kitchen", "ta", ["dosa", "millet"])],
   },
   eb4: {
     en: [
-      v("6Z7my9IApPc", "Quinoa Salad with Sprouts", "Pick Up Limes", "en", ["quinoa", "salad", "sprout", "moong"]),
-      v("0nqUMCsGcFk", "Moong Sprout Salad — Indian Style", "Hebbars Kitchen", "en", ["moong", "sprout", "salad"]),
+      v("6Z7my9IApPc", "Quinoa Salad with Sprouts", "Pick Up Limes", "en", [
+        "quinoa",
+        "salad",
+        "sprout",
+        "moong",
+      ]),
+      v("0nqUMCsGcFk", "Moong Sprout Salad — Indian Style", "Hebbars Kitchen", "en", [
+        "moong",
+        "sprout",
+        "salad",
+      ]),
     ],
   },
   ba4: {
     en: [
-      v("3A7Q7yH9J1k", "Tandoori Paneer Tikka", "Hebbars Kitchen", "en", ["paneer", "tandoori", "skewer"]),
+      v("3A7Q7yH9J1k", "Tandoori Paneer Tikka", "Hebbars Kitchen", "en", [
+        "paneer",
+        "tandoori",
+        "skewer",
+      ]),
     ],
-    hi: [
-      v("3A7Q7yH9J1k", "Paneer Tikka — Hindi", "Hebbars Kitchen", "hi", ["paneer", "tandoori"]),
-    ],
+    hi: [v("3A7Q7yH9J1k", "Paneer Tikka — Hindi", "Hebbars Kitchen", "hi", ["paneer", "tandoori"])],
   },
   el4: {
     en: [
-      v("4aZgoSazYto", "Crispy Pan-Seared Sea Bass", "Joshua Weissman", "en", ["fish", "sea bass", "macadamia", "seafood"]),
-      v("UVgJn2iD3u8", "Fish Fry Technique — Crispy Skin", "Kannamma Cooks", "en", ["fish", "seafood"]),
+      v("4aZgoSazYto", "Crispy Pan-Seared Sea Bass", "Joshua Weissman", "en", [
+        "fish",
+        "sea bass",
+        "macadamia",
+        "seafood",
+      ]),
+      v("UVgJn2iD3u8", "Fish Fry Technique — Crispy Skin", "Kannamma Cooks", "en", [
+        "fish",
+        "seafood",
+      ]),
     ],
   },
   in3: {
     en: [
-      v("Pt9iMB19iPI", "Methi Paratha — Indian Flatbread", "Hebbars Kitchen", "en", ["methi", "thepla", "flatbread"]),
+      v("Pt9iMB19iPI", "Methi Paratha — Indian Flatbread", "Hebbars Kitchen", "en", [
+        "methi",
+        "thepla",
+        "flatbread",
+      ]),
     ],
-    hi: [
-      v("Pt9iMB19iPI", "Methi Paratha — Hindi", "Hebbars Kitchen", "hi", ["methi", "thepla"]),
-    ],
+    hi: [v("Pt9iMB19iPI", "Methi Paratha — Hindi", "Hebbars Kitchen", "hi", ["methi", "thepla"])],
   },
   in4: {
     en: [
-      v("8c_scYUN5uc", "Dal Palak Recipe", "Your Food Lab", "en", ["dal", "palak", "spinach", "rice"]),
-      v("0nqUMCsGcFk", "Palak Dal with Brown Rice", "Hebbars Kitchen", "en", ["dal", "palak", "spinach"]),
+      v("8c_scYUN5uc", "Dal Palak Recipe", "Your Food Lab", "en", [
+        "dal",
+        "palak",
+        "spinach",
+        "rice",
+      ]),
+      v("0nqUMCsGcFk", "Palak Dal with Brown Rice", "Hebbars Kitchen", "en", [
+        "dal",
+        "palak",
+        "spinach",
+      ]),
     ],
-    hi: [
-      v("8c_scYUN5uc", "Dal Palak — Hindi", "Your Food Lab", "hi", ["dal", "palak"]),
-    ],
+    hi: [v("8c_scYUN5uc", "Dal Palak — Hindi", "Your Food Lab", "hi", ["dal", "palak"])],
   },
 };
 
@@ -197,15 +265,11 @@ function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/\s*·\s*(breakfast|lunch|dinner|snack)\s*$/i, "")
-    .split(/[^a-z0-9\u0900-\u097F\u0B80-\u0BFF\u0C00-\u0C7F]+/i)
+    .split(/[^a-z0-9\p{Script=Devanagari}\p{Script=Tamil}\p{Script=Telugu}]+/iu)
     .filter((t) => t.length > 2);
 }
 
-function scoreVideoForMeal(
-  video: CuratedVideo,
-  mealName: string,
-  ingredients: string[],
-): number {
+function scoreVideoForMeal(video: CuratedVideo, mealName: string, ingredients: string[]): number {
   const hay = `${video.title} ${video.channel} ${video.tags.join(" ")}`.toLowerCase();
   const tokens = [...tokenize(mealName), ...ingredients.flatMap((i) => tokenize(i))];
   let score = 0;
@@ -215,12 +279,22 @@ function scoreVideoForMeal(
     if (video.tags.some((t) => t.includes(token) || token.includes(t))) score += 8;
   }
 
-  if (/chicken|fish|salmon|scallop|sardine|sea bass|paneer|egg/i.test(mealName) && /chicken|fish|salmon|scallop|seafood|paneer|egg/i.test(hay)) {
+  if (
+    /chicken|fish|salmon|scallop|sardine|sea bass|paneer|egg/i.test(mealName) &&
+    /chicken|fish|salmon|scallop|seafood|paneer|egg/i.test(hay)
+  ) {
     score += 15;
   }
   if (/oat|overnight/i.test(mealName) && /oat/i.test(hay)) score += 20;
-  if (/dal|lentil|khichdi|palak|spinach/i.test(mealName) && /dal|lentil|khichdi|palak|spinach/i.test(hay)) score += 20;
-  if (/quinoa|dosa|ragi|thepla|miso|avocado|parfait/i.test(mealName) && new RegExp(mealName.split(/\s+/)[0], "i").test(hay)) {
+  if (
+    /dal|lentil|khichdi|palak|spinach/i.test(mealName) &&
+    /dal|lentil|khichdi|palak|spinach/i.test(hay)
+  )
+    score += 20;
+  if (
+    /quinoa|dosa|ragi|thepla|miso|avocado|parfait/i.test(mealName) &&
+    new RegExp(mealName.split(/\s+/)[0], "i").test(hay)
+  ) {
     score += 18;
   }
 
@@ -258,7 +332,9 @@ export function getCuratedYoutubeForMeal(input: CuratedMealVideoInput): DietYout
   const dedupedPool = dedupeVideos(DIET_VIDEO_POOL[lang] ?? DIET_VIDEO_POOL.en);
   if (!dedupedPool.length) return [];
 
-  const seed = `${input.mealId ?? ""}:${input.mealName}`.split("").reduce((n, c) => n + c.charCodeAt(0), 0);
+  const seed = `${input.mealId ?? ""}:${input.mealName}`
+    .split("")
+    .reduce((n, c) => n + c.charCodeAt(0), 0);
   const start = seed % dedupedPool.length;
   const rotated = [...dedupedPool.slice(start), ...dedupedPool.slice(0, start)];
   return rotated.slice(0, 3);
@@ -272,11 +348,11 @@ export const DIET_CURATED_BY_LANGUAGE: Record<DietLanguage, DietYoutubeVideo[]> 
   te: dedupeVideos(DIET_VIDEO_POOL.te).slice(0, 6),
 };
 
-export function curatedYoutubeKey(
-  input: Pick<DietAiSearchInput, "cuisine" | "query">,
-): string {
+export function curatedYoutubeKey(input: Pick<DietAiSearchInput, "cuisine" | "query">): string {
   if (input.cuisine === "indian") {
-    return /non-veg|chicken|fish|meat|egg|sardine|salmon|scallop/i.test(input.query) ? "nonveg" : "veg";
+    return /non-veg|chicken|fish|meat|egg|sardine|salmon|scallop/i.test(input.query)
+      ? "nonveg"
+      : "veg";
   }
   if (input.cuisine === "non-veg") return "nonveg";
   if (/oat|breakfast|overnight/i.test(input.query)) return "breakfast";

@@ -21,8 +21,7 @@ export async function readMediaCacheFromDb<T>(
     .eq("cache_key", cacheKey)
     .eq("cache_type", cacheType);
 
-  query =
-    language === null ? query.is("language", null) : query.eq("language", language);
+  query = language === null ? query.is("language", null) : query.eq("language", language);
 
   const { data, error } = await query.maybeSingle();
 
@@ -91,10 +90,7 @@ export async function writeBundleToDb(
   );
 }
 
-export async function readVideosFromDb<T>(
-  key: string,
-  language: string,
-): Promise<T | undefined> {
+export async function readVideosFromDb<T>(key: string, language: string): Promise<T | undefined> {
   return readMediaCacheFromDb<T>(dbKey(["videos", key, language]), "videos", language);
 }
 
@@ -104,23 +100,13 @@ export async function writeVideosToDb<T>(
   videos: T,
   ttlMs: number,
 ): Promise<void> {
-  await writeMediaCacheToDb(
-    dbKey(["videos", key, language]),
-    "videos",
-    language,
-    videos,
-    ttlMs,
-  );
+  await writeMediaCacheToDb(dbKey(["videos", key, language]), "videos", language, videos, ttlMs);
 }
 
 export async function readImageFromDb(key: string): Promise<string | undefined> {
   return readMediaCacheFromDb<string>(dbKey(["image", key]), "image", null);
 }
 
-export async function writeImageToDb(
-  key: string,
-  url: string,
-  ttlMs: number,
-): Promise<void> {
+export async function writeImageToDb(key: string, url: string, ttlMs: number): Promise<void> {
   await writeMediaCacheToDb(dbKey(["image", key]), "image", null, url, ttlMs);
 }

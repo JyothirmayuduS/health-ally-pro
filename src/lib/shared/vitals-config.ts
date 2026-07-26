@@ -29,7 +29,10 @@ export const EXTRA_VITAL_PRESETS: ExtraVitalPreset[] = [
   { id: "peak-flow", label: "Peak flow", unit: "L/min", placeholder: "320" },
   { id: "pain", label: "Pain score", unit: "/10", placeholder: "3" },
   { id: "height", label: "Height", unit: "cm", placeholder: "165" },
+  { id: "hc", label: "Head circumference", unit: "cm", placeholder: "48" },
+  { id: "muac", label: "MUAC", unit: "cm", placeholder: "14.5" },
   { id: "bmi", label: "BMI", unit: "kg/m²", placeholder: "24.2" },
+  { id: "bsa", label: "BSA", unit: "m²", placeholder: "1.72" },
   { id: "gcs", label: "GCS", unit: "/15", placeholder: "15" },
 ];
 

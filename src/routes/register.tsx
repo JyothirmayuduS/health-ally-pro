@@ -23,7 +23,9 @@ function RegisterPage() {
     try {
       const { user } = await signUp(email, password, fullName);
       if (user) {
-        setMessage("Account created. Check your email to confirm, or sign in if confirmation is disabled.");
+        setMessage(
+          "Account created. Check your email to confirm, or sign in if confirmation is disabled.",
+        );
         setTimeout(() => navigate({ to: "/login" }), 2000);
       }
     } catch (err) {
@@ -38,7 +40,9 @@ function RegisterPage() {
       <div className="card-soft w-full max-w-md p-8">
         <p className="label-eyebrow">Medora</p>
         <h1 className="mt-2 font-serif text-3xl tracking-tight">Create account</h1>
-        <p className="mt-2 text-sm text-ink-muted">Register as a patient to book appointments and view records.</p>
+        <p className="mt-2 text-sm text-ink-muted">
+          Register as a patient to book appointments and view records.
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <label className="block text-sm">

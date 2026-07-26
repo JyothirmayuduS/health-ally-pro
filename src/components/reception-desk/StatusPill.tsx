@@ -1,7 +1,4 @@
-const MAP: Record<
-  string,
-  { label: string; cls: string }
-> = {
+const MAP: Record<string, { label: string; cls: string }> = {
   scheduled: {
     label: "Scheduled",
     cls: "bg-white text-ink-600 border-ink-200",

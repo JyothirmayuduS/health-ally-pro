@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-07-22T04:32:00.000Z",
+  "host": {
+    "os": "darwin",
+    "arch": "arm64",
+    "dockerServerArch": "aarch64",
+    "platformsVerified": ["macos-arm64-docker-desktop"],
+    "platformsNotVerified": ["linux-amd64", "linux-arm64-bare", "windows"]
+  },
+  "image": {
+    "name": "health-ally-pro-main-app:latest",
+    "id": "efcc7815183b",
+    "sizeHuman": "1.35GB",
+    "user": "medora",
+    "cmd": ["npx", "wrangler", "dev", "--local", "--ip", "0.0.0.0", "--port", "3000"],
+    "baseDigestArm64": "sha256:d51cff3fa44ab8a368ae8708ae974480165be1b699b19527b7c0d2523433b271",
+    "secretsInHistoryOrConfig": false
+  },
+  "healthcheck": {
+    "instructionPresent": true,
+    "probe": "wget -q --spider http://127.0.0.1:3000/api/status",
+    "observedStatus": "unhealthy",
+    "reason": "wrangler fails: entry-point @tanstack/react-start/server-entry not found; prior vite preview returned HTTP 404 for all routes"
+  },
+  "runtimeServesApp": false,
+  "evidenceFiles": [
+    "docs/evidence/docker-build-report.md",
+    "docs/evidence/docker-runtime-logs.txt",
+    "docs/evidence/docker-history-layers.txt",
+    "docs/evidence/docker-image-config.json"
+  ]
+}

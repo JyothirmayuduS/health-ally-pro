@@ -27,14 +27,20 @@ import {
   Megaphone,
   TrendingUp,
   CalendarOff,
+  Droplets,
+  ScrollText,
+  BookOpen,
+  FileBarChart,
 } from "lucide-react";
 import type { DeskPortalConfig } from "./types";
+import { displayHospitalLogo, displayHospitalName } from "@/lib/hospital-brand";
+import { hasModule } from "@/lib/license";
 
 export const BILLING_DESK: DeskPortalConfig = {
   id: "billing",
   portalLabel: "Billing",
   version: "v1.0",
-  hospitalName: "Maple Hospital",
+  hospitalName: "Oak Haven Medical",
   wrapperClass: "billing-desk reception-desk",
   theme: {
     activeBg: "bg-teal-soft",
@@ -74,8 +80,7 @@ export const BILLING_DESK: DeskPortalConfig = {
       return { eyebrow: "Collections", title: "Payment log" };
     if (pathname.startsWith("/billing/encounters"))
       return { eyebrow: "Visits", title: "Encounter linkage" };
-    if (pathname.startsWith("/billing/leave"))
-      return { eyebrow: "HR", title: "My leaves" };
+    if (pathname.startsWith("/billing/leave")) return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Billing", title: "Back office" };
   },
 };
@@ -84,7 +89,7 @@ export const NURSING_DESK: DeskPortalConfig = {
   id: "nursing",
   portalLabel: "Nursing",
   version: "v1.0",
-  hospitalName: "Maple Hospital",
+  hospitalName: "Oak Haven Medical",
   wrapperClass: "nursing-desk reception-desk",
   theme: {
     activeBg: "bg-clay-soft",
@@ -113,14 +118,12 @@ export const NURSING_DESK: DeskPortalConfig = {
   titleFromPath: (pathname) => {
     if (pathname === "/nursing" || pathname === "/nursing/")
       return { eyebrow: "Ward", title: "Nursing station" };
-    if (pathname.startsWith("/nursing/beds"))
-      return { eyebrow: "IPD", title: "Bed management" };
+    if (pathname.startsWith("/nursing/beds")) return { eyebrow: "IPD", title: "Bed management" };
     if (pathname.startsWith("/nursing/patients"))
       return { eyebrow: "Census", title: "Patient list" };
     if (pathname.startsWith("/nursing/vitals"))
       return { eyebrow: "Clinical", title: "Record vitals" };
-    if (pathname.startsWith("/nursing/leave"))
-      return { eyebrow: "HR", title: "My leaves" };
+    if (pathname.startsWith("/nursing/leave")) return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Nursing", title: "Station" };
   },
 };
@@ -145,9 +148,16 @@ export const ADMIN_DESK: DeskPortalConfig = {
     {
       title: "Overview",
       items: [
-        { to: "/admin", label: "Command center", icon: LayoutDashboard, exact: true, dot: "bg-plum" },
+        {
+          to: "/admin",
+          label: "Command center",
+          icon: LayoutDashboard,
+          exact: true,
+          dot: "bg-plum",
+        },
         { to: "/admin/analytics", label: "Analytics", icon: BarChart3, dot: "bg-teal" },
         { to: "/admin/revenue", label: "Revenue", icon: DollarSign, dot: "bg-money" },
+        { to: "/admin/reports", label: "Reports (MIS)", icon: FileBarChart, dot: "bg-plum" },
         { to: "/admin/occupancy", label: "Occupancy & load", icon: LayoutGrid, dot: "bg-clay" },
       ],
     },
@@ -155,7 +165,13 @@ export const ADMIN_DESK: DeskPortalConfig = {
       title: "Organization",
       items: [
         { to: "/admin/hospital", label: "Hospital", icon: Building2, dot: "bg-sage" },
-        { to: "/admin/branches", label: "Branches", icon: GitBranch, dot: "bg-mustard" },
+        {
+          to: "/admin/branches",
+          label: "Branches",
+          icon: GitBranch,
+          dot: "bg-mustard",
+          moduleId: "multi_branch",
+        },
         { to: "/admin/departments", label: "Departments", icon: Layers, dot: "bg-clay" },
         { to: "/admin/staff", label: "Staff", icon: Users, dot: "bg-plum" },
         { to: "/admin/access-control", label: "Access control", icon: Shield, dot: "bg-plum" },
@@ -166,17 +182,51 @@ export const ADMIN_DESK: DeskPortalConfig = {
     {
       title: "Clinical config",
       items: [
-        { to: "/admin/doctors", label: "Doctors", icon: Stethoscope, dot: "bg-teal" },
+        {
+          to: "/admin/doctors",
+          label: "Doctors",
+          icon: Stethoscope,
+          dot: "bg-teal",
+          moduleId: "specialty_desk",
+        },
         { to: "/admin/doctor-roster", label: "Doctor roster", icon: CalendarRange, dot: "bg-teal" },
-        { to: "/admin/ot", label: "Operation theatre", icon: Activity, dot: "bg-plum" },
+        {
+          to: "/admin/ot",
+          label: "Operation theatre",
+          icon: Activity,
+          dot: "bg-plum",
+          moduleId: "ot",
+        },
+        {
+          to: "/admin/hospital-units",
+          label: "Hospital units",
+          icon: Droplets,
+          dot: "bg-sage",
+          moduleId: "hospital_units",
+        },
         { to: "/admin/services", label: "Services & fees", icon: Briefcase, dot: "bg-money" },
         { to: "/admin/lab-catalog", label: "Lab catalog", icon: FlaskConical, dot: "bg-sage" },
-        { to: "/admin/pharmacy-formulary", label: "Pharmacy formulary", icon: Pill, dot: "bg-mustard" },
+        {
+          to: "/admin/pharmacy-formulary",
+          label: "Pharmacy formulary",
+          icon: Pill,
+          dot: "bg-mustard",
+        },
+        { to: "/admin/masters", label: "Hospital masters", icon: BookOpen, dot: "bg-plum" },
+        {
+          to: "/admin/registers",
+          label: "Statutory registers",
+          icon: FileBarChart,
+          dot: "bg-money",
+        },
       ],
     },
     {
       title: "System",
-      items: [{ to: "/admin/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" }],
+      items: [
+        { to: "/admin/audit", label: "PHI audit", icon: ScrollText, dot: "bg-plum" },
+        { to: "/admin/settings", label: "Settings", icon: Settings, dot: "bg-ink-900" },
+      ],
     },
   ],
   searchPlaceholder: "Search staff, department, doctor…",
@@ -184,16 +234,16 @@ export const ADMIN_DESK: DeskPortalConfig = {
   titleFromPath: (pathname) => {
     if (pathname === "/admin" || pathname === "/admin/")
       return { eyebrow: "Control", title: "Hospital command center" };
+    if (pathname.startsWith("/admin/hospital-units"))
+      return { eyebrow: "Clinical ops", title: "Hospital support units" };
     if (pathname.startsWith("/admin/hospital"))
       return { eyebrow: "Organization", title: "Hospital profile" };
     if (pathname.startsWith("/admin/branches"))
       return { eyebrow: "Organization", title: "Branches" };
     if (pathname.startsWith("/admin/departments"))
       return { eyebrow: "Organization", title: "Departments" };
-    if (pathname.startsWith("/admin/staff"))
-      return { eyebrow: "People", title: "Staff directory" };
-    if (pathname.startsWith("/admin/doctors"))
-      return { eyebrow: "Clinical", title: "Doctors" };
+    if (pathname.startsWith("/admin/staff")) return { eyebrow: "People", title: "Staff directory" };
+    if (pathname.startsWith("/admin/doctors")) return { eyebrow: "Clinical", title: "Doctors" };
     if (pathname.startsWith("/admin/services"))
       return { eyebrow: "Pricing", title: "Service fees" };
     if (pathname.startsWith("/admin/lab-catalog"))
@@ -202,8 +252,11 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "Clinical", title: "Pharmacy formulary" };
     if (pathname.startsWith("/admin/settings"))
       return { eyebrow: "System", title: "Hospital settings" };
-    if (pathname.startsWith("/admin/analytics"))
-      return { eyebrow: "Insights", title: "Analytics" };
+    if (pathname.startsWith("/admin/audit"))
+      return { eyebrow: "Compliance", title: "PHI access audit" };
+    if (pathname.startsWith("/admin/analytics")) return { eyebrow: "Insights", title: "Analytics" };
+    if (pathname.startsWith("/admin/reports"))
+      return { eyebrow: "Insights", title: "Reports & MIS" };
     if (pathname.startsWith("/admin/revenue"))
       return { eyebrow: "Finance", title: "Revenue cycle" };
     if (pathname.startsWith("/admin/access-control"))
@@ -216,17 +269,35 @@ export const ADMIN_DESK: DeskPortalConfig = {
       return { eyebrow: "Communications", title: "Announcements" };
     if (pathname.startsWith("/admin/ot"))
       return { eyebrow: "Clinical", title: "Operation theatre" };
-    if (pathname.startsWith("/admin/hr"))
-      return { eyebrow: "People", title: "HR & Performance" };
+    if (pathname.startsWith("/admin/masters"))
+      return { eyebrow: "Masters", title: "Hospital master data" };
+    if (pathname.startsWith("/admin/registers"))
+      return { eyebrow: "Reports", title: "Statutory registers" };
     return { eyebrow: "Admin", title: "Control center" };
   },
 };
+
+/** Apply white-label name/logo + module entitlement filters for admin nav. */
+export function resolveAdminDesk(): DeskPortalConfig {
+  const name = displayHospitalName(ADMIN_DESK.hospitalName);
+  return {
+    ...ADMIN_DESK,
+    hospitalName: name,
+    logoUrl: displayHospitalLogo() ?? undefined,
+    sections: ADMIN_DESK.sections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => !item.moduleId || hasModule(item.moduleId)),
+      }))
+      .filter((section) => section.items.length > 0),
+  };
+}
 
 export const DOCTOR_DESK: DeskPortalConfig = {
   id: "doctor",
   portalLabel: "Doctor",
   version: "v1.0",
-  hospitalName: "Maple Hospital",
+  hospitalName: "Oak Haven Medical",
   wrapperClass: "doctor-desk reception-desk",
   theme: {
     activeBg: "bg-clay-soft",
@@ -261,6 +332,7 @@ export const DOCTOR_DESK: DeskPortalConfig = {
       items: [
         { to: "/doctor/orders", label: "Lab orders", icon: TestTube, dot: "bg-teal" },
         { to: "/doctor/prescriptions", label: "Prescriptions", icon: Pill, dot: "bg-mustard" },
+        { to: "/doctor/immunizations", label: "Vaccinations", icon: Activity, dot: "bg-clay" },
         { to: "/doctor/results", label: "Results", icon: FlaskConical, dot: "bg-clay" },
       ],
     },
@@ -284,10 +356,11 @@ export const DOCTOR_DESK: DeskPortalConfig = {
       return { eyebrow: "Diagnostics", title: "Lab orders" };
     if (pathname.startsWith("/doctor/prescriptions"))
       return { eyebrow: "Pharmacy", title: "E-prescriptions" };
+    if (pathname.startsWith("/doctor/immunizations"))
+      return { eyebrow: "Preventive", title: "Vaccinations" };
     if (pathname.startsWith("/doctor/results"))
       return { eyebrow: "Diagnostics", title: "Lab results" };
-    if (pathname.startsWith("/doctor/leave"))
-      return { eyebrow: "HR", title: "My leaves" };
+    if (pathname.startsWith("/doctor/leave")) return { eyebrow: "HR", title: "My leaves" };
     return { eyebrow: "Doctor", title: "Clinic" };
   },
 };

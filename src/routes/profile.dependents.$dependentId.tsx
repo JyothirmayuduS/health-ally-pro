@@ -21,7 +21,7 @@ export const Route = createFileRoute("/profile/dependents/$dependentId")({
       return (
         <div className="py-16 text-center">
           <p className="text-ink-muted">Dependent not found.</p>
-          <Link to="/profile/dependents/" className="mt-4 inline-block text-clay">
+          <Link to="/profile/dependents" className="mt-4 inline-block text-clay">
             Back to family profiles
           </Link>
         </div>

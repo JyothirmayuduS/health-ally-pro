@@ -69,7 +69,11 @@ function keywordSearch(query: string, limit: number): SearchResult[] {
   return out.slice(0, limit);
 }
 
-function mergeResults(keyword: SearchResult[], semantic: SearchResult[], limit: number): SearchResult[] {
+function mergeResults(
+  keyword: SearchResult[],
+  semantic: SearchResult[],
+  limit: number,
+): SearchResult[] {
   const seen = new Set<string>();
   const merged: SearchResult[] = [];
 

@@ -8,11 +8,7 @@ interface BadgeProps {
 
 export function Badge({ label, variant = "default" }: BadgeProps) {
   const bgClass =
-    variant === "clay"
-      ? "bg-clay-soft"
-      : variant === "muted"
-        ? "bg-surface-2"
-        : "bg-surface";
+    variant === "clay" ? "bg-clay-soft" : variant === "muted" ? "bg-surface-2" : "bg-surface";
   const textClass = variant === "clay" ? "text-clay" : "text-ink-muted";
 
   return (

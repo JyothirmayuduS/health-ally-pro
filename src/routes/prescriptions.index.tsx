@@ -39,10 +39,7 @@ function PatientPrescriptionsPage() {
   }, []);
 
   const filteredRx = useMemo(
-    () =>
-      doctorFilter
-        ? records.filter((r) => r.doctor_name === doctorFilter)
-        : records,
+    () => (doctorFilter ? records.filter((r) => r.doctor_name === doctorFilter) : records),
     [records, doctorFilter],
   );
 
@@ -260,9 +257,7 @@ function PastMedicationCard({ med }: { med: PatientMedication }) {
             Why it was prescribed
           </p>
         </div>
-        <p className="text-sm leading-relaxed text-ink-muted">
-          {med.clinicalReason ?? med.reason}
-        </p>
+        <p className="text-sm leading-relaxed text-ink-muted">{med.clinicalReason ?? med.reason}</p>
       </div>
     </article>
   );

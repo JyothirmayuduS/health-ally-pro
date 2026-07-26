@@ -27,9 +27,7 @@ export function ProfileStoreProvider({ children }: { children: ReactNode }) {
     return subscribeProfileStore(refresh);
   }, [refresh]);
 
-  return (
-    <ProfileStoreContext.Provider value={state}>{children}</ProfileStoreContext.Provider>
-  );
+  return <ProfileStoreContext.Provider value={state}>{children}</ProfileStoreContext.Provider>;
 }
 
 export function useProfileStore() {

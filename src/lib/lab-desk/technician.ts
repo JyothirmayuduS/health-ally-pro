@@ -47,12 +47,8 @@ function matchesTechnicianName(order: LabOrder, name: string) {
 }
 
 /** Match orders handled by the logged-in bench technician. */
-export function technicianOwnsOrder(
-  order: LabOrder,
-  ctx: TechnicianContext | string,
-) {
-  const context: TechnicianContext =
-    typeof ctx === "string" ? { name: ctx, email: "" } : ctx;
+export function technicianOwnsOrder(order: LabOrder, ctx: TechnicianContext | string) {
+  const context: TechnicianContext = typeof ctx === "string" ? { name: ctx, email: "" } : ctx;
 
   if (context.email === DEMO_TECH_EMAIL && order.bench_tech_email === DEMO_TECH_EMAIL) {
     return true;
@@ -89,8 +85,5 @@ export function useTechnicianContext() {
 export function useTechnicianOrders() {
   const { orders } = useLabStore();
   const ctx = useTechnicianContext();
-  return useMemo(
-    () => orders.filter((o) => technicianOwnsOrder(o, ctx)),
-    [orders, ctx],
-  );
+  return useMemo(() => orders.filter((o) => technicianOwnsOrder(o, ctx)), [orders, ctx]);
 }

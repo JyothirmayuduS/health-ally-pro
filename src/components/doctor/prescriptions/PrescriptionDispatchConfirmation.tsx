@@ -132,11 +132,16 @@ export function PrescriptionDispatchConfirmation({ data, onClose, onWriteAnother
           <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#E8F4F1] ring-4 ring-[#E8F4F1]/80">
             <CheckCircle2 className="h-9 w-9 text-[#2C7873]" strokeWidth={2.25} />
           </div>
-          <h2 id="rx-dispatch-confirmation-title" className="mt-4 font-serif text-xl font-semibold text-[#1B3B2E]">
+          <h2
+            id="rx-dispatch-confirmation-title"
+            className="mt-4 font-serif text-xl font-semibold text-[#1B3B2E]"
+          >
             Prescription sent
           </h2>
           <p className="mt-1 text-sm text-[#5C635F]">E-prescription delivered successfully.</p>
-          <p className="mt-3 font-mono text-lg font-bold tracking-wide text-[#1B3B2E]">{data.rxNumber}</p>
+          <p className="mt-3 font-mono text-lg font-bold tracking-wide text-[#1B3B2E]">
+            {data.rxNumber}
+          </p>
           <p className="mt-1 text-xs text-[#8A8F8C]">{formatSentAt(data.sentAt)}</p>
           <p className="mt-3 text-xs font-medium text-[#2C7873]">
             Opening {redirectLabel()} in {secondsLeft}s…
@@ -144,7 +149,9 @@ export function PrescriptionDispatchConfirmation({ data, onClose, onWriteAnother
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">Delivery summary</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
+            Delivery summary
+          </p>
 
           <div className="mt-3 space-y-2">
             {sentToPharmacy ? (
@@ -185,7 +192,9 @@ export function PrescriptionDispatchConfirmation({ data, onClose, onWriteAnother
             </div>
             <div className="flex justify-between gap-2 border-b border-[#EDEAE6] py-2">
               <span className="text-[#8A8F8C]">Diagnosis</span>
-              <span className="max-w-[58%] text-right font-medium text-[#1B3B2E]">{data.diagnosis}</span>
+              <span className="max-w-[58%] text-right font-medium text-[#1B3B2E]">
+                {data.diagnosis}
+              </span>
             </div>
             <div className="flex justify-between gap-2 pt-2">
               <span className="shrink-0 text-[#8A8F8C]">Medications</span>
@@ -246,8 +255,16 @@ export function PrescriptionDispatchConfirmation({ data, onClose, onWriteAnother
           <X className="h-5 w-5" />
         </button>
 
-        <div ref={printMountRef} className="pointer-events-none fixed left-[-9999px] top-0 opacity-0" aria-hidden>
-          <PrescriptionPreviewDocument patient={data.patient} draft={data.draft} rxId={data.rxNumber} />
+        <div
+          ref={printMountRef}
+          className="pointer-events-none fixed left-[-9999px] top-0 opacity-0"
+          aria-hidden
+        >
+          <PrescriptionPreviewDocument
+            patient={data.patient}
+            draft={data.draft}
+            rxId={data.rxNumber}
+          />
         </div>
       </div>
     </div>

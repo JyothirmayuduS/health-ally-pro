@@ -58,8 +58,12 @@ function FinanceKpi({
 }) {
   return (
     <div className="surface border-l-4 border-l-teal px-5 py-4">
-      <p className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-400">{label}</p>
-      <p className="mt-2 font-heading text-[28px] font-semibold tabular-nums text-ink-900">{value}</p>
+      <p className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-400">
+        {label}
+      </p>
+      <p className="mt-2 font-heading text-[28px] font-semibold tabular-nums text-ink-900">
+        {value}
+      </p>
       <p className={`mt-1 text-[11px] font-medium ${accent ?? "text-sage"}`}>
         {delta} <span className="text-ink-400">{vs}</span>
       </p>
@@ -89,21 +93,39 @@ export function HospitalCommandCenter() {
     <div className="space-y-6" data-testid="hospital-command-center">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-teal">Medora ERP</p>
-          <h2 className="font-heading text-xl font-semibold text-ink-900 sm:text-2xl">Hospital command center</h2>
-          <p className="mt-0.5 text-sm text-ink-500">Clinical · Diagnostics · Operations · Finance</p>
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-teal">
+            Medora ERP
+          </p>
+          <h2 className="font-heading text-xl font-semibold text-ink-900 sm:text-2xl">
+            Hospital command center
+          </h2>
+          <p className="mt-0.5 text-sm text-ink-500">
+            Clinical · Diagnostics · Operations · Finance
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link to="/reception" className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50">
+          <Link
+            to="/reception"
+            className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50"
+          >
             OPD →
           </Link>
-          <Link to="/nursing/beds" className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50">
+          <Link
+            to="/nursing/beds"
+            className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50"
+          >
             IPD →
           </Link>
-          <Link to="/lab" className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50">
+          <Link
+            to="/lab"
+            className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50"
+          >
             Lab →
           </Link>
-          <Link to="/billing" className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50">
+          <Link
+            to="/billing"
+            className="rounded-full border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 hover:bg-stone-50"
+          >
             Billing →
           </Link>
         </div>
@@ -111,10 +133,32 @@ export function HospitalCommandCenter() {
 
       {/* Finance KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <FinanceKpi label="Revenue today" value={fmtInr(FINANCE_KPIS.revenueToday.value)} delta={FINANCE_KPIS.revenueToday.delta} vs={FINANCE_KPIS.revenueToday.vs} />
-        <FinanceKpi label="Pending payments" value={fmtInr(FINANCE_KPIS.pendingPayments.value)} delta={FINANCE_KPIS.pendingPayments.delta} vs={FINANCE_KPIS.pendingPayments.vs} accent="text-clay" />
-        <FinanceKpi label="Total collected" value={fmtInr(FINANCE_KPIS.totalCollected.value)} delta={FINANCE_KPIS.totalCollected.delta} vs={FINANCE_KPIS.totalCollected.vs} />
-        <FinanceKpi label="Insurance claims" value={String(FINANCE_KPIS.insuranceClaims.value)} delta={FINANCE_KPIS.insuranceClaims.delta} vs={FINANCE_KPIS.insuranceClaims.vs} accent="text-plum" />
+        <FinanceKpi
+          label="Revenue today"
+          value={fmtInr(FINANCE_KPIS.revenueToday.value)}
+          delta={FINANCE_KPIS.revenueToday.delta}
+          vs={FINANCE_KPIS.revenueToday.vs}
+        />
+        <FinanceKpi
+          label="Pending payments"
+          value={fmtInr(FINANCE_KPIS.pendingPayments.value)}
+          delta={FINANCE_KPIS.pendingPayments.delta}
+          vs={FINANCE_KPIS.pendingPayments.vs}
+          accent="text-clay"
+        />
+        <FinanceKpi
+          label="Total collected"
+          value={fmtInr(FINANCE_KPIS.totalCollected.value)}
+          delta={FINANCE_KPIS.totalCollected.delta}
+          vs={FINANCE_KPIS.totalCollected.vs}
+        />
+        <FinanceKpi
+          label="Insurance claims"
+          value={String(FINANCE_KPIS.insuranceClaims.value)}
+          delta={FINANCE_KPIS.insuranceClaims.delta}
+          vs={FINANCE_KPIS.insuranceClaims.vs}
+          accent="text-plum"
+        />
       </div>
 
       {/* Charts row */}
@@ -125,10 +169,27 @@ export function HospitalCommandCenter() {
               <AreaChart data={REVENUE_VS_EXPENSES}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`} />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`}
+                />
                 <Tooltip formatter={(v: number) => fmtInr(v)} contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="revenue" stroke="#2C7873" fill="#2C787320" strokeWidth={2} name="Revenue" />
-                <Area type="monotone" dataKey="expenses" stroke="#B85C38" fill="#B85C3820" strokeWidth={2} name="Expenses" />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#2C7873"
+                  fill="#2C787320"
+                  strokeWidth={2}
+                  name="Revenue"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="expenses"
+                  stroke="#B85C38"
+                  fill="#B85C3820"
+                  strokeWidth={2}
+                  name="Expenses"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -139,7 +200,11 @@ export function HospitalCommandCenter() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={PAYMENT_METHODS} layout="vertical" margin={{ left: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EDEAE6" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+                />
                 <YAxis type="category" dataKey="method" tick={{ fontSize: 11 }} width={72} />
                 <Tooltip formatter={(v: number) => fmtInr(v)} contentStyle={tooltipStyle} />
                 <Bar dataKey="amount" fill="#2C7873" radius={[0, 4, 4, 0]} />
@@ -154,7 +219,10 @@ export function HospitalCommandCenter() {
         <DeskPanel
           title="Recent bills"
           action={
-            <Link to="/billing/invoices" className="text-[12px] font-medium text-teal hover:underline">
+            <Link
+              to="/billing/invoices"
+              className="text-[12px] font-medium text-teal hover:underline"
+            >
               View all <ArrowRight className="ml-0.5 inline h-3 w-3" />
             </Link>
           }
@@ -184,7 +252,10 @@ export function HospitalCommandCenter() {
         <DeskPanel
           title="OPD — today's schedule"
           action={
-            <Link to="/reception/appointments" className="text-[12px] font-medium text-teal hover:underline">
+            <Link
+              to="/reception/appointments"
+              className="text-[12px] font-medium text-teal hover:underline"
+            >
               Full schedule <ArrowRight className="ml-0.5 inline h-3 w-3" />
             </Link>
           }
@@ -193,7 +264,11 @@ export function HospitalCommandCenter() {
             {OPD_TODAY.map((a) => (
               <li key={a.id} className="flex items-start gap-3 px-5 py-3">
                 <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-teal-soft text-xs font-bold text-teal">
-                  {a.patient.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                  {a.patient
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -229,11 +304,15 @@ export function HospitalCommandCenter() {
                 <p className="text-[10px] uppercase text-ink-400">Total</p>
               </div>
               <div className="rounded-lg border border-ink-200 bg-stone-50 p-3 text-center">
-                <p className="mt-6 text-lg font-semibold tabular-nums text-plum">{IPD_SUMMARY.occupied}</p>
+                <p className="mt-6 text-lg font-semibold tabular-nums text-plum">
+                  {IPD_SUMMARY.occupied}
+                </p>
                 <p className="text-[10px] uppercase text-ink-400">Occupied</p>
               </div>
               <div className="rounded-lg border border-ink-200 bg-stone-50 p-3 text-center">
-                <p className="mt-6 text-lg font-semibold tabular-nums text-sage">{IPD_SUMMARY.available}</p>
+                <p className="mt-6 text-lg font-semibold tabular-nums text-sage">
+                  {IPD_SUMMARY.available}
+                </p>
                 <p className="text-[10px] uppercase text-ink-400">Available</p>
               </div>
             </div>
@@ -242,7 +321,10 @@ export function HospitalCommandCenter() {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={[{ value: IPD_SUMMARY.occupancyRate }, { value: 100 - IPD_SUMMARY.occupancyRate }]}
+                      data={[
+                        { value: IPD_SUMMARY.occupancyRate },
+                        { value: 100 - IPD_SUMMARY.occupancyRate },
+                      ]}
                       innerRadius={28}
                       outerRadius={40}
                       startAngle={90}
@@ -360,21 +442,54 @@ export function HospitalCommandCenter() {
           <p className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-400">
             Ask Medora
           </p>
-          <MedoraAiChatBar context="general" placeholder="Ask about beds, revenue, lab backlog, OT status…" />
+          <MedoraAiChatBar
+            context="general"
+            placeholder="Ask about beds, revenue, lab backlog, OT status…"
+          />
         </div>
       </div>
 
       {/* Sector quick links */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { to: "/reception", icon: Stethoscope, label: "OPD & reception", color: "bg-sage-soft text-sage" },
-          { to: "/nursing/beds", icon: BedDouble, label: "IPD & beds", color: "bg-plum-soft text-plum" },
+          {
+            to: "/reception",
+            icon: Stethoscope,
+            label: "OPD & reception",
+            color: "bg-sage-soft text-sage",
+          },
+          {
+            to: "/nursing/beds",
+            icon: BedDouble,
+            label: "IPD & beds",
+            color: "bg-plum-soft text-plum",
+          },
           { to: "/lab", icon: FlaskConical, label: "Laboratory", color: "bg-teal-soft text-teal" },
-          { to: "/pharmacy", icon: Wallet, label: "Pharmacy", color: "bg-mustard-soft text-mustard" },
+          {
+            to: "/pharmacy",
+            icon: Wallet,
+            label: "Pharmacy",
+            color: "bg-mustard-soft text-mustard",
+          },
           { to: "/lab/radiology", icon: Scan, label: "Radiology", color: "bg-clay-soft text-clay" },
-          { to: "/admin/ot", icon: Stethoscope, label: "Operation theatre", color: "bg-plum-soft text-plum" },
-          { to: "/billing", icon: Wallet, label: "Billing & finance", color: "bg-money-soft text-money" },
-          { to: "/admin/staff", icon: Stethoscope, label: "Staff & inventory", color: "bg-stone-100 text-ink-600" },
+          {
+            to: "/admin/ot",
+            icon: Stethoscope,
+            label: "Operation theatre",
+            color: "bg-plum-soft text-plum",
+          },
+          {
+            to: "/billing",
+            icon: Wallet,
+            label: "Billing & finance",
+            color: "bg-money-soft text-money",
+          },
+          {
+            to: "/admin/staff",
+            icon: Stethoscope,
+            label: "Staff & inventory",
+            color: "bg-stone-100 text-ink-600",
+          },
         ].map((item) => (
           <Link
             key={item.to + item.label}

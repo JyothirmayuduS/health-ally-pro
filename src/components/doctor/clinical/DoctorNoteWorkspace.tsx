@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import {
-  CheckCircle2,
-  FileText,
-  Save,
-  Stethoscope,
-} from "lucide-react";
+import { CheckCircle2, FileText, Save, Stethoscope } from "lucide-react";
 import { DoctorClinicalPageHeader } from "@/components/doctor/clinical/DoctorClinicalPageHeader";
 import { DoctorClinicalPatientCard } from "@/components/doctor/clinical/DoctorClinicalPatientCard";
 import { DoctorLockedPatientSelect } from "@/components/doctor/DoctorLockedPatientSelect";
@@ -53,7 +48,7 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
 
   const initialId = searchPatientId
     ? toEncounterPatientId(searchPatientId)
-    : inConsult?.patientId ?? clinicalPatients[0]?.encounterId ?? "";
+    : (inConsult?.patientId ?? clinicalPatients[0]?.encounterId ?? "");
 
   const [patientId, setPatientId] = useState(initialId);
   const [form, setForm] = useState<NoteForm>(EMPTY_FORM);
@@ -61,9 +56,7 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
 
   const panelId =
-    searchPatientId ??
-    clinicalPatients.find((p) => p.encounterId === patientId)?.id ??
-    "";
+    searchPatientId ?? clinicalPatients.find((p) => p.encounterId === patientId)?.id ?? "";
 
   useEffect(() => {
     const refresh = () => setEncounters(listEncounters());
@@ -99,10 +92,7 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
   const therapy = panelId ? getPatientTherapy(panelId) : undefined;
   const latestVitals = panelId ? listVitalsForPatient(panelId)[0] : undefined;
   const recentEncounters = useMemo(
-    () =>
-      encounters
-        .filter((e) => e.patientId === mrn || e.patientId === patientId)
-        .slice(0, 3),
+    () => encounters.filter((e) => e.patientId === mrn || e.patientId === patientId).slice(0, 3),
     [encounters, mrn, patientId],
   );
 
@@ -142,11 +132,7 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
       toast.error("Add at least chief complaint or assessment before signing");
       return;
     }
-    saveEncounterSoap(
-      enc.id,
-      { ...form, signedAt: new Date().toISOString() },
-      true,
-    );
+    saveEncounterSoap(enc.id, { ...form, signedAt: new Date().toISOString() }, true);
     toast.success(`Encounter ${enc.id} signed and closed`);
     setEncounters(listEncounters());
     setDraftSavedAt(null);
@@ -224,7 +210,11 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
           <span className="font-mono text-xs text-[#8A8F8C]">{activeEncounter.id}</span>
           {draftSavedAt ? (
             <span className="text-xs text-[#8A8F8C]">
-              · Draft saved {new Date(draftSavedAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+              · Draft saved{" "}
+              {new Date(draftSavedAt).toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </span>
           ) : null}
         </div>
@@ -252,10 +242,15 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
             </div>
           </section>
 
-          <form className="space-y-4 rounded-[20px] border border-[#EDEAE6] bg-white p-4 sm:p-5" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="space-y-4 rounded-[20px] border border-[#EDEAE6] bg-white p-4 sm:p-5"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <label>
               <span className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase text-[#8A8F8C]">
-                <span className="grid h-5 w-5 place-items-center rounded-md bg-[#F0DDD6] text-[10px] font-bold text-[#B8735D]">S</span>
+                <span className="grid h-5 w-5 place-items-center rounded-md bg-[#F0DDD6] text-[10px] font-bold text-[#B8735D]">
+                  S
+                </span>
                 Subjective · Chief complaint
               </span>
               <textarea
@@ -270,7 +265,9 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
             <label>
               <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
                 <span className="flex items-center gap-2 text-xs font-semibold uppercase text-[#8A8F8C]">
-                  <span className="grid h-5 w-5 place-items-center rounded-md bg-[#E8EFE6] text-[10px] font-bold text-[#1B3B2E]">O</span>
+                  <span className="grid h-5 w-5 place-items-center rounded-md bg-[#E8EFE6] text-[10px] font-bold text-[#1B3B2E]">
+                    O
+                  </span>
                   Objective · Exam &amp; vitals
                 </span>
                 <button
@@ -293,7 +290,9 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
                 <span className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase text-[#8A8F8C]">
-                  <span className="grid h-5 w-5 place-items-center rounded-md bg-[#F5E6B8] text-[10px] font-bold text-[#5C4A1E]">A</span>
+                  <span className="grid h-5 w-5 place-items-center rounded-md bg-[#F5E6B8] text-[10px] font-bold text-[#5C4A1E]">
+                    A
+                  </span>
                   Assessment
                 </span>
                 <textarea
@@ -306,7 +305,9 @@ export function DoctorNoteWorkspace({ searchPatientId }: Props) {
               </label>
               <label>
                 <span className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase text-[#8A8F8C]">
-                  <span className="grid h-5 w-5 place-items-center rounded-md bg-[#1B3B2E] text-[10px] font-bold text-white">P</span>
+                  <span className="grid h-5 w-5 place-items-center rounded-md bg-[#1B3B2E] text-[10px] font-bold text-white">
+                    P
+                  </span>
                   Plan
                 </span>
                 <textarea

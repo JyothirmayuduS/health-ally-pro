@@ -65,9 +65,8 @@ export async function recordExerciseCompletion(
   today.completions.push({ ...entry, completedAt: new Date().toISOString() });
   await writeLogs(logs);
 
-  const { appendClinicalEvent, demoPanelPatientId, defaultClinicalPatientId } = await import(
-    "@/lib/clinical-event-log"
-  );
+  const { appendClinicalEvent, demoPanelPatientId, defaultClinicalPatientId } =
+    await import("@/lib/clinical-event-log");
   await appendClinicalEvent({
     kind: "exercise_adherence",
     patientId: defaultClinicalPatientId(),

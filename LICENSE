@@ -1,0 +1,45 @@
+# Proprietary Software License — Medora
+
+Copyright (c) 2026 Jyothirmayudu S. All rights reserved.
+
+## Grant
+
+Subject to a valid commercial agreement and active license key issued by the Licensor,
+the Licensee is granted a non-exclusive, non-transferable right to use Medora
+(the "Software") for the Licensee's own hospital / clinic operations, for the term
+and seat/module limits described in the order form.
+
+## Restrictions
+
+Without prior written consent, Licensee may not:
+
+- Resell, sublicense, or redistribute the Software
+- Remove or obscure proprietary notices or evaluation watermarks (except under a licensed build)
+- Reverse engineer except to the extent permitted by applicable law
+- Use the Software to provide a competing hosted HMS to third parties
+
+## Evaluation use
+
+Builds without a valid `VITE_MEDORA_LICENSE_KEY` are **evaluation only**, may display
+watermarks, and must not be used for live patient care or production PHI.
+
+## Medical disclaimer
+
+The Software is a clinical workflow and documentation aid. It does **not** provide
+medical advice, diagnose conditions, or replace licensed clinician judgment.
+Emergency care must use local emergency services.
+
+## Data & compliance
+
+Licensee remains the data controller for patient data. Licensor does not claim ownership
+of Licensee PHI. Production deployments require a separate Data Processing Agreement /
+BAA where applicable.
+
+## Disclaimer of warranty
+
+EXCEPT AS EXPRESSLY STATED IN A SIGNED AGREEMENT, THE SOFTWARE IS PROVIDED "AS IS"
+WITHOUT WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+
+## Contact
+
+Commercial licensing: sales@medora.health (replace with your sales email)

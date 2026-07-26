@@ -22,7 +22,7 @@ export type PatientRxSyncEnvelope = {
   doctor_specialty: string;
   patientInstructions?: string;
   sent_at: string;
-  status: "active" | "dispensed" | "expired";
+  status: "active" | "dispensed" | "expired" | "cancelled" | "amended";
 };
 
 export type PatientRxInboxPollResponse = {

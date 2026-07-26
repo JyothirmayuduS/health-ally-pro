@@ -43,9 +43,7 @@ export function DoctorClinicalPageHeader({
           <h1
             className={cn(
               "font-serif font-semibold leading-tight text-[#1B3B2E]",
-              compact
-                ? "text-lg lg:text-[1.75rem]"
-                : "text-[1.5rem] sm:text-[1.75rem]",
+              compact ? "text-lg lg:text-[1.75rem]" : "text-[1.5rem] sm:text-[1.75rem]",
             )}
           >
             {title}

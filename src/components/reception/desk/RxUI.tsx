@@ -1,13 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 
-export function RxPage({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function RxPage({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={cn("p-6 lg:p-8", className)}>{children}</div>;
 }
 
@@ -42,9 +36,7 @@ export function RxCard({
   className?: string;
   padding?: boolean;
 }) {
-  return (
-    <div className={cn("rx-card", padding && "p-5 lg:p-6", className)}>{children}</div>
-  );
+  return <div className={cn("rx-card", padding && "p-5 lg:p-6", className)}>{children}</div>;
 }
 
 export function RxBtn({
@@ -73,7 +65,8 @@ export function RxBtn({
       type="button"
       className={cn(
         "inline-flex items-center gap-2 rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-colors",
-        variant === "outline" && "border border-stone-200 bg-white text-stone-700 hover:bg-stone-50",
+        variant === "outline" &&
+          "border border-stone-200 bg-white text-stone-700 hover:bg-stone-50",
         variant === "ghost" && "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
         className,
       )}

@@ -1,0 +1,27 @@
+{
+  "a_clinical_read_succeeds": {
+    "status": 200,
+    "ok": true,
+    "rows": 81
+  },
+  "b_failure_in_dlq": {
+    "primary_broke": true,
+    "primary_error": "invalid input syntax for type uuid: \"not-a-uuid\"",
+    "dlq_insert_error": null,
+    "matching_failure": {
+      "id": "ad905f3f-fa4f-422d-9f67-54241ee0a790",
+      "error_message": "PHI_AUDIT_FORCE_FAIL",
+      "created_at": "2026-07-23T12:55:15.545117+00:00",
+      "payload_path": "writeRecordLevelPhiReadAudit",
+      "record_level": true
+    },
+    "raw_failures_count": 1
+  },
+  "c_alert_fires": {
+    "ok": false,
+    "alert": true,
+    "checked_at": "2026-07-23T12:55:16.145694+00:00",
+    "open_failures": 2
+  },
+  "pass": true
+}

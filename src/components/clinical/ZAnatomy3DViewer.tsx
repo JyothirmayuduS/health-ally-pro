@@ -81,7 +81,7 @@ function muscleMaterial(original: THREE.Material, xray = false): THREE.Material 
 
 function createHighlightMaterial(original: THREE.Material, color: string): THREE.Material {
   const base = Array.isArray(original) ? original[0] : original;
-  const material = base.clone() as THREE.MeshStandardMaterial;
+  const material = base.clone();
   if (
     material instanceof THREE.MeshStandardMaterial ||
     material instanceof THREE.MeshPhysicalMaterial
@@ -141,7 +141,15 @@ function getMeshLabel(mesh: THREE.Mesh): string {
   return human;
 }
 
-function ViewCamera({ view, distance }: { view: AnatomyView; distance: number }) {
+function ViewCamera({
+  view,
+  distance,
+  target,
+}: {
+  view: AnatomyView;
+  distance: number;
+  target: [number, number, number];
+}) {
   const { camera } = useThree();
   const controls = useThree((s) => s.controls) as OrbitControlsImpl | null;
 
@@ -152,17 +160,17 @@ function ViewCamera({ view, distance }: { view: AnatomyView; distance: number })
     const x = horiz * Math.sin(azimuth);
     const z = horiz * Math.cos(azimuth);
 
-    camera.position.set(x, y, z);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(target[0] + x, target[1] + y, target[2] + z);
+    camera.lookAt(target[0], target[1], target[2]);
     camera.near = 0.01;
     camera.far = 200;
     camera.updateProjectionMatrix();
 
     if (controls) {
-      controls.target.set(0, 0, 0);
+      controls.target.set(target[0], target[1], target[2]);
       controls.update();
     }
-  }, [view, distance, camera, controls]);
+  }, [view, distance, target, camera, controls]);
 
   return null;
 }
@@ -181,6 +189,7 @@ type AtlasModelProps = {
   readOnly: boolean;
   hoveredId: string | null;
   selectedId: string | null;
+  focusKeywords?: string[];
   onHoverId: (id: string | null) => void;
   onHoverLabel: (label: string | null) => void;
   onPick: (regionId: string, label: string, meshType: string) => void;
@@ -194,6 +203,7 @@ function AtlasModel({
   readOnly,
   hoveredId,
   selectedId,
+  focusKeywords,
   onHoverId,
   onHoverLabel,
   onPick,
@@ -212,9 +222,18 @@ function AtlasModel({
   const pointerDownPosition = useRef<{ x: number; y: number } | null>(null);
   const pointerMoved = useRef(false);
   const ignoreSelection = useRef(false);
+  const focusSet = useMemo(
+    () => (focusKeywords ?? []).map((k) => k.toLowerCase()),
+    [focusKeywords],
+  );
 
   useEffect(() => {
     const list: AtlasMeshEntry[] = [];
+    const box = new THREE.Box3().setFromObject(root);
+    const size = box.getSize(new THREE.Vector3());
+    const readyDist = Math.max(size.x, size.y, size.z) * 1.35 || 2.8;
+    onReady(readyDist);
+
     root.traverse((child) => {
       if (!(child instanceof THREE.Mesh)) return;
       ensureOriginalMaterial(child);
@@ -233,15 +252,37 @@ function AtlasModel({
       } else {
         child.material = original;
       }
+
+      const isFocus =
+        focusSet.length === 0 ||
+        focusSet.some((k) => label.toLowerCase().includes(k) || path.toLowerCase().includes(k));
+
       child.userData.hoverMaterial = createHighlightMaterial(child.material, "#E53935");
       child.userData.markedMaterial = createHighlightMaterial(child.material, "#2E6B4F");
       child.userData.selectedMaterial = createHighlightMaterial(child.material, "#FFD54F");
+
+      if (focusSet.length > 0) {
+        if (isFocus) {
+          child.material = createHighlightMaterial(child.material, "#3D8BFF");
+        } else if (
+          child.material instanceof THREE.MeshStandardMaterial ||
+          child.material instanceof THREE.MeshPhysicalMaterial
+        ) {
+          const dimmed = child.material.clone();
+          dimmed.transparent = true;
+          dimmed.opacity = 0.18;
+          dimmed.depthWrite = false;
+          child.material = dimmed;
+        }
+      }
+
       const entry = { mesh: child, system, id, label };
       child.userData.meshEntry = entry;
+      child.userData.isSpecialtyFocus = isFocus;
       list.push(entry);
     });
     meshes.current = list;
-  }, [root, visibility, xrayMuscles]);
+  }, [root, visibility, xrayMuscles, focusSet, onReady]);
 
   const findMeshEntry = useCallback((object: THREE.Object3D | null) => {
     let current: THREE.Object3D | null = object;
@@ -414,10 +455,13 @@ useGLTF.preload(ANATOMY_MODELS.atlas, true);
 function Scene({
   view,
   cameraDistance,
+  cameraTarget,
   ...modelProps
-}: AtlasModelProps & { view: AnatomyView; cameraDistance: number }) {
-  const target = useMemo(() => [0, 0, 0] as const, []);
-
+}: AtlasModelProps & {
+  view: AnatomyView;
+  cameraDistance: number;
+  cameraTarget: [number, number, number];
+}) {
   return (
     <>
       <color attach="background" args={["#EEF2F0"]} />
@@ -427,7 +471,7 @@ function Scene({
       <directionalLight position={[-5, 3, -3]} intensity={0.65} color="#e8f0ff" />
       <directionalLight position={[0, -2, 4]} intensity={0.22} color="#dce8ff" />
       <Environment preset="sunset" />
-      <ViewCamera view={view} distance={cameraDistance} />
+      <ViewCamera view={view} distance={cameraDistance} target={cameraTarget} />
       <Suspense fallback={null}>
         <AtlasModel {...modelProps} selectedId={modelProps.selectedId} />
       </Suspense>
@@ -439,7 +483,7 @@ function Scene({
         minDistance={cameraDistance * 0.25}
         maxDistance={cameraDistance * 4}
         zoomSpeed={1.2}
-        target={target}
+        target={cameraTarget}
       />
     </>
   );
@@ -450,20 +494,56 @@ type Props = {
   onChange?: (markers: BodyMarker[]) => void;
   readOnly?: boolean;
   className?: string;
+  title?: string;
+  subtitle?: string;
+  initialView?: AnatomyView;
+  initialPreset?: ViewPreset;
+  cameraTarget?: [number, number, number];
+  cameraDistance?: number;
+  focusKeywords?: string[];
 };
 
-export function ZAnatomy3DViewer({ markers, onChange, readOnly = false, className }: Props) {
-  const [view, setView] = useState<AnatomyView>("external-front");
-  const [visibility, setVisibility] = useState<SystemVisibility>(DEFAULT_SYSTEM_VISIBILITY);
-  const [xrayMuscles, setXrayMuscles] = useState(false);
+export function ZAnatomy3DViewer({
+  markers,
+  onChange,
+  readOnly = false,
+  className,
+  title = "3D body map",
+  subtitle = "Real anatomy model · click to flag · scroll to zoom",
+  initialView = "external-front",
+  initialPreset = "surface",
+  cameraTarget = [0, 0, 0],
+  cameraDistance: cameraDistanceProp,
+  focusKeywords,
+}: Props) {
+  const [view, setView] = useState<AnatomyView>(initialView);
+  const initialVis = VIEW_PRESETS.find((p) => p.id === initialPreset);
+  const [visibility, setVisibility] = useState<SystemVisibility>(
+    initialVis?.visibility ?? DEFAULT_SYSTEM_VISIBILITY,
+  );
+  const [xrayMuscles, setXrayMuscles] = useState(Boolean(initialVis?.xrayMuscles));
   const [hoverLabel, setHoverLabel] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [cameraDistance, setCameraDistance] = useState(2.8);
+  const [cameraDistance, setCameraDistance] = useState(cameraDistanceProp ?? 2.8);
+  const targetKey = cameraTarget.join(",");
 
-  const onModelReady = useCallback((dist: number) => {
-    setCameraDistance(dist);
-  }, []);
+  useEffect(() => {
+    setView(initialView);
+    const p = VIEW_PRESETS.find((x) => x.id === initialPreset);
+    if (p) {
+      setVisibility(p.visibility);
+      setXrayMuscles(Boolean(p.xrayMuscles));
+    }
+    if (cameraDistanceProp != null) setCameraDistance(cameraDistanceProp);
+  }, [initialView, initialPreset, cameraDistanceProp, targetKey]);
+
+  const onModelReady = useCallback(
+    (dist: number) => {
+      if (cameraDistanceProp == null) setCameraDistance(dist);
+    },
+    [cameraDistanceProp],
+  );
 
   const applyPreset = (preset: ViewPreset) => {
     const p = VIEW_PRESETS.find((x) => x.id === preset);
@@ -495,10 +575,8 @@ export function ZAnatomy3DViewer({ markers, onChange, readOnly = false, classNam
     >
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h2 className="text-sm font-semibold text-[#1B3B2E]">3D body map</h2>
-          <p className="text-[11px] text-[#8A8F8C]">
-            Real anatomy model · click to flag · scroll to zoom
-          </p>
+          <h2 className="text-sm font-semibold text-[#1B3B2E]">{title}</h2>
+          <p className="text-[11px] text-[#8A8F8C]">{subtitle}</p>
         </div>
         <div className="flex flex-wrap gap-1">
           {ANATOMY_VIEWS.map((v) => (
@@ -558,7 +636,7 @@ export function ZAnatomy3DViewer({ markers, onChange, readOnly = false, classNam
       <div className="relative mt-3 h-[min(58vh,440px)] min-h-[300px] overflow-hidden rounded-2xl border border-[#D8E0DC] bg-gradient-to-b from-[#F8FAF9] to-[#E8EEEB]">
         <Canvas
           className={readOnly ? "cursor-grab" : "cursor-pointer"}
-          camera={{ fov: 32, near: 0.01, far: 200, position: [0, 0.2, 2.8] }}
+          camera={{ fov: 32, near: 0.01, far: 200, position: [0, 0.2, cameraDistance] }}
           gl={{
             antialias: true,
             toneMapping: THREE.ACESFilmicToneMapping,
@@ -569,12 +647,14 @@ export function ZAnatomy3DViewer({ markers, onChange, readOnly = false, classNam
           <Scene
             view={view}
             cameraDistance={cameraDistance}
+            cameraTarget={cameraTarget}
             visibility={visibility}
             xrayMuscles={xrayMuscles}
             markers={markers}
             readOnly={readOnly}
             hoveredId={hoveredId}
             selectedId={selectedId}
+            focusKeywords={focusKeywords}
             onHoverId={setHoveredId}
             onHoverLabel={setHoverLabel}
             onPick={(regionId, label, meshType) => {

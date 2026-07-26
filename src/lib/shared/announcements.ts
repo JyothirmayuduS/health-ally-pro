@@ -76,7 +76,7 @@ function save(data: Announcement[]) {
 export function getAnnouncements(): Announcement[] {
   const now = new Date().toISOString();
   return load().map((a) =>
-    a.status === "active" && a.expiresAt < now ? { ...a, status: "expired" } : a
+    a.status === "active" && a.expiresAt < now ? { ...a, status: "expired" } : a,
   );
 }
 
@@ -105,6 +105,5 @@ export function updateAnnouncement(id: string, patch: Partial<Announcement>): vo
 export const ANNOUNCEMENTS_EVENT = "medora-announcements-updated";
 
 export function notifyAnnouncementsUpdated() {
-  if (typeof window !== "undefined")
-    window.dispatchEvent(new CustomEvent(ANNOUNCEMENTS_EVENT));
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(ANNOUNCEMENTS_EVENT));
 }

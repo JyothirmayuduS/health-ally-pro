@@ -7,7 +7,7 @@ export type SpecimenMeta = {
   storage_rack: string;
   storage_slot: string;
   temp: "Room" | "2–8 °C" | "Frozen";
-  condition: "Acceptable" | "Hemolyzed" | "Lipemic";
+  condition: "Adequate" | "Hemolyzed" | "Lipemic" | "Clotted" | "Insufficient volume";
 };
 
 const TUBE_VISUAL: Record<string, { cap: string; ring: string; label: string }> = {
@@ -42,7 +42,7 @@ export function buildSpecimenMeta(order: LabOrder, catalog?: LabCatalogItem | nu
     storage_rack: rack,
     storage_slot: slot,
     temp: isUa ? "Room" : needsCold ? "2–8 °C" : "Room",
-    condition: "Acceptable",
+    condition: "Adequate",
   };
 }
 

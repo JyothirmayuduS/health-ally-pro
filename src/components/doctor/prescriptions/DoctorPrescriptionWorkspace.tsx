@@ -34,7 +34,11 @@ export function DoctorPrescriptionWorkspace({
   const [draftSnapshot, setDraftSnapshot] = useState<{
     diagnosis: string;
     diagnosisIcd?: string;
-    lines: { drug_id: string; frequency: import("@/lib/doctor-prescription-workflow").RxFrequency; durationDays: number }[];
+    lines: {
+      drug_id: string;
+      frequency: import("@/lib/doctor-prescription-workflow").RxFrequency;
+      durationDays: number;
+    }[];
   } | null>(null);
 
   const goTab = useCallback(
@@ -68,7 +72,11 @@ export function DoctorPrescriptionWorkspace({
       label: string;
       diagnosis: string;
       diagnosisIcd?: string;
-      lines: { drug_id: string; frequency: import("@/lib/doctor-prescription-workflow").RxFrequency; durationDays: number }[];
+      lines: {
+        drug_id: string;
+        frequency: import("@/lib/doctor-prescription-workflow").RxFrequency;
+        durationDays: number;
+      }[];
     }) => {
       void navigate({
         to: "/doctor/prescriptions",
@@ -91,13 +99,9 @@ export function DoctorPrescriptionWorkspace({
   return (
     <div className="min-w-0">
       <header className="sticky top-0 z-30 border-b border-[#E5E1DC] bg-white pt-[env(safe-area-inset-top,0px)]">
-        <nav
-          className="flex px-4 sm:px-6 lg:px-8 xl:px-10"
-          aria-label="Prescription views"
-        >
+        <nav className="flex px-4 sm:px-6 lg:px-8 xl:px-10" aria-label="Prescription views">
           {TABS.map((tab) => {
-            const active =
-              view === tab.id && (tab.id !== "sent" || !rxId || tab.id === "sent");
+            const active = view === tab.id && (tab.id !== "sent" || !rxId || tab.id === "sent");
             return (
               <button
                 key={tab.id}
@@ -138,7 +142,10 @@ export function DoctorPrescriptionWorkspace({
 
         {view === "templates" ? (
           <>
-            <DoctorRxTemplatesPanel onApplyTemplate={handleApplyTemplate} currentDraft={draftSnapshot ?? undefined} />
+            <DoctorRxTemplatesPanel
+              onApplyTemplate={handleApplyTemplate}
+              currentDraft={draftSnapshot ?? undefined}
+            />
             {!draftSnapshot ? (
               <p className="mt-4 text-center text-xs text-[#8A8F8C]">
                 Open the{" "}

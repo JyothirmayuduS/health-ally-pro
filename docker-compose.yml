@@ -1,0 +1,65 @@
+# Local topology: app container + env-injected secrets (never baked into image).
+# Usage: cp .env.example .env.docker && fill secrets; docker compose up --build
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_DIGEST: sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+        BUILD_VERSION: ${BUILD_VERSION:-unknown}
+        BUILT_AT: ${BUILT_AT:-unknown}
+        BUILD_DIRTY: ${BUILD_DIRTY:-false}
+        BUILD_ENVIRONMENT: ${BUILD_ENVIRONMENT:-docker}
+    image: medora-app:${BUILD_VERSION:-local}
+    ports:
+      - "3001:3000"
+    env_file:
+      - path: .env.docker
+        required: false
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOST: 0.0.0.0
+      TMPDIR: /tmp
+      CLOUDFLARE_INCLUDE_PROCESS_ENV: "true"
+      PHI_AUDIT_FORCE_FAIL: ""
+      MEDORA_ALLOW_FORCE_FAIL: ""
+      # Injected at runtime — never baked into the image. Must match Prometheus credentials_file.
+      METRICS_BEARER_TOKEN: ${METRICS_BEARER_TOKEN:-}
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+      VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    restart: unless-stopped
+    # Root FS read-only; vite preview needs writable .vite-temp for config bundle
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+      - /app/tmp:size=64m,uid=999,gid=999,mode=1777
+      - /app/node_modules/.vite-temp:size=128m,uid=999,gid=999,mode=1777
+      - /app/node_modules/.mf:size=64m,uid=999,gid=999,mode=1777
+      - /app/.wrangler/state:size=64m,uid=999,gid=999,mode=1777
+      - /app/.wrangler/registry:size=32m,uid=999,gid=999,mode=1777
+      - /app/.wrangler/tmp:size=64m,uid=999,gid=999,mode=1777
+      - /app/.wrangler/logs:size=32m,uid=999,gid=999,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.25"
+          memory: 512M

@@ -1,0 +1,624 @@
+{
+  "at": "2026-07-24T17:05:35.874Z",
+  "base": "https://medora-health-ally.jyothirmayudu03.workers.dev",
+  "host": {
+    "cpus": 8,
+    "total_mem_mb": 8192,
+    "free_mem_mb_start": 158
+  },
+  "methodology": {
+    "note": "In-process Node concurrency ladder — not distributed k6. Same JWT reused (auth cache warm path). Direct PostgREST samples run after each API burst.",
+    "scenarios": [
+      100,
+      250,
+      500,
+      750,
+      1000
+    ],
+    "resources": [
+      "appointments",
+      "patients",
+      "lab_results"
+    ]
+  },
+  "scenarios": [
+    {
+      "users": 100,
+      "concurrency": 25,
+      "wall_ms": 3224,
+      "throughput_rps": 31.02,
+      "overall": {
+        "n": 100,
+        "min": 185.89,
+        "avg": 745.31,
+        "p50": 268.14,
+        "p95": 2269.71,
+        "p99": 2317.76,
+        "max": 2474.41,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 34,
+          "min": 203.72,
+          "avg": 742.77,
+          "p50": 278.73,
+          "p95": 2300.71,
+          "p99": 2474.41,
+          "max": 2474.41,
+          "errors": 0
+        },
+        "patients": {
+          "n": 33,
+          "min": 185.89,
+          "avg": 737.57,
+          "p50": 268.14,
+          "p95": 2252.81,
+          "p99": 2257.72,
+          "max": 2257.72,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 33,
+          "min": 193.91,
+          "avg": 755.66,
+          "p50": 251.82,
+          "p95": 2292.98,
+          "p99": 2317.76,
+          "max": 2317.76,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 72.63,
+          "avg": 2013.26,
+          "p50": 2164.98,
+          "p95": 5730.68,
+          "p99": 5997.02,
+          "max": 5997.02
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 170.03,
+            "avg": 2426.57,
+            "p50": 2164.98,
+            "p95": 5730.68,
+            "p99": 5997.02,
+            "max": 5997.02,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 72.63,
+            "avg": 2100.23,
+            "p50": 2525.27,
+            "p95": 5753.68,
+            "p99": 5817.08,
+            "max": 5817.08,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 126.57,
+            "avg": 1512.99,
+            "p50": 510.92,
+            "p95": 3184.25,
+            "p99": 3427.84,
+            "max": 3427.84,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 72,
+        "rss_mb_after": 76,
+        "heap_used_mb_after": 18
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    },
+    {
+      "users": 250,
+      "concurrency": 40,
+      "wall_ms": 2692,
+      "throughput_rps": 92.87,
+      "overall": {
+        "n": 250,
+        "min": 180.36,
+        "avg": 400.94,
+        "p50": 285.85,
+        "p95": 1334.85,
+        "p99": 1712.62,
+        "max": 1880.92,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 84,
+          "min": 184.8,
+          "avg": 372.56,
+          "p50": 291.92,
+          "p95": 810.22,
+          "p99": 1547.42,
+          "max": 1547.42,
+          "errors": 0
+        },
+        "patients": {
+          "n": 83,
+          "min": 183.98,
+          "avg": 408.51,
+          "p50": 287.07,
+          "p95": 1334.85,
+          "p99": 1712.62,
+          "max": 1712.62,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 83,
+          "min": 180.36,
+          "avg": 422.08,
+          "p50": 274.07,
+          "p95": 1586.56,
+          "p99": 1880.92,
+          "max": 1880.92,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 162.69,
+          "avg": 322.4,
+          "p50": 261.74,
+          "p95": 621.19,
+          "p99": 642.28,
+          "max": 642.28
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 172.44,
+            "avg": 332.36,
+            "p50": 268.25,
+            "p95": 631.27,
+            "p99": 642.28,
+            "max": 642.28,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 172.97,
+            "avg": 310.7,
+            "p50": 259.33,
+            "p95": 494.94,
+            "p99": 621.19,
+            "max": 621.19,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 162.69,
+            "avg": 324.14,
+            "p50": 258.86,
+            "p95": 618.92,
+            "p99": 620.32,
+            "max": 620.32,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 57,
+        "rss_mb_after": 101,
+        "heap_used_mb_after": 23
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    },
+    {
+      "users": 500,
+      "concurrency": 60,
+      "wall_ms": 3251,
+      "throughput_rps": 153.82,
+      "overall": {
+        "n": 500,
+        "min": 238.97,
+        "avg": 377.87,
+        "p50": 341.88,
+        "p95": 690.11,
+        "p99": 1180.9,
+        "max": 1764.41,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 167,
+          "min": 251.04,
+          "avg": 372.53,
+          "p50": 346.28,
+          "p95": 552.5,
+          "p99": 955.47,
+          "max": 1277.27,
+          "errors": 0
+        },
+        "patients": {
+          "n": 167,
+          "min": 238.97,
+          "avg": 372.93,
+          "p50": 333.94,
+          "p95": 706.5,
+          "p99": 1180.9,
+          "max": 1205.5,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 166,
+          "min": 240.14,
+          "avg": 388.21,
+          "p50": 345.51,
+          "p95": 713.77,
+          "p99": 1533.95,
+          "max": 1764.41,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 108.94,
+          "avg": 704.09,
+          "p50": 711.86,
+          "p95": 1212.14,
+          "p99": 1227.03,
+          "max": 1227.03
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 127.78,
+            "avg": 773.53,
+            "p50": 867.74,
+            "p95": 1225.23,
+            "p99": 1227.03,
+            "max": 1227.03,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 135.78,
+            "avg": 696.09,
+            "p50": 686.19,
+            "p95": 1175.65,
+            "p99": 1178.47,
+            "max": 1178.47,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 108.94,
+            "avg": 642.65,
+            "p50": 651.3,
+            "p95": 1167.41,
+            "p99": 1177.29,
+            "max": 1177.29,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 60,
+        "rss_mb_after": 105,
+        "heap_used_mb_after": 39
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    },
+    {
+      "users": 750,
+      "concurrency": 80,
+      "wall_ms": 6211,
+      "throughput_rps": 120.76,
+      "overall": {
+        "n": 750,
+        "min": 248.69,
+        "avg": 635.79,
+        "p50": 523.71,
+        "p95": 1397.65,
+        "p99": 1606.19,
+        "max": 1830.72,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 250,
+          "min": 248.69,
+          "avg": 650.26,
+          "p50": 536.58,
+          "p95": 1499.35,
+          "p99": 1627.33,
+          "max": 1707.6,
+          "errors": 0
+        },
+        "patients": {
+          "n": 250,
+          "min": 295.31,
+          "avg": 617.88,
+          "p50": 495.67,
+          "p95": 1326.17,
+          "p99": 1569.43,
+          "max": 1830.72,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 250,
+          "min": 315.61,
+          "avg": 639.23,
+          "p50": 528.19,
+          "p95": 1492.18,
+          "p99": 1554.1,
+          "max": 1634.48,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 64.58,
+          "avg": 478.28,
+          "p50": 205.9,
+          "p95": 1177.93,
+          "p99": 1200.33,
+          "max": 1200.33
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 88.08,
+            "avg": 510.05,
+            "p50": 207.29,
+            "p95": 1166.24,
+            "p99": 1174.93,
+            "max": 1174.93,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 64.58,
+            "avg": 480.1,
+            "p50": 181.82,
+            "p95": 1177.93,
+            "p99": 1181.86,
+            "max": 1181.86,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 74.11,
+            "avg": 444.67,
+            "p50": 187,
+            "p95": 1179.96,
+            "p99": 1200.33,
+            "max": 1200.33,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 66,
+        "rss_mb_after": 89,
+        "heap_used_mb_after": 36
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    },
+    {
+      "users": 1000,
+      "concurrency": 100,
+      "wall_ms": 7055,
+      "throughput_rps": 141.74,
+      "overall": {
+        "n": 1000,
+        "min": 171.67,
+        "avg": 696.65,
+        "p50": 398.17,
+        "p95": 2206.35,
+        "p99": 2487.58,
+        "max": 4731.8,
+        "errors": 0,
+        "error_rate": 0
+      },
+      "by_resource": {
+        "appointments": {
+          "n": 334,
+          "min": 194.86,
+          "avg": 687.82,
+          "p50": 397.7,
+          "p95": 2212.6,
+          "p99": 2443.39,
+          "max": 2677.94,
+          "errors": 0
+        },
+        "patients": {
+          "n": 333,
+          "min": 192.9,
+          "avg": 674.98,
+          "p50": 392.96,
+          "p95": 1973.61,
+          "p99": 2469.75,
+          "max": 2758.51,
+          "errors": 0
+        },
+        "lab_results": {
+          "n": 333,
+          "min": 171.67,
+          "avg": 727.18,
+          "p50": 411.01,
+          "p95": 2245.01,
+          "p99": 2731.51,
+          "max": 4731.8,
+          "errors": 0
+        }
+      },
+      "db_direct": {
+        "overall": {
+          "n": 60,
+          "min": 80.76,
+          "avg": 379.93,
+          "p50": 306.98,
+          "p95": 831.76,
+          "p99": 855.93,
+          "max": 855.93
+        },
+        "by_resource": {
+          "appointments": {
+            "n": 20,
+            "min": 137.9,
+            "avg": 399.64,
+            "p50": 370.55,
+            "p95": 815.29,
+            "p99": 833.02,
+            "max": 833.02,
+            "errors": 0
+          },
+          "patients": {
+            "n": 20,
+            "min": 80.76,
+            "avg": 352.77,
+            "p50": 306.98,
+            "p95": 629.29,
+            "p99": 666.21,
+            "max": 666.21,
+            "errors": 0
+          },
+          "lab_results": {
+            "n": 20,
+            "min": 92.24,
+            "avg": 387.39,
+            "p50": 270.69,
+            "p95": 832.09,
+            "p99": 855.93,
+            "max": 855.93,
+            "errors": 0
+          }
+        },
+        "errors": 0
+      },
+      "client_memory": {
+        "rss_mb_before": 53,
+        "rss_mb_after": 110,
+        "heap_used_mb_after": 47
+      },
+      "audit_dlq": {
+        "source": "database_rpc",
+        "open_failures": 0,
+        "alert": false
+      },
+      "pass": true
+    }
+  ],
+  "slowest_endpoints": [
+    {
+      "users": 100,
+      "endpoint": "appointments",
+      "p95": 2300.71,
+      "p99": 2474.41,
+      "avg": 742.77
+    },
+    {
+      "users": 100,
+      "endpoint": "lab_results",
+      "p95": 2292.98,
+      "p99": 2317.76,
+      "avg": 755.66
+    },
+    {
+      "users": 100,
+      "endpoint": "patients",
+      "p95": 2252.81,
+      "p99": 2257.72,
+      "avg": 737.57
+    },
+    {
+      "users": 1000,
+      "endpoint": "lab_results",
+      "p95": 2245.01,
+      "p99": 2731.51,
+      "avg": 727.18
+    },
+    {
+      "users": 1000,
+      "endpoint": "appointments",
+      "p95": 2212.6,
+      "p99": 2443.39,
+      "avg": 687.82
+    },
+    {
+      "users": 1000,
+      "endpoint": "patients",
+      "p95": 1973.61,
+      "p99": 2469.75,
+      "avg": 674.98
+    },
+    {
+      "users": 250,
+      "endpoint": "lab_results",
+      "p95": 1586.56,
+      "p99": 1880.92,
+      "avg": 422.08
+    },
+    {
+      "users": 750,
+      "endpoint": "appointments",
+      "p95": 1499.35,
+      "p99": 1627.33,
+      "avg": 650.26
+    },
+    {
+      "users": 750,
+      "endpoint": "lab_results",
+      "p95": 1492.18,
+      "p99": 1554.1,
+      "avg": 639.23
+    },
+    {
+      "users": 250,
+      "endpoint": "patients",
+      "p95": 1334.85,
+      "p99": 1712.62,
+      "avg": 408.51
+    }
+  ],
+  "enterprise_budget": {
+    "p50_ms": 500,
+    "p95_ms": 2000,
+    "p99_ms": 4000,
+    "error_rate_max": 0.005
+  }
+}

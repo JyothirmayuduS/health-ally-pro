@@ -25,11 +25,7 @@ export function DoctorClinicStatusBar({ variant = "card", embedded = false, clas
       ? "Accepting"
       : "Paused";
 
-  const dotColor = store.away.active
-    ? "bg-[#E9A820]"
-    : accepting
-      ? "bg-[#7A9B7E]"
-      : "bg-[#C45C4A]";
+  const dotColor = store.away.active ? "bg-[#E9A820]" : accepting ? "bg-[#7A9B7E]" : "bg-[#C45C4A]";
 
   const roomLabel = store.schedule.room || room;
   const isToolbar = variant === "toolbar";
@@ -50,7 +46,9 @@ export function DoctorClinicStatusBar({ variant = "card", embedded = false, clas
           aria-label={accepting ? "Pause queue" : "Resume accepting"}
           title="Toggle accepting (P)"
         >
-          {store.away.active && <AlertTriangle className="h-3 w-3 text-[#E9A820]" strokeWidth={2} />}
+          {store.away.active && (
+            <AlertTriangle className="h-3 w-3 text-[#E9A820]" strokeWidth={2} />
+          )}
           <span className={cn("h-2 w-2 rounded-full", dotColor)} />
           {statusLabel}
         </button>

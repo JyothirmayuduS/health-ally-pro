@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { X, Calendar, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { useStore } from "@/lib/reception-desk/store";
+import { useStore, type Appointment } from "@/lib/reception-desk/store";
 import { TODAY_STR, TIME_SLOTS } from "@/lib/reception-desk/mockData";
 
 const REASONS = [
@@ -12,7 +12,30 @@ const REASONS = [
   "Other",
 ];
 
-export default function CancelAppointmentModal({ open, onClose, appointment, onConfirm }) {
+export type CancelAppointmentReschedule = {
+  doctorId: string;
+  date: string;
+  time: string;
+};
+
+type CancelAppointmentModalProps = {
+  open: boolean;
+  onClose: () => void;
+  appointment: Appointment | null;
+  onConfirm: (
+    appointmentId: string,
+    reason: string,
+    notes: string,
+    reschedule?: CancelAppointmentReschedule,
+  ) => void;
+};
+
+export default function CancelAppointmentModal({
+  open,
+  onClose,
+  appointment,
+  onConfirm,
+}: CancelAppointmentModalProps) {
   const { doctors, appointments } = useStore();
   const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");
@@ -32,7 +55,9 @@ export default function CancelAppointmentModal({ open, onClose, appointment, onC
   const availableSlotsFor = useMemo(() => {
     if (!reschDoctorId) return [];
     const used = appointments
-      .filter((a) => a.date === reschDate && a.doctorId === reschDoctorId && a.status !== "cancelled")
+      .filter(
+        (a) => a.date === reschDate && a.doctorId === reschDoctorId && a.status !== "cancelled",
+      )
       .map((a) => a.time);
     return TIME_SLOTS.filter((s) => !used.includes(s));
   }, [reschDoctorId, reschDate, appointments]);
@@ -81,7 +106,8 @@ export default function CancelAppointmentModal({ open, onClose, appointment, onC
             <div className="p-3 bg-clay-soft/40 border border-clay/20 rounded-sm text-[12.5px] text-clay flex gap-2.5 items-start">
               <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
               <div>
-                <span className="font-semibold">Are you sure?</span> This will cancel the booking. If you select Reschedule, it will automatically cancel this slot and book a new one.
+                <span className="font-semibold">Are you sure?</span> This will cancel the booking.
+                If you select Reschedule, it will automatically cancel this slot and book a new one.
               </div>
             </div>
 
@@ -96,9 +122,13 @@ export default function CancelAppointmentModal({ open, onClose, appointment, onC
                 onChange={(e) => setReason(e.target.value)}
                 className="w-full h-9 px-2 text-[13px] bg-white border border-ink-200 rounded-sm focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage text-ink-900"
               >
-                <option value="" disabled>Select reason...</option>
+                <option value="" disabled>
+                  Select reason...
+                </option>
                 {REASONS.map((r) => (
-                  <option key={r} value={r}>{r}</option>
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
                 ))}
               </select>
             </div>
@@ -121,7 +151,9 @@ export default function CancelAppointmentModal({ open, onClose, appointment, onC
             <div className="flex items-center justify-between border-t border-ink-100 pt-3">
               <div>
                 <div className="text-[13px] font-medium text-ink-900">Offer reschedule?</div>
-                <div className="text-[11.5px] text-ink-400">Cancel the current slot and immediately schedule a new time.</div>
+                <div className="text-[11.5px] text-ink-400">
+                  Cancel the current slot and immediately schedule a new time.
+                </div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input

@@ -36,7 +36,11 @@ export function DoctorQueuePanel({ queue }: { queue: QueueItem[] }) {
                   <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#1B3B2E] text-xs font-bold text-[#F0DDD6]">
                     {item.tokenNumber}
                   </span>
-                  <img src={patient.photoUrl} alt="" className="h-9 w-9 rounded-full object-cover" />
+                  <img
+                    src={patient.photoUrl}
+                    alt=""
+                    className="h-9 w-9 rounded-full object-cover"
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold">{patient.name}</p>
                     <p className="truncate text-xs text-[#8A8F8C]">{patient.condition}</p>

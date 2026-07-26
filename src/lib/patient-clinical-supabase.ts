@@ -2,6 +2,7 @@ import type { PatientMedication } from "@/lib/mock-data";
 import { patientMedications, reports } from "@/lib/mock-data";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase/client";
 import type { LabResultRow } from "@/lib/reports-utils";
+import { fetchPhiResource } from "@/lib/supabase/phi-api";
 
 export type SupabasePatientMedicationRow = {
   id: string;
@@ -57,25 +58,9 @@ export async function fetchPatientMedicationsFromSupabase(): Promise<PatientMedi
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return null;
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", userData.user.id)
-    .maybeSingle();
-
-  if (!patient) return null;
-
-  const { data, error } = await supabase
-    .from("patient_medications")
-    .select(
-      "id, name, dosage, medication_time, frequency, reason, clinical_reason, instruction_tag, best_way_to_take, side_effects, interactions, alternatives, pills_remaining, total_pills, prescribed_by, status, legacy_id",
-    )
-    .eq("patient_id", patient.id)
-    .order("status")
-    .order("name");
-
-  if (error || !data?.length) return null;
-  return (data as SupabasePatientMedicationRow[]).map(mapMedicationRow);
+  const res = await fetchPhiResource<SupabasePatientMedicationRow[]>("patient_medications");
+  if (!res.ok || !res.data?.length) return null;
+  return res.data.map(mapMedicationRow);
 }
 
 export async function fetchLabFindingsFromSupabase(): Promise<LabResultRow[] | null> {
@@ -84,35 +69,13 @@ export async function fetchLabFindingsFromSupabase(): Promise<LabResultRow[] | n
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return null;
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", userData.user.id)
-    .maybeSingle();
+  const res = await fetchPhiResource<SupabaseLabItemRow[]>("lab_findings");
+  if (!res.ok || !res.data?.length) return null;
 
-  if (!patient) return null;
-
-  const { data: labReports, error: reportsError } = await supabase
-    .from("lab_results")
-    .select("id")
-    .eq("patient_id", patient.id)
-    .eq("report_type", "Lab");
-
-  if (reportsError || !labReports?.length) return null;
-
-  const reportIds = labReports.map((r) => r.id as string);
-
-  const { data, error } = await supabase
-    .from("lab_result_items")
-    .select("name, value, status")
-    .in("lab_result_id", reportIds);
-
-  if (error || !data?.length) return null;
-
-  return data.map((row) => ({
-    name: row.name as string,
-    value: row.value as string,
-    status: row.status as LabResultRow["status"],
+  return res.data.map((row) => ({
+    name: row.name,
+    value: row.value,
+    status: row.status,
   }));
 }
 
@@ -124,35 +87,15 @@ export async function fetchLabItemsForReportFromSupabase(
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return null;
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", userData.user.id)
-    .maybeSingle();
+  const res = await fetchPhiResource<SupabaseLabItemRow[]>("lab_items", {
+    reportLegacyId,
+  });
+  if (!res.ok || !res.data?.length) return null;
 
-  if (!patient) return null;
-
-  const { data: report } = await supabase
-    .from("lab_results")
-    .select("id")
-    .eq("patient_id", patient.id)
-    .eq("legacy_id", reportLegacyId)
-    .maybeSingle();
-
-  if (!report) return null;
-
-  const { data, error } = await supabase
-    .from("lab_result_items")
-    .select("name, value, status, sort_order")
-    .eq("lab_result_id", report.id)
-    .order("sort_order");
-
-  if (error || !data?.length) return null;
-
-  return data.map((row) => ({
-    name: row.name as string,
-    value: row.value as string,
-    status: row.status as LabResultRow["status"],
+  return res.data.map((row) => ({
+    name: row.name,
+    value: row.value,
+    status: row.status,
   }));
 }
 

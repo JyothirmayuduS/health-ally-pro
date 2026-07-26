@@ -15,9 +15,33 @@ const TAKEN_KEY = "medora-patient-med-taken-today";
 
 /** Demo schedule aligned with native mock meds */
 export const PATIENT_DEMO_MEDS: PatientMedReminder[] = [
-  { id: "m1", name: "Levothyroxine", dosage: "50mcg", timeLabel: "8:00 AM", hour: 8, minute: 0, instruction: "Empty stomach" },
-  { id: "m2", name: "Vitamin D3", dosage: "2000 IU", timeLabel: "8:00 AM", hour: 8, minute: 0, instruction: "With food" },
-  { id: "m3", name: "Magnesium Glycinate", dosage: "200mg", timeLabel: "9:00 PM", hour: 21, minute: 0, instruction: "At bedtime" },
+  {
+    id: "m1",
+    name: "Levothyroxine",
+    dosage: "50mcg",
+    timeLabel: "8:00 AM",
+    hour: 8,
+    minute: 0,
+    instruction: "Empty stomach",
+  },
+  {
+    id: "m2",
+    name: "Vitamin D3",
+    dosage: "2000 IU",
+    timeLabel: "8:00 AM",
+    hour: 8,
+    minute: 0,
+    instruction: "With food",
+  },
+  {
+    id: "m3",
+    name: "Magnesium Glycinate",
+    dosage: "200mg",
+    timeLabel: "9:00 PM",
+    hour: 21,
+    minute: 0,
+    instruction: "At bedtime",
+  },
 ];
 
 export function medRemindersEnabled(): boolean {

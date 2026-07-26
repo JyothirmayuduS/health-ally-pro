@@ -138,9 +138,7 @@ export function DoctorEmergencyAwayScreen() {
               <span
                 className={cn(
                   "mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border-2",
-                  reason === option.id
-                    ? "border-[#1B3B2E] bg-[#1B3B2E]"
-                    : "border-[#D4D0CB]",
+                  reason === option.id ? "border-[#1B3B2E] bg-[#1B3B2E]" : "border-[#D4D0CB]",
                 )}
               >
                 {reason === option.id && <span className="h-2 w-2 rounded-full bg-white" />}
@@ -284,10 +282,7 @@ export function DoctorEmergencyAwayScreen() {
           ? "Away mode active — colleagues notified"
           : "Reassign patients & notify them"
       }
-      breadcrumbs={[
-        { label: "Profile", to: "/doctor/settings" },
-        { label: "Emergency / away" },
-      ]}
+      breadcrumbs={[{ label: "Profile", to: "/doctor/settings" }, { label: "Emergency / away" }]}
       action={
         store.away.active ? (
           <button
@@ -313,7 +308,10 @@ export function DoctorEmergencyAwayScreen() {
               })
             : "recently"}
           . Check{" "}
-          <a href="/doctor/settings/notifications" className="font-semibold text-[#B8735D] underline">
+          <a
+            href="/doctor/settings/notifications"
+            className="font-semibold text-[#B8735D] underline"
+          >
             notifications
           </a>{" "}
           for colleague responses.
@@ -329,7 +327,9 @@ export function DoctorEmergencyAwayScreen() {
             onClick={() => setStep(s)}
             className={cn(
               "flex-1 rounded-full py-2 text-xs font-semibold",
-              step === s ? "bg-[#1B3B2E] text-white" : "bg-white text-[#8A8F8C] border border-[#E8E4DF]",
+              step === s
+                ? "bg-[#1B3B2E] text-white"
+                : "bg-white text-[#8A8F8C] border border-[#E8E4DF]",
             )}
           >
             {s === 1 ? "Why" : s === 2 ? "Patients" : "Cover"}
@@ -344,7 +344,13 @@ export function DoctorEmergencyAwayScreen() {
           {pauseSection}
         </div>
 
-        <div className={cn("space-y-5", step === 2 ? "block" : "hidden lg:block", step === 3 && "lg:block")}>
+        <div
+          className={cn(
+            "space-y-5",
+            step === 2 ? "block" : "hidden lg:block",
+            step === 3 && "lg:block",
+          )}
+        >
           <div className={cn(step !== 2 && step !== 3 && "hidden lg:block")}>{patientsSection}</div>
           <div className={cn(step !== 3 && "hidden lg:block")}>{doctorsSection}</div>
 
@@ -379,10 +385,7 @@ export function DoctorEmergencyAwayScreen() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmSend}
-              className="bg-[#C45C4A] hover:bg-[#B04A3A]"
-            >
+            <AlertDialogAction onClick={confirmSend} className="bg-[#C45C4A] hover:bg-[#B04A3A]">
               Send requests
             </AlertDialogAction>
           </AlertDialogFooter>

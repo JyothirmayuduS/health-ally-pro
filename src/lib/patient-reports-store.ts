@@ -105,9 +105,7 @@ export function revokeShareGrant(grantId: string) {
 
 export function activatePendingGrants(reportId: string) {
   const next = listReportShareGrants().map((g) =>
-    g.reportId === reportId && g.status === "pending"
-      ? { ...g, status: "active" as const }
-      : g,
+    g.reportId === reportId && g.status === "pending" ? { ...g, status: "active" as const } : g,
   );
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));

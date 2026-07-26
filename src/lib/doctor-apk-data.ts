@@ -1,9 +1,9 @@
 export const apkDoctor = {
-  name: "Dr. Rajesh Mehta",
-  shortName: "Dr. Rajesh",
-  specialty: "Internal Medicine",
-  initials: "RM",
-  email: "dr.mehta@clinic.in",
+  name: "Dr. Aarav Mehta",
+  shortName: "Dr. Aarav Mehta",
+  specialty: "General Medicine",
+  initials: "AM",
+  email: "doctor@oakhaven.demo",
   rating: 4.9,
   scheduleSlots: 8,
 };
@@ -276,9 +276,27 @@ export type ApkRxItem = {
 };
 
 export const apkRecentRx: ApkRxItem[] = [
-  { id: "rx1", drug: "Lisinopril 10 mg", patient: "Arjun Kapoor", initials: "AK", when: "Today 09:15" },
-  { id: "rx2", drug: "Salbutamol inhaler", patient: "Sneha Rao", initials: "SR", when: "Yesterday" },
-  { id: "rx3", drug: "Metformin 500 mg", patient: "Mohammad Ali", initials: "MA", when: "2 days ago" },
+  {
+    id: "rx1",
+    drug: "Lisinopril 10 mg",
+    patient: "Arjun Kapoor",
+    initials: "AK",
+    when: "Today 09:15",
+  },
+  {
+    id: "rx2",
+    drug: "Salbutamol inhaler",
+    patient: "Sneha Rao",
+    initials: "SR",
+    when: "Yesterday",
+  },
+  {
+    id: "rx3",
+    drug: "Metformin 500 mg",
+    patient: "Mohammad Ali",
+    initials: "MA",
+    when: "2 days ago",
+  },
 ];
 
 export const DOCTOR_APK_TABS = [

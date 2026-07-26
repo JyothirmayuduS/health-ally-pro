@@ -1,0 +1,17 @@
+{
+  "status": 200,
+  "http_ms": 1048.51,
+  "response_ok": true,
+  "data_count": 6,
+  "audit_rows_for_this_request": 1,
+  "exactly_one": true,
+  "sample": {
+    "id": "353d64c4-618a-489a-bf31-8f120a6c6cc6",
+    "created_at": "2026-07-21T21:33:10.442518+00:00",
+    "resource": "staff_profiles",
+    "action": "read",
+    "metadata": {
+      "count": 6
+    }
+  }
+}

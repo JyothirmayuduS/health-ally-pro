@@ -1,6 +1,9 @@
 import { DRUGS } from "@/lib/pharmacy-desk/mockData";
 import type { PatientRxRecord } from "@/lib/patient-prescription-store";
-import type { PatientRxInboxPollResponse, PatientRxSyncEnvelope } from "@/lib/shared/patient-rx-sync-types";
+import type {
+  PatientRxInboxPollResponse,
+  PatientRxSyncEnvelope,
+} from "@/lib/shared/patient-rx-sync-types";
 import { PATIENT_RX_SYNC_CHANNEL } from "@/lib/shared/patient-rx-sync-types";
 import { PORTAL_DEMO_PATIENT_ID } from "@/lib/shared/patient-registry";
 

@@ -192,7 +192,11 @@ const TIMING: Record<string, Partial<Record<RxLocale, string>>> = {
   "At bedtime": { hi: "सोते समय", te: "నిద్రకు ముందు", ta: "படுக்கும் நேரம்" },
   "In the morning": { hi: "सुबह", te: "ఉదయం", ta: "காலையில்" },
   "With milk": { hi: "दूध के साथ", te: "పాలతో", ta: "பாலுடன்" },
-  "Avoid dairy": { hi: "डेयरी से बचें", te: "పాల ఉత్పత్తులు తప్పించండి", ta: "பால் பொருட்களைத் தவிர்க்கவும்" },
+  "Avoid dairy": {
+    hi: "डेयरी से बचें",
+    te: "పాల ఉత్పత్తులు తప్పించండి",
+    ta: "பால் பொருட்களைத் தவிர்க்கவும்",
+  },
 };
 
 const FREQ_LATIN: Record<RxFrequency, Partial<Record<RxLocale, string>>> = {
@@ -223,11 +227,31 @@ const PHRASES: Record<string, Partial<Record<RxLocale, string>>> = {
   "Take with food": { hi: "भोजन के साथ लें", te: "ఆహారంతో తీసుకోండి", ta: "உணவுடன் எடுக்கவும்" },
   "Avoid alcohol": { hi: "शराब से बचें", te: "మద్యం తప్పించండి", ta: "மது தவிர்க்கவும்" },
   "Do not drive": { hi: "गाड़ी न चलाएँ", te: "వాహనం నడపవద్దు", ta: "வாகனம் ஓட்ட வேண்டாம்" },
-  "Keep refrigerated": { hi: "फ्रिज में रखें", te: "శీతలీకరించి ఉంచండి", ta: "குளிர்சாதனப்பெட்டியில் வைக்கவும்" },
-  "Finish full course": { hi: "पूरा कोर्स पूरा करें", te: "పూర్తి కోర్స్ పూర్తి చేయండి", ta: "முழு காலத்தையும் முடிக்கவும்" },
-  "Monitor blood sugar": { hi: "ब्लड शुगर जाँचें", te: "బ్లడ్ షుగర్ పర్యవేక్షించండి", ta: "இரத்த சர்க்கரை கண்காணிக்கவும்" },
-  "Check BP daily": { hi: "रोज़ BP जाँचें", te: "ప్రతిరోజు బీపీ చూడండి", ta: "தினமும் இரத்த அழுத்தம் பார்க்கவும்" },
-  "Return if worsens": { hi: "बिगड़ने पर वापस आएँ", te: "మరింత అయితే తిరిగి రండి", ta: "மோசமானால் மீண்டும் வாருங்கள்" },
+  "Keep refrigerated": {
+    hi: "फ्रिज में रखें",
+    te: "శీతలీకరించి ఉంచండి",
+    ta: "குளிர்சாதனப்பெட்டியில் வைக்கவும்",
+  },
+  "Finish full course": {
+    hi: "पूरा कोर्स पूरा करें",
+    te: "పూర్తి కోర్స్ పూర్తి చేయండి",
+    ta: "முழு காலத்தையும் முடிக்கவும்",
+  },
+  "Monitor blood sugar": {
+    hi: "ब्लड शुगर जाँचें",
+    te: "బ్లడ్ షుగర్ పర్యవేక్షించండి",
+    ta: "இரத்த சர்க்கரை கண்காணிக்கவும்",
+  },
+  "Check BP daily": {
+    hi: "रोज़ BP जाँचें",
+    te: "ప్రతిరోజు బీపీ చూడండి",
+    ta: "தினமும் இரத்த அழுத்தம் பார்க்கவும்",
+  },
+  "Return if worsens": {
+    hi: "बिगड़ने पर वापस आएँ",
+    te: "మరింత అయితే తిరిగి రండి",
+    ta: "மோசமானால் மீண்டும் வாருங்கள்",
+  },
   Rest: { hi: "आराम करें", te: "విశ్రాంతి తీసుకోండి", ta: "ஓய்வு எடுங்கள்" },
   Hydration: { hi: "पर्याप्त पानी पिएँ", te: "తగినంత నీరు తాగండి", ta: "போதுமான நீர் குடிக்கவும்" },
   "Upper respiratory tract infection": {
@@ -242,7 +266,10 @@ const PHRASES: Record<string, Partial<Record<RxLocale, string>>> = {
   },
 };
 
-export function resolveRxLocale(printInPatientLanguage: boolean, language: PatientLanguage): RxLocale {
+export function resolveRxLocale(
+  printInPatientLanguage: boolean,
+  language: PatientLanguage,
+): RxLocale {
   if (!printInPatientLanguage) return "en";
   return language;
 }

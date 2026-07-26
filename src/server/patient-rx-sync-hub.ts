@@ -18,7 +18,10 @@ export function publishPatientRxToHub(envelope: PatientRxSyncEnvelope): InboxMes
   return msg;
 }
 
-export function pollPatientRxInbox(patientId: string, since = 0): { messages: InboxMessage[]; latestSeq: number } {
+export function pollPatientRxInbox(
+  patientId: string,
+  since = 0,
+): { messages: InboxMessage[]; latestSeq: number } {
   const list = inboxes.get(patientId) ?? [];
   const messages = list.filter((m) => m.seq > since);
   const latestSeq = list.length > 0 ? list[list.length - 1]!.seq : since;

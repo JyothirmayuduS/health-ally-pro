@@ -224,6 +224,24 @@ export const PANEL_PATIENTS: PanelPatient[] = [
     rxCount: 1,
     lastSeen: "3 weeks ago",
   },
+  {
+    id: "p6",
+    name: "Ahaan Mehta",
+    initials: "AM",
+    condition: "Well-child · Immunization",
+    age: 1,
+    gender: "M",
+    patientRef: "MRN-100239",
+    status: "Stable",
+    timeline: "Today · Vaccination visit · Mother Priya",
+    accent: "#E8EFE6",
+    categories: ["all", "today", "upcoming"],
+    pills: ["Overview", "Vaccines"],
+    priority: 2,
+    visits: 4,
+    rxCount: 0,
+    lastSeen: "Today",
+  },
 ];
 
 export const PANEL_TASKS: PanelTask[] = [
@@ -406,7 +424,7 @@ export const CHART_OPEN_ITEMS: ChartOpenItem[] = [
     icon: "message",
     detailTitle: "Secure message thread",
     detailBody:
-      "Patient: \"Peak flow still low after 2 days on prednisolone. Should I come in?\" · Sent 2h ago.",
+      'Patient: "Peak flow still low after 2 days on prednisolone. Should I come in?" · Sent 2h ago.',
     detailMeta: "Reply recommended before next prescription",
   },
   {
@@ -567,7 +585,8 @@ export const CHART_MEDICATIONS: ChartMedication[] = [
     status: "ACTIVE",
     condition: "Essential hypertension",
     icd: "ICD-10 I10",
-    whyPrescribed: "First-line calcium channel blocker for BP control. Well tolerated; no peripheral edema reported.",
+    whyPrescribed:
+      "First-line calcium channel blocker for BP control. Well tolerated; no peripheral edema reported.",
     patientInstructions: "Take at the same time each morning.",
     chartDate: "12 Apr 2026",
     chartSubtitle: "Once daily · 90 days",
@@ -829,7 +848,10 @@ export const HISTORY_VISITS: HistoryVisitEntry[] = [
     note: "HbA1c 7.8% · discussed intensification",
     detailSections: [
       { title: "ASSESSMENT", body: "Suboptimal glycemic control. Adherent to metformin." },
-      { title: "PLAN", body: "Continue current regimen. Nutrition referral. Repeat HbA1c in 3 months." },
+      {
+        title: "PLAN",
+        body: "Continue current regimen. Nutrition referral. Repeat HbA1c in 3 months.",
+      },
     ],
   },
   {
@@ -842,7 +864,10 @@ export const HISTORY_VISITS: HistoryVisitEntry[] = [
     meta: "In-person · 25 min",
     note: "HbA1c 7.2% · foot exam normal",
     detailSections: [
-      { title: "PLAN", body: "Continue metformin. Added glimepiride when HbA1c rose at next visit." },
+      {
+        title: "PLAN",
+        body: "Continue metformin. Added glimepiride when HbA1c rose at next visit.",
+      },
     ],
   },
   {
@@ -854,9 +879,7 @@ export const HISTORY_VISITS: HistoryVisitEntry[] = [
     title: "New diagnosis counselling",
     meta: "In-person · 30 min",
     note: "Type 2 DM confirmed · lifestyle plan started",
-    detailSections: [
-      { title: "PLAN", body: "Start metformin 500mg BD. Dietitian referral." },
-    ],
+    detailSections: [{ title: "PLAN", body: "Start metformin 500mg BD. Dietitian referral." }],
   },
   {
     id: "p4-hv1",
@@ -1176,7 +1199,12 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "HDL", value: "52 mg/dL" },
         { label: "TRIGLYCERIDES", value: "142 mg/dL" },
       ],
-      sections: [{ title: "INTERPRETATION", body: "Lipid panel at goal on current antihypertensive and lifestyle therapy." }],
+      sections: [
+        {
+          title: "INTERPRETATION",
+          body: "Lipid panel at goal on current antihypertensive and lifestyle therapy.",
+        },
+      ],
     },
   },
   {
@@ -1199,7 +1227,12 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "REFERRED TO", value: "Oak Haven Cardiology" },
         { label: "DATE", value: "8 Jan 2026" },
       ],
-      sections: [{ title: "REASON", body: "Stress echo for exertional dyspnea despite controlled blood pressure." }],
+      sections: [
+        {
+          title: "REASON",
+          body: "Stress echo for exertional dyspnea despite controlled blood pressure.",
+        },
+      ],
     },
   },
   {
@@ -1226,7 +1259,12 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "HbA1c", value: "7.8%", accent: true },
         { label: "FASTING GLUCOSE", value: "142 mg/dL" },
       ],
-      sections: [{ title: "INTERPRETATION", body: "Glycemic control suboptimal; up from 7.2% six months ago." }],
+      sections: [
+        {
+          title: "INTERPRETATION",
+          body: "Glycemic control suboptimal; up from 7.2% six months ago.",
+        },
+      ],
     },
   },
   {
@@ -1248,7 +1286,9 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "SOURCE", value: "Oak Haven Ophthalmology" },
         { label: "STUDY DATE", value: "15 Mar 2026" },
       ],
-      sections: [{ title: "IMPRESSION", body: "No diabetic retinopathy identified on screening exam." }],
+      sections: [
+        { title: "IMPRESSION", body: "No diabetic retinopathy identified on screening exam." },
+      ],
     },
   },
   {
@@ -1271,7 +1311,12 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "LOCATION", value: "LAD" },
         { label: "DATE", value: "8 Jun 2026" },
       ],
-      sections: [{ title: "SUMMARY", body: "Successful PCI with drug-eluting stent to LAD. No complications." }],
+      sections: [
+        {
+          title: "SUMMARY",
+          body: "Successful PCI with drug-eluting stent to LAD. No complications.",
+        },
+      ],
     },
   },
   {
@@ -1293,7 +1338,12 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "WARD", value: "Cardiology" },
         { label: "DISCHARGE DATE", value: "8 Jun 2026" },
       ],
-      sections: [{ title: "FOLLOW-UP", body: "PCP in 2 weeks · cardiology in 4 weeks. Continue DAPT and cardiac rehab." }],
+      sections: [
+        {
+          title: "FOLLOW-UP",
+          body: "PCP in 2 weeks · cardiology in 4 weeks. Continue DAPT and cardiac rehab.",
+        },
+      ],
     },
   },
   {
@@ -1342,7 +1392,9 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "DATE", value: "30 May 2026" },
       ],
       findings: [{ label: "LAD STENOSIS", value: "90%", accent: true }],
-      sections: [{ title: "FINDINGS", body: "Significant LAD stenosis treated with drug-eluting stent." }],
+      sections: [
+        { title: "FINDINGS", body: "Significant LAD stenosis treated with drug-eluting stent." },
+      ],
     },
   },
   {
@@ -1400,7 +1452,9 @@ export const HISTORY_DOCUMENTS: HistoryDocumentEntry[] = [
         { label: "STATUS", value: "Not yet completed", accent: true },
         { label: "LOCATION", value: "Oak Haven Pulmonary" },
       ],
-      sections: [{ title: "INDICATION", body: "COPD follow-up · pre- and post-bronchodilator spirometry." }],
+      sections: [
+        { title: "INDICATION", body: "COPD follow-up · pre- and post-bronchodilator spirometry." },
+      ],
     },
   },
 ];

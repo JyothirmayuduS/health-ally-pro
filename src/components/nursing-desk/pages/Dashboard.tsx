@@ -2,7 +2,15 @@ import { Link } from "@tanstack/react-router";
 import { Activity, Heart, Thermometer, Users, Stethoscope } from "lucide-react";
 import { SHARED_PATIENTS } from "@/lib/shared/patients";
 import { listVitals } from "@/lib/nursing-desk/vitals";
-import { DeskKpi, DeskPanel, DeskQuickAction, DeskTable, DeskThead, DeskTh, DeskEmpty } from "@/components/desk-shell/ui";
+import {
+  DeskKpi,
+  DeskPanel,
+  DeskQuickAction,
+  DeskTable,
+  DeskThead,
+  DeskTh,
+  DeskEmpty,
+} from "@/components/desk-shell/ui";
 
 export default function NursingDashboard() {
   const vitals = listVitals();
@@ -50,7 +58,9 @@ export default function NursingDashboard() {
                   {todayVitals.length
                     ? Math.round(todayVitals.reduce((s, v) => s + v.pulse, 0) / todayVitals.length)
                     : "—"}{" "}
-                  {todayVitals.length > 0 && <span className="text-sm font-normal text-ink-400">bpm</span>}
+                  {todayVitals.length > 0 && (
+                    <span className="text-sm font-normal text-ink-400">bpm</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -60,11 +70,11 @@ export default function NursingDashboard() {
                 <div className="text-[11px] text-ink-500">Avg temp today</div>
                 <div className="font-heading text-xl font-semibold">
                   {todayVitals.length
-                    ? (
-                        todayVitals.reduce((s, v) => s + v.temp, 0) / todayVitals.length
-                      ).toFixed(1)
+                    ? (todayVitals.reduce((s, v) => s + v.temp, 0) / todayVitals.length).toFixed(1)
                     : "—"}
-                  {todayVitals.length > 0 && <span className="text-sm font-normal text-ink-400"> °C</span>}
+                  {todayVitals.length > 0 && (
+                    <span className="text-sm font-normal text-ink-400"> °C</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -96,7 +106,10 @@ export default function NursingDashboard() {
               return (
                 <tr key={v.id} className="border-b border-stone-100 hover:bg-bone/40">
                   <td className="px-4 py-3 font-mono text-[11px] text-ink-500">
-                    {new Date(v.at).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+                    {new Date(v.at).toLocaleTimeString("en-IN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </td>
                   <td className="px-4 py-3 font-medium">{p?.name ?? v.patientId}</td>
                   <td className="px-4 py-3 font-mono">

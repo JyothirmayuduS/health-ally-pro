@@ -3,14 +3,7 @@
  * Visual hierarchy: Large position number → Progress bar → Doctor card → Tips
  */
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-  Platform,
-} from "react-native";
+import { View, Text, ScrollView, Pressable, StyleSheet, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Animated, {
@@ -42,13 +35,18 @@ function PulseDot({ color }: { color: string }) {
     scale.value = withRepeat(
       withSequence(withTiming(1.5, { duration: 700 }), withTiming(1, { duration: 700 })),
       -1,
-      true
+      true,
     );
   }, []);
   const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }], opacity: 0.5 }));
   return (
     <View style={{ width: 12, height: 12, alignItems: "center", justifyContent: "center" }}>
-      <Animated.View style={[{ position: "absolute", width: 12, height: 12, borderRadius: 6, backgroundColor: color }, style]} />
+      <Animated.View
+        style={[
+          { position: "absolute", width: 12, height: 12, borderRadius: 6, backgroundColor: color },
+          style,
+        ]}
+      />
       <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: color }} />
     </View>
   );
@@ -89,7 +87,9 @@ export default function QueueScreen() {
             onPress={() => router.push("/(tabs)/book")}
             style={[s.emptyBtn, { backgroundColor: colors.ink }]}
           >
-            <Text style={[s.emptyBtnText, { color: colors.primaryForeground }]}>Book an appointment</Text>
+            <Text style={[s.emptyBtnText, { color: colors.primaryForeground }]}>
+              Book an appointment
+            </Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -122,8 +122,7 @@ export default function QueueScreen() {
         <Animated.View entering={FadeInDown.duration(500)} style={s.titleBlock}>
           <Text style={[s.eyebrow, { color: colors.inkMuted }]}>LIVE QUEUE</Text>
           <Text style={[s.heading, { color: colors.foreground }]}>
-            With{" "}
-            <Text style={{ color: colors.clay, fontStyle: "italic" }}>{doctor.name}</Text>
+            With <Text style={{ color: colors.clay, fontStyle: "italic" }}>{doctor.name}</Text>
           </Text>
           <Text style={[s.subHeading, { color: colors.inkMuted }]}>
             Stay nearby — we'll notify you when it's almost time.
@@ -132,37 +131,32 @@ export default function QueueScreen() {
 
         {/* Big position card */}
         <Animated.View entering={FadeInDown.duration(500).delay(100)}>
-          <View style={[s.posCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-
+          <View
+            style={[s.posCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          >
             {/* Header row */}
             <View style={s.posHeaderRow}>
               <View>
-                <Text style={[s.posLabel, { color: colors.inkMuted }]}>
-                  YOUR POSITION
-                </Text>
+                <Text style={[s.posLabel, { color: colors.inkMuted }]}>YOUR POSITION</Text>
                 <Text style={[s.posNumber, { color: colors.foreground }]}>
                   {String(pos).padStart(2, "0")}
-                  <Text style={[s.posOf, { color: colors.border }]}>
-                    /{total}
-                  </Text>
+                  <Text style={[s.posOf, { color: colors.border }]}>/{total}</Text>
                 </Text>
               </View>
               {/* Wait badge */}
               <View style={[s.waitBadge, { backgroundColor: colors.background }]}>
                 <Clock4 size={13} color={colors.inkMuted} strokeWidth={1.75} />
-                <Text style={[s.waitText, { color: colors.foreground }]}>
-                  ~{wait} min
-                </Text>
+                <Text style={[s.waitText, { color: colors.foreground }]}>~{wait} min</Text>
               </View>
             </View>
 
             {/* ── Patient avatar queue track ─────────────────── */}
             <View style={s.queueTrack}>
               {Array.from({ length: total }).map((_, i) => {
-                const isDone    = i < pos - 1;
-                const isYou     = i === pos - 1;
-                const isAhead   = i > pos - 1;
-                const isFirst   = i === 0;
+                const isDone = i < pos - 1;
+                const isYou = i === pos - 1;
+                const isAhead = i > pos - 1;
+                const isFirst = i === 0;
 
                 const INITIALS = ["AT", "MK", "SR", "BL", "CJ", "RV"];
                 const initials = INITIALS[i] ?? "?";
@@ -170,27 +164,38 @@ export default function QueueScreen() {
                 // Avatar bg / border for light card
                 let avatarBg: string = colors.background;
                 let avatarBorder: string = colors.border;
-                
-                if (isFirst && pos > 1) { avatarBg = colors.clay; avatarBorder = colors.clay; }
-                else if (isDone)        { avatarBg = colors.background; avatarBorder = colors.border; }
-                else if (isYou)         { avatarBg = colors.clay; avatarBorder = colors.ink; }
-                else if (isAhead)       { avatarBg = colors.background; avatarBorder = colors.border; }
+
+                if (isFirst && pos > 1) {
+                  avatarBg = colors.clay;
+                  avatarBorder = colors.clay;
+                } else if (isDone) {
+                  avatarBg = colors.background;
+                  avatarBorder = colors.border;
+                } else if (isYou) {
+                  avatarBg = colors.clay;
+                  avatarBorder = colors.ink;
+                } else if (isAhead) {
+                  avatarBg = colors.background;
+                  avatarBorder = colors.border;
+                }
 
                 return (
                   <View key={i} style={s.queueSlot}>
                     {/* Connector line */}
                     {i > 0 && (
-                      <View style={[
-                        s.queueLine,
-                        { backgroundColor: isDone ? colors.inkMuted : colors.border },
-                      ]} />
+                      <View
+                        style={[
+                          s.queueLine,
+                          { backgroundColor: isDone ? colors.inkMuted : colors.border },
+                        ]}
+                      />
                     )}
 
                     {/* Avatar */}
                     <Animated.View
                       entering={FadeInDown.duration(350).delay(i * 90)}
                       style={[
-                         s.queueAvatar,
+                        s.queueAvatar,
                         { backgroundColor: avatarBg, borderColor: avatarBorder },
                         isYou && { width: 54, height: 54, borderRadius: 27 },
                       ]}
@@ -200,22 +205,40 @@ export default function QueueScreen() {
                       ) : isDone ? (
                         <Text style={{ fontSize: 14, color: colors.inkMuted }}>✓</Text>
                       ) : isYou ? (
-                        <Text style={{ fontSize: 12, fontFamily: "DMSans_600SemiBold", color: "#fff" }}>YOU</Text>
+                        <Text
+                          style={{ fontSize: 12, fontFamily: "DMSans_600SemiBold", color: "#fff" }}
+                        >
+                          YOU
+                        </Text>
                       ) : (
-                        <Text style={{ fontSize: 10, fontFamily: "DMSans_500Medium", color: colors.inkMuted }}>
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            fontFamily: "DMSans_500Medium",
+                            color: colors.inkMuted,
+                          }}
+                        >
                           {initials}
                         </Text>
                       )}
                     </Animated.View>
 
                     {/* Label */}
-                    <Text style={{
-                      fontSize: 9,
-                      fontFamily: isYou ? "DMSans_600SemiBold" : "DMSans_400Regular",
-                      color: isYou ? colors.clay : isDone ? colors.inkMuted : colors.border,
-                      letterSpacing: 0.2,
-                    }}>
-                      {isFirst && pos > 1 ? "Now" : isDone ? "Done" : isYou ? "You" : `+${i - (pos - 1)}`}
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        fontFamily: isYou ? "DMSans_600SemiBold" : "DMSans_400Regular",
+                        color: isYou ? colors.clay : isDone ? colors.inkMuted : colors.border,
+                        letterSpacing: 0.2,
+                      }}
+                    >
+                      {isFirst && pos > 1
+                        ? "Now"
+                        : isDone
+                          ? "Done"
+                          : isYou
+                            ? "You"
+                            : `+${i - (pos - 1)}`}
                     </Text>
                   </View>
                 );
@@ -223,19 +246,28 @@ export default function QueueScreen() {
             </View>
 
             {/* Footer */}
-            <Text style={{ fontSize: 12, fontFamily: "DMSans_400Regular", color: colors.inkMuted, textAlign: "center" }}>
+            <Text
+              style={{
+                fontSize: 12,
+                fontFamily: "DMSans_400Regular",
+                color: colors.inkMuted,
+                textAlign: "center",
+              }}
+            >
               {pos - 1} patient{pos - 1 !== 1 ? "s" : ""} ahead of you
             </Text>
-
           </View>
         </Animated.View>
 
         {/* ── Doctor's Door card ─────────────────────────────── */}
         <Animated.View entering={FadeInDown.duration(500).delay(155)}>
-          <View style={[s.doorCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-
+          <View
+            style={[s.doorCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          >
             {/* Left: door visual */}
-            <View style={[s.doorVisual, { backgroundColor: colors.ink, borderColor: colors.border }]}>
+            <View
+              style={[s.doorVisual, { backgroundColor: colors.ink, borderColor: colors.border }]}
+            >
               {/* Door frame */}
               <View style={[s.doorFrame, { borderColor: "rgba(255,255,255,0.15)" }]}>
                 {/* Door panel */}
@@ -244,10 +276,7 @@ export default function QueueScreen() {
                 <View style={[s.doorKnob, { backgroundColor: colors.clay }]} />
                 {/* Light strip above door */}
                 <Animated.View
-                  style={[
-                    s.doorLight,
-                    { backgroundColor: pos <= 2 ? "#4CAF7D" : "#F59E0B" },
-                  ]}
+                  style={[s.doorLight, { backgroundColor: pos <= 2 ? "#4CAF7D" : "#F59E0B" }]}
                 />
               </View>
               {/* Room label */}
@@ -258,31 +287,27 @@ export default function QueueScreen() {
             {/* Right: info */}
             <View style={s.doorInfo}>
               <Text style={[s.doorTitle, { color: colors.foreground }]}>Doctor's Door</Text>
-              <Text style={[s.doorSub, { color: colors.inkMuted }]}>
-                {doctor.hospital}
-              </Text>
+              <Text style={[s.doorSub, { color: colors.inkMuted }]}>{doctor.hospital}</Text>
 
               {/* Status pill */}
-              <View style={[
-                s.doorStatus,
-                {
-                  backgroundColor: pos <= 2 ? "#E8F5E9" : "#FFF8E1",
-                  borderColor: pos <= 2 ? "#4CAF7D40" : "#F59E0B40",
-                },
-              ]}>
-                <View style={[
-                  s.doorStatusDot,
-                  { backgroundColor: pos <= 2 ? "#4CAF7D" : "#F59E0B" },
-                ]} />
-                <Text style={[
-                  s.doorStatusText,
-                  { color: pos <= 2 ? "#2E7D32" : "#B45309" },
-                ]}>
+              <View
+                style={[
+                  s.doorStatus,
+                  {
+                    backgroundColor: pos <= 2 ? "#E8F5E9" : "#FFF8E1",
+                    borderColor: pos <= 2 ? "#4CAF7D40" : "#F59E0B40",
+                  },
+                ]}
+              >
+                <View
+                  style={[s.doorStatusDot, { backgroundColor: pos <= 2 ? "#4CAF7D" : "#F59E0B" }]}
+                />
+                <Text style={[s.doorStatusText, { color: pos <= 2 ? "#2E7D32" : "#B45309" }]}>
                   {pos === 1
                     ? "Your turn — walk in!"
                     : pos <= 2
-                    ? "Almost ready for you"
-                    : "Doctor is consulting"}
+                      ? "Almost ready for you"
+                      : "Doctor is consulting"}
                 </Text>
               </View>
 
@@ -299,7 +324,9 @@ export default function QueueScreen() {
 
         {/* Doctor detail card */}
         <Animated.View entering={FadeInDown.duration(500).delay(180)}>
-          <View style={[s.docCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View
+            style={[s.docCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          >
             {/* Doctor row */}
             <View style={s.docRow}>
               <Avatar initials={doctor.initials} size="lg" />
@@ -310,7 +337,12 @@ export default function QueueScreen() {
             </View>
 
             {/* Details */}
-            <View style={[s.detailGrid, { borderTopColor: colors.border, borderBottomColor: colors.border }]}>
+            <View
+              style={[
+                s.detailGrid,
+                { borderTopColor: colors.border, borderBottomColor: colors.border },
+              ]}
+            >
               <View style={s.detailItem}>
                 <Text style={[s.detailLabel, { color: colors.inkMuted }]}>Reason</Text>
                 <Text style={[s.detailValue, { color: colors.foreground }]}>{active.reason}</Text>
@@ -330,7 +362,9 @@ export default function QueueScreen() {
               <View style={s.detailItem}>
                 <View style={s.detailInline}>
                   <Phone size={13} color={colors.inkMuted} strokeWidth={1.75} />
-                  <Text style={[s.detailValue, { color: colors.foreground }]}>+1 (415) 555-0142</Text>
+                  <Text style={[s.detailValue, { color: colors.foreground }]}>
+                    +1 (415) 555-0142
+                  </Text>
                 </View>
               </View>
             </View>
@@ -363,7 +397,13 @@ export default function QueueScreen() {
           ].map((tip, i) => (
             <View
               key={i}
-              style={[s.tipRow, i < 2 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }]}
+              style={[
+                s.tipRow,
+                i < 2 && {
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  borderBottomColor: colors.border,
+                },
+              ]}
             >
               <View style={[s.tipDot, { backgroundColor: colors.clay }]} />
               <View style={{ flex: 1 }}>
@@ -393,7 +433,10 @@ const s = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   backBtn: {
-    width: 36, height: 36, alignItems: "center", justifyContent: "center",
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
   },
   liveChip: {
     flexDirection: "row",
@@ -583,7 +626,6 @@ const s = StyleSheet.create({
   doorMetaText: { fontSize: 11, fontFamily: "DMSans_400Regular" },
 
   docCard: {
-
     borderRadius: 20,
     borderWidth: 1,
     padding: 18,
@@ -602,7 +644,13 @@ const s = StyleSheet.create({
     paddingVertical: 14,
   },
   detailItem: { width: "45%" },
-  detailLabel: { fontSize: 10, fontFamily: "DMSans_500Medium", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 },
+  detailLabel: {
+    fontSize: 10,
+    fontFamily: "DMSans_500Medium",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
   detailValue: { fontSize: 13, fontFamily: "DMSans_500Medium" },
   detailInline: { flexDirection: "row", alignItems: "center", gap: 5 },
 
@@ -624,14 +672,24 @@ const s = StyleSheet.create({
   },
   ghostBtnText: { fontSize: 14, fontFamily: "DMSans_500Medium" },
 
-  tipsHeading: { fontSize: 17, fontFamily: "Fraunces_500Medium", letterSpacing: -0.3, marginBottom: 4 },
+  tipsHeading: {
+    fontSize: 17,
+    fontFamily: "Fraunces_500Medium",
+    letterSpacing: -0.3,
+    marginBottom: 4,
+  },
   tipRow: { flexDirection: "row", alignItems: "flex-start", gap: 14, paddingVertical: 14 },
   tipDot: { width: 6, height: 6, borderRadius: 3, marginTop: 7 },
   tipTitle: { fontSize: 14, fontFamily: "DMSans_600SemiBold", marginBottom: 3 },
   tipDesc: { fontSize: 13, fontFamily: "DMSans_400Regular", lineHeight: 18 },
 
   emptyState: { flex: 1, alignItems: "center", justifyContent: "center", padding: 40, gap: 14 },
-  emptyTitle: { fontSize: 22, fontFamily: "Fraunces_400Regular", letterSpacing: -0.5, textAlign: "center" },
+  emptyTitle: {
+    fontSize: 22,
+    fontFamily: "Fraunces_400Regular",
+    letterSpacing: -0.5,
+    textAlign: "center",
+  },
   emptySub: { fontSize: 14, fontFamily: "DMSans_400Regular", textAlign: "center", lineHeight: 21 },
   emptyBtn: { marginTop: 8, borderRadius: 16, paddingHorizontal: 28, paddingVertical: 14 },
   emptyBtnText: { fontSize: 15, fontFamily: "DMSans_600SemiBold" },

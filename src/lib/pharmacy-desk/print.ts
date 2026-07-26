@@ -1,7 +1,10 @@
-const fmt = (n: number) => `₹${Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+import type { ShiftReport } from "./desk-persistence";
+
+const fmt = (n: number) =>
+  `₹${Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const HOSPITAL = {
-  name: "Maple Hospital",
+  name: "Oak Haven Medical",
   address: "44 Linking Road, Bandra West, Mumbai 400050",
   phone: "+91 22 4455 1100",
   gst: "27ABCDE1234F1Z9",
@@ -41,10 +44,10 @@ ${bodyHtml}
   w.focus();
 }
 
-export function printPharmacistShiftReport(report: any) {
+export function printPharmacistShiftReport(report: ShiftReport) {
   const reconRows = report.reconciliation
     .map(
-      (r: any) => `
+      (r) => `
       <tr>
         <td>${r.drugName}</td>
         <td class="right mono">${r.openingBalance}</td>
@@ -52,7 +55,7 @@ export function printPharmacistShiftReport(report: any) {
         <td class="right mono">${r.closingBalance}</td>
         <td class="right mono" style="color: ${r.variance !== 0 ? "#b85c38" : "inherit"}">${r.variance}</td>
       </tr>
-    `
+    `,
     )
     .join("");
 
@@ -118,13 +121,17 @@ export function printPharmacistShiftReport(report: any) {
       <tr><td>Wastage Disposed Value</td><td class="right mono" style="color: #b85c38">${fmt(report.wastageValue)}</td></tr>
     </table>
 
-    ${report.notes ? `
+    ${
+      report.notes
+        ? `
       <hr/>
       <div class="xs">Handover Remarks</div>
       <div style="font-size: 11px; padding: 6px; background: #fcfcfb; border: 1px solid #e5e5e0; border-radius: 4px; margin-top: 4px; line-height: 1.4;">
         ${report.notes}
       </div>
-    ` : ""}
+    `
+        : ""
+    }
 
     <div class="stamp">
       <div class="xs">Authorized Signatures</div>

@@ -38,9 +38,7 @@ export function wantsMedicationRulesOnly(text: string): boolean {
   const lower = text.toLowerCase();
   const mentionsMeds = /med|medication|levothyroxine|thyroid|pill/.test(lower);
   const wantsFood =
-    /recipe|cook|make|prepare|food|meal|breakfast|lunch|dinner|eat|best|cure|suggest/.test(
-      lower,
-    );
+    /recipe|cook|make|prepare|food|meal|breakfast|lunch|dinner|eat|best|cure|suggest/.test(lower);
   return mentionsMeds && !wantsFood;
 }
 
@@ -68,9 +66,7 @@ export function resolveSemanticQuery(text: string, ctx: RecipeIntentContext): st
     if (mealType === "dinner" || /dinner/.test(lower)) {
       return "thyroid safe dinner lentil zinc turmeric";
     }
-    if (
-      /med|medicine|pill|thyroid|best|suggest|cure|good|which|recommend/.test(lower)
-    ) {
+    if (/med|medicine|pill|thyroid|best|suggest|cure|good|which|recommend/.test(lower)) {
       return "levothyroxine medication safe meal iodine selenium zinc lactose free";
     }
   }
@@ -185,7 +181,11 @@ export function formatMealClinicalBlock(meal: DietMeal, ctx: RecipeIntentContext
   return lines.join("\n");
 }
 
-export function formatChefMealReply(meal: DietMeal, ctx: RecipeIntentContext, language: DietLanguage): string {
+export function formatChefMealReply(
+  meal: DietMeal,
+  ctx: RecipeIntentContext,
+  language: DietLanguage,
+): string {
   const langLabel =
     language === "en"
       ? "English"

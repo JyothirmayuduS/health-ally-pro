@@ -1,0 +1,175 @@
+{
+  "probe": "TENANT-B-PROBE-mrv4vi2y",
+  "environment": {
+    "supabase_url": "https://wsnpwyqypgclsclktoyf.supabase.co",
+    "note": "No separate staging Worker/project in this org — ran against health_ally_pro + local :8787"
+  },
+  "desks": [
+    {
+      "desk": "patients",
+      "table": "patients",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "specialty_charts",
+      "table": "specialty_chart_notes",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "reception",
+      "table": "hospital_desk_records",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "lab",
+      "table": "hospital_desk_records",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "pharmacy",
+      "table": "hospital_desk_records",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "units",
+      "table": "hospital_unit_records",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "anatomy_markers",
+      "table": "anatomy_markers",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    },
+    {
+      "desk": "audit_logs",
+      "table": "audit_logs",
+      "pass": true,
+      "oak_sees_B": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      },
+      "B_sees_own": {
+        "ok": true,
+        "count": 1,
+        "error": null
+      },
+      "B_sees_Oak": {
+        "ok": true,
+        "count": 0,
+        "error": null
+      }
+    }
+  ],
+  "persist_api": {
+    "status": 403,
+    "body": "{\"error\":\"Hospital out of scope\"}",
+    "pass": true
+  },
+  "all_desks_pass": true
+}

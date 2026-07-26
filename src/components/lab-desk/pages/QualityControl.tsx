@@ -45,6 +45,20 @@ import {
 import { cn } from "@/lib/utils";
 import type { QCRun } from "@/lib/lab-desk/qcData";
 
+type QcChartPoint = {
+  name: string;
+  value: number;
+  mean: number;
+  plus1SD: number;
+  plus2SD: number;
+  plus3SD: number;
+  minus1SD: number;
+  minus2SD: number;
+  minus3SD: number;
+  pointColor: string;
+  runId: string;
+};
+
 export default function QualityControl() {
   const { qcRuns, catalog, qcLocks, logQCRun, logQCCorrectiveAction } = useLabStore();
   const { name } = useLabAuth();
@@ -69,7 +83,13 @@ export default function QualityControl() {
   const analytesList = useMemo(() => {
     return [
       { code: "glu", name: "Glucose", defaultMean: 100, defaultSD: 5, defaultLot: "LOT-GLU-A5" },
-      { code: "hb", name: "Hemoglobin", defaultMean: 12.0, defaultSD: 0.4, defaultLot: "LOT-HEM-H2" },
+      {
+        code: "hb",
+        name: "Hemoglobin",
+        defaultMean: 12.0,
+        defaultSD: 0.4,
+        defaultLot: "LOT-HEM-H2",
+      },
     ];
   }, []);
 
@@ -121,7 +141,8 @@ export default function QualityControl() {
         const diff = r.value - r.mean;
         const sdUnits = diff / r.sd;
         let pointColor = "#10b981"; // green
-        if (Math.abs(sdUnits) >= 3.0) pointColor = "#ef4444"; // red
+        if (Math.abs(sdUnits) >= 3.0)
+          pointColor = "#ef4444"; // red
         else if (Math.abs(sdUnits) >= 2.0) pointColor = "#f59e0b"; // amber
 
         return {
@@ -151,7 +172,10 @@ export default function QualityControl() {
       <SectionLabel
         action={
           <div className="flex gap-2">
-            <Button className="btn-primary !h-8 !px-3 !text-[12px]" onClick={() => setModalOpen(true)}>
+            <Button
+              className="btn-primary !h-8 !px-3 !text-[12px]"
+              onClick={() => setModalOpen(true)}
+            >
               <Plus className="mr-1.5 h-3.5 w-3.5" /> Log QC Run
             </Button>
           </div>
@@ -169,10 +193,12 @@ export default function QualityControl() {
           <button
             key={t.value}
             type="button"
-            onClick={() => setActiveTab(t.value as any)}
+            onClick={() => setActiveTab(t.value as typeof activeTab)}
             className={cn(
               "flex-1 rounded px-3 py-1.5 text-[11px] font-medium transition text-center",
-              activeTab === t.value ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-700",
+              activeTab === t.value
+                ? "bg-white text-ink-900 shadow-sm"
+                : "text-ink-500 hover:text-ink-700",
             )}
           >
             {t.label}
@@ -184,8 +210,12 @@ export default function QualityControl() {
         <div className="rounded-lg border border-red-200 bg-red-50/50 px-4 py-3 text-[13px] text-red-800 flex items-start gap-3">
           <AlertTriangle className="h-4 w-4 shrink-0 text-red-600 mt-0.5 animate-pulse" />
           <div>
-            <strong>QC FAILURE LOCK IN PLACE:</strong> Releases are blocked for patient results matching:{" "}
-            <span className="font-mono font-bold">{qcLocks.map((l) => l.toUpperCase()).join(", ")}</span>. Log corrective action on the failed run below to resume patient validations.
+            <strong>QC FAILURE LOCK IN PLACE:</strong> Releases are blocked for patient results
+            matching:{" "}
+            <span className="font-mono font-bold">
+              {qcLocks.map((l) => l.toUpperCase()).join(", ")}
+            </span>
+            . Log corrective action on the failed run below to resume patient validations.
           </div>
         </div>
       )}
@@ -209,7 +239,11 @@ export default function QualityControl() {
               {qcRuns.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-8">
-                    <EmptyState icon={Activity} title="No QC runs recorded" hint="Log a run to get started." />
+                    <EmptyState
+                      icon={Activity}
+                      title="No QC runs recorded"
+                      hint="Log a run to get started."
+                    />
                   </td>
                 </tr>
               ) : (
@@ -223,7 +257,9 @@ export default function QualityControl() {
                     }}
                   >
                     <td className="px-4 py-3">
-                      <div className="font-medium text-ink-900">{new Date(r.date).toLocaleDateString()}</div>
+                      <div className="font-medium text-ink-900">
+                        {new Date(r.date).toLocaleDateString()}
+                      </div>
                       <div className="text-[10px] capitalize text-ink-400">{r.shift} shift</div>
                     </td>
                     <td className="px-4 py-3">
@@ -242,8 +278,8 @@ export default function QualityControl() {
                           r.status === "pass"
                             ? "bg-green-100 text-green-800"
                             : r.status === "warning"
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-red-100 text-red-800"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-red-100 text-red-800",
                         )}
                       >
                         {r.status}
@@ -265,7 +301,10 @@ export default function QualityControl() {
                           <Wrench className="h-3 w-3 mr-1" /> Fix lock
                         </Button>
                       ) : r.correctiveAction ? (
-                        <div className="text-[11px] text-stone-500 italic max-w-xs truncate" title={r.correctiveAction}>
+                        <div
+                          className="text-[11px] text-stone-500 italic max-w-xs truncate"
+                          title={r.correctiveAction}
+                        >
                           Fixed: {r.correctiveAction}
                         </div>
                       ) : (
@@ -295,7 +334,8 @@ export default function QualityControl() {
 
           <div className="surface p-5 h-96">
             <h3 className="font-heading font-semibold text-ink-900 mb-4 flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-sage" /> Levey-Jennings Control Chart — {selectedAnalyte.toUpperCase()}
+              <TrendingUp className="h-4 w-4 text-sage" /> Levey-Jennings Control Chart —{" "}
+              {selectedAnalyte.toUpperCase()}
             </h3>
             {chartData.length === 0 ? (
               <p className="text-center text-ink-400 py-16">No QC data available for chart.</p>
@@ -306,29 +346,101 @@ export default function QualityControl() {
                   <XAxis dataKey="name" tick={{ fontSize: 10 }} />
                   <YAxis
                     domain={[
-                      (dataMin) => Math.min(dataMin, currentTarget.defaultMean - currentTarget.defaultSD * 3.5),
-                      (dataMax) => Math.max(dataMax, currentTarget.defaultMean + currentTarget.defaultSD * 3.5),
+                      (dataMin: number) =>
+                        Math.min(
+                          dataMin,
+                          currentTarget.defaultMean - currentTarget.defaultSD * 3.5,
+                        ),
+                      (dataMax: number) =>
+                        Math.max(
+                          dataMax,
+                          currentTarget.defaultMean + currentTarget.defaultSD * 3.5,
+                        ),
                     ]}
                     tick={{ fontSize: 10 }}
                   />
                   <Tooltip />
                   {/* Westgard Limits lines */}
-                  <ReferenceLine y={currentTarget.defaultMean} stroke="#6b7280" strokeWidth={1.5} label={{ value: "Mean", position: "right", fontSize: 10 }} />
-                  <ReferenceLine y={currentTarget.defaultMean + currentTarget.defaultSD} stroke="#9ca3af" strokeDasharray="3 3" label={{ value: "+1SD", position: "right", fontSize: 10 }} />
-                  <ReferenceLine y={currentTarget.defaultMean - currentTarget.defaultSD} stroke="#9ca3af" strokeDasharray="3 3" label={{ value: "-1SD", position: "right", fontSize: 10 }} />
-                  <ReferenceLine y={currentTarget.defaultMean + currentTarget.defaultSD * 2} stroke="#f59e0b" strokeDasharray="3 3" label={{ value: "+2SD (Warning)", position: "right", fill: "#d97706", fontSize: 10 }} />
-                  <ReferenceLine y={currentTarget.defaultMean - currentTarget.defaultSD * 2} stroke="#f59e0b" strokeDasharray="3 3" label={{ value: "-2SD (Warning)", position: "right", fill: "#d97706", fontSize: 10 }} />
-                  <ReferenceLine y={currentTarget.defaultMean + currentTarget.defaultSD * 3} stroke="#ef4444" strokeWidth={1.5} label={{ value: "+3SD (Fail)", position: "right", fill: "#dc2626", fontSize: 10 }} />
-                  <ReferenceLine y={currentTarget.defaultMean - currentTarget.defaultSD * 3} stroke="#ef4444" strokeWidth={1.5} label={{ value: "-3SD (Fail)", position: "right", fill: "#dc2626", fontSize: 10 }} />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean}
+                    stroke="#6b7280"
+                    strokeWidth={1.5}
+                    label={{ value: "Mean", position: "right", fontSize: 10 }}
+                  />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean + currentTarget.defaultSD}
+                    stroke="#9ca3af"
+                    strokeDasharray="3 3"
+                    label={{ value: "+1SD", position: "right", fontSize: 10 }}
+                  />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean - currentTarget.defaultSD}
+                    stroke="#9ca3af"
+                    strokeDasharray="3 3"
+                    label={{ value: "-1SD", position: "right", fontSize: 10 }}
+                  />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean + currentTarget.defaultSD * 2}
+                    stroke="#f59e0b"
+                    strokeDasharray="3 3"
+                    label={{
+                      value: "+2SD (Warning)",
+                      position: "right",
+                      fill: "#d97706",
+                      fontSize: 10,
+                    }}
+                  />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean - currentTarget.defaultSD * 2}
+                    stroke="#f59e0b"
+                    strokeDasharray="3 3"
+                    label={{
+                      value: "-2SD (Warning)",
+                      position: "right",
+                      fill: "#d97706",
+                      fontSize: 10,
+                    }}
+                  />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean + currentTarget.defaultSD * 3}
+                    stroke="#ef4444"
+                    strokeWidth={1.5}
+                    label={{
+                      value: "+3SD (Fail)",
+                      position: "right",
+                      fill: "#dc2626",
+                      fontSize: 10,
+                    }}
+                  />
+                  <ReferenceLine
+                    y={currentTarget.defaultMean - currentTarget.defaultSD * 3}
+                    stroke="#ef4444"
+                    strokeWidth={1.5}
+                    label={{
+                      value: "-3SD (Fail)",
+                      position: "right",
+                      fill: "#dc2626",
+                      fontSize: 10,
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="value"
                     stroke="#3f6b58"
                     strokeWidth={2}
                     activeDot={{ r: 6 }}
-                    dot={(props: any) => {
+                    dot={(props: { cx?: number; cy?: number; payload: QcChartPoint }) => {
                       const { cx, cy, payload } = props;
-                      return <Dot cx={cx} cy={cy} r={5} fill={payload.pointColor} stroke="#fff" strokeWidth={1.5} />;
+                      return (
+                        <Dot
+                          cx={cx}
+                          cy={cy}
+                          r={5}
+                          fill={payload.pointColor}
+                          stroke="#fff"
+                          strokeWidth={1.5}
+                        />
+                      );
                     }}
                   />
                 </LineChart>
@@ -344,7 +456,9 @@ export default function QualityControl() {
           <form onSubmit={handleSaveQC} className="space-y-4">
             <DialogHeader>
               <DialogTitle>Log Quality Control Run</DialogTitle>
-              <DialogDescription>Run controls and log the values to verify calibration status.</DialogDescription>
+              <DialogDescription>
+                Run controls and log the values to verify calibration status.
+              </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-3">
@@ -364,11 +478,19 @@ export default function QualityControl() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Control Lot</Label>
-                  <Input value={formLot} onChange={(e) => setFormLot(e.target.value)} className="mt-1 border-ink-200 bg-white" required />
+                  <Input
+                    value={formLot}
+                    onChange={(e) => setFormLot(e.target.value)}
+                    className="mt-1 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
                 <div>
                   <Label>Control Level</Label>
-                  <Select value={formLevel} onValueChange={(val: any) => setFormLevel(val)}>
+                  <Select
+                    value={formLevel}
+                    onValueChange={(val) => setFormLevel(val as typeof formLevel)}
+                  >
                     <SelectTrigger className="w-full bg-white border-ink-200 mt-1">
                       <SelectValue placeholder="Level" />
                     </SelectTrigger>
@@ -384,7 +506,10 @@ export default function QualityControl() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Current Shift</Label>
-                  <Select value={formShift} onValueChange={(val: any) => setFormShift(val)}>
+                  <Select
+                    value={formShift}
+                    onValueChange={(val) => setFormShift(val as typeof formShift)}
+                  >
                     <SelectTrigger className="w-full bg-white border-ink-200 mt-1">
                       <SelectValue placeholder="Shift" />
                     </SelectTrigger>
@@ -412,18 +537,32 @@ export default function QualityControl() {
               <div className="grid grid-cols-2 gap-3 bg-stone-50 p-3 rounded-lg border border-stone-200 text-xs">
                 <div>
                   <Label className="text-[10px]">Expected Mean</Label>
-                  <Input value={formMean} onChange={(e) => setFormMean(e.target.value)} className="mt-1 h-7 border-ink-200 bg-white" required />
+                  <Input
+                    value={formMean}
+                    onChange={(e) => setFormMean(e.target.value)}
+                    className="mt-1 h-7 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
                 <div>
                   <Label className="text-[10px]">1 Standard Deviation (SD)</Label>
-                  <Input value={formSD} onChange={(e) => setFormSD(e.target.value)} className="mt-1 h-7 border-ink-200 bg-white" required />
+                  <Input
+                    value={formSD}
+                    onChange={(e) => setFormSD(e.target.value)}
+                    className="mt-1 h-7 border-ink-200 bg-white"
+                    required
+                  />
                 </div>
               </div>
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setModalOpen(false)}>Cancel</Button>
-              <Button type="submit" className="btn-primary">Save & Evaluate Rules</Button>
+              <Button type="button" variant="ghost" onClick={() => setModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="btn-primary">
+                Save & Evaluate Rules
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -452,8 +591,12 @@ export default function QualityControl() {
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setActionModalOpen(false)}>Cancel</Button>
-              <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white">Save & Unlock</Button>
+              <Button type="button" variant="ghost" onClick={() => setActionModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white">
+                Save & Unlock
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -475,46 +618,66 @@ export default function QualityControl() {
             <div className="space-y-4 my-2 text-sm text-ink-700">
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Analyte / Instrument</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Analyte / Instrument
+                  </span>
                   <span className="font-semibold text-ink-900">{selectedRun.analyteName}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Lot Number</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Lot Number
+                  </span>
                   <span className="font-mono text-ink-900">{selectedRun.lotNumber}</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 border-b pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Date & Shift</span>
-                  <span>{new Date(selectedRun.date).toLocaleString()} ({selectedRun.shift})</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Date & Shift
+                  </span>
+                  <span>
+                    {new Date(selectedRun.date).toLocaleString()} ({selectedRun.shift})
+                  </span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-ink-400 block">Run By Operator</span>
+                  <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                    Run By Operator
+                  </span>
                   <span>{selectedRun.runBy}</span>
                 </div>
               </div>
 
               <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 space-y-2">
-                <span className="text-[10px] uppercase font-bold text-ink-400 block">Measured vs Target Stats</span>
+                <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                  Measured vs Target Stats
+                </span>
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
                   <div className="bg-white p-2 rounded border">
-                    <span className="block font-semibold text-[13px] font-mono text-ink-900">{selectedRun.value}</span>
+                    <span className="block font-semibold text-[13px] font-mono text-ink-900">
+                      {selectedRun.value}
+                    </span>
                     <span className="text-[10px] text-ink-400">Observed</span>
                   </div>
                   <div className="bg-white p-2 rounded border">
-                    <span className="block font-semibold text-[13px] font-mono text-ink-900">{selectedRun.mean}</span>
+                    <span className="block font-semibold text-[13px] font-mono text-ink-900">
+                      {selectedRun.mean}
+                    </span>
                     <span className="text-[10px] text-ink-400">Mean Target</span>
                   </div>
                   <div className="bg-white p-2 rounded border">
-                    <span className="block font-semibold text-[13px] font-mono text-ink-900">± {selectedRun.sd}</span>
+                    <span className="block font-semibold text-[13px] font-mono text-ink-900">
+                      ± {selectedRun.sd}
+                    </span>
                     <span className="text-[10px] text-ink-400">Std Dev (SD)</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-ink-400 block">Westgard Evaluation Status</span>
+                <span className="text-[10px] uppercase font-bold text-ink-400 block">
+                  Westgard Evaluation Status
+                </span>
                 <div className="flex items-center gap-2">
                   <span
                     className={cn(
@@ -522,8 +685,8 @@ export default function QualityControl() {
                       selectedRun.status === "pass"
                         ? "bg-green-100 text-green-800"
                         : selectedRun.status === "warning"
-                        ? "bg-amber-100 text-amber-800"
-                        : "bg-red-100 text-red-800"
+                          ? "bg-amber-100 text-amber-800"
+                          : "bg-red-100 text-red-800",
                     )}
                   >
                     {selectedRun.status}
@@ -532,8 +695,8 @@ export default function QualityControl() {
                     {selectedRun.status === "pass"
                       ? "Control run is within acceptable calibration limits."
                       : selectedRun.status === "warning"
-                      ? "Value exceeds ±2SD limit. Routine warning."
-                      : "Control value is outside ±3SD limit. Analyte Locked!"}
+                        ? "Value exceeds ±2SD limit. Routine warning."
+                        : "Control value is outside ±3SD limit. Analyte Locked!"}
                   </span>
                 </div>
                 {selectedRun.rulesTriggered && selectedRun.rulesTriggered.length > 0 && (
@@ -553,7 +716,9 @@ export default function QualityControl() {
           )}
 
           <DialogFooter>
-            <Button onClick={() => setViewModalOpen(false)} className="btn-primary">Close</Button>
+            <Button onClick={() => setViewModalOpen(false)} className="btn-primary">
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

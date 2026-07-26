@@ -62,7 +62,12 @@ export function notifyNewPrescription(input: {
   }
 }
 
-export function notifyPatientMedicationDue(med: { name: string; dosage: string; timeLabel: string; instruction?: string }) {
+export function notifyPatientMedicationDue(med: {
+  name: string;
+  dosage: string;
+  timeLabel: string;
+  instruction?: string;
+}) {
   toast.message("Medication reminder", {
     description: `${med.name} ${med.dosage} — ${med.instruction ?? med.timeLabel}`,
     duration: 10000,

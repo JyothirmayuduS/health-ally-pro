@@ -1,9 +1,6 @@
 import { getPanelPatient } from "@/lib/doctor-patients-apk-data";
 import { listActiveMedications } from "@/lib/patient-meds-store";
-import {
-  listClinicalEvents,
-  type ClinicalEvent,
-} from "@/lib/shared/clinical-event-log";
+import { listClinicalEvents, type ClinicalEvent } from "@/lib/shared/clinical-event-log";
 
 export type AdherenceRiskTier = "critical" | "warning" | "stable";
 
@@ -42,13 +39,9 @@ export function buildAdherenceSparkline(
     const d = new Date(nowMs);
     d.setDate(d.getDate() - offset);
     const key = d.toISOString().slice(0, 10);
-    const takenCount = events.filter(
-      (e) => isMedTakenEvent(e) && dayKey(e.at) === key,
-    ).length;
+    const takenCount = events.filter((e) => isMedTakenEvent(e) && dayKey(e.at) === key).length;
     const pct =
-      prescribedDaily > 0
-        ? Math.min(100, Math.round((takenCount / prescribedDaily) * 100))
-        : 100;
+      prescribedDaily > 0 ? Math.min(100, Math.round((takenCount / prescribedDaily) * 100)) : 100;
     spark.push(pct);
   }
   return spark;
@@ -67,15 +60,11 @@ export function buildAdherenceTriageForPanelPatient(
   const takenToday = meds.filter((m) => m.taken).length;
   const medPct = prescribedDaily ? Math.round((takenToday / prescribedDaily) * 100) : 100;
 
-  const recent48 = events.filter(
-    (e) => nowMs - new Date(e.at).getTime() <= MS_48H,
-  );
+  const recent48 = events.filter((e) => nowMs - new Date(e.at).getTime() <= MS_48H);
   const medTaken48 = recent48.filter(isMedTakenEvent).length;
   const medMissed48 = recent48.filter(isMedMissedEvent).length;
   const exercise48 = recent48.filter((e) => e.kind === "exercise_adherence").length;
-  const rxSafety = recent48.filter(
-    (e) => e.kind === "rx_cancelled" || e.kind === "rx_amended",
-  );
+  const rxSafety = recent48.filter((e) => e.kind === "rx_cancelled" || e.kind === "rx_amended");
 
   const sparkline = buildAdherenceSparkline(events, prescribedDaily, nowMs);
   const name = patient?.name ?? "Patient";

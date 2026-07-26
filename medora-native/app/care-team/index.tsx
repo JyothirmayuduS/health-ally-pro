@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  StatusBar,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import {
@@ -33,13 +26,13 @@ export default function CareTeamScreen() {
   const filteredDoctors = doctors.filter(
     (d) =>
       d.name.toLowerCase().includes(search.toLowerCase()) ||
-      d.specialty.toLowerCase().includes(search.toLowerCase())
+      d.specialty.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle="dark-content" />
-      
+
       {/* Header */}
       <View style={[styles.header, { borderBottomWidth: 1, borderBottomColor: colors.border }]}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
@@ -51,7 +44,11 @@ export default function CareTeamScreen() {
         </Pressable>
       </View>
 
-      <ScrollView style={styles.content} stickyHeaderIndices={[1]} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.content}
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <Text style={[styles.heroTitle, { color: colors.foreground }]}>
@@ -63,14 +60,28 @@ export default function CareTeamScreen() {
         </View>
 
         {/* Search & Filter Bar */}
-        <View style={[styles.searchBarWrapper, { backgroundColor: colors.background, borderBottomWidth: 1, borderBottomColor: colors.border }]}>
+        <View
+          style={[
+            styles.searchBarWrapper,
+            {
+              backgroundColor: colors.background,
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+            },
+          ]}
+        >
           <View style={styles.searchInner}>
             <SearchInput
               value={search}
               onChangeText={setSearch}
               placeholder="Search by name or specialty..."
             />
-            <Pressable style={[styles.filterBtn, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Pressable
+              style={[
+                styles.filterBtn,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
               <Filter size={18} color={colors.foreground} />
             </Pressable>
           </View>
@@ -92,28 +103,51 @@ export default function CareTeamScreen() {
                   <Text style={[styles.name, { color: colors.foreground }]}>{doc.name}</Text>
                   <Text style={[styles.specialty, { color: colors.clay }]}>{doc.specialty}</Text>
                   <View style={styles.metaRow}>
-                    <Text style={[styles.metaText, { color: colors.inkMuted }]}>{doc.experience} Years Exp.</Text>
+                    <Text style={[styles.metaText, { color: colors.inkMuted }]}>
+                      {doc.experience} Years Exp.
+                    </Text>
                     <View style={[styles.dot, { backgroundColor: colors.border }]} />
-                    <Text style={[styles.metaText, { color: colors.foreground }]}>★ {doc.rating}</Text>
+                    <Text style={[styles.metaText, { color: colors.foreground }]}>
+                      ★ {doc.rating}
+                    </Text>
                   </View>
-                  
+
                   {/* 🏥 CLINICAL HISTORY SECTION */}
-                  {appointments.filter(a => a.doctorId === doc.id && a.status === 'completed').length > 0 && (
+                  {appointments.filter((a) => a.doctorId === doc.id && a.status === "completed")
+                    .length > 0 && (
                     <View style={styles.historyBox}>
-                       <View style={styles.historyRow}>
-                          <Text style={[styles.historyLabel, { color: colors.inkMuted }]}>Last Visit:</Text>
-                          <Text style={[styles.historyVal, { color: colors.foreground }]}>
-                             {format(new Date(appointments.filter(a => a.doctorId === doc.id && a.status === 'completed').sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date), "MMM d, yyyy")}
+                      <View style={styles.historyRow}>
+                        <Text style={[styles.historyLabel, { color: colors.inkMuted }]}>
+                          Last Visit:
+                        </Text>
+                        <Text style={[styles.historyVal, { color: colors.foreground }]}>
+                          {format(
+                            new Date(
+                              appointments
+                                .filter((a) => a.doctorId === doc.id && a.status === "completed")
+                                .sort(
+                                  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+                                )[0].date,
+                            ),
+                            "MMM d, yyyy",
+                          )}
+                        </Text>
+                      </View>
+                      {medications.some((m) => m.prescribedBy === doc.name) && (
+                        <View style={styles.historyRow}>
+                          <Text style={[styles.historyLabel, { color: colors.inkMuted }]}>
+                            Rx History:
                           </Text>
-                       </View>
-                       {medications.some(m => m.prescribedBy === doc.name) && (
-                          <View style={styles.historyRow}>
-                             <Text style={[styles.historyLabel, { color: colors.inkMuted }]}>Rx History:</Text>
-                             <Text style={[styles.historyVal, { color: colors.clay, fontFamily: 'Outfit-Bold' }]}>
-                                {medications.find(m => m.prescribedBy === doc.name)?.name}
-                             </Text>
-                          </View>
-                       )}
+                          <Text
+                            style={[
+                              styles.historyVal,
+                              { color: colors.clay, fontFamily: "Outfit-Bold" },
+                            ]}
+                          >
+                            {medications.find((m) => m.prescribedBy === doc.name)?.name}
+                          </Text>
+                        </View>
+                      )}
                     </View>
                   )}
                 </View>
@@ -123,21 +157,28 @@ export default function CareTeamScreen() {
 
               <View style={styles.cardActions}>
                 <View style={styles.actionGroup}>
-                  <Pressable 
-                    onPress={(e) => { e.stopPropagation(); }}
+                  <Pressable
+                    onPress={(e) => {
+                      e.stopPropagation();
+                    }}
                     style={[styles.actionIconBtn, { backgroundColor: "#4CAF50" + "10" }]}
                   >
                     <Phone size={16} color="#4CAF50" />
                   </Pressable>
-                  <Pressable 
-                    onPress={(e) => { e.stopPropagation(); }}
+                  <Pressable
+                    onPress={(e) => {
+                      e.stopPropagation();
+                    }}
                     style={[styles.actionBtn, { backgroundColor: colors.ink + "10" }]}
                   >
                     <MessageCircle size={16} color={colors.ink} />
                     <Text style={[styles.actionBtnText, { color: colors.ink }]}>Chat</Text>
                   </Pressable>
-                  <Pressable 
-                    onPress={(e) => { e.stopPropagation(); router.push("/care-team/video-call"); }}
+                  <Pressable
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      router.push("/care-team/video-call");
+                    }}
                     style={[styles.actionBtn, { backgroundColor: colors.clay + "10" }]}
                   >
                     <Video size={16} color={colors.clay} />
@@ -149,7 +190,7 @@ export default function CareTeamScreen() {
             </Pressable>
           ))}
         </View>
-        
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
@@ -279,19 +320,19 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.03)',
+    borderTopColor: "rgba(0,0,0,0.03)",
   },
   historyRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   historyLabel: {
     fontSize: 12,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: "Outfit-Regular",
   },
   historyVal: {
     fontSize: 12,
-    fontFamily: 'Outfit-Medium',
+    fontFamily: "Outfit-Medium",
   },
 });

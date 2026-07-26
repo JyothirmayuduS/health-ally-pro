@@ -62,7 +62,10 @@ const NAME_ALIASES: Record<string, string> = {
 };
 
 export function resolveDrugIdFromMedName(name: string): string | null {
-  const normalized = name.toLowerCase().replace(/inhaler|tablet|capsule|syrup/gi, "").trim();
+  const normalized = name
+    .toLowerCase()
+    .replace(/inhaler|tablet|capsule|syrup/gi, "")
+    .trim();
   for (const [alias, drugId] of Object.entries(NAME_ALIASES)) {
     if (normalized.includes(alias)) return drugId;
   }

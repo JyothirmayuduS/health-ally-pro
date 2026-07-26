@@ -21,7 +21,7 @@ import { fetchDoctors, fetchReportsForPatient } from "@/lib/supabase/queries";
 import { ChefHat, Dumbbell, FileText, Pill, Stethoscope } from "lucide-react";
 
 const QUICK_LINKS = [
-  { label: "Home dashboard", to: "/" },
+  { label: "Home dashboard", to: "/app" },
   { label: "Care hub", to: "/care" },
   { label: "Health hub", to: "/health" },
   { label: "Book appointment", to: "/book" },
@@ -118,11 +118,7 @@ export function PatientCommandPalette() {
         {!search.trim() && (
           <CommandGroup heading="Quick links">
             {QUICK_LINKS.map((link) => (
-              <CommandItem
-                key={link.to}
-                value={link.label}
-                onSelect={() => go(link.to)}
-              >
+              <CommandItem key={link.to} value={link.label} onSelect={() => go(link.to)}>
                 {link.label}
               </CommandItem>
             ))}
@@ -146,7 +142,9 @@ export function PatientCommandPalette() {
                       <Icon className="mr-2 h-4 w-4 shrink-0 text-ink-muted" strokeWidth={1.75} />
                       <span className="min-w-0">
                         <span className="block truncate font-medium">{hit.title}</span>
-                        <span className="block truncate text-xs text-ink-muted">{hit.subtitle}</span>
+                        <span className="block truncate text-xs text-ink-muted">
+                          {hit.subtitle}
+                        </span>
                       </span>
                     </CommandItem>
                   ))}

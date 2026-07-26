@@ -5,7 +5,11 @@ import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts, Fraunces_400Regular, Fraunces_500Medium } from "@expo-google-fonts/fraunces";
-import { DMSans_400Regular, DMSans_500Medium, DMSans_600SemiBold } from "@expo-google-fonts/dm-sans";
+import {
+  DMSans_400Regular,
+  DMSans_500Medium,
+  DMSans_600SemiBold,
+} from "@expo-google-fonts/dm-sans";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { usePatientSyncBootstrap } from "@/lib/usePatientSyncBootstrap";
 
@@ -23,9 +27,15 @@ function PatientSyncRoot() {
       <Stack.Screen name="refill/[id]" options={{ presentation: "modal" }} />
       <Stack.Screen name="clinical-rules/[mealId]" options={{ presentation: "card" }} />
       <Stack.Screen name="ai-assistant/index" options={{ presentation: "modal" }} />
-      <Stack.Screen name="upload/index" options={{ presentation: "transparentModal", animation: "fade" }} />
+      <Stack.Screen
+        name="upload/index"
+        options={{ presentation: "transparentModal", animation: "fade" }}
+      />
       <Stack.Screen name="settings/edit" options={{ presentation: "modal" }} />
-      <Stack.Screen name="settings/family-create" options={{ presentation: "transparentModal", animation: "fade" }} />
+      <Stack.Screen
+        name="settings/family-create"
+        options={{ presentation: "transparentModal", animation: "fade" }}
+      />
       <Stack.Screen name="settings/privacy" options={{ presentation: "card" }} />
       <Stack.Screen name="settings/support" options={{ presentation: "card" }} />
       <Stack.Screen name="settings/terms" options={{ presentation: "card" }} />

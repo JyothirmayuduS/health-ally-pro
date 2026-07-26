@@ -89,10 +89,7 @@ export function ShareProgressOverlay({ open, onComplete }: Props) {
                 </span>
                 {i < PHASES.length - 1 ? (
                   <span
-                    className={cn(
-                      "h-px w-8 sm:w-12",
-                      i < phaseIndex ? "bg-clay" : "bg-[#E8E4DF]",
-                    )}
+                    className={cn("h-px w-8 sm:w-12", i < phaseIndex ? "bg-clay" : "bg-[#E8E4DF]")}
                   />
                 ) : null}
               </div>

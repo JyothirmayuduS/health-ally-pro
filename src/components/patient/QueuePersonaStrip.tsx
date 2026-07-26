@@ -14,7 +14,11 @@ export function QueuePersonaStrip({ position, total, className }: StripProps) {
 
   return (
     <div className={cn("space-y-1.5", className)}>
-      <div className="flex items-end justify-between gap-1" role="list" aria-label="People in queue">
+      <div
+        className="flex items-end justify-between gap-1"
+        role="list"
+        aria-label="People in queue"
+      >
         {nodes.map((node) => (
           <div
             key={node.position}
@@ -22,12 +26,11 @@ export function QueuePersonaStrip({ position, total, className }: StripProps) {
             className="flex min-w-0 flex-1 flex-col items-center gap-0.5"
           >
             <QueuePersonaIcon
-                persona={node.persona}
-                kind={node.kind}
-                size="sm"
-                surface="dark"
-                plain={node.kind === "in-room" || node.kind === "completed"}
-              />
+              persona={node.persona}
+              kind={node.kind}
+              size="sm"
+              plain={node.kind === "in-room" || node.kind === "completed"}
+            />
             {node.kind === "you" ? (
               <span className="text-[8px] font-bold uppercase tracking-wider text-[#D4957E]">
                 You

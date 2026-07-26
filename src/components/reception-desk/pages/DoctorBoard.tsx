@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
-const STATUS = {
+const STATUS: Record<string, { chip: string; dot: string; text: string; bar: string }> = {
   consulting: {
     chip: "chip-teal",
     dot: "bg-teal animate-pulse-dot",
@@ -99,14 +99,24 @@ export default function DoctorBoard() {
               Right now
             </div>
             <div className="text-[15px] font-heading font-semibold text-ink-900">
-              {counts.consulting} doctor{counts.consulting === 1 ? "" : "s"} consulting · {counts.waiting} have a queue · {counts.available} free
+              {counts.consulting} doctor{counts.consulting === 1 ? "" : "s"} consulting ·{" "}
+              {counts.waiting} have a queue · {counts.available} free
             </div>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <span className="chip-teal"><span className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse-dot" /> {counts.consulting} live</span>
-            <span className="chip-mustard"><span className="w-1.5 h-1.5 rounded-full bg-mustard" /> {counts.waiting} queue</span>
-            <span className="chip-money"><span className="w-1.5 h-1.5 rounded-full bg-money" /> {counts.available} free</span>
-            <span className="chip-ink"><span className="w-1.5 h-1.5 rounded-full bg-ink-400" /> {counts.off} off</span>
+            <span className="chip-teal">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse-dot" />{" "}
+              {counts.consulting} live
+            </span>
+            <span className="chip-mustard">
+              <span className="w-1.5 h-1.5 rounded-full bg-mustard" /> {counts.waiting} queue
+            </span>
+            <span className="chip-money">
+              <span className="w-1.5 h-1.5 rounded-full bg-money" /> {counts.available} free
+            </span>
+            <span className="chip-ink">
+              <span className="w-1.5 h-1.5 rounded-full bg-ink-400" /> {counts.off} off
+            </span>
           </div>
         </div>
       </div>

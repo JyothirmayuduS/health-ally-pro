@@ -82,9 +82,7 @@ function dedupeAppointments(list: Appointment[]): Appointment[] {
 }
 
 function seedAppointments(): Appointment[] {
-  return mockAppointments.filter(
-    (a) => a.status === "completed" || a.status === "cancelled",
-  );
+  return mockAppointments.filter((a) => a.status === "completed" || a.status === "cancelled");
 }
 
 function readStored(): Appointment[] | null {
@@ -143,9 +141,7 @@ function enrichInQueueMetrics(appt: Appointment): Appointment {
     queuePosition: meta.queuePosition,
     queueTotal: meta.queueTotal,
     estimatedWait: meta.estimatedWait,
-    checkInStatus: meta.pendingApproval
-      ? "Awaiting clinic approval"
-      : appt.checkInStatus,
+    checkInStatus: meta.pendingApproval ? "Awaiting clinic approval" : appt.checkInStatus,
   };
 }
 
@@ -182,18 +178,14 @@ function syncFromBookings(existing: Appointment[]): Appointment[] {
 export function listPatientAppointments(): Appointment[] {
   const stored = readStored();
   let base = stored ?? seedAppointments();
-  base = base.filter(
-    (a) => a.status !== "in-queue" || a.id.startsWith("appt-"),
-  );
+  base = base.filter((a) => a.status !== "in-queue" || a.id.startsWith("appt-"));
   const synced = dedupeAppointments(syncFromBookings(base));
   if (typeof window !== "undefined") {
     if (!stored || JSON.stringify(stored) !== JSON.stringify(synced)) {
       writeStored(synced);
     }
   }
-  return synced.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+  return synced.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export function upsertAppointmentFromBooking(
@@ -201,13 +193,15 @@ export function upsertAppointmentFromBooking(
   meta: { reason?: string; visitType?: string },
 ): Appointment {
   const list = listPatientAppointments();
-  const appt = bookingToAppointment(booking, meta.reason?.trim() || "Scheduled visit", meta.visitType);
+  const appt = bookingToAppointment(
+    booking,
+    meta.reason?.trim() || "Scheduled visit",
+    meta.visitType,
+  );
 
   let next = list.filter((a) => a.id !== appt.id);
   if (appt.status === "in-queue") {
-    next = next.map((a) =>
-      a.status === "in-queue" ? { ...a, status: "upcoming" as const } : a,
-    );
+    next = next.map((a) => (a.status === "in-queue" ? { ...a, status: "upcoming" as const } : a));
   }
   next.push(appt);
   writeStored(dedupeAppointments(next));
@@ -215,9 +209,7 @@ export function upsertAppointmentFromBooking(
 }
 
 export function hasActiveQueueForDoctor(doctorId: string): boolean {
-  return listPatientAppointments().some(
-    (a) => a.doctorId === doctorId && a.status === "in-queue",
-  );
+  return listPatientAppointments().some((a) => a.doctorId === doctorId && a.status === "in-queue");
 }
 
 export function getAppointmentForBooking(bookingId: string): Appointment | undefined {

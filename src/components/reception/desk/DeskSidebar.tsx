@@ -13,12 +13,12 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/reception", label: "Overview", icon: LayoutDashboard, exact: true },
-  { to: "/reception/register", label: "Register", icon: UserPlus },
-  { to: "/reception/patients", label: "Patients", icon: Users },
-  { to: "/reception/appointments", label: "Appointments", icon: CalendarDays },
-  { to: "/reception/check-in", label: "Check-in", icon: ClipboardCheck },
-  { to: "/reception/queue", label: "Queue", icon: ListOrdered },
-  { to: "/reception/token-display", label: "TV Display", icon: Monitor },
+  { to: "/reception/register", label: "Register", icon: UserPlus, exact: false },
+  { to: "/reception/patients", label: "Patients", icon: Users, exact: false },
+  { to: "/reception/appointments", label: "Appointments", icon: CalendarDays, exact: false },
+  { to: "/reception/check-in", label: "Check-in", icon: ClipboardCheck, exact: false },
+  { to: "/reception/queue", label: "Queue", icon: ListOrdered, exact: false },
+  { to: "/reception/token-display", label: "TV Display", icon: Monitor, exact: false },
 ] as const;
 
 export function DeskSidebar() {

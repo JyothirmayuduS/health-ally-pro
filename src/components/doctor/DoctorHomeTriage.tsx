@@ -40,16 +40,9 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
     return () => window.clearInterval(id);
   }, []);
 
-  const overview = computeClinicOverview(
-    { accepting, room, entries, bookingRequests },
-    nowMs,
-  );
-  const servingPatient = overview.serving
-    ? getQueuePatient(overview.serving.patientId)
-    : null;
-  const nextPatient = overview.nextWaiting
-    ? getQueuePatient(overview.nextWaiting.patientId)
-    : null;
+  const overview = computeClinicOverview({ accepting, room, entries, bookingRequests }, nowMs);
+  const servingPatient = overview.serving ? getQueuePatient(overview.serving.patientId) : null;
+  const nextPatient = overview.nextWaiting ? getQueuePatient(overview.nextWaiting.patientId) : null;
 
   const handleApprove = (id: string, name: string) => {
     const token = approveBooking(id);
@@ -64,9 +57,13 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
       toast.error("No patients waiting");
       return;
     }
+    // callNextPatient() already completes any current serving entry, then calls next.
+    const wasServing = servingPatient?.name;
     callNext();
     toast.success(`Calling ${nextPatient.name}`, {
-      description: `${formatDisplayToken(overview.nextWaiting.token)} · ${room}`,
+      description: wasServing
+        ? `${wasServing} completed · ${formatDisplayToken(overview.nextWaiting.token)} · ${room}`
+        : `${formatDisplayToken(overview.nextWaiting.token)} · ${room}`,
     });
   };
 
@@ -153,16 +150,25 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
           <p className="mt-2 text-2xl font-bold tabular-nums text-[#1B3B2E] sm:text-3xl">
             {formatDisplayToken(overview.nextWaiting.token)}
           </p>
-          <p className="mt-0.5 text-base font-semibold text-[#1B3B2E] sm:text-lg">{nextPatient.name}</p>
-          <p className="mt-0.5 line-clamp-2 text-sm text-[#8A8F8C]">{overview.nextWaiting.reason}</p>
+          <p className="mt-0.5 text-base font-semibold text-[#1B3B2E] sm:text-lg">
+            {nextPatient.name}
+          </p>
+          <p className="mt-0.5 line-clamp-2 text-sm text-[#8A8F8C]">
+            {overview.nextWaiting.reason}
+          </p>
           <p className="mt-auto pt-3 text-xs text-[#8A8F8C]">
             Avg wait {overview.avgWaitLabel} · {room}
           </p>
           <button
             type="button"
             onClick={handleCallNext}
-            disabled={!accepting || !!overview.serving}
+            disabled={!accepting || !overview.nextWaiting}
             className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-xl bg-[#B8735D] px-3.5 py-2 text-xs font-semibold text-white disabled:opacity-45"
+            title={
+              overview.serving
+                ? "Completes current consult, then calls the next patient"
+                : "Call the next waiting patient"
+            }
           >
             Call now
           </button>
@@ -253,11 +259,7 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
             </Link>
           </p>
         </div>
-        <div
-          className={cn(
-            layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3",
-          )}
-        >
+        <div className={cn(layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3")}>
           {nowCard}
           {nextCard}
           {approvalsCard}
@@ -267,11 +269,7 @@ export function DoctorHomeTriage({ layout = "grid" }: { layout?: Layout }) {
   }
 
   return (
-    <div
-      className={cn(
-        layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3",
-      )}
-    >
+    <div className={cn(layout === "grid" ? "grid gap-3 sm:gap-4 lg:grid-cols-3" : "space-y-3")}>
       {nowCard}
       {nextCard}
       {approvalsCard}

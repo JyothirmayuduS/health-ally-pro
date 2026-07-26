@@ -13,7 +13,9 @@ export type HistoryPanelTab = "visits" | "rx" | "documents" | "vitals";
 
 export function HistoryMonthDivider({ month }: { month: string }) {
   return (
-    <p className="text-center text-[10px] font-semibold tracking-[0.14em] text-[#8A8F8C]">{month}</p>
+    <p className="text-center text-[10px] font-semibold tracking-[0.14em] text-[#8A8F8C]">
+      {month}
+    </p>
   );
 }
 
@@ -75,7 +77,9 @@ export function HistoryTimelineCard({
     <>
       <div className="w-11 shrink-0 text-center">
         <p className="text-[1.35rem] font-bold leading-none text-[#1B3B2E]">{entry.day}</p>
-        <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[#8A8F8C]">{entry.monthShort}</p>
+        <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-[#8A8F8C]">
+          {entry.monthShort}
+        </p>
       </div>
       <div className="h-11 w-px shrink-0 bg-[#E8E4DF]" />
       <div className="min-w-0 flex-1">
@@ -208,14 +212,16 @@ export function HistoryDocumentsPanel({
   const counts = getDocumentFilterCounts(patientId);
   const query = searchQuery.trim().toLowerCase();
   const documents = filterPatientDocuments(patientId, documentFilter).filter(
-    (doc) =>
-      !query ||
-      [doc.title, doc.meta, patientName].join(" ").toLowerCase().includes(query),
+    (doc) => !query || [doc.title, doc.meta, patientName].join(" ").toLowerCase().includes(query),
   );
 
   return (
     <div className="space-y-3">
-      <DocumentFilterBar counts={counts} activeFilter={documentFilter} onChange={setDocumentFilter} />
+      <DocumentFilterBar
+        counts={counts}
+        activeFilter={documentFilter}
+        onChange={setDocumentFilter}
+      />
 
       <div className="flex justify-end">
         <button
@@ -234,7 +240,9 @@ export function HistoryDocumentsPanel({
           return (
             <div key={doc.id} className="space-y-2.5">
               {showMonth && (
-                <p className="text-[10px] font-semibold tracking-[0.14em] text-[#8A8F8C]">{doc.month}</p>
+                <p className="text-[10px] font-semibold tracking-[0.14em] text-[#8A8F8C]">
+                  {doc.month}
+                </p>
               )}
               <HistoryDocumentCard
                 doc={doc}

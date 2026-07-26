@@ -2,10 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronLeft, Plus, Shield, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AddDependentSheet } from "@/components/patient/profile/AddDependentSheet";
-import {
-  DependentEmptyState,
-  DependentFullCard,
-} from "@/components/patient/profile/DependentCard";
+import { DependentEmptyState, DependentFullCard } from "@/components/patient/profile/DependentCard";
 import { useDependents } from "@/hooks/useDependents";
 
 export function DependentsListPage() {
@@ -16,9 +13,7 @@ export function DependentsListPage() {
     const avgAdherence =
       dependents.length === 0
         ? 0
-        : Math.round(
-            dependents.reduce((sum, d) => sum + d.adherence, 0) / dependents.length,
-          );
+        : Math.round(dependents.reduce((sum, d) => sum + d.adherence, 0) / dependents.length);
     const upcoming = dependents.filter((d) =>
       d.appointments.some((a) => a.status === "upcoming"),
     ).length;
@@ -67,9 +62,7 @@ export function DependentsListPage() {
               className="rounded-[18px] border border-[#EDEAE6] bg-white px-2 py-3 text-center sm:rounded-[20px] sm:py-4"
             >
               <Icon className="mx-auto h-4 w-4 text-ink-muted" strokeWidth={1.75} />
-              <p className="mt-1.5 font-serif text-xl tabular-nums text-ink sm:text-2xl">
-                {value}
-              </p>
+              <p className="mt-1.5 font-serif text-xl tabular-nums text-ink sm:text-2xl">{value}</p>
               <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-muted sm:text-[10px]">
                 {label}
               </p>

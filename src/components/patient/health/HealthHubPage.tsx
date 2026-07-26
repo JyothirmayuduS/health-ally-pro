@@ -1,22 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ChevronRight,
-  Dumbbell,
-  FileText,
-  History,
-  Lock,
-  Pill,
-  ScrollText,
-} from "lucide-react";
+import { ChevronRight, Dumbbell, FileText, History, Lock, Pill, ScrollText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PatientHubLayout } from "@/components/patient/PatientHubLayout";
 import { PatientProgressStrip } from "@/components/patient/PatientProgressStrip";
 import { usePatientMedications } from "@/hooks/usePatientMedications";
 import { reports as mockReports } from "@/lib/mock-data";
-import {
-  listPatientPrescriptions,
-  PATIENT_RX_EVENT,
-} from "@/lib/patient-prescription-store";
+import { listPatientPrescriptions, PATIENT_RX_EVENT } from "@/lib/patient-prescription-store";
 import { countSharedReports } from "@/lib/reports-utils";
 import { fetchReportsForPatient } from "@/lib/supabase/queries";
 import type { Report } from "@/lib/mock-data";

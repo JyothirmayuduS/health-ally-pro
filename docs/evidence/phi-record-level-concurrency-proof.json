@@ -1,0 +1,104 @@
+{
+  "concurrent_requests": 8,
+  "resource": "patients",
+  "http_results": [
+    {
+      "i": 0,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 1,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 2,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 3,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 4,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 5,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 6,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    },
+    {
+      "i": 7,
+      "status": 200,
+      "ok": true,
+      "id_count": 81
+    }
+  ],
+  "http_all_200": true,
+  "audit_rows": 8,
+  "unique_audit_ids": 8,
+  "missing": 0,
+  "duplicates": 0,
+  "per_audit_record_ids_ok": [
+    {
+      "audit_id": "6c5dc7d5-441e-4bc6-89b5-eef274af5dbb",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "5829e81a-bd3a-4d9c-89dd-af7af371fd06",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "997ae327-5af8-4b2f-9b4b-5d4ed7c48299",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "e2c8e41e-92aa-4c92-9e1a-eb4ce598db46",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "74a5e81e-71bb-4a26-836f-4a9c229ba57c",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "1a06f927-914f-44a0-b3e1-161feaaef598",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "770031ce-d5bd-4cee-a896-ab9dad3c8e7e",
+      "record_ids_count": 81,
+      "match": true
+    },
+    {
+      "audit_id": "efecc9c6-90f2-48ed-9692-a99886a43cf4",
+      "record_ids_count": 81,
+      "match": true
+    }
+  ],
+  "all_audits_have_correct_ids": true,
+  "query_error": null,
+  "pass": true
+}

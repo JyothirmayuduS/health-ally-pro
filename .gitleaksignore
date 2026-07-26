@@ -1,0 +1,23 @@
+178d36a18b8ab7bdd80f72ee6a9507e984995cb4:src/lib/specialties/doctor-registry.ts:generic-api-key:5
+178d36a18b8ab7bdd80f72ee6a9507e984995cb4:src/lib/specialties/doctor-registry.ts:generic-api-key:7
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:.env.example:generic-api-key:6
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:medora-native/lib/patient-meds-store.ts:generic-api-key:9
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/diet-store.ts:generic-api-key:12
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/doctor-med-reconciliation.ts:generic-api-key:4
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/doctor-prescription-store.ts:generic-api-key:47
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/doctor-results-imaging.ts:generic-api-key:82
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/nursing-desk/vitals.ts:generic-api-key:16
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/patient-appointments-store.ts:generic-api-key:16
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/patient-meds-store.ts:generic-api-key:6
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/patient-notifications-store.ts:generic-api-key:1
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/reception-desk/store.tsx:generic-api-key:36
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/shared/billing-ledger.ts:generic-api-key:33
+1cc11bf5bf3b0f3eadd92474c93010f42ba703c9:src/lib/shared/services.ts:generic-api-key:1
+9f7cdcbf497e6c41f48190310a5e02f9f014e453:src/lib/hospital-brand.ts:generic-api-key:17
+c42d5776f36387c80aaaf75cf2d2ea0472a50f98:src/components/reception-desk/pages/TokenBoard.tsx:generic-api-key:41
+c42d5776f36387c80aaaf75cf2d2ea0472a50f98:src/lib/reception-desk/store.tsx:generic-api-key:202
+c42d5776f36387c80aaaf75cf2d2ea0472a50f98:src/lib/reception-desk/store.tsx:generic-api-key:203
+c4c9c6886e5cc1a72cc3ee90cacbd3195947ad14:src/lib/shared/announcements.ts:generic-api-key:19
+9c13d86c8b0df13dbb06c344c58cb591d8e336f2:src/server/stripe-webhook.test.ts:generic-api-key:41
+# Historical CI placeholder that looked JWT-shaped (replaced by ci-placeholder-anon-key)
+9b235deeb5ee2d3daec4e80bdc5cc1e26f690354:.github/workflows/ci.yml:generic-api-key:112

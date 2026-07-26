@@ -1,8 +1,5 @@
 import type { QueueNodeKind, QueuePersona } from "@/lib/patient-queue";
-import {
-  personaImageNeedsInvert,
-  QUEUE_PERSONA_IMAGES,
-} from "@/lib/queue-persona-assets";
+import { personaImageNeedsInvert, QUEUE_PERSONA_IMAGES } from "@/lib/queue-persona-assets";
 import { QueueBustAvatar } from "@/components/patient/QueueBustAvatar";
 import { cn } from "@/lib/utils";
 

@@ -19,24 +19,21 @@ const titleFromPath = (pathname: string) => {
     return { eyebrow: "Today", title: "Reception dashboard" };
   if (pathname.startsWith("/reception/register"))
     return { eyebrow: "Patient intake", title: "Register patient" };
-  if (pathname.startsWith("/reception/patients"))
-    return { eyebrow: "Records", title: "Patients" };
+  if (pathname.startsWith("/reception/patients")) return { eyebrow: "Records", title: "Patients" };
   if (pathname.startsWith("/reception/appointments/new"))
     return { eyebrow: "Scheduling", title: "New appointment" };
   if (pathname.startsWith("/reception/appointments"))
     return { eyebrow: "Scheduling", title: "Appointments" };
   if (pathname.startsWith("/reception/admissions"))
     return { eyebrow: "Inpatient", title: "Admissions & Bed Board" };
-  if (pathname.startsWith("/reception/check-in"))
-    return { eyebrow: "Arrivals", title: "Check-in" };
+  if (pathname.startsWith("/reception/check-in")) return { eyebrow: "Arrivals", title: "Check-in" };
   if (pathname.startsWith("/reception/vitals"))
     return { eyebrow: "Clinical", title: "Record vitals" };
   if (pathname.startsWith("/reception/queue"))
     return { eyebrow: "Live", title: "Queue management" };
   if (pathname.startsWith("/reception/board"))
     return { eyebrow: "Live", title: "Doctor & room board" };
-  if (pathname.startsWith("/reception/billing"))
-    return { eyebrow: "Front desk", title: "Billing" };
+  if (pathname.startsWith("/reception/billing")) return { eyebrow: "Front desk", title: "Billing" };
   if (pathname.startsWith("/reception/cash-drawer"))
     return { eyebrow: "Front desk", title: "Cash drawer & handover" };
   if (pathname.startsWith("/reception/insurance"))
@@ -45,7 +42,7 @@ const titleFromPath = (pathname: string) => {
     return { eyebrow: "End of day", title: "Day sheet" };
   if (pathname.startsWith("/reception/reports"))
     return { eyebrow: "Insights", title: "Reception reports" };
-  return { eyebrow: "Reception", title: "Maple Hospital" };
+  return { eyebrow: "Reception", title: "Oak Haven Medical" };
 };
 
 export default function AppLayout() {

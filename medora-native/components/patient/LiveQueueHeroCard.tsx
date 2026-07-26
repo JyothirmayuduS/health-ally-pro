@@ -166,7 +166,12 @@ const s = StyleSheet.create({
     lineHeight: 56,
   },
   posOf: { fontSize: 22, fontFamily: "DMSans_400Regular", color: "rgba(255,255,255,0.45)" },
-  posSub: { marginTop: 6, fontSize: 12, fontFamily: "DMSans_400Regular", color: "rgba(255,255,255,0.6)" },
+  posSub: {
+    marginTop: 6,
+    fontSize: 12,
+    fontFamily: "DMSans_400Regular",
+    color: "rgba(255,255,255,0.6)",
+  },
   waitLabel: {
     fontSize: 10,
     fontFamily: "DMSans_500Medium",
@@ -194,7 +199,12 @@ const s = StyleSheet.create({
     overflow: "hidden",
   },
   docName: { fontSize: 14, fontFamily: "DMSans_600SemiBold", color: "#fff" },
-  docMeta: { fontSize: 12, fontFamily: "DMSans_400Regular", color: "rgba(255,255,255,0.65)", marginTop: 2 },
+  docMeta: {
+    fontSize: 12,
+    fontFamily: "DMSans_400Regular",
+    color: "rgba(255,255,255,0.65)",
+    marginTop: 2,
+  },
   statusText: {
     fontSize: 11,
     fontFamily: "DMSans_400Regular",

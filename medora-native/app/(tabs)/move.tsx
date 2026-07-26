@@ -101,7 +101,9 @@ export default function MoveScreen() {
               accessibilityRole="button"
               accessibilityLabel={routine.name}
               accessibilityHint={
-                done ? "Already completed today" : "Marks routine complete and saves to device storage"
+                done
+                  ? "Already completed today"
+                  : "Marks routine complete and saves to device storage"
               }
               onPress={() => void completeRoutine(routine)}
             >

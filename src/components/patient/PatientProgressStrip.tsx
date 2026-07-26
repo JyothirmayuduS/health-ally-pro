@@ -15,11 +15,7 @@ type Props = {
 /** One-line daily progress summary for home and Health hub. */
 export function PatientProgressStrip({ className, visitsDone = 0 }: Props) {
   const { taken, total, pct } = medsAdherenceSummary();
-  const exercisePicks = getTopExercisePicks(
-    exerciseRoutines,
-    getPatientExerciseContext(),
-    3,
-  );
+  const exercisePicks = getTopExercisePicks(exerciseRoutines, getPatientExerciseContext(), 3);
   const exercise = getTodayAdherence(exercisePicks.length);
 
   return (
@@ -32,7 +28,10 @@ export function PatientProgressStrip({ className, visitsDone = 0 }: Props) {
     >
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-sm">
         <span className="font-medium text-ink">
-          Meds <span className="tabular-nums text-clay">{taken}/{total}</span>
+          Meds{" "}
+          <span className="tabular-nums text-clay">
+            {taken}/{total}
+          </span>
         </span>
         <span className="hidden text-ink-muted sm:inline" aria-hidden>
           ·

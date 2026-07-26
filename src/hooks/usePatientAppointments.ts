@@ -7,9 +7,7 @@ import {
 import { PATIENT_BOOKING_EVENT } from "@/lib/patient-booking-store";
 
 export function usePatientAppointments() {
-  const [appointments, setAppointments] = useState<Appointment[]>(
-    listPatientAppointments,
-  );
+  const [appointments, setAppointments] = useState<Appointment[]>(listPatientAppointments);
 
   const sync = useCallback(() => {
     setAppointments(listPatientAppointments());

@@ -30,9 +30,7 @@ export function verifyPatientWebAiRequest(request: Request): boolean {
 
 export function corsHeaders(origin?: string | null): Record<string, string> {
   const allowed =
-    process.env.MEDORA_AI_CORS_ORIGIN ??
-    process.env.EXPO_PUBLIC_MEDORA_API_URL ??
-    "*";
+    process.env.MEDORA_AI_CORS_ORIGIN ?? process.env.EXPO_PUBLIC_MEDORA_API_URL ?? "*";
 
   return {
     "Access-Control-Allow-Origin": origin && allowed !== "*" ? origin : allowed,

@@ -1,10 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  CalendarPlus,
-  ChevronRight,
-  Clock4,
-  Stethoscope,
-} from "lucide-react";
+import { CalendarPlus, ChevronRight, Clock4, Stethoscope } from "lucide-react";
 import { useMemo, useState } from "react";
 import { usePatientAppointments } from "@/hooks/usePatientAppointments";
 import { PatientBackIconButton } from "@/components/patient/PatientBackButton";
@@ -29,19 +24,13 @@ export function PastVisitsPage({ doctorFilter }: Props) {
     const list = doctorFilter
       ? appointments.filter((a) => a.doctorId === doctorFilter)
       : appointments;
-    return [...list].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    return [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [appointments, doctorFilter]);
 
-  const upcoming = filtered.filter(
-    (a) => a.status === "upcoming" || a.status === "in-queue",
-  );
+  const upcoming = filtered.filter((a) => a.status === "upcoming" || a.status === "in-queue");
   const past = filtered.filter((a) => a.status === "completed" || a.status === "cancelled");
 
-  const filterDoctor = doctorFilter
-    ? doctors.find((d) => d.id === doctorFilter)
-    : undefined;
+  const filterDoctor = doctorFilter ? doctors.find((d) => d.id === doctorFilter) : undefined;
 
   const backFallback = doctorFilter ? "/" : "/care";
 

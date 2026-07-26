@@ -1,0 +1,16 @@
+{
+  "service_role_read": {
+    "error": null,
+    "rows": 80,
+    "ms": 368.47
+  },
+  "phi_read_audit_rows_since_before": 0,
+  "sample": null,
+  "log_phi_row_read_fired": false,
+  "conclusion": "service_role BYPASSES RLS \u2014 log_phi_row_read did NOT fire",
+  "phi_read_audit_total_at_probe_time": 995,
+  "before_new_rows_window": 0,
+  "after_new_rows_window": 0,
+  "ro_insert_proof": "RO_INSERT_PROOF: cannot execute INSERT in a read-only transaction",
+  "definitive": "NO \u2014 log_phi_row_read does not fire for service_role reads"
+}

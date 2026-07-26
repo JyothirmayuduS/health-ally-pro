@@ -1,11 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Menu, Pill } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePharmacyStore } from "@/lib/pharmacy-desk/store";
@@ -71,24 +66,38 @@ function NavContent({ onClick }: { onClick?: () => void }) {
   const { name, email } = usePharmacyAuth();
 
   const counts = useMemo(() => {
-    const inbox = prescriptions.filter((r) =>
-      ["received", "in_review"].includes(r.status),
-    ).length;
+    const inbox = prescriptions.filter((r) => ["received", "in_review"].includes(r.status)).length;
     const dispense = prescriptions.filter((r) =>
       ["ready_to_dispense", "dispensing"].includes(r.status),
     ).length;
     const pickup = prescriptions.filter((r) => r.status === "ready_pickup").length;
     const pendingRefills = refills.filter((r) => r.status === "pending").length;
-    const lowStock = drugs.filter((d) => isLowStock(d, batches.filter((b) => b.drug_id === d.id))).length;
+    const lowStock = drugs.filter((d) =>
+      isLowStock(
+        d,
+        batches.filter((b) => b.drug_id === d.id),
+      ),
+    ).length;
     const hold = prescriptions.filter((r) => r.status === "on_hold").length;
     const ward = wardOrders.filter((w) => !["delivered"].includes(w.status)).length;
     const activeAlerts = alerts.filter((a) => !a.dismissed).length;
-    const billing = prescriptions.filter((r) =>
-      ["received", "in_review", "ready_to_dispense", "dispensing"].includes(r.status) &&
-      r.payment_status !== "paid",
+    const billing = prescriptions.filter(
+      (r) =>
+        ["received", "in_review", "ready_to_dispense", "dispensing"].includes(r.status) &&
+        r.payment_status !== "paid",
     ).length;
 
-    return { inbox, dispense, pickup, refills: pendingRefills, lowStock, hold, ward, alerts: activeAlerts, billing };
+    return {
+      inbox,
+      dispense,
+      pickup,
+      refills: pendingRefills,
+      lowStock,
+      hold,
+      ward,
+      alerts: activeAlerts,
+      billing,
+    };
   }, [prescriptions, refills, drugs, batches, wardOrders, alerts]);
 
   return (

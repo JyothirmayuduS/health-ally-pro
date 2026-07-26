@@ -152,10 +152,7 @@ export function DoctorAuditTrailScreen() {
     <DoctorProfileSubpage
       title="Audit trail"
       subtitle="Clinical actions on this device"
-      breadcrumbs={[
-        { label: "Profile", to: "/doctor/settings" },
-        { label: "Audit trail" },
-      ]}
+      breadcrumbs={[{ label: "Profile", to: "/doctor/settings" }, { label: "Audit trail" }]}
     >
       <div className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {FILTERS.map((f) => (
@@ -172,7 +169,12 @@ export function DoctorAuditTrailScreen() {
           >
             {f.label}
             {f.count > 0 && (
-              <span className={cn("ml-1.5 tabular-nums", filter === f.id ? "text-white/80" : "text-[#ADADAD]")}>
+              <span
+                className={cn(
+                  "ml-1.5 tabular-nums",
+                  filter === f.id ? "text-white/80" : "text-[#ADADAD]",
+                )}
+              >
                 {f.count}
               </span>
             )}

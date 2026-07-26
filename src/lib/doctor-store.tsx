@@ -7,11 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {
-  doctorAppointments,
-  type DoctorAppointment,
-  type QueueItem,
-} from "./doctor-mock-data";
+import { doctorAppointments, type DoctorAppointment, type QueueItem } from "./doctor-mock-data";
 import {
   CLINIC_QUEUE_EVENT,
   DOCTOR_PORTAL_STAFF_ID,

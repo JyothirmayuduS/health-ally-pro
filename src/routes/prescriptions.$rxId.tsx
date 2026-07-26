@@ -20,7 +20,9 @@ function PatientPrescriptionDetailPage() {
     return (
       <div className="mx-auto max-w-lg py-16 text-center">
         <p className="font-serif text-2xl text-ink">Prescription not found</p>
-        <p className="mt-2 text-sm text-ink-muted">This Rx may have been removed or the link is invalid.</p>
+        <p className="mt-2 text-sm text-ink-muted">
+          This Rx may have been removed or the link is invalid.
+        </p>
         <Link
           to="/prescriptions"
           className="mt-6 inline-flex rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-primary-foreground"

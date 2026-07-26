@@ -27,11 +27,7 @@ export function SectionCard({
 }: Props) {
   return (
     <section
-      className={cn(
-        "flex h-full flex-col rounded-[32px] p-6 lg:p-7",
-        variants[variant],
-        className,
-      )}
+      className={cn("flex h-full flex-col rounded-[32px] p-6 lg:p-7", variants[variant], className)}
     >
       <header className="mb-6 flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-1.5">

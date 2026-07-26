@@ -1,0 +1,5 @@
+📦 Supply Chain Security Related artifacts for an image: ghcr.io/jyothirmayudus/medora-app@sha256:553504d45a953e9931b869faf4249fdcbcc61bf5984d1615b0a82d8cc0f8d020
+└── 💾 Attestations for an image tag: ghcr.io/jyothirmayudus/medora-app:sha256-553504d45a953e9931b869faf4249fdcbcc61bf5984d1615b0a82d8cc0f8d020.att
+   └── 🍒 sha256:986ac75ab8742f7d40f0d0cc60ad0fd62be07d616687677660a272e05af4d843
+└── 🔐 Signatures for an image tag: ghcr.io/jyothirmayudus/medora-app:sha256-553504d45a953e9931b869faf4249fdcbcc61bf5984d1615b0a82d8cc0f8d020.sig
+   └── 🍒 sha256:ccd8cb31da2a64757e336cf0e3f322322fcbdda6fecd0a11d31cda5e87d66586

@@ -64,23 +64,37 @@ function OverviewTab() {
         {[
           { label: "Invoiced (30d)", value: inrFmt(totalInvoiced), color: "text-ink-900" },
           { label: "Collected (30d)", value: inrFmt(totalCollected), color: "text-money" },
-          { label: "Collection rate", value: `${collectionRate}%`, color: collectionRate >= 80 ? "text-teal" : "text-clay" },
+          {
+            label: "Collection rate",
+            value: `${collectionRate}%`,
+            color: collectionRate >= 80 ? "text-teal" : "text-clay",
+          },
         ].map((k) => (
           <div key={k.label} className="surface px-5 py-4">
-            <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">{k.label}</div>
-            <div className={`mt-1.5 text-3xl font-heading font-semibold tabular-nums ${k.color}`}>{k.value}</div>
+            <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">
+              {k.label}
+            </div>
+            <div className={`mt-1.5 text-3xl font-heading font-semibold tabular-nums ${k.color}`}>
+              {k.value}
+            </div>
           </div>
         ))}
       </div>
 
       <div className="surface overflow-hidden">
         <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">14-day revenue trend</span>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
+            14-day revenue trend
+          </span>
           <button
             onClick={() =>
               downloadCSV("revenue-14d.csv", [
                 ["Date", "Invoiced", "Collected"],
-                ...DAILY_REVENUE.slice(-14).map((d) => [d.date, String(d.invoiced), String(d.collected)]),
+                ...DAILY_REVENUE.slice(-14).map((d) => [
+                  d.date,
+                  String(d.invoiced),
+                  String(d.collected),
+                ]),
               ])
             }
             className="text-[11px] text-plum hover:underline"
@@ -96,8 +110,22 @@ function OverviewTab() {
               <YAxis tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
               <Tooltip formatter={(v: number) => inrFmt(v)} />
               <Legend />
-              <Line type="monotone" dataKey="invoiced" stroke="#a87826" strokeWidth={2} dot={false} name="Invoiced" />
-              <Line type="monotone" dataKey="collected" stroke="#2c7873" strokeWidth={2} dot={false} name="Collected" />
+              <Line
+                type="monotone"
+                dataKey="invoiced"
+                stroke="#a87826"
+                strokeWidth={2}
+                dot={false}
+                name="Invoiced"
+              />
+              <Line
+                type="monotone"
+                dataKey="collected"
+                stroke="#2c7873"
+                strokeWidth={2}
+                dot={false}
+                name="Collected"
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -137,12 +165,20 @@ function DepartmentTab() {
     <div className="space-y-5">
       <div className="surface overflow-hidden">
         <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">Revenue by department</span>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
+            Revenue by department
+          </span>
           <button
             onClick={() =>
               downloadCSV("revenue-by-dept.csv", [
                 ["Department", "Invoiced", "Collected", "Outstanding", "Rate%"],
-                ...DEPARTMENT_REVENUE.map((d) => [d.department, String(d.invoiced), String(d.collected), String(d.outstanding), String(d.rate)]),
+                ...DEPARTMENT_REVENUE.map((d) => [
+                  d.department,
+                  String(d.invoiced),
+                  String(d.collected),
+                  String(d.outstanding),
+                  String(d.rate),
+                ]),
               ])
             }
             className="text-[11px] text-plum hover:underline"
@@ -169,9 +205,16 @@ function DepartmentTab() {
         <table className="w-full text-[13px]">
           <thead className="border-b border-ink-100 bg-bone/60">
             <tr>
-              {["Department", "Invoiced", "Collected", "Outstanding", "Collection rate"].map((h) => (
-                <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">{h}</th>
-              ))}
+              {["Department", "Invoiced", "Collected", "Outstanding", "Collection rate"].map(
+                (h) => (
+                  <th
+                    key={h}
+                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400"
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-ink-100">
@@ -184,9 +227,20 @@ function DepartmentTab() {
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-20 rounded-full bg-stone-100 overflow-hidden">
-                      <div className="h-full rounded-full bg-teal" style={{ width: `${d.rate}%` }} />
+                      <div
+                        className="h-full rounded-full bg-teal"
+                        style={{ width: `${d.rate}%` }}
+                      />
                     </div>
-                    <span className={d.rate >= 90 ? "text-teal font-semibold" : d.rate >= 75 ? "text-money" : "text-clay"}>
+                    <span
+                      className={
+                        d.rate >= 90
+                          ? "text-teal font-semibold"
+                          : d.rate >= 75
+                            ? "text-money"
+                            : "text-clay"
+                      }
+                    >
                       {d.rate}%
                     </span>
                   </div>
@@ -217,27 +271,50 @@ function OutstandingTab() {
     <div className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="surface px-5 py-4">
-          <div className="text-[10.5px] uppercase text-ink-400 tracking-widest">Total outstanding</div>
-          <div className="mt-1.5 text-3xl font-semibold text-clay tabular-nums font-heading">{inrFmt(totalDue)}</div>
+          <div className="text-[10.5px] uppercase text-ink-400 tracking-widest">
+            Total outstanding
+          </div>
+          <div className="mt-1.5 text-3xl font-semibold text-clay tabular-nums font-heading">
+            {inrFmt(totalDue)}
+          </div>
         </div>
         <div className="surface px-5 py-4">
-          <div className="text-[10.5px] uppercase text-ink-400 tracking-widest">Invoices outstanding</div>
-          <div className="mt-1.5 text-3xl font-semibold text-ink-900 tabular-nums font-heading">{OUTSTANDING_INVOICES.length}</div>
+          <div className="text-[10.5px] uppercase text-ink-400 tracking-widest">
+            Invoices outstanding
+          </div>
+          <div className="mt-1.5 text-3xl font-semibold text-ink-900 tabular-nums font-heading">
+            {OUTSTANDING_INVOICES.length}
+          </div>
         </div>
         <div className="surface px-5 py-4">
-          <div className="text-[10.5px] uppercase text-ink-400 tracking-widest">Critical (&gt;60 days)</div>
-          <div className={`mt-1.5 text-3xl font-semibold tabular-nums font-heading ${critical > 0 ? "text-clay" : "text-teal"}`}>{critical}</div>
+          <div className="text-[10.5px] uppercase text-ink-400 tracking-widest">
+            Critical (&gt;60 days)
+          </div>
+          <div
+            className={`mt-1.5 text-3xl font-semibold tabular-nums font-heading ${critical > 0 ? "text-clay" : "text-teal"}`}
+          >
+            {critical}
+          </div>
         </div>
       </div>
 
       <div className="surface overflow-hidden">
         <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">Outstanding invoices</span>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">
+            Outstanding invoices
+          </span>
           <button
             onClick={() =>
               downloadCSV("outstanding.csv", [
                 ["Invoice ID", "Patient", "MRN", "Dept", "Amount Due", "Days Outstanding"],
-                ...OUTSTANDING_INVOICES.map((i) => [i.id, i.patientName, i.patientId, i.department, String(i.amountDue), String(i.daysOutstanding)]),
+                ...OUTSTANDING_INVOICES.map((i) => [
+                  i.id,
+                  i.patientName,
+                  i.patientId,
+                  i.department,
+                  String(i.amountDue),
+                  String(i.daysOutstanding),
+                ]),
               ])
             }
             className="text-[11px] text-plum hover:underline"
@@ -248,9 +325,16 @@ function OutstandingTab() {
         <table className="w-full text-[13px]">
           <thead className="border-b border-ink-100 bg-bone/60">
             <tr>
-              {["Invoice", "Patient", "Department", "Amount Due", "Age", "Invoice Date"].map((h) => (
-                <th key={h} className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">{h}</th>
-              ))}
+              {["Invoice", "Patient", "Department", "Amount Due", "Age", "Invoice Date"].map(
+                (h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400"
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-ink-100">
@@ -262,9 +346,13 @@ function OutstandingTab() {
                   <div className="text-[10px] text-ink-400">{inv.patientId}</div>
                 </td>
                 <td className="px-4 py-3 text-ink-600">{inv.department}</td>
-                <td className="px-4 py-3 font-mono font-semibold text-clay">{inrFmt(inv.amountDue)}</td>
+                <td className="px-4 py-3 font-mono font-semibold text-clay">
+                  {inrFmt(inv.amountDue)}
+                </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex rounded px-2 py-0.5 text-[10px] font-semibold ${ageBadge(inv.daysOutstanding)}`}>
+                  <span
+                    className={`inline-flex rounded px-2 py-0.5 text-[10px] font-semibold ${ageBadge(inv.daysOutstanding)}`}
+                  >
                     {inv.daysOutstanding}d
                   </span>
                 </td>
@@ -315,7 +403,10 @@ function PayerMixTab() {
             <div className="space-y-2">
               {PAYER_MIX.map((p, i) => (
                 <div key={p.payer} className="flex items-center gap-2 text-[12px]">
-                  <div className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />
+                  <div
+                    className="h-2.5 w-2.5 rounded-full"
+                    style={{ background: COLORS[i % COLORS.length] }}
+                  />
                   <span className="text-ink-600">{p.payer}</span>
                   <span className="font-semibold text-ink-900">{p.percent}%</span>
                 </div>
@@ -333,11 +424,19 @@ function PayerMixTab() {
               <BarChart data={PAYER_MONTH_COMPARISON}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0ede8" />
                 <XAxis dataKey="payer" tick={{ fontSize: 10 }} />
-                <YAxis tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 10 }} />
+                <YAxis
+                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+                  tick={{ fontSize: 10 }}
+                />
                 <Tooltip formatter={(v: number) => inrFmt(v)} />
                 <Legend />
                 <Bar dataKey="current" fill="#2c7873" name="Current month" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="previous" fill="#a87826" name="Previous month" radius={[3, 3, 0, 0]} />
+                <Bar
+                  dataKey="previous"
+                  fill="#a87826"
+                  name="Previous month"
+                  radius={[3, 3, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -352,7 +451,12 @@ function PayerMixTab() {
           <thead className="border-b border-ink-100 bg-bone/60">
             <tr>
               {["Provider", "Patients", "Invoiced", "Collected", "Collection rate"].map((h) => (
-                <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400">{h}</th>
+                <th
+                  key={h}
+                  className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-400"
+                >
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
@@ -366,7 +470,15 @@ function PayerMixTab() {
                   <td className="px-5 py-3 font-mono">{inrFmt(p.invoiced)}</td>
                   <td className="px-5 py-3 font-mono text-money">{inrFmt(p.collected)}</td>
                   <td className="px-5 py-3">
-                    <span className={rate >= 85 ? "text-teal font-semibold" : rate >= 70 ? "text-money" : "text-clay"}>
+                    <span
+                      className={
+                        rate >= 85
+                          ? "text-teal font-semibold"
+                          : rate >= 70
+                            ? "text-money"
+                            : "text-clay"
+                      }
+                    >
                       {rate}%
                     </span>
                   </td>
@@ -395,7 +507,9 @@ export default function AdminRevenue() {
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 rounded-md px-3 py-2 text-[12px] font-medium transition-colors ${
-              tab === t ? "bg-white shadow-sm text-ink-900 border border-ink-100" : "text-ink-500 hover:text-ink-800"
+              tab === t
+                ? "bg-white shadow-sm text-ink-900 border border-ink-100"
+                : "text-ink-500 hover:text-ink-800"
             }`}
           >
             {t}

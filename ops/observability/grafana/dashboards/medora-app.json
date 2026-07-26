@@ -1,0 +1,45 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "DLQ open failures",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "medora_audit_dlq_open_failures", "refId": "A" }],
+      "id": 1
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP latency p95 (ms)",
+      "gridPos": { "h": 8, "w": 12, "x": 6, "y": 0 },
+      "targets": [{ "expr": "medora_http_latency_ms{quantile=\"0.95\"}", "refId": "A" }],
+      "id": 2
+    },
+    {
+      "type": "timeseries",
+      "title": "Error rate 5m",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 0 },
+      "targets": [{ "expr": "medora_http_error_rate_5m", "refId": "A" }],
+      "id": 3
+    },
+    {
+      "type": "timeseries",
+      "title": "Request rate",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [{ "expr": "rate(medora_http_requests_total[5m])", "refId": "A" }],
+      "id": 4
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["medora"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Medora Application",
+  "uid": "medora-app",
+  "version": 1
+}

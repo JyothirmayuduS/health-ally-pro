@@ -24,10 +24,7 @@ export type ClinicOverview = {
   queueBadge: number;
 };
 
-export function computeClinicOverview(
-  state: LiveQueueState,
-  nowMs = Date.now(),
-): ClinicOverview {
+export function computeClinicOverview(state: LiveQueueState, nowMs = Date.now()): ClinicOverview {
   const waiting = state.entries
     .filter((e) => e.status === "waiting")
     .sort((a, b) => a.token - b.token);

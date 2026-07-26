@@ -64,9 +64,7 @@ export function Button({
       ) : (
         <>
           {icon}
-          <Text className={`${v.text} ${s.text} font-sans-medium`}>
-            {label}
-          </Text>
+          <Text className={`${v.text} ${s.text} font-sans-medium`}>{label}</Text>
         </>
       )}
     </Pressable>

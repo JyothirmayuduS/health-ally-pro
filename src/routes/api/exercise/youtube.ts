@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { DietLanguage } from "@/lib/diet-ai-types";
-import {
-  jsonResponse,
-  optionsResponse,
-  verifyPatientWebAiRequest,
-} from "@/server/ai/api-auth";
+import { jsonResponse, optionsResponse, verifyPatientWebAiRequest } from "@/server/ai/api-auth";
 import { searchYoutubeExercises } from "@/server/exercise/youtube";
 
 type Body = {
@@ -26,10 +22,7 @@ export const Route = createFileRoute("/api/exercise/youtube")({
         try {
           const body = (await request.json()) as Body;
           if (!body.routineName?.trim() || !body.routineId) {
-            return jsonResponse(
-              { error: "routineId and routineName required" },
-              { status: 400 },
-            );
+            return jsonResponse({ error: "routineId and routineName required" }, { status: 400 });
           }
 
           const language = body.language ?? "en";

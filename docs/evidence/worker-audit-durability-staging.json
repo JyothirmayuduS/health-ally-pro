@@ -1,0 +1,52 @@
+{
+  "completed_at": "2026-07-24T11:39:23.787Z",
+  "commit": "137ac0b4001c3d3d0050931a0cd51e37f4c6fdaa",
+  "environment": "staging",
+  "worker_name": "medora-health-ally-staging",
+  "worker_url": "https://medora-health-ally-staging.jyothirmayudu03.workers.dev",
+  "deployment_id": "f8d3fe89-a671-4eb0-a025-b4815628f762",
+  "version_id": "bbd36e62-ac0e-4a97-a313-383930ae940c",
+  "deploy_version_id_from_wrangler": "684d0692-1e98-4e14-8489-f776c41e6358",
+  "stub_in_bundle": false,
+  "durability": {
+    "request_id": "staging-durability-1784893152617",
+    "response_status": 200,
+    "response_ms": 963,
+    "audit_id": "876c2abc-67aa-4d43-8b36-77d15c528a5f",
+    "audit_event_id": "6a2e3909-7c27-4583-baa5-420e2cd67e4a",
+    "record_count": 83,
+    "audit_latency_ms": 645,
+    "result": "PASS"
+  },
+  "failure_test": {
+    "primary_failure_induced": true,
+    "clinical_still_200": true,
+    "dlq_row_created": true,
+    "dlq_id": "d8fc1343-fe51-4b5d-9bd2-c3f27b322b6f",
+    "open_failures_before": 8,
+    "open_failures_during": 9,
+    "test_record_resolved": true,
+    "open_failures_after": 8,
+    "force_fail_disabled_after": true,
+    "status_source_after": "database_rpc",
+    "open_failures_returned_to_baseline": true,
+    "result": "PASS"
+  },
+  "status_after": {
+    "source": "database_rpc",
+    "open_failures": 8,
+    "alert": true,
+    "scheduler": {
+      "ok": true,
+      "wait_until_present": true,
+      "wait_until_type": "cloudflare",
+      "no_op_fallback": false,
+      "production_runtime": true
+    }
+  },
+  "preexisting_open_failures_note": "Baseline open_failures were >0 from prior waituntil_unavailable markers; relative baseline restored after resolving staging force-fail row.",
+  "summary": {
+    "durability_pass": true,
+    "failure_pass": true
+  }
+}

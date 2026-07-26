@@ -1,3 +1,5 @@
+import type { DietYoutubeVideo } from "@/lib/diet-mock-data";
+
 type CacheEntry<T> = { value: T; expiresAt: number };
 
 const TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -37,7 +39,7 @@ export function setCachedImage(key: string, url: string): void {
 
 export type CachedMediaBundle = {
   imageUrl: string | null;
-  videos: unknown[];
+  videos: DietYoutubeVideo[];
   source: string;
 };
 

@@ -42,16 +42,12 @@ function writeStored(data: StoredMeds) {
 }
 
 function seedTakenIds(): string[] {
-  return patientMedications
-    .filter((m) => m.status !== "past" && m.taken)
-    .map((m) => m.id);
+  return patientMedications.filter((m) => m.status !== "past" && m.taken).map((m) => m.id);
 }
 
 export function listActiveMedications(): PatientMedication[] {
   const stored = readStored();
-  const takenSet = new Set(
-    stored.takenIds.length ? stored.takenIds : seedTakenIds(),
-  );
+  const takenSet = new Set(stored.takenIds.length ? stored.takenIds : seedTakenIds());
   return patientMedications
     .filter((m) => m.status !== "past")
     .map((m) => ({ ...m, taken: takenSet.has(m.id) }));

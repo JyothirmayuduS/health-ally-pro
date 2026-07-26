@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { DietCuisineFilter, DietLanguage } from "@/lib/diet-ai-types";
-import {
-  jsonResponse,
-  optionsResponse,
-  verifyPatientWebAiRequest,
-} from "@/server/ai/api-auth";
+import { jsonResponse, optionsResponse, verifyPatientWebAiRequest } from "@/server/ai/api-auth";
 import { resolveMealVideos } from "@/server/diet/resolve-meal-media";
 
 type Body = {
@@ -27,10 +23,7 @@ export const Route = createFileRoute("/api/diet/youtube")({
         try {
           const body = (await request.json()) as Body;
           if (!body.mealName?.trim() || !body.ingredients?.length) {
-            return jsonResponse(
-              { error: "mealName and ingredients required" },
-              { status: 400 },
-            );
+            return jsonResponse({ error: "mealName and ingredients required" }, { status: 400 });
           }
 
           const language = body.language ?? "en";

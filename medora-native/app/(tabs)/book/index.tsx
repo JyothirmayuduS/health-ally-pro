@@ -3,18 +3,20 @@
  * Visual hierarchy: Search bar dominant → Specialty chips → Doctor cards
  */
 import React, { useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  FlatList,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { View, Text, Pressable, FlatList, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
-import { Search, Star, MapPin, Clock, SlidersHorizontal, MessageCircle, Phone, Video } from "lucide-react-native";
+import {
+  Search,
+  Star,
+  MapPin,
+  Clock,
+  SlidersHorizontal,
+  MessageCircle,
+  Phone,
+  Video,
+} from "lucide-react-native";
 import { doctors } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -63,8 +65,7 @@ export default function BookScreen() {
             <Animated.View entering={FadeInDown.duration(500)} style={s.titleBlock}>
               <Text style={[s.eyebrow, { color: colors.clay }]}>SPECIALISTS</Text>
               <Text style={[s.heading, { color: colors.foreground }]}>
-                Find a{" "}
-                <Text style={{ color: colors.clay, fontStyle: "italic" }}>doctor</Text>
+                Find a <Text style={{ color: colors.clay, fontStyle: "italic" }}>doctor</Text>
               </Text>
               <Text style={[s.subHeading, { color: colors.inkMuted }]}>
                 Book with 80+ board-certified physicians near you.
@@ -129,7 +130,7 @@ export default function BookScreen() {
         }
         renderItem={({ item: d, index }) => (
           <Animated.View entering={FadeInDown.duration(400).delay(index * 60)} style={s.cardWrap}>
-            <Pressable 
+            <Pressable
               onPress={() => router.push(`/book/${d.id}`)}
               style={[s.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
             >
@@ -143,12 +144,24 @@ export default function BookScreen() {
                     <Star size={12} color={colors.clay} fill={colors.clay} />
                     <Text style={[s.rating, { color: colors.foreground }]}>{d.rating}</Text>
                     <Text style={[s.reviews, { color: colors.inkMuted }]}>({d.reviews})</Text>
-                    <View style={[s.expBadge, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                      <Text style={[s.expText, { color: colors.inkMuted }]}>{d.experience}y exp</Text>
+                    <View
+                      style={[
+                        s.expBadge,
+                        { backgroundColor: colors.background, borderColor: colors.border },
+                      ]}
+                    >
+                      <Text style={[s.expText, { color: colors.inkMuted }]}>
+                        {d.experience}y exp
+                      </Text>
                     </View>
                   </View>
                 </View>
-                <View style={[s.feeBadge, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                <View
+                  style={[
+                    s.feeBadge,
+                    { backgroundColor: colors.background, borderColor: colors.border },
+                  ]}
+                >
                   <Text style={[s.feeText, { color: colors.foreground }]}>${d.fee}</Text>
                 </View>
               </View>
@@ -173,13 +186,22 @@ export default function BookScreen() {
               {/* CTA */}
               <View style={[s.ctaRow, { borderTopColor: colors.border }]}>
                 <View style={{ flexDirection: "row", gap: 8 }}>
-                  <Pressable style={[s.iconBtn, { backgroundColor: colors.clay + "1A" }]} onPress={() => {}}>
+                  <Pressable
+                    style={[s.iconBtn, { backgroundColor: colors.clay + "1A" }]}
+                    onPress={() => {}}
+                  >
                     <MessageCircle size={16} color={colors.clay} />
                   </Pressable>
-                  <Pressable style={[s.iconBtn, { backgroundColor: colors.clay + "1A" }]} onPress={() => {}}>
+                  <Pressable
+                    style={[s.iconBtn, { backgroundColor: colors.clay + "1A" }]}
+                    onPress={() => {}}
+                  >
                     <Phone size={16} color={colors.clay} />
                   </Pressable>
-                  <Pressable style={[s.iconBtn, { backgroundColor: colors.clay + "1A" }]} onPress={() => {}}>
+                  <Pressable
+                    style={[s.iconBtn, { backgroundColor: colors.clay + "1A" }]}
+                    onPress={() => {}}
+                  >
                     <Video size={16} color={colors.clay} />
                   </Pressable>
                 </View>
@@ -187,7 +209,9 @@ export default function BookScreen() {
                   onPress={() => router.push(`/book/${d.id}`)}
                   style={[s.bookBtn, { backgroundColor: colors.ink }]}
                 >
-                  <Text style={[s.bookBtnText, { color: colors.primaryForeground }]}>Book Slot</Text>
+                  <Text style={[s.bookBtnText, { color: colors.primaryForeground }]}>
+                    Book Slot
+                  </Text>
                 </Pressable>
               </View>
             </Pressable>
@@ -299,11 +323,22 @@ const s = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingTop: 14,
   },
-  slotLabel: { fontSize: 9, fontFamily: "DMSans_500Medium", letterSpacing: 1.5, textTransform: "uppercase" },
+  slotLabel: {
+    fontSize: 9,
+    fontFamily: "DMSans_500Medium",
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+  },
   slotValue: { fontSize: 14, fontFamily: "DMSans_600SemiBold", marginTop: 2 },
   bookBtn: { borderRadius: 14, paddingHorizontal: 22, paddingVertical: 11 },
   bookBtnText: { fontSize: 14, fontFamily: "DMSans_600SemiBold" },
-  iconBtn: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center" },
+  iconBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
   empty: { paddingVertical: 64, alignItems: "center" },
   emptyText: { fontSize: 14, fontFamily: "DMSans_400Regular" },

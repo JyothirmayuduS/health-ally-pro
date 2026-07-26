@@ -11,13 +11,7 @@ type Props = {
   onClose: () => void;
 };
 
-export function DependentRecordSheet({
-  open,
-  title,
-  subtitle,
-  rows,
-  onClose,
-}: Props) {
+export function DependentRecordSheet({ open, title, subtitle, rows, onClose }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
 
   usePatientSheetA11y({
@@ -54,12 +48,13 @@ export function DependentRecordSheet({
 
         <div className="flex shrink-0 items-start justify-between gap-3 px-5 pb-4 pt-2 lg:px-6 lg:pt-6">
           <div className="min-w-0 flex-1">
-            <h2 id="dependent-record-title" className="font-serif text-[22px] leading-tight text-ink">
+            <h2
+              id="dependent-record-title"
+              className="font-serif text-[22px] leading-tight text-ink"
+            >
               {title}
             </h2>
-            {subtitle ? (
-              <p className="mt-0.5 text-sm text-ink-muted">{subtitle}</p>
-            ) : null}
+            {subtitle ? <p className="mt-0.5 text-sm text-ink-muted">{subtitle}</p> : null}
           </div>
           <button
             type="button"
@@ -76,7 +71,9 @@ export function DependentRecordSheet({
             {rows.map((row, i) => (
               <div
                 key={row.label}
-                className={i > 0 ? "border-t border-[#EDEAE6] px-4 py-3.5 sm:px-5" : "px-4 py-3.5 sm:px-5"}
+                className={
+                  i > 0 ? "border-t border-[#EDEAE6] px-4 py-3.5 sm:px-5" : "px-4 py-3.5 sm:px-5"
+                }
               >
                 <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-ink-muted">
                   {row.label}

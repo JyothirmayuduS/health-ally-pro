@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { DoctorProfileSubpage, ProfileSectionCard } from "@/components/doctor/profile/DoctorProfileSubpage";
+import {
+  DoctorProfileSubpage,
+  ProfileSectionCard,
+} from "@/components/doctor/profile/DoctorProfileSubpage";
 import { savePersonalInfo } from "@/lib/doctor-profile-store";
 import { useProfileStore } from "@/lib/doctor-profile-store-context";
 

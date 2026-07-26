@@ -1,9 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  usePharmacyStore,
-  formatRelative,
-  getPatient,
-} from "@/lib/pharmacy-desk/store";
+import { usePharmacyStore, formatRelative, getPatient } from "@/lib/pharmacy-desk/store";
 import {
   PaymentPill,
   PriorityPill,
@@ -31,7 +27,8 @@ const STATUS_TABS = [
 ];
 
 export default function Billing() {
-  const { prescriptions, patients, invoices, getInvoiceForRx, collectRxPayment } = usePharmacyStore();
+  const { prescriptions, patients, invoices, getInvoiceForRx, collectRxPayment } =
+    usePharmacyStore();
   const [tab, setTab] = useState("due");
   const [query, setQuery] = useState("");
   const [selectedRxId, setSelectedRxId] = useState<string | null>(null);
@@ -76,7 +73,12 @@ export default function Billing() {
     .filter((i) => i.status !== "paid")
     .reduce((s, i) => s + balanceDue(i), 0);
   const collectedToday = invoices
-    .filter((i) => i.status === "paid" && i.paid_at && new Date(i.paid_at).toDateString() === new Date().toDateString())
+    .filter(
+      (i) =>
+        i.status === "paid" &&
+        i.paid_at &&
+        new Date(i.paid_at).toDateString() === new Date().toDateString(),
+    )
     .reduce((s, i) => s + i.total, 0);
 
   function handlePay(method: PaymentMethod, amount: number) {
@@ -91,12 +93,20 @@ export default function Billing() {
         <SectionLabel>Billing counter</SectionLabel>
         <div className="flex flex-wrap gap-2">
           <div className="rounded-lg border border-clay/30 bg-clay-soft/40 px-4 py-2">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-clay">Outstanding</div>
-            <div className="font-heading text-[18px] font-semibold text-clay">{fmtInr(dueTotal)}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider text-clay">
+              Outstanding
+            </div>
+            <div className="font-heading text-[18px] font-semibold text-clay">
+              {fmtInr(dueTotal)}
+            </div>
           </div>
           <div className="rounded-lg border border-status-doneBorder bg-status-doneBg/40 px-4 py-2">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-status-doneText">Collected today</div>
-            <div className="font-heading text-[18px] font-semibold text-status-doneText">{fmtInr(collectedToday)}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider text-status-doneText">
+              Collected today
+            </div>
+            <div className="font-heading text-[18px] font-semibold text-status-doneText">
+              {fmtInr(collectedToday)}
+            </div>
           </div>
         </div>
       </div>
@@ -119,7 +129,9 @@ export default function Billing() {
               onClick={() => setTab(t.value)}
               className={cn(
                 "rounded px-3 py-1.5 text-[11px] font-medium transition",
-                tab === t.value ? "bg-white text-ink-900 shadow-sm" : "text-ink-500 hover:text-ink-700",
+                tab === t.value
+                  ? "bg-white text-ink-900 shadow-sm"
+                  : "text-ink-500 hover:text-ink-700",
               )}
             >
               {t.label}
@@ -135,7 +147,11 @@ export default function Billing() {
           </div>
           <div className="max-h-[calc(100vh-300px)] divide-y divide-ink-100 overflow-y-auto">
             {rows.length === 0 ? (
-              <EmptyState icon={Receipt} title="No invoices" hint="Unpaid Rx orders appear here for collection." />
+              <EmptyState
+                icon={Receipt}
+                title="No invoices"
+                hint="Unpaid Rx orders appear here for collection."
+              />
             ) : (
               rows.map((row) => {
                 if (!row) return null;
@@ -148,19 +164,27 @@ export default function Billing() {
                     onClick={() => setSelectedRxId(rx.id)}
                     className={cn(
                       "w-full px-4 py-3.5 text-left transition",
-                      active ? "border-l-2 border-mustard bg-mustard-soft/40" : "border-l-2 border-transparent hover:bg-stone-50/80",
+                      active
+                        ? "border-l-2 border-mustard bg-mustard-soft/40"
+                        : "border-l-2 border-transparent hover:bg-stone-50/80",
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="font-mono text-[11px] text-ink-500">{inv.invoice_number}</div>
+                        <div className="font-mono text-[11px] text-ink-500">
+                          {inv.invoice_number}
+                        </div>
                         <div className="font-medium text-ink-900">{patient?.name}</div>
                         <div className="font-mono text-[11px] text-ink-500">{rx.rx_number}</div>
                       </div>
                       <div className="text-right">
-                        <div className="font-mono text-[13px] font-semibold text-ink-900">{fmtInr(inv.total)}</div>
+                        <div className="font-mono text-[13px] font-semibold text-ink-900">
+                          {fmtInr(inv.total)}
+                        </div>
                         {inv.status !== "paid" && (
-                          <div className="text-[11px] font-medium text-clay">Due {fmtInr(balanceDue(inv))}</div>
+                          <div className="text-[11px] font-medium text-clay">
+                            Due {fmtInr(balanceDue(inv))}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -177,13 +201,21 @@ export default function Billing() {
 
         <div className="surface lg:col-span-3">
           {!selected ? (
-            <EmptyState icon={Receipt} title="Select an invoice" hint="Choose a row to collect payment or print receipt." />
+            <EmptyState
+              icon={Receipt}
+              title="Select an invoice"
+              hint="Choose a row to collect payment or print receipt."
+            />
           ) : (
             <div className="p-5">
               <div className="flex flex-wrap items-start justify-between gap-3 border-b border-ink-200 pb-4">
                 <div>
-                  <div className="font-mono text-[11px] text-ink-500">{selected.inv.invoice_number}</div>
-                  <h2 className="font-heading text-[20px] font-semibold text-ink-900">{selected.patient?.name}</h2>
+                  <div className="font-mono text-[11px] text-ink-500">
+                    {selected.inv.invoice_number}
+                  </div>
+                  <h2 className="font-heading text-[20px] font-semibold text-ink-900">
+                    {selected.patient?.name}
+                  </h2>
                   <p className="text-[13px] text-ink-600">
                     {selected.patient?.mrn} · {selected.rx.rx_number} · {selected.rx.doctor_name}
                   </p>
@@ -246,7 +278,11 @@ export default function Billing() {
                     Collect {fmtInr(balanceDue(selected.inv))}
                   </Button>
                 )}
-                <Button variant="outline" className="border-ink-200" onClick={() => printPharmacyReceipt(selected.inv)}>
+                <Button
+                  variant="outline"
+                  className="border-ink-200"
+                  onClick={() => printPharmacyReceipt(selected.inv)}
+                >
                   <Printer className="mr-1.5 h-4 w-4" />
                   Print receipt
                 </Button>
@@ -267,7 +303,7 @@ export default function Billing() {
       <PharmacyPayDialog
         open={payOpen}
         onOpenChange={setPayOpen}
-        invoice={selected ? getInvoiceForRx(selected.rx.id) ?? selected.inv : null}
+        invoice={selected ? (getInvoiceForRx(selected.rx.id) ?? selected.inv) : null}
         onPay={handlePay}
       />
     </div>

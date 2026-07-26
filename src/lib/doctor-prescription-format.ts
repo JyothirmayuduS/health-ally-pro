@@ -13,7 +13,7 @@ import {
 } from "./doctor-prescription-i18n";
 
 export const CLINIC_RX_META = {
-  hospitalName: "Maple Multi-Speciality Hospital",
+  hospitalName: "Oak Haven Medical",
   tagline: "NABH Accredited · 24×7 Emergency",
   address: "42, Koramangala 5th Block, Bengaluru, Karnataka — 560095",
   phone: "+91 80 4567 8900",

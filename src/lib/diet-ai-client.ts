@@ -18,6 +18,7 @@ import { getCuratedYoutubeVideos, mealNeedsVideoRepair } from "@/lib/diet-youtub
 export type { PatientDietContext } from "@/lib/patient-diet-profile";
 export { getPatientDietContext } from "@/lib/patient-diet-profile";
 
+import { getPatientDietContext } from "@/lib/patient-diet-profile";
 import type { PatientDietContext } from "@/lib/patient-diet-profile";
 
 export function getMedicationAwareSuggestions(ctx: PatientDietContext): string[] {
@@ -129,12 +130,12 @@ export function personalizeLibraryMeal(
     ...meal,
     id: `ai-${Date.now()}`,
     clinicalRationale: personalizeRationale(meal.clinicalRationale ?? "", profile),
-    instructions:
-      meal.instructions ??
-      buildInstructions(isIndian, isVegan, profile),
-    protocol: meal.protocol ?? (profile.takesThyroidMeds
-      ? { medGap: "60 mins", caution: profile.restrictions.slice(0, 3) }
-      : undefined),
+    instructions: meal.instructions ?? buildInstructions(isIndian, isVegan, profile),
+    protocol:
+      meal.protocol ??
+      (profile.takesThyroidMeds
+        ? { medGap: "60 mins", caution: profile.restrictions.slice(0, 3) }
+        : undefined),
   };
 }
 
@@ -184,10 +185,10 @@ function buildPatientUniqueRecipe(
         : "Balanced Clinical";
 
   const primaryNutrient = profile.nutrientPriorities[0] ?? "metabolic";
-  const name = `${severityLabel} ${capitalize(primaryNutrient)} ${slot === "breakfast" ? "Morning" : slot === "dinner" ? "Evening" : ""} Plate`.replace(
-    /\s+/g,
-    " ",
-  ).trim();
+  const name =
+    `${severityLabel} ${capitalize(primaryNutrient)} ${slot === "breakfast" ? "Morning" : slot === "dinner" ? "Evening" : ""} Plate`
+      .replace(/\s+/g, " ")
+      .trim();
 
   const calories =
     profile.severity === "high"
@@ -201,7 +202,10 @@ function buildPatientUniqueRecipe(
           : 430;
 
   const labNote = profile.labFindings.length
-    ? ` Tuned for your labs: ${profile.labFindings.slice(0, 2).map((l) => `${l.name} ${l.status}`).join(", ")}.`
+    ? ` Tuned for your labs: ${profile.labFindings
+        .slice(0, 2)
+        .map((l) => `${l.name} ${l.status}`)
+        .join(", ")}.`
     : "";
 
   return {
@@ -216,7 +220,8 @@ function buildPatientUniqueRecipe(
     calories,
     cuisine: isIndian ? "indian" : "continental",
     prepTimeMinutes: input.budget === "elite" ? 35 : input.budget === "balanced" ? 25 : 18,
-    clinicalRationale: `Personalized for patient ${profile.profileId} (${profile.severity} severity). Medications: ${profile.medNames.join(", ")}.${labNote} ${profile.restrictions[0] ?? ""}`.trim(),
+    clinicalRationale:
+      `Personalized for patient ${profile.profileId} (${profile.severity} severity). Medications: ${profile.medNames.join(", ")}.${labNote} ${profile.restrictions[0] ?? ""}`.trim(),
     instructions: buildInstructions(isIndian, isVegan, profile),
     protocol: profile.takesThyroidMeds
       ? {
@@ -310,11 +315,7 @@ function inferMealType(query: string): DietMeal["mealType"] {
   return "lunch";
 }
 
-function buildInstructions(
-  isIndian: boolean,
-  isVegan: boolean,
-  ctx: PatientDietContext,
-): string[] {
+function buildInstructions(isIndian: boolean, isVegan: boolean, ctx: PatientDietContext): string[] {
   const steps = [
     "Wash and prep all ingredients; measure portions for your macro targets.",
     isIndian
@@ -381,17 +382,14 @@ export async function runDietAiSearch(input: DietAiSearchInput): Promise<DietAiS
             }
           : {
               ...data.meal,
-              instructions:
-                data.meal.instructions?.length
-                  ? data.meal.instructions
-                  : local.meal.instructions,
+              instructions: data.meal.instructions?.length
+                ? data.meal.instructions
+                : local.meal.instructions,
               protocol: data.meal.protocol ?? local.meal.protocol,
               metabolicImpact: data.meal.metabolicImpact ?? local.meal.metabolicImpact,
               clinicalBenefits: data.meal.clinicalBenefits ?? local.meal.clinicalBenefits,
               ingredients:
-                data.meal.ingredients?.length >= 3
-                  ? data.meal.ingredients
-                  : local.meal.ingredients,
+                data.meal.ingredients?.length >= 3 ? data.meal.ingredients : local.meal.ingredients,
               name: isBadGeneratedMealName(data.meal.name, input.query)
                 ? local.meal.name
                 : data.meal.name,

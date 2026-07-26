@@ -106,7 +106,9 @@ async function completeHuggingFace(
   return null;
 }
 
-export async function completeWithRouter(req: AiCompletionRequest): Promise<AiCompletionResult | null> {
+export async function completeWithRouter(
+  req: AiCompletionRequest,
+): Promise<AiCompletionResult | null> {
   const env = getServerAiEnv();
 
   if (env.geminiApiKey && canSendToCloudProvider("gemini")) {

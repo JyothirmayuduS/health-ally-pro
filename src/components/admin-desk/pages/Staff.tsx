@@ -17,7 +17,9 @@ export default function AdminStaff() {
   const [formDept, setFormDept] = useState("");
   const [formDesignation, setFormDesignation] = useState("");
   const [formRole, setFormRole] = useState<Role>("Read Only");
-  const [formShift, setFormShift] = useState<"morning" | "afternoon" | "night" | "rotational">("morning");
+  const [formShift, setFormShift] = useState<"morning" | "afternoon" | "night" | "rotational">(
+    "morning",
+  );
 
   // Get unique departments/roles for filters
   const departments = useMemo(() => {
@@ -37,16 +39,15 @@ export default function AdminStaff() {
 
   // Filter/Sort logic
   const filteredStaff = useMemo(() => {
-    return (staff ?? [])
-      .filter((s) => {
-        const matchesSearch =
-          s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (s.employeeId && s.employeeId.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesDept = deptFilter === "All" || s.department === deptFilter;
-        const matchesRole = roleFilter === "All" || s.roleFull === roleFilter;
-        return matchesSearch && matchesDept && matchesRole;
-      });
+    return (staff ?? []).filter((s) => {
+      const matchesSearch =
+        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (s.employeeId && s.employeeId.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesDept = deptFilter === "All" || s.department === deptFilter;
+      const matchesRole = roleFilter === "All" || s.roleFull === roleFilter;
+      return matchesSearch && matchesDept && matchesRole;
+    });
   }, [staff, searchTerm, deptFilter, roleFilter]);
 
   const handleEditClick = (s: ExtendedStaffMember) => {
@@ -84,7 +85,17 @@ export default function AdminStaff() {
   };
 
   const exportCSV = () => {
-    const headers = ["Employee ID", "Name", "Designation", "Department", "Role", "Email", "Phone", "Shift", "Status"];
+    const headers = [
+      "Employee ID",
+      "Name",
+      "Designation",
+      "Department",
+      "Role",
+      "Email",
+      "Phone",
+      "Shift",
+      "Status",
+    ];
     const rows = filteredStaff.map((s) => [
       s.employeeId ?? "",
       s.name,
@@ -99,8 +110,8 @@ export default function AdminStaff() {
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((e) => e.map(val => `"${val}"`).join(","))].join("\n");
-    
+      [headers.join(","), ...rows.map((e) => e.map((val) => `"${val}"`).join(","))].join("\n");
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -115,16 +126,28 @@ export default function AdminStaff() {
       {/* Metrics Row */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="surface px-5 py-4">
-          <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">Total Directory</div>
-          <div className="mt-1 text-3xl font-heading font-semibold text-plum">{totalStaffCount} members</div>
+          <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">
+            Total Directory
+          </div>
+          <div className="mt-1 text-3xl font-heading font-semibold text-plum">
+            {totalStaffCount} members
+          </div>
         </div>
         <div className="surface px-5 py-4">
-          <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">Active Duty</div>
-          <div className="mt-1 text-3xl font-heading font-semibold text-teal">{activeStaffCount} active</div>
+          <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">
+            Active Duty
+          </div>
+          <div className="mt-1 text-3xl font-heading font-semibold text-teal">
+            {activeStaffCount} active
+          </div>
         </div>
         <div className="surface px-5 py-4">
-          <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">Deactivated</div>
-          <div className="mt-1 text-3xl font-heading font-semibold text-clay">{inactiveStaffCount} suspended</div>
+          <div className="text-[10.5px] uppercase tracking-widest text-ink-400 font-mono">
+            Deactivated
+          </div>
+          <div className="mt-1 text-3xl font-heading font-semibold text-clay">
+            {inactiveStaffCount} suspended
+          </div>
         </div>
       </div>
 
@@ -148,9 +171,13 @@ export default function AdminStaff() {
             className="rounded border-stone-300 text-[13px] focus:ring-plum focus:border-plum"
           >
             <option value="All">All Departments</option>
-            {departments.filter((d) => d !== "All").map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
+            {departments
+              .filter((d) => d !== "All")
+              .map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
           </select>
 
           <select
@@ -159,9 +186,13 @@ export default function AdminStaff() {
             className="rounded border-stone-300 text-[13px] focus:ring-plum focus:border-plum"
           >
             <option value="All">All Roles</option>
-            {roles.filter((r) => r !== "All").map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
+            {roles
+              .filter((r) => r !== "All")
+              .map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -191,7 +222,9 @@ export default function AdminStaff() {
               <tbody>
                 {filteredStaff.map((s) => (
                   <tr key={s.id} className="border-b border-stone-100 hover:bg-bone/20 text-[13px]">
-                    <td className="px-4 py-3 font-mono font-medium text-[12px] text-ink-500">{s.employeeId ?? "—"}</td>
+                    <td className="px-4 py-3 font-mono font-medium text-[12px] text-ink-500">
+                      {s.employeeId ?? "—"}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="font-semibold text-ink-950">{s.name}</div>
                       <div className="text-[11px] text-ink-400 font-mono">{s.email}</div>
@@ -207,7 +240,9 @@ export default function AdminStaff() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="font-mono text-[11px]">{s.phone ?? "—"}</div>
-                      <div className="text-[11.5px] text-ink-500 capitalize">{s.shift ?? "morning"} Shift</div>
+                      <div className="text-[11.5px] text-ink-500 capitalize">
+                        {s.shift ?? "morning"} Shift
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -232,11 +267,17 @@ export default function AdminStaff() {
                         <button
                           onClick={() => handleToggleActive(s.id, s.active)}
                           className={`p-1 rounded transition ${
-                            s.active ? "hover:bg-red-50 text-red-500" : "hover:bg-green-50 text-green-600"
+                            s.active
+                              ? "hover:bg-red-50 text-red-500"
+                              : "hover:bg-green-50 text-green-600"
                           }`}
                           title={s.active ? "Deactivate / Suspend" : "Activate"}
                         >
-                          {s.active ? <EyeOff className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+                          {s.active ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Check className="h-4 w-4" />
+                          )}
                         </button>
                       </div>
                     </td>
@@ -251,17 +292,28 @@ export default function AdminStaff() {
       {/* Edit Directory Info Modal */}
       {editingStaff && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <form onSubmit={handleSave} className="surface max-w-md w-full overflow-hidden shadow-xl flex flex-col max-h-[90vh]">
+          <form
+            onSubmit={handleSave}
+            className="surface max-w-md w-full overflow-hidden shadow-xl flex flex-col max-h-[90vh]"
+          >
             <div className="border-b border-ink-100 px-6 py-4 flex items-center justify-between bg-bone/20">
-              <h3 className="font-heading font-semibold text-ink-950">Modify Staff Directory Details</h3>
-              <button type="button" onClick={() => setEditingStaff(null)} className="text-ink-400 hover:text-ink-600">
+              <h3 className="font-heading font-semibold text-ink-950">
+                Modify Staff Directory Details
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingStaff(null)}
+                className="text-ink-400 hover:text-ink-600"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4">
               <div className="space-y-1">
-                <label className="block text-[11.5px] uppercase font-mono text-ink-400">Full Name</label>
+                <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                  Full Name
+                </label>
                 <input
                   type="text"
                   required
@@ -273,7 +325,9 @@ export default function AdminStaff() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">Email Address</label>
+                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     required
@@ -283,7 +337,9 @@ export default function AdminStaff() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">Phone</label>
+                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                    Phone
+                  </label>
                   <input
                     type="text"
                     value={formPhone}
@@ -295,7 +351,9 @@ export default function AdminStaff() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">Department</label>
+                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                    Department
+                  </label>
                   <input
                     type="text"
                     required
@@ -305,7 +363,9 @@ export default function AdminStaff() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">Designation</label>
+                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                    Designation
+                  </label>
                   <input
                     type="text"
                     required
@@ -318,7 +378,9 @@ export default function AdminStaff() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">RBAC Role</label>
+                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                    RBAC Role
+                  </label>
                   <select
                     value={formRole}
                     onChange={(e) => setFormRole(e.target.value as Role)}
@@ -338,10 +400,16 @@ export default function AdminStaff() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">Scheduled Shift</label>
+                  <label className="block text-[11.5px] uppercase font-mono text-ink-400">
+                    Scheduled Shift
+                  </label>
                   <select
                     value={formShift}
-                    onChange={(e) => setFormShift(e.target.value as any)}
+                    onChange={(e) =>
+                      setFormShift(
+                        e.target.value as "morning" | "afternoon" | "night" | "rotational",
+                      )
+                    }
                     className="w-full rounded border-stone-300 text-[13px] focus:ring-plum focus:border-plum"
                   >
                     <option value="morning">Morning Shift</option>

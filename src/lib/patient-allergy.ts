@@ -18,7 +18,7 @@ export function parseAllergieSubstances(allergyWarning?: string): string[] {
     .replace(/^allergy:\s*/i, "")
     .trim();
 
-  if (!cleaned) return [];
+  if (!cleaned || cleaned === "—") return [];
 
   return cleaned
     .split(/,\s*|\s+and\s+/i)
@@ -28,4 +28,20 @@ export function parseAllergieSubstances(allergyWarning?: string): string[] {
 
 export function formatAllergieList(substances: string[]): string {
   return substances.join(", ");
+}
+
+/**
+ * Prefer structured patient_allergies rows; fall back to legacy allergy string.
+ * Keeps prescription / vaccination safety checks working across migration.
+ */
+export function resolveAllergySubstances(input: {
+  structured?: Array<{ substance?: string | null; status?: string | null; archived_at?: string | null }>;
+  legacyWarning?: string | null;
+}): string[] {
+  const fromStructured = (input.structured ?? [])
+    .filter((a) => (a.status ?? "active") === "active" && !a.archived_at)
+    .map((a) => (a.substance ?? "").trim())
+    .filter(Boolean);
+  if (fromStructured.length) return fromStructured;
+  return parseAllergieSubstances(input.legacyWarning ?? undefined);
 }

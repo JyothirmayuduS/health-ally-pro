@@ -51,7 +51,10 @@ function scoreRoutine(
     if (routine.targetConditions.some((t) => lower.includes(t.toLowerCase().split(" ")[0]))) {
       score += 15;
     }
-    if (/hypothyroid|thyroid/.test(lower) && /thyroid|hypothyroid/i.test(routine.clinicalRationale)) {
+    if (
+      /hypothyroid|thyroid/.test(lower) &&
+      /thyroid|hypothyroid/i.test(routine.clinicalRationale)
+    ) {
       score += 12;
     }
     if (/sleep|muscle/.test(lower) && routine.category === "recovery") score += 14;

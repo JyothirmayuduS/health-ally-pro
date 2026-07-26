@@ -20,6 +20,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { DrugMonographSheet } from "@/components/doctor/prescriptions/DrugMonographSheet";
+import { IcdPicker } from "@/components/doctor/IcdPicker";
 import { PrescriptionPreviewSheet } from "@/components/doctor/prescriptions/PrescriptionPreviewSheet";
 import {
   PrescriptionDispatchConfirmation,
@@ -65,13 +66,12 @@ import {
   nextRxNumber,
   type DoctorRxPatient,
 } from "@/lib/pharmacy-desk/prescription-bridge";
-import {
-  panelPatientToSnapshot,
-  pushPatientPrescription,
-} from "@/lib/patient-prescription-store";
+import { panelPatientToSnapshot, pushPatientPrescription } from "@/lib/patient-prescription-store";
 import { LANGUAGE_OPTIONS } from "@/lib/doctor-prescription-i18n";
 import { resolvePatientId } from "@/lib/shared/patients";
-import { formatAllergieList, parseAllergieSubstances } from "@/lib/patient-allergy";
+import { formatAllergieList, resolveAllergySubstances } from "@/lib/patient-allergy";
+
+
 import {
   discontinueMed,
   durationDaysFromChart,
@@ -94,7 +94,11 @@ type DoctorPrescriptionsProps = {
   onDraftChange?: (draft: {
     diagnosis: string;
     diagnosisIcd?: string;
-    lines: { drug_id: string; frequency: import("@/lib/doctor-prescription-workflow").RxFrequency; durationDays: number }[];
+    lines: {
+      drug_id: string;
+      frequency: import("@/lib/doctor-prescription-workflow").RxFrequency;
+      durationDays: number;
+    }[];
   }) => void;
   onSent?: (rxNumber: string) => void;
 };
@@ -109,13 +113,17 @@ function panelToPharmacy(p: PanelPatient): DoctorRxPatient {
     age: p.age,
     sex: p.gender,
     phone: "",
-    allergies: parseAllergieSubstances(p.allergyWarning),
+    allergies: resolveAllergySubstances({ legacyWarning: p.allergyWarning }),
   };
 }
 
 function suggestionToLine(s: AiMedicationSuggestion): PrescriptionLineDraft {
   return createLineFromDrug(s.drug_id, {
-    frequency: s.sig.includes("twice") ? "BD" : s.sig.includes("PRN") || s.sig.includes("as needed") ? "SOS" : "OD",
+    frequency: s.sig.includes("twice")
+      ? "BD"
+      : s.sig.includes("PRN") || s.sig.includes("as needed")
+        ? "SOS"
+        : "OD",
     durationDays: s.days_supply,
     refills_allowed: s.refills_allowed,
     qty_prescribed: s.qty_prescribed,
@@ -129,7 +137,8 @@ export default function DoctorPrescriptions({
   onDraftChange,
   onSent,
 }: DoctorPrescriptionsProps) {
-  const defaultPatient = PANEL_PATIENTS.find((p) => p.id === initialPatientId) ?? PANEL_PATIENTS[0]!;
+  const defaultPatient =
+    PANEL_PATIENTS.find((p) => p.id === initialPatientId) ?? PANEL_PATIENTS[0]!;
   const [patientId, setPatientId] = useState(defaultPatient.id);
 
   useEffect(() => {
@@ -155,11 +164,14 @@ export default function DoctorPrescriptions({
   const [showDraftBanner, setShowDraftBanner] = useState(false);
   const [medsExpanded, setMedsExpanded] = useState(true);
   const [aiExpanded, setAiExpanded] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const [drugSearch, setDrugSearch] = useState("");
   const [diagnosisSearch, setDiagnosisSearch] = useState("");
   const [sending, setSending] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [dispatchConfirmation, setDispatchConfirmation] = useState<DispatchConfirmationData | null>(null);
+  const [dispatchConfirmation, setDispatchConfirmation] = useState<DispatchConfirmationData | null>(
+    null,
+  );
   const [sendOptionsOpen, setSendOptionsOpen] = useState(false);
   const [monographDrugId, setMonographDrugId] = useState<string | null>(null);
   const [discontinuedIds, setDiscontinuedIds] = useState<string[]>([]);
@@ -247,9 +259,7 @@ export default function DoctorPrescriptions({
   useEffect(() => {
     if (openEncounter && !draft.diagnosis) {
       const suggested =
-        openEncounter.soap?.assessment?.trim() ||
-        openEncounter.chiefComplaint?.trim() ||
-        "";
+        openEncounter.soap?.assessment?.trim() || openEncounter.chiefComplaint?.trim() || "";
       if (suggested) {
         setDraft((d) => (d.diagnosis ? d : { ...d, diagnosis: suggested }));
       }
@@ -276,12 +286,18 @@ export default function DoctorPrescriptions({
 
   useEffect(() => {
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent<{
-        label: string;
-        diagnosis: string;
-        diagnosisIcd?: string;
-        lines: { drug_id: string; frequency: import("@/lib/doctor-prescription-workflow").RxFrequency; durationDays: number }[];
-      }>).detail;
+      const detail = (
+        e as CustomEvent<{
+          label: string;
+          diagnosis: string;
+          diagnosisIcd?: string;
+          lines: {
+            drug_id: string;
+            frequency: import("@/lib/doctor-prescription-workflow").RxFrequency;
+            durationDays: number;
+          }[];
+        }>
+      ).detail;
       if (!detail) return;
       const lines = detail.lines.map((l) =>
         createLineFromDrug(l.drug_id, { frequency: l.frequency, durationDays: l.durationDays }),
@@ -431,7 +447,7 @@ export default function DoctorPrescriptions({
       });
     }
 
-  if (target === "patient" || target === "both") {
+    if (target === "patient" || target === "both") {
       pushPatientPrescription({
         rx_number: rxNum,
         patientId: resolvePatientId(patient.id),
@@ -519,7 +535,7 @@ export default function DoctorPrescriptions({
   };
 
   return (
-    <div className="mx-auto w-full min-w-0 max-w-3xl overflow-x-hidden pb-4 lg:max-w-4xl lg:pb-8 [scroll-padding-bottom:calc(5.5rem+env(safe-area-inset-bottom))]">
+    <div className="mx-auto w-full min-w-0 max-w-3xl overflow-x-hidden pb-4 lg:max-w-[1400px] lg:pb-8 [scroll-padding-bottom:calc(5.5rem+env(safe-area-inset-bottom))]">
       {/* Preview action — page title lives in workspace tabs */}
       <div className="mb-4 flex items-center justify-end gap-3">
         <h1 className="sr-only">Write prescription</h1>
@@ -537,7 +553,8 @@ export default function DoctorPrescriptions({
         <div className="mb-4 flex gap-2 rounded-2xl border border-[#E8F4F1] bg-[#F4FAF8] px-4 py-3 text-sm text-[#2C7873]">
           <ClipboardList className="h-4 w-4 shrink-0" />
           <span>
-            Amending <strong className="font-mono">{amendFromRxNumber}</strong> — send a new Rx when edits are complete.
+            Amending <strong className="font-mono">{amendFromRxNumber}</strong> — send a new Rx when
+            edits are complete.
           </span>
         </div>
       ) : null}
@@ -558,17 +575,26 @@ export default function DoctorPrescriptions({
       {showDraftBanner && storedDraft && (
         <div className="mb-4 rounded-2xl border border-[#F0DDD6] bg-[#FDF8F5] px-4 py-3 text-sm text-[#5C635F]">
           Unsaved draft for <strong className="text-[#1B3B2E]">{patient.name}</strong>. Continue?{" "}
-          <button type="button" onClick={restoreDraft} className="font-semibold text-[#B8735D] underline-offset-2 hover:underline">
+          <button
+            type="button"
+            onClick={restoreDraft}
+            className="font-semibold text-[#B8735D] underline-offset-2 hover:underline"
+          >
             Yes
           </button>{" "}
           ·{" "}
-          <button type="button" onClick={discardStoredDraft} className="font-semibold text-[#8A8F8C] underline-offset-2 hover:underline">
+          <button
+            type="button"
+            onClick={discardStoredDraft}
+            className="font-semibold text-[#8A8F8C] underline-offset-2 hover:underline"
+          >
             Start fresh
           </button>
         </div>
       )}
 
-      <div className="space-y-4 sm:space-y-5">
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-6">
+        <div className="min-w-0 space-y-4 sm:space-y-5">
         {/* Patient card */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
           <div className="flex items-start justify-between gap-3">
@@ -605,7 +631,7 @@ export default function DoctorPrescriptions({
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span className="break-words">
                 <span className="font-semibold">Known allergy:</span>{" "}
-                {formatAllergieList(parseAllergieSubstances(patient.allergyWarning))}
+                {formatAllergieList(resolveAllergySubstances({ legacyWarning: patient.allergyWarning }))}
               </span>
             </div>
           )}
@@ -619,7 +645,9 @@ export default function DoctorPrescriptions({
                 onClick={() => setPatientId(p.id)}
                 className={cn(
                   "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium",
-                  p.id === patientId ? "border-[#1B3B2E] bg-[#1B3B2E] text-white" : "border-[#EDEAE6] bg-[#FAF9F7] text-[#5C635F]",
+                  p.id === patientId
+                    ? "border-[#1B3B2E] bg-[#1B3B2E] text-white"
+                    : "border-[#EDEAE6] bg-[#FAF9F7] text-[#5C635F]",
                 )}
               >
                 {p.initials}
@@ -637,12 +665,19 @@ export default function DoctorPrescriptions({
               className="flex min-h-[48px] w-full items-center justify-between px-4 py-3 text-left"
             >
               <span className="text-sm font-semibold text-[#1B3B2E]">Med reconciliation</span>
-              {medsExpanded ? <ChevronUp className="h-4 w-4 text-[#8A8F8C]" /> : <ChevronDown className="h-4 w-4 text-[#8A8F8C]" />}
+              {medsExpanded ? (
+                <ChevronUp className="h-4 w-4 text-[#8A8F8C]" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-[#8A8F8C]" />
+              )}
             </button>
             {medsExpanded && (
               <ul className="border-t border-[#EDEAE6] px-4 py-3">
                 {activeMeds.map((m) => (
-                  <li key={m.id} className="flex items-start justify-between gap-2 border-b border-[#F4F2EF] py-2.5 last:border-0">
+                  <li
+                    key={m.id}
+                    className="flex items-start justify-between gap-2 border-b border-[#F4F2EF] py-2.5 last:border-0"
+                  >
                     <div className="min-w-0 text-sm">
                       <p className="font-medium text-[#1B3B2E]">
                         {m.name} {m.strength}
@@ -683,7 +718,9 @@ export default function DoctorPrescriptions({
 
         {/* Templates */}
         <section>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">Templates →</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">
+            Templates →
+          </p>
           <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[...RX_TEMPLATES, ...listDoctorTemplates().slice(0, 3)].map((t) => (
               <button
@@ -709,8 +746,27 @@ export default function DoctorPrescriptions({
               setDiagnosisSearch(e.target.value);
               updateDraft({ diagnosis: e.target.value });
             }}
-            placeholder="ICD-10 or diagnosis name"
+            placeholder="Diagnosis name or clinical indication"
             className="mt-2 min-h-[48px] w-full rounded-2xl border border-[#EDEAE6] bg-[#FAF9F7] px-4 text-base sm:text-sm"
+          />
+          <label className="mt-3 block text-xs font-medium text-[#8A8F8C]">
+            ICD-10 code (optional)
+          </label>
+          <IcdPicker
+            value={
+              draft.diagnosisIcd
+                ? `${draft.diagnosisIcd}${draft.diagnosis ? ` — ${draft.diagnosis}` : ""}`
+                : ""
+            }
+            onChange={(code, entry) => {
+              updateDraft({
+                diagnosisIcd: code,
+                diagnosis: entry?.description ?? draft.diagnosis,
+              });
+              setDiagnosisSearch("");
+            }}
+            placeholder="Search ICD-10 code or description…"
+            className="mt-1 [&_input]:min-h-[48px] [&_input]:rounded-2xl [&_input]:border-[#EDEAE6] [&_input]:bg-[#FAF9F7] [&_input]:px-4 [&_input]:text-base sm:[&_input]:text-sm"
           />
           <div className="mt-2 flex flex-wrap gap-2">
             {diagnosisOptions.slice(0, 4).map((d) => (
@@ -728,7 +784,9 @@ export default function DoctorPrescriptions({
 
         {/* Frequent meds */}
         <section>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">Frequent</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8A8F8C]">
+            Frequent
+          </p>
           <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {FREQUENT_DRUG_IDS.map((id) => {
               const d = DRUGS.find((x) => x.id === id);
@@ -749,7 +807,10 @@ export default function DoctorPrescriptions({
         </section>
 
         {/* Medication search */}
-        <section ref={medicationSectionRef} className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
+        <section
+          ref={medicationSectionRef}
+          className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm"
+        >
           <label className="text-sm font-semibold text-[#1B3B2E]">Medication</label>
           <div className="relative mt-2">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#ADADAD]" />
@@ -812,9 +873,14 @@ export default function DoctorPrescriptions({
                 index={idx}
                 line={line}
                 onChange={(next) =>
-                  setDraft((d) => ({ ...d, lines: d.lines.map((l) => (l.key === line.key ? next : l)) }))
+                  setDraft((d) => ({
+                    ...d,
+                    lines: d.lines.map((l) => (l.key === line.key ? next : l)),
+                  }))
                 }
-                onRemove={() => setDraft((d) => ({ ...d, lines: d.lines.filter((l) => l.key !== line.key) }))}
+                onRemove={() =>
+                  setDraft((d) => ({ ...d, lines: d.lines.filter((l) => l.key !== line.key) }))
+                }
                 onDuplicate={() =>
                   setDraft((d) => ({
                     ...d,
@@ -877,9 +943,33 @@ export default function DoctorPrescriptions({
             placeholder="Additional instructions…"
             className="mt-3 w-full rounded-2xl border border-[#EDEAE6] px-4 py-3 text-base sm:text-sm"
           />
-          <p className="mt-1 text-right text-[10px] text-[#ADADAD]">{draft.patientInstructions.length} characters</p>
+          <p className="mt-1 text-right text-[10px] text-[#ADADAD]">
+            {draft.patientInstructions.length} characters
+          </p>
         </section>
 
+        {/* Dispensing & options — progressive disclosure */}
+        <div>
+          <button
+            type="button"
+            onClick={() => setAdvancedOpen((o) => !o)}
+            className="flex min-h-[48px] w-full items-center justify-between rounded-2xl border border-[#EDEAE6] bg-white px-4 py-3 text-left shadow-sm"
+          >
+            <span className="flex items-center gap-2 text-sm font-semibold text-[#1B3B2E]">
+              <Building2 className="h-4 w-4 text-[#8A8F8C]" />
+              Dispensing &amp; options
+              <span className="text-xs font-normal text-[#ADADAD]">
+                validity · type · pharmacy · language
+              </span>
+            </span>
+            {advancedOpen ? (
+              <ChevronUp className="h-4 w-4 text-[#8A8F8C]" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-[#8A8F8C]" />
+            )}
+          </button>
+          {advancedOpen ? (
+            <div className="mt-3 space-y-4">
         {/* Language */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
           <label className="flex min-h-[44px] items-center justify-between gap-3">
@@ -894,7 +984,8 @@ export default function DoctorPrescriptions({
           {draft.printInPatientLanguage && (
             <>
               <p className="mt-2 text-xs text-[#8A8F8C]">
-                Patient copy and printout use the selected language. Drug names stay in English per NMC rules.
+                Patient copy and printout use the selected language. Drug names stay in English per
+                NMC rules.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {LANGUAGE_OPTIONS.map((lang) => (
@@ -920,7 +1011,8 @@ export default function DoctorPrescriptions({
                 className="mt-3 text-xs font-semibold text-[#B8735D] underline-offset-2 hover:underline"
               >
                 Preview in{" "}
-                {LANGUAGE_OPTIONS.find((l) => l.id === draft.patientLanguage)?.native ?? "selected language"}
+                {LANGUAGE_OPTIONS.find((l) => l.id === draft.patientLanguage)?.native ??
+                  "selected language"}
               </button>
             </>
           )}
@@ -928,7 +1020,9 @@ export default function DoctorPrescriptions({
 
         {/* Validity & metadata */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
-          <p className="mb-3 text-[10px] font-bold uppercase tracking-wide text-[#ADADAD]">Validity & metadata</p>
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-wide text-[#ADADAD]">
+            Validity & metadata
+          </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="text-xs text-[#8A8F8C]">
               Valid from
@@ -965,7 +1059,9 @@ export default function DoctorPrescriptions({
             <span className="text-sm text-[#1B3B2E]">
               <span className="font-semibold">Follow-up required</span>
               <span className="mt-0.5 block text-xs text-[#8A8F8C]">
-                {draft.followUpRequired ? "Follow-up will be scheduled" : "No follow-up with this Rx"}
+                {draft.followUpRequired
+                  ? "Follow-up will be scheduled"
+                  : "No follow-up with this Rx"}
               </span>
             </span>
             <input
@@ -999,159 +1095,9 @@ export default function DoctorPrescriptions({
             />
           </label>
         </section>
-
-        {/* Desktop — full checklist */}
-        <section className="hidden rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm lg:block">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
-            Ready to send checklist
-          </p>
-
-          <ul className="mt-3 space-y-2">
-            <li className="flex items-start gap-2 text-sm">
-              {draft.diagnosis.trim() ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
-              ) : (
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
-              )}
-              <span className={draft.diagnosis.trim() ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
-                <span className="font-semibold">Diagnosis</span>
-                {draft.diagnosis.trim() ? ` — ${draft.diagnosis}` : " — required. Add diagnosis above."}
-              </span>
-            </li>
-            <li className="flex items-start gap-2 text-sm">
-              {draft.lines.length > 0 ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
-              ) : (
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
-              )}
-              <span className={draft.lines.length > 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
-                <span className="font-semibold">Medication</span>
-                {draft.lines.length > 0
-                  ? ` — ${draft.lines.length} drug(s) on Rx`
-                  : " — required. Search and add at least one drug."}
-              </span>
-            </li>
-            <li className="flex items-start gap-2 text-sm">
-              {criticalAlerts.length === 0 ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
-              ) : (
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
-              )}
-              <span className={criticalAlerts.length === 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
-                <span className="font-semibold">Safety</span>
-                {criticalAlerts.length === 0
-                  ? " — no critical blocks"
-                  : ` — ${criticalAlerts.length} critical alert(s) must be resolved`}
-              </span>
-            </li>
-          </ul>
-
-          {criticalAlerts.length > 0 && (
-            <div className="mt-4 space-y-2 rounded-xl border border-[#C45C4A]/30 bg-[#FDF5F4] p-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-[#C45C4A]">Must fix before sending</p>
-              {criticalAlerts.map((alert) => (
-                <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
-                  <p className="text-sm font-semibold text-[#8B3A32]">{alert.title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
-                  {alert.id.startsWith("allergy-") && alert.id !== "allergy-doc" ? (
-                    <p className="mt-1 text-[11px] font-medium text-[#B8735D]">
-                      → Remove the conflicting drug from the medication list above.
-                    </p>
-                  ) : null}
-                </div>
-              ))}
             </div>
-          )}
-
-          {warningAlerts.length > 0 && (
-            <div className="mt-3 space-y-2 rounded-xl border border-[#E9A820]/30 bg-[#FFFBF0] p-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-[#92400E]">Review (does not block send)</p>
-              {warningAlerts.map((alert) => (
-                <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
-                  <p className="text-sm font-semibold text-[#92400E]">{alert.title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {canDispatch && (
-            <p className="mt-3 flex items-center gap-2 text-sm font-medium text-[#2C7873]">
-              <CheckCircle2 className="h-4 w-4" />
-              Ready to dispatch — use the buttons below.
-            </p>
-          )}
-        </section>
-
-        {/* Dispatch — desktop only (mobile uses sticky bar) */}
-        <section className="hidden rounded-2xl border border-[#1B3B2E]/15 bg-gradient-to-b from-[#F4FAF8] to-white p-4 shadow-sm sm:p-5 lg:block">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
-                Dispatch e-prescription
-              </p>
-              <p className="mt-1 text-sm text-[#5C635F]">
-                Send this signed Rx to the pharmacy desk, the patient app, or both.
-              </p>
-            </div>
-            <span className="mt-2 inline-flex w-fit items-center rounded-full bg-[#E8F4F1] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#1B3B2E] sm:mt-0">
-              {draft.lines.length} med · {draft.rxType}
-            </span>
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <button
-              type="button"
-              disabled={!canDispatch}
-              onClick={() => void dispatchPrescription("pharmacy")}
-              className="flex min-h-[72px] flex-col items-start gap-2 rounded-2xl border border-[#EDEAE6] bg-white p-4 text-left transition-colors hover:border-[#2C7873]/40 hover:bg-[#FAFDFC] disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              <span className="flex items-center gap-2 text-sm font-semibold text-[#1B3B2E]">
-                <Building2 className="h-4 w-4 text-[#2C7873]" />
-                Send to pharmacy
-              </span>
-              <span className="text-xs leading-snug text-[#8A8F8C]">
-                {selectedPharmacy?.name ?? "Pharmacy desk"}
-                {selectedPharmacy?.distance ? ` · ${selectedPharmacy.distance}` : ""}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              disabled={!canDispatch}
-              onClick={() => void dispatchPrescription("patient")}
-              className="flex min-h-[72px] flex-col items-start gap-2 rounded-2xl border border-[#EDEAE6] bg-white p-4 text-left transition-colors hover:border-[#B8735D]/40 hover:bg-[#FDF8F5] disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              <span className="flex items-center gap-2 text-sm font-semibold text-[#1B3B2E]">
-                <Smartphone className="h-4 w-4 text-[#B8735D]" />
-                Send to patient
-              </span>
-              <span className="text-xs leading-snug text-[#8A8F8C]">
-                {patient.name} · visible in patient app under My Prescriptions
-              </span>
-            </button>
-          </div>
-
-          <button
-            type="button"
-            disabled={!canDispatch}
-            onClick={() => void dispatchPrescription("both")}
-            className="mt-3 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-[#1B3B2E] text-sm font-semibold text-white transition-colors hover:bg-[#2C7873] disabled:cursor-not-allowed disabled:opacity-45"
-          >
-            <Send className="h-4 w-4" />
-            {sending ? "Sending prescription…" : "Send to pharmacy & patient"}
-          </button>
-
-          {!canDispatch && (
-            <p className="mt-3 text-center text-xs text-[#8A8F8C]">
-              {missingFields.length > 0
-                ? `Complete: ${missingFields.join(", ")}`
-                : criticalAlerts.length > 0
-                  ? "Fix critical safety alerts in the checklist above"
-                  : "Complete the checklist above to enable send"}
-            </p>
-          )}
-        </section>
+          ) : null}
+        </div>
 
         {/* AI — collapsible */}
         <section className="rounded-2xl border border-[#EDEAE6] bg-white shadow-sm">
@@ -1182,10 +1128,218 @@ export default function DoctorPrescriptions({
         <div
           className={cn(
             "lg:hidden",
-            sendOptionsOpen ? "h-[calc(9.5rem+env(safe-area-inset-bottom))]" : "h-[calc(6.5rem+env(safe-area-inset-bottom))]",
+            sendOptionsOpen
+              ? "h-[calc(9.5rem+env(safe-area-inset-bottom))]"
+              : "h-[calc(6.5rem+env(safe-area-inset-bottom))]",
           )}
           aria-hidden
         />
+        </div>
+
+        {/* Sticky Rx summary + dispatch rail — desktop */}
+        <aside className="hidden lg:sticky lg:top-4 lg:block lg:self-start lg:space-y-4">
+          {/* Live Rx summary */}
+          <div className="overflow-hidden rounded-2xl border border-[#1B3B2E]/15 bg-white shadow-sm">
+            <div className="flex items-center gap-2.5 border-b border-[#EDEAE6] bg-gradient-to-r from-[#F4FAF8] to-white px-4 py-3">
+              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#1B3B2E] text-white">
+                <ClipboardList className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-[#1B3B2E]">Prescription</p>
+                <p className="truncate text-[11px] text-[#8A8F8C]">
+                  {patient.name} · {patient.age}y {patient.gender === "M" ? "M" : "F"} ·{" "}
+                  {draft.lines.length} med · {draft.rxType}
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 px-4 py-3.5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">
+                  Diagnosis
+                </p>
+                <p
+                  className={cn(
+                    "mt-0.5 text-sm",
+                    draft.diagnosis.trim()
+                      ? "font-medium text-[#1B3B2E]"
+                      : "italic text-[#C45C4A]",
+                  )}
+                >
+                  {draft.diagnosis.trim() ? draft.diagnosis : "Not set — required"}
+                  {draft.diagnosisIcd ? (
+                    <span className="ml-1 font-mono text-xs text-[#8A8F8C]">
+                      {draft.diagnosisIcd}
+                    </span>
+                  ) : null}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#8A8F8C]">
+                  Medications ({draft.lines.length})
+                </p>
+                {draft.lines.length === 0 ? (
+                  <p className="mt-0.5 text-sm italic text-[#C45C4A]">None added — required</p>
+                ) : (
+                  <ul className="mt-1 space-y-1.5">
+                    {draft.lines.map((line) => {
+                      const d = DRUGS.find((x) => x.id === line.drug_id);
+                      return (
+                        <li key={line.key} className="text-[13px] leading-snug">
+                          <span className="font-medium text-[#1B3B2E]">
+                            {d ? d.generic_name : line.drug_id}
+                          </span>
+                          <span className="ml-1 text-xs text-[#8A8F8C]">
+                            {d?.strength ? `${d.strength} · ` : ""}
+                            {line.frequency} · {line.durationDays}d
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Ready-to-send checklist */}
+          <div className="rounded-2xl border border-[#EDEAE6] bg-white p-4 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Ready to send
+            </p>
+            <ul className="mt-3 space-y-2">
+              <li className="flex items-start gap-2 text-sm">
+                {draft.diagnosis.trim() ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
+                ) : (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
+                )}
+                <span className={draft.diagnosis.trim() ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
+                  <span className="font-semibold">Diagnosis</span>
+                  {draft.diagnosis.trim() ? " added" : " — required"}
+                </span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                {draft.lines.length > 0 ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
+                ) : (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
+                )}
+                <span className={draft.lines.length > 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
+                  <span className="font-semibold">Medication</span>
+                  {draft.lines.length > 0
+                    ? ` — ${draft.lines.length} on Rx`
+                    : " — add at least one"}
+                </span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                {criticalAlerts.length === 0 ? (
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2C7873]" />
+                ) : (
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#C45C4A]" />
+                )}
+                <span className={criticalAlerts.length === 0 ? "text-[#1B3B2E]" : "text-[#C45C4A]"}>
+                  <span className="font-semibold">Safety</span>
+                  {criticalAlerts.length === 0
+                    ? " — no blocks"
+                    : ` — ${criticalAlerts.length} critical`}
+                </span>
+              </li>
+            </ul>
+
+            {criticalAlerts.length > 0 && (
+              <div className="mt-4 space-y-2 rounded-xl border border-[#C45C4A]/30 bg-[#FDF5F4] p-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#C45C4A]">
+                  Must fix before sending
+                </p>
+                {criticalAlerts.map((alert) => (
+                  <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
+                    <p className="text-sm font-semibold text-[#8B3A32]">{alert.title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
+                    {alert.id.startsWith("allergy-") && alert.id !== "allergy-doc" ? (
+                      <p className="mt-1 text-[11px] font-medium text-[#B8735D]">
+                        → Remove the conflicting drug from the list.
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {warningAlerts.length > 0 && (
+              <div className="mt-3 space-y-2 rounded-xl border border-[#E9A820]/30 bg-[#FFFBF0] p-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#92400E]">
+                  Review (does not block)
+                </p>
+                {warningAlerts.map((alert) => (
+                  <div key={alert.id} className="rounded-lg bg-white/80 px-3 py-2">
+                    <p className="text-sm font-semibold text-[#92400E]">{alert.title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-[#5C635F]">{alert.detail}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Dispatch */}
+          <div className="rounded-2xl border border-[#1B3B2E]/15 bg-gradient-to-b from-[#F4FAF8] to-white p-4 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A8F8C]">
+              Dispatch e-prescription
+            </p>
+            <div className="mt-3 grid gap-2">
+              <button
+                type="button"
+                disabled={!canDispatch}
+                onClick={() => void dispatchPrescription("pharmacy")}
+                className="flex items-center gap-2.5 rounded-xl border border-[#EDEAE6] bg-white px-3 py-2.5 text-left transition-colors hover:border-[#2C7873]/40 hover:bg-[#FAFDFC] disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Building2 className="h-4 w-4 shrink-0 text-[#2C7873]" />
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-[#1B3B2E]">
+                    Send to pharmacy
+                  </span>
+                  <span className="block truncate text-xs text-[#8A8F8C]">
+                    {selectedPharmacy?.name ?? "Pharmacy desk"}
+                    {selectedPharmacy?.distance ? ` · ${selectedPharmacy.distance}` : ""}
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
+                disabled={!canDispatch}
+                onClick={() => void dispatchPrescription("patient")}
+                className="flex items-center gap-2.5 rounded-xl border border-[#EDEAE6] bg-white px-3 py-2.5 text-left transition-colors hover:border-[#B8735D]/40 hover:bg-[#FDF8F5] disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Smartphone className="h-4 w-4 shrink-0 text-[#B8735D]" />
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-[#1B3B2E]">Send to patient</span>
+                  <span className="block truncate text-xs text-[#8A8F8C]">
+                    {patient.name} · patient app
+                  </span>
+                </span>
+              </button>
+            </div>
+
+            <button
+              type="button"
+              disabled={!canDispatch}
+              onClick={() => void dispatchPrescription("both")}
+              className="mt-2.5 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#1B3B2E] text-sm font-semibold text-white transition-colors hover:bg-[#2C7873] disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Send className="h-4 w-4" />
+              {sending ? "Sending…" : "Send to pharmacy & patient"}
+            </button>
+
+            {!canDispatch && (
+              <p className="mt-2.5 text-center text-xs text-[#8A8F8C]">
+                {missingFields.length > 0
+                  ? `Complete: ${missingFields.join(", ")}`
+                  : criticalAlerts.length > 0
+                    ? "Fix critical safety alerts above"
+                    : "Complete the checklist to enable send"}
+              </p>
+            )}
+          </div>
+        </aside>
       </div>
 
       {showPreview && (
@@ -1204,7 +1358,11 @@ export default function DoctorPrescriptions({
         />
       ) : null}
 
-      <DrugMonographSheet drugId={monographDrugId} open={Boolean(monographDrugId)} onOpenChange={(o) => !o && setMonographDrugId(null)} />
+      <DrugMonographSheet
+        drugId={monographDrugId}
+        open={Boolean(monographDrugId)}
+        onOpenChange={(o) => !o && setMonographDrugId(null)}
+      />
 
       {/* Mobile sticky action bar — one row; more options expand on demand */}
       <div className="fixed inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-30 border-t border-[#EDEAE6] bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.08)] lg:hidden">
@@ -1243,7 +1401,10 @@ export default function DoctorPrescriptions({
               patient={patient}
               draftDrugIds={draftDrugIds}
               onApplySuggestion={applySuggestion}
-              alertCount={safetyAlerts.filter((a) => a.severity === "critical" || a.severity === "warning").length}
+              alertCount={
+                safetyAlerts.filter((a) => a.severity === "critical" || a.severity === "warning")
+                  .length
+              }
             />
           )}
           <button
@@ -1259,9 +1420,7 @@ export default function DoctorPrescriptions({
             onClick={handlePrimarySend}
             className={cn(
               "flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-full text-sm font-semibold",
-              canDispatch
-                ? "bg-[#1B3B2E] text-white"
-                : "bg-[#E8E6E1] text-[#5C635F]",
+              canDispatch ? "bg-[#1B3B2E] text-white" : "bg-[#E8E6E1] text-[#5C635F]",
             )}
           >
             <Send className="h-4 w-4 shrink-0" />
@@ -1274,7 +1433,11 @@ export default function DoctorPrescriptions({
             aria-label={sendOptionsOpen ? "Hide send options" : "More send options"}
             aria-expanded={sendOptionsOpen}
           >
-            {sendOptionsOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+            {sendOptionsOpen ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronUp className="h-4 w-4" />
+            )}
           </button>
         </div>
       </div>

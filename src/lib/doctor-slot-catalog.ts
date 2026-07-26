@@ -1,21 +1,10 @@
 import { getProfileStore } from "@/lib/doctor-profile-store";
-import {
-  DEFAULT_SCHEDULE,
-  type ScheduleSlot,
-} from "@/lib/doctor-profile-workspace";
+import { DEFAULT_SCHEDULE, type ScheduleSlot } from "@/lib/doctor-profile-workspace";
 
 /** Dr. Eleanor Thorne (d1) shares live slot capacity with the doctor portal schedule. */
 const ELEANOR_DOCTOR_ID = "d1";
 
-const GENERIC_SLOT_TIMES = [
-  "09:00",
-  "09:30",
-  "11:15",
-  "14:00",
-  "14:30",
-  "15:15",
-  "16:00",
-] as const;
+const GENERIC_SLOT_TIMES = ["09:00", "09:30", "11:15", "14:00", "14:30", "15:15", "16:00"] as const;
 
 function genericSlots(price = 800): ScheduleSlot[] {
   return GENERIC_SLOT_TIMES.map((time, i) => ({

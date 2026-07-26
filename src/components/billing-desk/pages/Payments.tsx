@@ -10,7 +10,9 @@ export default function BillingPayments() {
     <div className="space-y-5" data-testid="billing-payments">
       <div className="surface flex items-center justify-between px-5 py-4">
         <div>
-          <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">Total logged</div>
+          <div className="font-mono text-[10px] uppercase tracking-wider text-ink-400">
+            Total logged
+          </div>
           <div className="font-heading text-2xl font-semibold tabular-nums">{fmtLedger(total)}</div>
         </div>
         <div className="text-right text-[12px] text-ink-500">{payments.length} transactions</div>

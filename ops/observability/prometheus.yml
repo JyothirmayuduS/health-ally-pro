@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
+rule_files:
+  - /etc/prometheus/alerts.yml
+
+scrape_configs:
+  # Scrape via Docker DNS service name (same compose network). Host header is "app:3000";
+  # vite preview allowedHosts must permit this (see vite.config.ts).
+  - job_name: medora-app
+    metrics_path: /api/metrics
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/metrics_bearer_token
+    static_configs:
+      - targets: ["app:3000"]
+        labels:
+          service: medora
+          env: local

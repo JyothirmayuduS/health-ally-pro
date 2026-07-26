@@ -66,7 +66,8 @@ function seed(): PatientRxRecord[] {
       ],
       doctor_name: "Dr. Lucien Park",
       doctor_specialty: "Endocrinology",
-      patientInstructions: "Take 30–60 min before breakfast. Separate from calcium/iron by 4 hours.",
+      patientInstructions:
+        "Take 30–60 min before breakfast. Separate from calcium/iron by 4 hours.",
       sent_at: new Date(now - 12 * 86400000).toISOString(),
       status: "active",
     },
@@ -137,7 +138,10 @@ export function getPatientPrescription(rxId: string): PatientRxRecord | undefine
 }
 
 export function pushPatientPrescription(
-  input: Omit<PatientRxRecord, "id" | "status"> & { id?: string; status?: PatientRxRecord["status"] },
+  input: Omit<PatientRxRecord, "id" | "status"> & {
+    id?: string;
+    status?: PatientRxRecord["status"];
+  },
 ): PatientRxRecord {
   const record: PatientRxRecord = {
     ...input,
@@ -151,7 +155,9 @@ export function pushPatientPrescription(
   return record;
 }
 
-export function importPatientPrescriptionFromSync(envelope: import("./patient-rx-sync-types").PatientRxSyncEnvelope): PatientRxRecord {
+export function importPatientPrescriptionFromSync(
+  envelope: import("./patient-rx-sync-types").PatientRxSyncEnvelope,
+): PatientRxRecord {
   const existing = seed().find((r) => r.rx_number === envelope.rx_number);
   const record: PatientRxRecord = {
     id: envelope.id,
@@ -185,5 +191,9 @@ export function formatRxRelative(iso: string): string {
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
   if (days < 7) return `${days}d ago`;
-  return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }

@@ -55,13 +55,7 @@ function useIsMobileBelowLg() {
   return isMobile;
 }
 
-function PatientAvatarChip({
-  patientId,
-  size = "sm",
-}: {
-  patientId: string;
-  size?: "sm" | "md";
-}) {
+function PatientAvatarChip({ patientId, size = "sm" }: { patientId: string; size?: "sm" | "md" }) {
   const patient = getPanelPatient(patientId);
   if (!patient) return null;
   return (
@@ -139,7 +133,7 @@ function VisitDetailCard({
             ) : (
               <MapPin className="h-3.5 w-3.5" strokeWidth={1.75} />
             )}
-            {visit.mode === "video" ? "Video" : visit.room ?? "In-person"}
+            {visit.mode === "video" ? "Video" : (visit.room ?? "In-person")}
           </span>
         </div>
         {visit.notes && (
@@ -194,7 +188,9 @@ function DayDetailPanel({
     <div className="space-y-4">
       <div>
         <p className="text-[10px] font-semibold tracking-[0.12em] text-[#8A8F8C]">SELECTED DAY</p>
-        <h2 className="font-serif text-xl font-semibold text-[#1B3B2E]">{formatDisplayDate(date)}</h2>
+        <h2 className="font-serif text-xl font-semibold text-[#1B3B2E]">
+          {formatDisplayDate(date)}
+        </h2>
         <p className="mt-0.5 text-sm text-[#8A8F8C]">
           {visits.length === 0
             ? "No visits scheduled"
@@ -206,7 +202,7 @@ function DayDetailPanel({
         <ProfileEmptyState
           title="No appointments"
           description="This day is clear. Bookings from reception and your slot settings will appear here."
-            action={
+          action={
             <Link
               to="/doctor/settings/slots"
               className="rounded-xl bg-[#1B3B2E] px-4 py-2 text-sm font-semibold text-white"
@@ -316,11 +312,12 @@ export function DoctorScheduleCalendarScreen({ selectedDateKey }: { selectedDate
   }, [selectedDate]);
 
   const weekDays = useMemo(
-    () => Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(weekStart);
-      d.setDate(weekStart.getDate() + i);
-      return d;
-    }),
+    () =>
+      Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(weekStart);
+        d.setDate(weekStart.getDate() + i);
+        return d;
+      }),
     [weekStart],
   );
 
@@ -385,7 +382,8 @@ export function DoctorScheduleCalendarScreen({ selectedDateKey }: { selectedDate
       <div
         className={cn(
           "space-y-5",
-          !isMobileLayout && "lg:grid lg:grid-cols-[minmax(300px,1fr)_minmax(320px,400px)] lg:items-start lg:gap-6 lg:space-y-0",
+          !isMobileLayout &&
+            "lg:grid lg:grid-cols-[minmax(300px,1fr)_minmax(320px,400px)] lg:items-start lg:gap-6 lg:space-y-0",
         )}
       >
         <div className="rounded-[22px] border border-[#EDEAE6] bg-white p-4 shadow-sm sm:p-5">
@@ -446,7 +444,11 @@ export function DoctorScheduleCalendarScreen({ selectedDateKey }: { selectedDate
                       onClick={() => selectDate(date)}
                       className={cn(
                         "flex min-h-[72px] flex-col items-center rounded-xl p-1 text-center",
-                        isSelected ? "bg-[#1B3B2E] text-white" : isToday ? "bg-[#F0DDD6]" : "hover:bg-[#FAF9F7]",
+                        isSelected
+                          ? "bg-[#1B3B2E] text-white"
+                          : isToday
+                            ? "bg-[#F0DDD6]"
+                            : "hover:bg-[#FAF9F7]",
                       )}
                     >
                       <span className="text-[10px] font-medium opacity-80">
@@ -454,7 +456,12 @@ export function DoctorScheduleCalendarScreen({ selectedDateKey }: { selectedDate
                       </span>
                       <span className="text-lg font-bold tabular-nums">{date.getDate()}</span>
                       {count > 0 && (
-                        <span className={cn("text-[10px] font-bold", isSelected ? "text-white/80" : "text-[#B8735D]")}>
+                        <span
+                          className={cn(
+                            "text-[10px] font-bold",
+                            isSelected ? "text-white/80" : "text-[#B8735D]",
+                          )}
+                        >
                           {count}
                         </span>
                       )}
@@ -465,98 +472,100 @@ export function DoctorScheduleCalendarScreen({ selectedDateKey }: { selectedDate
             </div>
           ) : (
             <>
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-[#1B3B2E]">{monthLabel}</h2>
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={prevMonth}
-                className="grid h-9 w-9 place-items-center rounded-xl border border-[#E8E4DF] text-[#8A8F8C] hover:bg-[#FAF9F7]"
-                aria-label="Previous month"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => selectDate(today)}
-                className="rounded-xl px-3 py-2 text-xs font-semibold text-[#B8735D] hover:bg-[#F0DDD6]/40"
-              >
-                Today
-              </button>
-              <button
-                type="button"
-                onClick={nextMonth}
-                className="grid h-9 w-9 place-items-center rounded-xl border border-[#E8E4DF] text-[#8A8F8C] hover:bg-[#FAF9F7]"
-                aria-label="Next month"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="mb-2 grid grid-cols-7 gap-1">
-            {WEEKDAYS.map((day) => (
-              <div
-                key={day}
-                className="py-1 text-center text-[10px] font-semibold tracking-wide text-[#8A8F8C]"
-              >
-                {day}
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-[#1B3B2E]">{monthLabel}</h2>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={prevMonth}
+                    className="grid h-9 w-9 place-items-center rounded-xl border border-[#E8E4DF] text-[#8A8F8C] hover:bg-[#FAF9F7]"
+                    aria-label="Previous month"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => selectDate(today)}
+                    className="rounded-xl px-3 py-2 text-xs font-semibold text-[#B8735D] hover:bg-[#F0DDD6]/40"
+                  >
+                    Today
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextMonth}
+                    className="grid h-9 w-9 place-items-center rounded-xl border border-[#E8E4DF] text-[#8A8F8C] hover:bg-[#FAF9F7]"
+                    aria-label="Next month"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
 
-          <div className="grid grid-cols-7 gap-1">
-            {calendarCells.map((day, idx) => {
-              if (day == null) {
-                return <div key={`empty-${idx}`} className="aspect-square" />;
-              }
-              const date = new Date(viewYear, viewMonth, day);
-              const dateKey = formatDateKey(date);
-              const count = visitCounts.get(dateKey) ?? 0;
-              const patientIds = patientIdsForDate(dateKey, today);
-              const isSelected = dateKey === selectedKey;
-              const isToday = dateKey === todayKey;
-
-              return (
-                <button
-                  key={dateKey}
-                  type="button"
-                  onClick={() => selectDate(date)}
-                  className={cn(
-                    "flex aspect-square flex-col items-center justify-start rounded-xl p-1 transition-colors",
-                    isSelected
-                      ? "bg-[#1B3B2E] text-white ring-2 ring-[#B8735D]/30"
-                      : isToday
-                        ? "bg-[#F0DDD6] text-[#1B3B2E]"
-                        : count > 0
-                          ? "bg-[#E8EFE6]/60 text-[#1B3B2E] hover:bg-[#E8EFE6]"
-                          : "text-[#8A8F8C] hover:bg-[#FAF9F7]",
-                  )}
-                >
-                  <span className={cn("text-sm font-bold tabular-nums", isSelected && "text-white")}>
+              <div className="mb-2 grid grid-cols-7 gap-1">
+                {WEEKDAYS.map((day) => (
+                  <div
+                    key={day}
+                    className="py-1 text-center text-[10px] font-semibold tracking-wide text-[#8A8F8C]"
+                  >
                     {day}
-                  </span>
-                  {count > 0 && (
-                    <div className="mt-0.5 flex flex-wrap justify-center gap-0.5">
-                      {patientIds.slice(0, 3).map((id) => (
-                        <PatientAvatarChip key={id} patientId={id} />
-                      ))}
-                    </div>
-                  )}
-                  {count > 3 && (
-                    <span
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-7 gap-1">
+                {calendarCells.map((day, idx) => {
+                  if (day == null) {
+                    return <div key={`empty-${idx}`} className="aspect-square" />;
+                  }
+                  const date = new Date(viewYear, viewMonth, day);
+                  const dateKey = formatDateKey(date);
+                  const count = visitCounts.get(dateKey) ?? 0;
+                  const patientIds = patientIdsForDate(dateKey, today);
+                  const isSelected = dateKey === selectedKey;
+                  const isToday = dateKey === todayKey;
+
+                  return (
+                    <button
+                      key={dateKey}
+                      type="button"
+                      onClick={() => selectDate(date)}
                       className={cn(
-                        "mt-0.5 text-[9px] font-bold",
-                        isSelected ? "text-white/80" : "text-[#8A8F8C]",
+                        "flex aspect-square flex-col items-center justify-start rounded-xl p-1 transition-colors",
+                        isSelected
+                          ? "bg-[#1B3B2E] text-white ring-2 ring-[#B8735D]/30"
+                          : isToday
+                            ? "bg-[#F0DDD6] text-[#1B3B2E]"
+                            : count > 0
+                              ? "bg-[#E8EFE6]/60 text-[#1B3B2E] hover:bg-[#E8EFE6]"
+                              : "text-[#8A8F8C] hover:bg-[#FAF9F7]",
                       )}
                     >
-                      +{count - 3}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+                      <span
+                        className={cn("text-sm font-bold tabular-nums", isSelected && "text-white")}
+                      >
+                        {day}
+                      </span>
+                      {count > 0 && (
+                        <div className="mt-0.5 flex flex-wrap justify-center gap-0.5">
+                          {patientIds.slice(0, 3).map((id) => (
+                            <PatientAvatarChip key={id} patientId={id} />
+                          ))}
+                        </div>
+                      )}
+                      {count > 3 && (
+                        <span
+                          className={cn(
+                            "mt-0.5 text-[9px] font-bold",
+                            isSelected ? "text-white/80" : "text-[#8A8F8C]",
+                          )}
+                        >
+                          +{count - 3}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>
