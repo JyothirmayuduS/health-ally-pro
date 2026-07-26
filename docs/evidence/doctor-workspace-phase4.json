@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-07-26T04:11:56.135Z",
+  "phase": "doctor-workspace-phase4",
+  "architecture": {
+    "consultation_bridge": "doctor_consultations",
+    "reuses_opd_queue_appointments": true,
+    "reuses_emr_soap_diagnoses": true,
+    "worker_only_mutations": true,
+    "allergy_safety_on_rx": true
+  },
+  "schema": {
+    "migration": "supabase/migrations/20260726190000_doctor_workspace_phase4.sql",
+    "tables": [
+      "doctor_consultations",
+      "clinical_tasks",
+      "clinical_referrals",
+      "radiology_orders"
+    ],
+    "prescription_allergy_checked": true,
+    "postgrest_revoked": true
+  },
+  "api": {
+    "route": "/api/hospital/doctor-workspace",
+    "actions": [
+      "board",
+      "consultation",
+      "start",
+      "complete",
+      "rx",
+      "lab",
+      "radiology",
+      "referral",
+      "task",
+      "complete_task",
+      "follow_up"
+    ],
+    "audit_scheduled": true
+  },
+  "ui": {
+    "route": "/doctor/workspace",
+    "screen": true,
+    "primary_nav": true
+  },
+  "tests": {
+    "unit": "src/lib/doctor-workspace/doctor-workspace.test.ts",
+    "security": "src/server/doctor-workspace/security-inventory.test.ts",
+    "e2e": "e2e/doctor-workspace-phase4.spec.ts"
+  },
+  "privacy": {
+    "contains_phi": false,
+    "contains_tokens": false,
+    "contains_signed_urls": false
+  },
+  "limitations": [
+    "Follow-up booking requires a resolvable doctor staff id in the hospital.",
+    "Legacy prescription and specialty desks remain available as secondary surfaces."
+  ]
+}

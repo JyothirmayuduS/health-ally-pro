@@ -32,10 +32,10 @@ export type DoctorNavItem = {
 /** Primary clinician navigation — single source of truth */
 export const DOCTOR_PRIMARY_NAV: DoctorNavItem[] = [
   { to: "/doctor", label: "Home", icon: LayoutDashboard, exact: true },
+  { to: "/doctor/workspace", label: "Workspace", icon: Stethoscope },
   { to: "/doctor/patients", label: "Patients", icon: Users },
   { to: "/doctor/queue", label: "Queue", icon: ListOrdered },
   { to: "/doctor/reports", label: "Inbox", icon: ClipboardList },
-  { to: "/doctor/settings", label: "Profile", icon: Settings },
 ];
 
 /** Secondary clinical tools — sidebar (desktop) + FAB (mobile) only */
@@ -66,6 +66,12 @@ export type DoctorModuleLink = {
 };
 
 export const DOCTOR_CLINICAL_MODULES: DoctorModuleLink[] = [
+  {
+    to: "/doctor/workspace",
+    label: "Doctor workspace",
+    description: "Today, queue, consult, orders & tasks",
+    icon: Stethoscope,
+  },
   {
     to: "/doctor/specialty",
     label: "Specialty desk",

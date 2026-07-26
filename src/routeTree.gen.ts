@@ -89,6 +89,7 @@ import { Route as DoctorSettingsRouteImport } from './routes/doctor.settings'
 import { Route as DoctorSpecialtyRouteImport } from './routes/doctor.specialty'
 import { Route as DoctorStatisticsRouteImport } from './routes/doctor.statistics'
 import { Route as DoctorVitalsRouteImport } from './routes/doctor.vitals'
+import { Route as DoctorWorkspaceRouteImport } from './routes/doctor.workspace'
 import { Route as ExerciseIndexRouteImport } from './routes/exercise.index'
 import { Route as ExerciseRoutineIdRouteImport } from './routes/exercise.$routineId'
 import { Route as HealthIndexRouteImport } from './routes/health.index'
@@ -192,6 +193,7 @@ import { Route as ApiExerciseYoutubeRouteImport } from './routes/api/exercise/yo
 import { Route as ApiHospitalAppointmentsRouteImport } from './routes/api/hospital/appointments'
 import { Route as ApiHospitalAuditRouteImport } from './routes/api/hospital/audit'
 import { Route as ApiHospitalAuditDlqRouteImport } from './routes/api/hospital/audit-dlq'
+import { Route as ApiHospitalDoctorWorkspaceRouteImport } from './routes/api/hospital/doctor-workspace'
 import { Route as ApiHospitalPatientsRouteImport } from './routes/api/hospital/patients'
 import { Route as ApiHospitalPersistRouteImport } from './routes/api/hospital/persist'
 import { Route as ApiHospitalPhiRouteImport } from './routes/api/hospital/phi'
@@ -626,6 +628,11 @@ const DoctorStatisticsRoute = DoctorStatisticsRouteImport.update({
 const DoctorVitalsRoute = DoctorVitalsRouteImport.update({
   id: '/vitals',
   path: '/vitals',
+  getParentRoute: () => DoctorRoute,
+} as any)
+const DoctorWorkspaceRoute = DoctorWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
   getParentRoute: () => DoctorRoute,
 } as any)
 const ExerciseIndexRoute = ExerciseIndexRouteImport.update({
@@ -1146,6 +1153,12 @@ const ApiHospitalAuditDlqRoute = ApiHospitalAuditDlqRouteImport.update({
   path: '/api/hospital/audit-dlq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHospitalDoctorWorkspaceRoute =
+  ApiHospitalDoctorWorkspaceRouteImport.update({
+    id: '/api/hospital/doctor-workspace',
+    path: '/api/hospital/doctor-workspace',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiHospitalPatientsRoute = ApiHospitalPatientsRouteImport.update({
   id: '/api/hospital/patients',
   path: '/api/hospital/patients',
@@ -1407,6 +1420,7 @@ export interface FileRoutesByFullPath {
   '/doctor/specialty': typeof DoctorSpecialtyRoute
   '/doctor/statistics': typeof DoctorStatisticsRoute
   '/doctor/vitals': typeof DoctorVitalsRoute
+  '/doctor/workspace': typeof DoctorWorkspaceRoute
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
   '/lab/catalog': typeof LabCatalogRoute
   '/lab/collection': typeof LabCollectionRoute
@@ -1516,6 +1530,7 @@ export interface FileRoutesByFullPath {
   '/api/hospital/appointments': typeof ApiHospitalAppointmentsRoute
   '/api/hospital/audit': typeof ApiHospitalAuditRoute
   '/api/hospital/audit-dlq': typeof ApiHospitalAuditDlqRoute
+  '/api/hospital/doctor-workspace': typeof ApiHospitalDoctorWorkspaceRoute
   '/api/hospital/patients': typeof ApiHospitalPatientsRouteWithChildren
   '/api/hospital/persist': typeof ApiHospitalPersistRoute
   '/api/hospital/phi': typeof ApiHospitalPhiRoute
@@ -1616,6 +1631,7 @@ export interface FileRoutesByTo {
   '/doctor/specialty': typeof DoctorSpecialtyRoute
   '/doctor/statistics': typeof DoctorStatisticsRoute
   '/doctor/vitals': typeof DoctorVitalsRoute
+  '/doctor/workspace': typeof DoctorWorkspaceRoute
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
   '/lab/catalog': typeof LabCatalogRoute
   '/lab/collection': typeof LabCollectionRoute
@@ -1724,6 +1740,7 @@ export interface FileRoutesByTo {
   '/api/hospital/appointments': typeof ApiHospitalAppointmentsRoute
   '/api/hospital/audit': typeof ApiHospitalAuditRoute
   '/api/hospital/audit-dlq': typeof ApiHospitalAuditDlqRoute
+  '/api/hospital/doctor-workspace': typeof ApiHospitalDoctorWorkspaceRoute
   '/api/hospital/patients': typeof ApiHospitalPatientsRouteWithChildren
   '/api/hospital/persist': typeof ApiHospitalPersistRoute
   '/api/hospital/phi': typeof ApiHospitalPhiRoute
@@ -1835,6 +1852,7 @@ export interface FileRoutesById {
   '/doctor/specialty': typeof DoctorSpecialtyRoute
   '/doctor/statistics': typeof DoctorStatisticsRoute
   '/doctor/vitals': typeof DoctorVitalsRoute
+  '/doctor/workspace': typeof DoctorWorkspaceRoute
   '/exercise/$routineId': typeof ExerciseRoutineIdRoute
   '/lab/catalog': typeof LabCatalogRoute
   '/lab/collection': typeof LabCollectionRoute
@@ -1944,6 +1962,7 @@ export interface FileRoutesById {
   '/api/hospital/appointments': typeof ApiHospitalAppointmentsRoute
   '/api/hospital/audit': typeof ApiHospitalAuditRoute
   '/api/hospital/audit-dlq': typeof ApiHospitalAuditDlqRoute
+  '/api/hospital/doctor-workspace': typeof ApiHospitalDoctorWorkspaceRoute
   '/api/hospital/patients': typeof ApiHospitalPatientsRouteWithChildren
   '/api/hospital/persist': typeof ApiHospitalPersistRoute
   '/api/hospital/phi': typeof ApiHospitalPhiRoute
@@ -2057,6 +2076,7 @@ export interface FileRouteTypes {
     | '/doctor/specialty'
     | '/doctor/statistics'
     | '/doctor/vitals'
+    | '/doctor/workspace'
     | '/exercise/$routineId'
     | '/lab/catalog'
     | '/lab/collection'
@@ -2166,6 +2186,7 @@ export interface FileRouteTypes {
     | '/api/hospital/appointments'
     | '/api/hospital/audit'
     | '/api/hospital/audit-dlq'
+    | '/api/hospital/doctor-workspace'
     | '/api/hospital/patients'
     | '/api/hospital/persist'
     | '/api/hospital/phi'
@@ -2266,6 +2287,7 @@ export interface FileRouteTypes {
     | '/doctor/specialty'
     | '/doctor/statistics'
     | '/doctor/vitals'
+    | '/doctor/workspace'
     | '/exercise/$routineId'
     | '/lab/catalog'
     | '/lab/collection'
@@ -2374,6 +2396,7 @@ export interface FileRouteTypes {
     | '/api/hospital/appointments'
     | '/api/hospital/audit'
     | '/api/hospital/audit-dlq'
+    | '/api/hospital/doctor-workspace'
     | '/api/hospital/patients'
     | '/api/hospital/persist'
     | '/api/hospital/phi'
@@ -2484,6 +2507,7 @@ export interface FileRouteTypes {
     | '/doctor/specialty'
     | '/doctor/statistics'
     | '/doctor/vitals'
+    | '/doctor/workspace'
     | '/exercise/$routineId'
     | '/lab/catalog'
     | '/lab/collection'
@@ -2593,6 +2617,7 @@ export interface FileRouteTypes {
     | '/api/hospital/appointments'
     | '/api/hospital/audit'
     | '/api/hospital/audit-dlq'
+    | '/api/hospital/doctor-workspace'
     | '/api/hospital/patients'
     | '/api/hospital/persist'
     | '/api/hospital/phi'
@@ -2689,6 +2714,7 @@ export interface RootRouteChildren {
   ApiHospitalAppointmentsRoute: typeof ApiHospitalAppointmentsRoute
   ApiHospitalAuditRoute: typeof ApiHospitalAuditRoute
   ApiHospitalAuditDlqRoute: typeof ApiHospitalAuditDlqRoute
+  ApiHospitalDoctorWorkspaceRoute: typeof ApiHospitalDoctorWorkspaceRoute
   ApiHospitalPatientsRoute: typeof ApiHospitalPatientsRouteWithChildren
   ApiHospitalPersistRoute: typeof ApiHospitalPersistRoute
   ApiHospitalPhiRoute: typeof ApiHospitalPhiRoute
@@ -3260,6 +3286,13 @@ declare module '@tanstack/react-router' {
       path: '/vitals'
       fullPath: '/doctor/vitals'
       preLoaderRoute: typeof DoctorVitalsRouteImport
+      parentRoute: typeof DoctorRoute
+    }
+    '/doctor/workspace': {
+      id: '/doctor/workspace'
+      path: '/workspace'
+      fullPath: '/doctor/workspace'
+      preLoaderRoute: typeof DoctorWorkspaceRouteImport
       parentRoute: typeof DoctorRoute
     }
     '/exercise/': {
@@ -3983,6 +4016,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHospitalAuditDlqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hospital/doctor-workspace': {
+      id: '/api/hospital/doctor-workspace'
+      path: '/api/hospital/doctor-workspace'
+      fullPath: '/api/hospital/doctor-workspace'
+      preLoaderRoute: typeof ApiHospitalDoctorWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hospital/patients': {
       id: '/api/hospital/patients'
       path: '/api/hospital/patients'
@@ -4432,6 +4472,7 @@ interface DoctorRouteChildren {
   DoctorSpecialtyRoute: typeof DoctorSpecialtyRoute
   DoctorStatisticsRoute: typeof DoctorStatisticsRoute
   DoctorVitalsRoute: typeof DoctorVitalsRoute
+  DoctorWorkspaceRoute: typeof DoctorWorkspaceRoute
   DoctorIndexRoute: typeof DoctorIndexRoute
   DoctorEmrPatientIdRoute: typeof DoctorEmrPatientIdRoute
 }
@@ -4455,6 +4496,7 @@ const DoctorRouteChildren: DoctorRouteChildren = {
   DoctorSpecialtyRoute: DoctorSpecialtyRoute,
   DoctorStatisticsRoute: DoctorStatisticsRoute,
   DoctorVitalsRoute: DoctorVitalsRoute,
+  DoctorWorkspaceRoute: DoctorWorkspaceRoute,
   DoctorIndexRoute: DoctorIndexRoute,
   DoctorEmrPatientIdRoute: DoctorEmrPatientIdRoute,
 }
@@ -4786,6 +4828,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHospitalAppointmentsRoute: ApiHospitalAppointmentsRoute,
   ApiHospitalAuditRoute: ApiHospitalAuditRoute,
   ApiHospitalAuditDlqRoute: ApiHospitalAuditDlqRoute,
+  ApiHospitalDoctorWorkspaceRoute: ApiHospitalDoctorWorkspaceRoute,
   ApiHospitalPatientsRoute: ApiHospitalPatientsRouteWithChildren,
   ApiHospitalPersistRoute: ApiHospitalPersistRoute,
   ApiHospitalPhiRoute: ApiHospitalPhiRoute,
