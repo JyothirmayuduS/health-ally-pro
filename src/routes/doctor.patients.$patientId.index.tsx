@@ -16,6 +16,7 @@ import { BodyAnatomyMarker } from "@/components/clinical/BodyAnatomyMarker";
 import { DoctorAdherenceInbox } from "@/components/doctor/DoctorAdherenceInbox";
 import { PatientChartActionRail } from "@/components/doctor/PatientChartActionRail";
 import { PatientProfileWorkspace } from "@/components/patient-management/PatientProfileWorkspace";
+import { EmrWorkspace } from "@/components/emr/EmrWorkspace";
 import { ChartVaccinesPanel, vaccineDueCount } from "@/components/doctor/immunizations/ChartVaccinesPanel";
 import {
   HistoryDocumentsPanel,
@@ -244,6 +245,18 @@ function PatientChart() {
       )}
 
       <PatientChartActionRail patientId={patientId} />
+
+      <section
+        id="patient-emr-workspace"
+        className="rounded-[20px] border border-[#EDEAE6] bg-white p-4 shadow-[0_2px_14px_rgba(27,59,46,0.05)]"
+      >
+        <EmrWorkspace
+          patientId={patientId}
+          patientName={patient?.name}
+          embedded
+          canWrite
+        />
+      </section>
 
       <section
         id="patient-management-profile"

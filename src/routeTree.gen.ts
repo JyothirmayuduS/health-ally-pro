@@ -201,6 +201,7 @@ import { Route as ApiPatientRxInboxRouteImport } from './routes/api/patient/rx-i
 import { Route as CareVisitsIndexRouteImport } from './routes/care.visits.index'
 import { Route as CareVisitsVisitIdRouteImport } from './routes/care.visits.$visitId'
 import { Route as DietMealIdClinicalRulesRouteImport } from './routes/diet.$mealId.clinical-rules'
+import { Route as DoctorEmrPatientIdRouteImport } from './routes/doctor.emr.$patientId'
 import { Route as DoctorPatientsIndexRouteImport } from './routes/doctor.patients.index'
 import { Route as DoctorPatientsPatientIdRouteImport } from './routes/doctor.patients.$patientId'
 import { Route as DoctorPatientsTasksRouteImport } from './routes/doctor.patients.tasks'
@@ -221,6 +222,7 @@ import { Route as ReceptionAppointmentsIndexRouteImport } from './routes/recepti
 import { Route as ReceptionAppointmentsNewRouteImport } from './routes/reception.appointments.new'
 import { Route as ReportsShareIndexRouteImport } from './routes/reports.share.index'
 import { Route as ReportsShareReportIdRouteImport } from './routes/reports.share.$reportId'
+import { Route as ApiHospitalEmrPatientIdRouteImport } from './routes/api/hospital/emr.$patientId'
 import { Route as ApiHospitalPatientsPatientIdRouteImport } from './routes/api/hospital/patients.$patientId'
 import { Route as DoctorPatientsPatientIdIndexRouteImport } from './routes/doctor.patients.$patientId.index'
 import { Route as DoctorPatientsPatientIdHistoryRouteImport } from './routes/doctor.patients.$patientId.history'
@@ -1190,6 +1192,11 @@ const DietMealIdClinicalRulesRoute = DietMealIdClinicalRulesRouteImport.update({
   path: '/clinical-rules',
   getParentRoute: () => DietMealIdRoute,
 } as any)
+const DoctorEmrPatientIdRoute = DoctorEmrPatientIdRouteImport.update({
+  id: '/emr/$patientId',
+  path: '/emr/$patientId',
+  getParentRoute: () => DoctorRoute,
+} as any)
 const DoctorPatientsIndexRoute = DoctorPatientsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -1293,6 +1300,11 @@ const ReportsShareIndexRoute = ReportsShareIndexRouteImport.update({
 const ReportsShareReportIdRoute = ReportsShareReportIdRouteImport.update({
   id: '/reports/share/$reportId',
   path: '/reports/share/$reportId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHospitalEmrPatientIdRoute = ApiHospitalEmrPatientIdRouteImport.update({
+  id: '/api/hospital/emr/$patientId',
+  path: '/api/hospital/emr/$patientId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiHospitalPatientsPatientIdRoute =
@@ -1512,6 +1524,7 @@ export interface FileRoutesByFullPath {
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
   '/diet/$mealId/clinical-rules': typeof DietMealIdClinicalRulesRoute
+  '/doctor/emr/$patientId': typeof DoctorEmrPatientIdRoute
   '/doctor/patients/$patientId': typeof DoctorPatientsPatientIdRouteWithChildren
   '/doctor/patients/tasks': typeof DoctorPatientsTasksRoute
   '/doctor/referrals/$referralId': typeof DoctorReferralsReferralIdRoute
@@ -1533,6 +1546,7 @@ export interface FileRoutesByFullPath {
   '/profile/dependents/': typeof ProfileDependentsIndexRoute
   '/reception/appointments/': typeof ReceptionAppointmentsIndexRoute
   '/reports/share/': typeof ReportsShareIndexRoute
+  '/api/hospital/emr/$patientId': typeof ApiHospitalEmrPatientIdRoute
   '/api/hospital/patients/$patientId': typeof ApiHospitalPatientsPatientIdRoute
   '/doctor/patients/$patientId/history': typeof DoctorPatientsPatientIdHistoryRoute
   '/doctor/settings/referrals/$referralId': typeof DoctorSettingsReferralsReferralIdRoute
@@ -1718,6 +1732,7 @@ export interface FileRoutesByTo {
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
   '/diet/$mealId/clinical-rules': typeof DietMealIdClinicalRulesRoute
+  '/doctor/emr/$patientId': typeof DoctorEmrPatientIdRoute
   '/doctor/patients/tasks': typeof DoctorPatientsTasksRoute
   '/doctor/referrals/$referralId': typeof DoctorReferralsReferralIdRoute
   '/doctor/settings/audit': typeof DoctorSettingsAuditRoute
@@ -1738,6 +1753,7 @@ export interface FileRoutesByTo {
   '/profile/dependents': typeof ProfileDependentsIndexRoute
   '/reception/appointments': typeof ReceptionAppointmentsIndexRoute
   '/reports/share': typeof ReportsShareIndexRoute
+  '/api/hospital/emr/$patientId': typeof ApiHospitalEmrPatientIdRoute
   '/api/hospital/patients/$patientId': typeof ApiHospitalPatientsPatientIdRoute
   '/doctor/patients/$patientId/history': typeof DoctorPatientsPatientIdHistoryRoute
   '/doctor/settings/referrals/$referralId': typeof DoctorSettingsReferralsReferralIdRoute
@@ -1936,6 +1952,7 @@ export interface FileRoutesById {
   '/api/patient/rx-inbox': typeof ApiPatientRxInboxRoute
   '/care/visits/$visitId': typeof CareVisitsVisitIdRoute
   '/diet/$mealId/clinical-rules': typeof DietMealIdClinicalRulesRoute
+  '/doctor/emr/$patientId': typeof DoctorEmrPatientIdRoute
   '/doctor/patients/$patientId': typeof DoctorPatientsPatientIdRouteWithChildren
   '/doctor/patients/tasks': typeof DoctorPatientsTasksRoute
   '/doctor/referrals/$referralId': typeof DoctorReferralsReferralIdRoute
@@ -1957,6 +1974,7 @@ export interface FileRoutesById {
   '/profile/dependents/': typeof ProfileDependentsIndexRoute
   '/reception/appointments/': typeof ReceptionAppointmentsIndexRoute
   '/reports/share/': typeof ReportsShareIndexRoute
+  '/api/hospital/emr/$patientId': typeof ApiHospitalEmrPatientIdRoute
   '/api/hospital/patients/$patientId': typeof ApiHospitalPatientsPatientIdRoute
   '/doctor/patients/$patientId/history': typeof DoctorPatientsPatientIdHistoryRoute
   '/doctor/settings/referrals/$referralId': typeof DoctorSettingsReferralsReferralIdRoute
@@ -2156,6 +2174,7 @@ export interface FileRouteTypes {
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
     | '/diet/$mealId/clinical-rules'
+    | '/doctor/emr/$patientId'
     | '/doctor/patients/$patientId'
     | '/doctor/patients/tasks'
     | '/doctor/referrals/$referralId'
@@ -2177,6 +2196,7 @@ export interface FileRouteTypes {
     | '/profile/dependents/'
     | '/reception/appointments/'
     | '/reports/share/'
+    | '/api/hospital/emr/$patientId'
     | '/api/hospital/patients/$patientId'
     | '/doctor/patients/$patientId/history'
     | '/doctor/settings/referrals/$referralId'
@@ -2362,6 +2382,7 @@ export interface FileRouteTypes {
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
     | '/diet/$mealId/clinical-rules'
+    | '/doctor/emr/$patientId'
     | '/doctor/patients/tasks'
     | '/doctor/referrals/$referralId'
     | '/doctor/settings/audit'
@@ -2382,6 +2403,7 @@ export interface FileRouteTypes {
     | '/profile/dependents'
     | '/reception/appointments'
     | '/reports/share'
+    | '/api/hospital/emr/$patientId'
     | '/api/hospital/patients/$patientId'
     | '/doctor/patients/$patientId/history'
     | '/doctor/settings/referrals/$referralId'
@@ -2579,6 +2601,7 @@ export interface FileRouteTypes {
     | '/api/patient/rx-inbox'
     | '/care/visits/$visitId'
     | '/diet/$mealId/clinical-rules'
+    | '/doctor/emr/$patientId'
     | '/doctor/patients/$patientId'
     | '/doctor/patients/tasks'
     | '/doctor/referrals/$referralId'
@@ -2600,6 +2623,7 @@ export interface FileRouteTypes {
     | '/profile/dependents/'
     | '/reception/appointments/'
     | '/reports/share/'
+    | '/api/hospital/emr/$patientId'
     | '/api/hospital/patients/$patientId'
     | '/doctor/patients/$patientId/history'
     | '/doctor/settings/referrals/$referralId'
@@ -2673,6 +2697,7 @@ export interface RootRouteChildren {
   ApiPatientRxInboxRoute: typeof ApiPatientRxInboxRoute
   ReportsShareReportIdRoute: typeof ReportsShareReportIdRoute
   ReportsShareIndexRoute: typeof ReportsShareIndexRoute
+  ApiHospitalEmrPatientIdRoute: typeof ApiHospitalEmrPatientIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -4021,6 +4046,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DietMealIdClinicalRulesRouteImport
       parentRoute: typeof DietMealIdRoute
     }
+    '/doctor/emr/$patientId': {
+      id: '/doctor/emr/$patientId'
+      path: '/emr/$patientId'
+      fullPath: '/doctor/emr/$patientId'
+      preLoaderRoute: typeof DoctorEmrPatientIdRouteImport
+      parentRoute: typeof DoctorRoute
+    }
     '/doctor/patients/': {
       id: '/doctor/patients/'
       path: '/'
@@ -4159,6 +4191,13 @@ declare module '@tanstack/react-router' {
       path: '/reports/share/$reportId'
       fullPath: '/reports/share/$reportId'
       preLoaderRoute: typeof ReportsShareReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hospital/emr/$patientId': {
+      id: '/api/hospital/emr/$patientId'
+      path: '/api/hospital/emr/$patientId'
+      fullPath: '/api/hospital/emr/$patientId'
+      preLoaderRoute: typeof ApiHospitalEmrPatientIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/hospital/patients/$patientId': {
@@ -4394,6 +4433,7 @@ interface DoctorRouteChildren {
   DoctorStatisticsRoute: typeof DoctorStatisticsRoute
   DoctorVitalsRoute: typeof DoctorVitalsRoute
   DoctorIndexRoute: typeof DoctorIndexRoute
+  DoctorEmrPatientIdRoute: typeof DoctorEmrPatientIdRoute
 }
 
 const DoctorRouteChildren: DoctorRouteChildren = {
@@ -4416,6 +4456,7 @@ const DoctorRouteChildren: DoctorRouteChildren = {
   DoctorStatisticsRoute: DoctorStatisticsRoute,
   DoctorVitalsRoute: DoctorVitalsRoute,
   DoctorIndexRoute: DoctorIndexRoute,
+  DoctorEmrPatientIdRoute: DoctorEmrPatientIdRoute,
 }
 
 const DoctorRouteWithChildren =
@@ -4753,6 +4794,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPatientRxInboxRoute: ApiPatientRxInboxRoute,
   ReportsShareReportIdRoute: ReportsShareReportIdRoute,
   ReportsShareIndexRoute: ReportsShareIndexRoute,
+  ApiHospitalEmrPatientIdRoute: ApiHospitalEmrPatientIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -4,6 +4,7 @@ import {
   Activity,
   Beaker,
   Calendar,
+  FileText,
   Grid3X3,
   MessageCircle,
   Phone,
@@ -21,6 +22,7 @@ type ActionDef = {
   icon: typeof MessageCircle;
   to?: string;
   search?: Record<string, string>;
+  params?: { patientId: string };
   onClick?: () => void;
 };
 
@@ -50,11 +52,18 @@ export function PatientChartActionRail({ patientId }: { patientId: string }) {
       search: { patientId, view: "due" },
     },
     {
+      id: "emr",
+      label: "EMR",
+      icon: FileText,
+      to: "/doctor/emr/$patientId",
+      params: { patientId },
+    },
+    {
       id: "soap",
       label: "Note",
       icon: Stethoscope,
-      to: "/doctor/encounters",
-      search: { patientId },
+      to: "/doctor/emr/$patientId",
+      params: { patientId },
     },
     {
       id: "labs",
@@ -131,6 +140,20 @@ export function PatientChartActionRail({ patientId }: { patientId: string }) {
         <button key={action.id} type="button" onClick={action.onClick} className={className}>
           {inner}
         </button>
+      );
+    }
+
+    if (action.to && action.params) {
+      return (
+        <Link
+          key={action.id}
+          to={action.to}
+          params={action.params}
+          search={action.search}
+          className={className}
+        >
+          {inner}
+        </Link>
       );
     }
 

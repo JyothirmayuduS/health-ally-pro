@@ -91,6 +91,12 @@ export const DOCTOR_CLINICAL_MODULES: DoctorModuleLink[] = [
     icon: Syringe,
   },
   {
+    to: "/doctor/patients",
+    label: "EMR / EHR",
+    description: "Timeline, SOAP, ICD-10, vitals & history",
+    icon: ClipboardList,
+  },
+  {
     to: "/doctor/statistics",
     label: "Analytics",
     description: "Fill, revenue, panel & workload",
